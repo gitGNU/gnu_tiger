@@ -23,6 +23,8 @@
 # 	Removed CC dependancy, added TODO
 #       Debian specific checks moved into an if and check.tbl cleared
 #       (that file should be user-only)
+# Linux/2/check - 05/09/2003 - jfs
+# 	Removed ambiguous redirect
 #-----------------------------------------------------------------------------
 # TODO:
 #
@@ -134,19 +136,19 @@ if [ "$LXDISTRIBUTION" == "debian" ]; then
 # they could be generalised (there is a tigerrc variable for them)
 [ "$Tiger_Check_OS" != 'N' ] && {
 #  echo "`$TIMECMD`> Checking for correct OS version..."
-  $SCRIPTDIR/check_release >> $logtmp
+  $SCRIPTDIR/check_release 
 }
 
 [ "$Tiger_Check_PATCH" != 'N' ] && {
 #  echo "`$TIMECMD`> Checking for up-to-date patches..."
-  $SCRIPTDIR/check_patches >> $logtmp
+  $SCRIPTDIR/check_patches
 }
 
 # No tigerrc variables defined for these, but they are only 
 # Debian specific
-$SCRIPTDIR/deb_checkadvisories >> $logtmp
-$SCRIPTDIR/deb_checkmd5sums >>$logtmp
-$SCRIPTDIR/deb_nopackfiles >>$logtmp
+$SCRIPTDIR/deb_checkadvisories 
+$SCRIPTDIR/deb_checkmd5sums 
+$SCRIPTDIR/deb_nopackfiles 
 # End of Debian-specific checks
 
 fi 
