@@ -17,6 +17,8 @@
 #
 # check_printcap - 06/28/93
 #
+# Checks the printer control file.
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
