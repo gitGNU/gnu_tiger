@@ -95,8 +95,10 @@ checkcmds()
   okgroup=$Tiger_ROOT_PATH_OK_Group_Write
   [ "$_user" != 'root' ] && okgroup=$Tiger_PATH_OK_Group_Write
 
-# TODO : this should be fixed to follow symlinks (see Debian bug:
+# TODO : this should be fixed to skip symlinks (see Debian bug:
 # http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=161993&repeatmerged=yes)
+# It could be done with the option -L (will follow symlinks instead of
+# avoiding them) but I have to check if this is a GNU-only option
   [ -d $_dir ] &&
   $LS -d $_dir/* |
   getpermit |
