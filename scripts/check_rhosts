@@ -68,7 +68,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT EXPR GEN_PASSWD_SETS JOIN LS RM SED OUTPUTMETHOD || exit 1
+  haveallcmds AWK CAT EXPR GEN_PASSWD_SETS HEAD JOIN LS RM SED OUTPUTMETHOD || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME || exit 1
   
@@ -80,7 +80,7 @@ done
 echo
 echo "# Performing check of /etc/hosts.equiv and .rhosts files..."
 
-haveallcmds AWK CAT EXPR GEN_PASSWD_SETS JOIN LS RM SED OUTPUTMETHOD || exit 1
+haveallcmds AWK CAT EXPR GEN_PASSWD_SETS HEAD JOIN LS RM SED OUTPUTMETHOD || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 safe_temp "$WORKDIR/home.hosts.$$" "$WORKDIR/pass.list.$$"
@@ -128,9 +128,7 @@ scan_file()
   file="$2"
      
   # added #+@_ which should be valid characters.
-  $AWK '/^[#\+@_a-zA-Z0-9\.\-\t ]*$/ {print}' < "$file" | 
-  # Bob Hall suggests the following for HP-UX
-  # $AWK '/^[-#\+@_a-zA-Z0-9\.\t ]*$/ {print}' < "$file" | 
+  $AWK '/^[#\+@_a-zA-Z0-9\.\-\\\t ]*$/ {print}' < "$file" | 
         {
           while read rhost ruser
           do
@@ -139,7 +137,7 @@ scan_file()
         }
     
   # added #+@_ which should be valid characters.
-  $AWK 'BEGIN {count = 0} !/^[#\+@_a-zA-Z0-9\.\-\t ]*$/ {count += 1} 
+  $AWK 'BEGIN {count = 0} !/^[#\+@_a-zA-Z0-9\.\-\\\t ]*$/ {count += 1} 
   END {print count}' < "$file" |
           {
             read count
@@ -236,9 +234,9 @@ file_rhosts ()
 # BUG: If no fileid is returned then there must be an error above
 # (notice we use userids instead of names here just like in the spool checks)
 	    [ -n "$fileid" ] && {
-	    fowner=`$AWK -F: '$3 ~ /'$fileid'$/ { print $1 }' $passwd_set | $HEAD -1`
-	    [ $userid -ne $fileid ] && \
-            message ALERT rcmd017a "" "User $user's .rhosts file does not belong to him, belongs to the user $fowner (user id $fileid)"
+	    	fowner=`$AWK -F: '$3 ~ /^'$fileid'$/ { print $1 }' $passwd_set | $HEAD -1`
+	    	[ $userid -ne $fileid ] && \
+            	  message ALERT rcmd017a "" "User $user's .rhosts file does not belong to him, belongs to the user $fowner (user id $fileid)"
 	    }
     fi
   done

@@ -46,6 +46,7 @@ SED=/bin/sed
 SORT=/bin/sort
 COMM=/usr/bin/comm
 TAIL=/bin/tail
+HEAD=/bin/head
 MV=/bin/mv
 TR=/usr/bin/tr
 JOIN=/usr/bin/join
@@ -58,6 +59,7 @@ CHOWN=/bin/chown
 CHMOD=/bin/chmod
 LN=/bin/ln
 WC=/bin/wc
+TEE=/bin/tee
 #
 # Disable diff because it doesn't support -D... so we can not
 # use diff... this will cause reports to be mailed as is... future
@@ -70,7 +72,7 @@ SENDMAILCF="/usr/lib/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ PASTE
-export BASENAME CHOWN CHMOD LN DIFF MAILER WC
+export BASENAME CHOWN CHMOD LN DIFF MAILER WC TEE
 #
 UNAME=/bin/uname
 GETHOSTNAME=/bin/hostname

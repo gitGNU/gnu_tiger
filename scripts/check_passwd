@@ -315,7 +315,6 @@ done < $WORKDIR/pass.list.$$
     delete $file $file.src
   done < $WORKDIR/pass.list.$$
 }
-delete $WORKDIR/pass.list.$$
 delete "$WORKDIR/pass.list.$$" "$WORKDIR/p1name.$$" "$WORKDIR/p2name.$$" 
 delete "$WORKDIR/p1uid.$$" "$WORKDIR/p2uid.$$"
 

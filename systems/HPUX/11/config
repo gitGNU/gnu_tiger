@@ -52,6 +52,7 @@ SED=/bin/sed
 SORT=/bin/sort
 COMM=/usr/bin/comm
 TAIL=/bin/tail
+HEAD=/bin/head
 MV=/bin/mv
 TR=/usr/bin/tr
 JOIN=/usr/bin/join
@@ -64,6 +65,7 @@ CHOWN=/bin/chown
 CHMOD=/bin/chmod
 LN=/bin/ln
 WC=/bin/wc
+TEE=/bin/tee
 MESG=/usr/bin/mesg
 ID=/usr/bin/id
 CUT=/usr/bin/cut
@@ -101,7 +103,7 @@ SENDMAILCF="/usr/lib/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ PASTE
-export BASENAME CHOWN CHMOD LN DIFF MAILER WC ID CUT NDD MESG PWCK GRPCK GETPRDEF
+export BASENAME CHOWN CHMOD LN DIFF MAILER WC TEE ID CUT NDD MESG PWCK GRPCK GETPRDEF
 export SSHD_CONFIG SENDMAILS SENDMAILCF
 #
 UNAME=/bin/uname

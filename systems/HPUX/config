@@ -16,6 +16,7 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # HPUX/config - 06/14/93
+# 10/1/2003 - jfs - Applied a patch provided by Ryan Bradetich to add TEE
 # 09/03/2003 - jfs - Applied a patch provided by Ryan Bradetich to support
 #                    default locations of SSHD_CONFIG
 # 06/21/2003 - jfs - Applied a patch provided by Ryan Bradetich to support
@@ -53,6 +54,7 @@ SED=/bin/sed
 SORT=/bin/sort
 COMM=/usr/bin/comm
 TAIL=/bin/tail
+HEAD=/bin/head
 MV=/bin/mv
 TR=/usr/bin/tr
 JOIN=/usr/bin/join
@@ -65,6 +67,7 @@ CHOWN=/bin/chown
 CHMOD=/bin/chmod
 LN=/bin/ln
 WC=/bin/wc
+TEE=/bin/tee
 MESG=/usr/bin/mesg
 ID=/usr/bin/id
 CUT=/usr/bin/cut
@@ -100,8 +103,8 @@ SENDMAILS="/usr/lib/sendmail"
 SENDMAILCF="/usr/lib/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
-export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ PASTE
-export BASENAME CHOWN CHMOD LN DIFF MAILER WC ID CUT MESG PWCK GRPCK GETPRDEF
+export SORT COMM TAIL HEAD MV TR JOIN GROUPSS FILECMD UNIQ PASTE
+export BASENAME CHOWN CHMOD LN DIFF MAILER WC TEE ID CUT MESG PWCK GRPCK GETPRDEF
 export SSHD_CONFIG SENDMAILS SENDMAILCF
 #
 UNAME=/bin/uname
