@@ -139,9 +139,3 @@
 /usr/bin/sh                 root  .     0 0 1 . 1   1 0 1   1 0 1 W 001 002 003
 /usr/bin/*                  root  .     . . 1 . 1   . 0 .   . 0 . . 001 002 003
 #
-/usr/etcas_sets
-CHECK_CRON check_cron
-GEN_BOOTPARAM_SETS gen_bootparam_sets
-GEN_EXPORT_SETS gen_export_sets
-GEN_SERVICES_SETS gen_services
-GET_MOUN
