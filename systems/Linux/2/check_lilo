@@ -108,6 +108,9 @@ fi
 if [ -r /etc/grub.conf ] ; then
    # SuSE uses /etc/grub.conf.
    file=/etc/grub.conf
+elsif [ -r  /boot/grub/menu.lst ] ; then
+   # Debian uses /boot/grub/menu.lst
+   file=/boot/grub/menu.lst
 else
    # for other Linux systems
    file=/boot/grub/grub.conf
