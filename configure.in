@@ -9,32 +9,32 @@ test "x$prefix" != "xNONE" || prefix=/usr/local
 AC_ARG_WITH(tigerhome, [  --with-tigerhome=LOCATION        Location of all Tiger files],
 tigerhome=$withval, tigerhome="no")
 if test "$tigerhome" = "no" ; then
-        tigerhome='${prefix}/tiger'
+        tigerhome=${prefix}/tiger
 fi
 
 AC_ARG_WITH(tigerconfig, [  --with-tigerconfig=LOCATION        Location of Tiger configuration files],
 tigerconfig=$withval, tigerconfig="no")
 if test "$tigerconfig" = "no" ; then
-        tigerconfig='${sysconfdir}/tiger'
+        tigerconfig=${sysconfdir}/tiger
 
 fi
 
 AC_ARG_WITH(tigerwork, [  --with-tigerwork=LOCATION        Location of all the temporary files created by Tiger],
 tigerwork=$withval, tigerwork="no")
 if test "$tigerwork" = "no" ; then
-        tigerwork='$(localstatedir)/tiger/run'
+        tigerwork=${localstatedir}/tiger/run
 fi
 
 AC_ARG_WITH(tigerlog, [  --with-tigerlog=LOCATION        Location of all the logfiles created by Tiger],
 tigerlog=$withval, tigerlog="no")
 if test "$tigerlog" = "no" ; then
-        tigerlog='$(localstatedir)/tiger/log'
+        tigerlog=${localstatedir}/tiger/log
 fi
 
 AC_ARG_WITH(tigerbin, [  --with-tigerbin=LOCATION        Location of the Tiger binaries],
 tigerbin=$withval, tigerbin="no")
 if test "$tigerbin" = "no" ; then
-        tigerbin='${sbindir}'
+        tigerbin=${sbindir}
 fi
 
 AC_SUBST(tigerhome)
@@ -42,4 +42,4 @@ AC_SUBST(tigerwork)
 AC_SUBST(tigerlog)
 AC_SUBST(tigerbin)
 AC_SUBST(tigerconfig)
-AC_OUTPUT(Makefile config tigercron tiger tigexp)
+AC_OUTPUT(Makefile)

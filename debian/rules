@@ -13,7 +13,7 @@ build-stamp:
 	dh_testdir
 
 	autoconf
-	./configure --with-tigerhome=/usr/lib/tiger --with-tigerwork=/var/run/tiger/work --with-tigerlog=/var/log/tiger --with-tigerbin=/usr/sbin --with-tigerconfig=/etc/tiger --prefix=""
+	./configure --with-tigerhome=/usr/lib/tiger --with-tigerwork=/var/run/tiger/work --with-tigerlog=/var/log/tiger --with-tigerbin=/usr/sbin --with-tigerconfig=/etc/tiger --prefix=/usr 
 	$(MAKE) all
 
 
@@ -35,7 +35,7 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/tmp.
-	$(MAKE) install prefix=debian/tmp/
+	$(MAKE) install DESTDIR=debian/tmp/
 	# Just in case
 	chmod a+x debian/tmp/usr/lib/tiger/systems/Linux/2/{deb,gen,check}_*
 	chmod a+x debian/tmp/usr/lib/tiger/scripts/check_*
