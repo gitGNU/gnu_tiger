@@ -117,11 +117,11 @@ delete()
   do
     if [ -n "$LS" ]
     then 
-#    	if [ -z "`$LS $__file 2>/dev/null`" ] 
-#	then
+    	if [ -z "`$LS $__file 2>/dev/null`" ] 
+	then
 #       		echo "--ERROR-- [post001e] File \`$__file' will not be removed since it does not exist"
-#		goahead=0
-#	fi
+		goahead=0
+	fi
     	if [ $goahead -eq 1 -a  -n "$AWK" -a -n "$UUID" ]
 	then
 	    	if [ "$UUID" != "`$LS -nl $__file | $AWK '{print $3}'`" ] 
