@@ -49,6 +49,8 @@
 # check_inetd - 10/07/2003 - jfs Removed temporary files
 # check_inetd - 10/19/2003 - jfs Applied patch from Ryan Bradetich which
 #     adds the exec service to the 'rexd' check.
+# check_inetd - 11/18/2003 - jfs Do not report the service is not protected
+#     if tcp wrappers are undefined (patch from Ryan Bradetich).
 #
 # TODO
 # - This script needs to be improved to warn for some of the 'chatty' issues
@@ -160,7 +162,7 @@ checkinetd ()
       message WARN inet025w "" "The 'chargen' udp server is enabled, consider disabling it"
     fi
 
-    if [ "$t" = "nowait" -a "$currbinary" != "$tcpdpath" ]; then
+    if [ "$t" = "nowait" -a -n "$tcpdpath" -a "$currbinary" != "$tcpdpath" ]; then
       message WARN inet099w "" "'$currservice' is not protected by tcp wrappers."
     fi
 
