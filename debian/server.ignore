@@ -1,5 +1,13 @@
+# Mysql database server
 Program mysqld \(pid [[:digit:]]+, parent [[:digit:]]+\) is using a deleted file: .* /var/log/mysql/mysql\.err\.[[:digit:]]+ \(deleted\)
-Server /usr/sbin/apache \(pid .*\) is using deleted files
+# Apache web server
+Server /usr/sbin/apache \(pid [[:digit:]]+\) is using deleted files
 Program apache \(pid [[:digit:]]+, parent [[:digit:]]+\) is using a deleted file: .* /tmp/session_mm_apache0.sem \(deleted\)
-The parent process of server /usr/sbin/apache \(pid [[:digit:]]+\) is using dele
-ted files
+The parent process of server /usr/sbin/apache \(pid [[:digit:]]+\) is using deleted files
+# Cupds printer daemon
+Server /usr/sbin/cupsd \(pid [[:digit:]]+\) is using deleted files
+Program cupsd \(pid [[:digit:]]+, parent [[:digit:]]+\) is using a deleted file: .* /var/log/cupsd/error_log\..* \(deleted\)
+#Mailman list manager
+Program python \(pid [[:digit:]]+, parent [[:digit:]]+\) is using a deleted file: .* /var/log/mailman/.* \(deleted\)
+# Squid proxy
+Server \(squid\) .*  \(pid [[:digit:]]+\) is using deleted files

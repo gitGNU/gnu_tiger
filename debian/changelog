@@ -1,9 +1,149 @@
+tiger (1:3.2.1-16) unstable; urgency=low
+
+  * Updated advisories
+  * Fixed gen_group_sets to work properly in NIS environments for Linux
+    and Tru64 (Closes: #281608)
+  * Fixed eval in check_accounts so that find is _only_ executed for users
+    which are not part of Tiger_Admin_Accounts, this prevents Tiger from
+    going and using remote filesystems (i.e. /var/autofs/ because in
+    Debian 'operator' has /var as his home dir). It also should speed
+    up this check a lot. This shows why Tiger_Admin_Accounts is a bad
+    idea and Tiger_Accounts_Trust should be used instead (or add a
+    Tiger_Accounts_Admin) (Closes: #280653, #280654)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 17 Nov 2004 15:15:21 +0100
+
+tiger (1:3.2.1-15) unstable; urgency=low
+
+  * Lintian fixes:
+    - Updated Standards-Version
+    - Removed cvs conflict copy files
+    - Changelog is now UTF-8
+  * Use C locales to avoid scripts/check_system from breaking up (Close: #270108)
+  * deb_checkmd5sums's regexep now excludes usr/share/doc/ (Closes: #264111)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Mon, 13 Sep 2004 11:12:08 +0200
+
+
+tiger (1:3.2.1-14) unstable; urgency=low
+
+  [ as suggested by Tilman Koschnick ]
+  * Allow delete() to remove files from LOGDIR so that reports generated
+    by tiger -e are removed proplerly (Closes: #262523)
+  * Symlink /usr/lib/tiger/tigexp to /sbin/tigexp so that tiger -e works
+    (Closes: #262518)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun,  1 Aug 2004 18:19:18 +0200
+
+tiger (1:3.2.1-13) unstable; urgency=low
+
+  * Updated to CVS changes which fix a problem in the gen_passwd_sets
+    script which would make duplicates appear in the passwd files.
+    Thus generating a lot of false positives (in the check_passwd script)
+    Also removes some other duplicates in the check_passwdformat script
+    and updates the Debian advisories listing.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun, 27 Jun 2004 21:25:27 +0200
+
+tiger (1:3.2.1-12) unstable; urgency=low
+
+  * Updated to latest CVS code fixing:
+    - [check_known] Do not call LS directly with all files but use a for loop
+    (Closes: #246600)
+    - [deb_nopackfiles]  Made the dirlist variable so that directories which
+    do not exist are not checked for (Closes: #254574)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun, 27 Jun 2004 13:58:24 +0200
+
+tiger (1:3.2.1-11) unstable; urgency=low
+
+  * Updated to latest CVS code which fixes:
+    - [check_accounts] Try to avoid eval problems if user/shells/directories 
+    contain non-empty (but invalid) characters (such as space)
+    (Similar changes in some other scripts to avoid breakage in similar
+    situations)
+    (Closes: #246987)
+    - [check_passwd] Define Tiger_Passwd_Hashes if not defined
+    (Closes: #246885)
+    - [deb_checkmd5sums] Fixed patch provided by Chung-chieh Shan
+    (Closes: #234811)
+
+  * Remove check_finddeleted from the default configuration since it 
+    is prone to a lot of false positives, also, it depends on LSOF
+    (which is only recommended). I will reenable this sometime in
+    the future and (maybe) provide a Debian-specific script to just
+    monitor for daemons that are using outdated libraries 
+    (Closes: #249331)
+  * Send filesystem scans error output to /dev/null (need to fix this
+    in scripts/find_files by not following symbolic links that point
+    nowhere, this is an interim fix)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 20 May 2004 09:31:23 +0200
+
+tiger (1:3.2.1-10) unstable; urgency=low
+
+  * Removed evals from tigerrc and make proper sourcing in
+    Tiger_PATH_OK_Group_Write (Closes: #236419)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sat,  6 Mar 2004 11:00:55 +0100
+
+tiger (1:3.2.1-9) unstable; urgency=medium
+
+  * Added Danish debconf translation (Closes: #235066)
+  * Fixed errors in check_finddeleted (Closes: #235951)
+  * Added some more common servers to the server.ignore example
+  * Fix error in deb_checkmd5sums with patch from Chung-chieh Shan
+  which avoids failure on packages whose names contain "." (Closes: #234811)
+  * Minor change in check_passwd to detect if no shell is defined for 
+  a given user (as suggested by raoul bhatia)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed,  3 Mar 2004 13:13:05 +0100
+
+tiger (1:3.2.1-8) unstable; urgency=low
+
+  * check_rcumask: Proper warning if no umask settings are defined 
+    (Closes: #234661)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 25 Feb 2004 20:39:16 +0100
+
+tiger (1:3.2.1-7) unstable; urgency=low
+
+  * Updated from CVS which includes a number of improvements including
+    the following (relevant to Debian bugs):
+      - Added more information on check_finddeleted regarding 
+       how to use it and remove spurious errors. This script
+       will not give false positives any longer on some special
+       characterr) files like /dev/console or /dev/null and has
+       reduced its output to something more managable (there is
+       only one message per deleted file now)
+       (Closes: #232704,#231148, #225112)
+      - Fixed password definitions adding the 'g-Z' 'A-Z' and
+      '.' sets (Closes: #227596) 
+      - Many scripts now controls YPCAT errors to printing errors in
+        hosts that are not properly configured.  
+        (i.e. nsswitch.conf is defined to use NIS but there's no NIS
+        host) Errors are redirected to /dev/null when YPCAT is not 
+        required as many systems do not include it, specially in Debian.
+        (Closes: #225910)
+      - Check_crontab will only warn if neither cron.allow
+        or cron.deny exist (Debian bug #226362)
+  * Default cronrc no longer runs check_finddeleted as often since it's
+    prone to false positives (even if it can be customised through the
+    ignore mechanism, see /usr/share/doc/tiger/examples/server.ignore)
+  * Added French template translation provided by Christian Perrier
+    (Closes: #226883, #224700)
+  * Fully translated the spanish template.
+  * Updated to include latest Debian advisories.
+  * debian/rules now uses mandir (/usr/share/man/) in configure call.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Tue, 24 Feb 2004 21:21:19 +0100
+
 tiger (1:3.2.1-6) unstable; urgency=low
 
   * The cron.d taks will only run if tigercron is executable, this avoids
     cron.d from running tiger if it has been removed but not purged
     (thanks to Thomas Lange for noticing this mistake)
-  * Included patch from Nicholas François which makes Tiger not warn
+  * Included patch from Nicholas FranÃ§ois which makes Tiger not warn
     on manpage files purged through localepurge (Closes: #219728)
   * Added To: line in tigercron (Closes: #218363)
   * Added Japanese translation contributed by Hideki Yamane (Closes: #224185)

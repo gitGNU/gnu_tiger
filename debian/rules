@@ -16,7 +16,7 @@ build-stamp:
 	dh_testdir
 
 	autoconf
-	./configure --with-tigerhome=/usr/lib/tiger --with-tigerwork=/var/run/tiger/work --with-tigerlog=/var/log/tiger --with-tigerbin=/usr/sbin --with-tigerconfig=/etc/tiger --prefix=/usr
+	./configure --with-tigerhome=/usr/lib/tiger --with-tigerwork=/var/run/tiger/work --with-tigerlog=/var/log/tiger --with-tigerbin=/usr/sbin --with-tigerconfig=/etc/tiger --prefix=/usr --mandir=/usr/share/man
 	$(MAKE) all
 
 
