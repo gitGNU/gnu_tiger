@@ -45,6 +45,7 @@ Tiger_Check_RUNPROC=N		# Fast, needs to be customized per system
 Tiger_Check_DELETED=Y		# Depends on the number of processes on the
 				# system
 Tiger_Check_APACHE=N		# Fast
+Tiger_Check_SENDMAIL=N		# Fast
 Tiger_Check_PRINTCAP=Y		# Fast
 Tiger_Check_EXRC=N		# Depends on the size of the filesystem
 # 

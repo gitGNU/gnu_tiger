@@ -201,9 +201,11 @@ trippid=
   $SCRIPTDIR/check_passwd >> $logtmp
   echo "`$TIMECMD`> Checking password format..."
   $SCRIPTDIR/check_passwdformat >> $logtmp
+}
+
+[ "$Tiger_Check_PASSWD_NIS" != 'N' ] && {
   echo "`$TIMECMD`> Checking NIS settings..."
   $SCRIPTDIR/check_nisplus >> $logtmp
-}
 
 [ "$Tiger_Check_GROUP" != 'N' ] && {
   echo "`$TIMECMD`> Checking group files..."
@@ -354,8 +356,13 @@ trippid=
 }
 
 [ "$Tiger_Check_APACHE" != 'N' ] && {
-  echo "`$TIMECMD`> Checking the Apache configuration..."
+  echo "`$TIMECMD`> Checking Apache's configuration..."
   $SCRIPTDIR/check_apache >> $logtmp
+}
+
+[ "$Tiger_Check_SENDMAIL" != 'N' ] && {
+  echo "`$TIMECMD`> Checking Sendmail's configuration..."
+  $SCRIPTDIR/check_sendmail >> $logtmp
 }
 
 [ "$Tiger_Check_PRINTCAP" != 'N' ] && {
