@@ -40,6 +40,9 @@ from Marc Heuse dated Fri Jun 26 1998 - 08:24:17 BST)
 	- R-exd?
 	- NFS
 
+- Modify Tiger so it can use a system's scripts if it exists and substitute
+  the one under scripts/ by introducing a run_script funcion (check
+  if the script is under scripts and under systems/$OS/... and run it)
 
 - Update signatures using TAMU's (and maybe knowngoods.org's) signature
 database.
