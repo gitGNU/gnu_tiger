@@ -1,0 +1,230 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2003 Michael Sconzo, Javier Fernandez-Sanguino Peña,
+#                        Ryan Bradetich
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+#  check_xinetd - 02/11/2003
+# 
+#  Checks which xinetd services are enabled or disabled.
+#
+#  11/19/2003 - jfs - Linux-specific version based on patch from Ryan
+#      Bradetich which introduces many more checks for services and
+#      configuration (but still more is needed). Added many TODOs.
+#  08/19/2003 - jfs - Allow override of XINETDCONF and fix error
+#  08/12/2003 - jfs - Now write messages for disabled services too. Also
+#               fixed some errors.
+#  08/11/2003 - jfs - Fixed dependancies. Now uses XINETDFILE instead of 
+#               hardcoding the location. Added additional checks
+#               to avoid errors and use message instead of echo.
+#
+#-----------------------------------------------------------------------------
+# TODO:
+#
+# - this script can emit false positives for services that are redirected
+#   (i.e. no 'server' flag but a 'redirect' flag)
+# - it could warn for servers that are not restricted by TCP wrappers
+#   (nees to check if server = tcpd)
+# - should check whether some services use log_on_failure or log_on_success
+# - info for services that are chrooted (server = chroot)
+# - do not warn for services which are bound to 127.0.0.1?
+# - xinetd checks should determine if insecure services are active or
+#   running as root when not needed.
+# - should check the server binaries it points to. Are they properly
+#   owned?
+# - consider generating a file based on the xinetd.conf similar to 
+#   how it's done with GEN_INETD_SERVICES
+# - it could also check vs the tiger's provided operating system's
+#   XINETDFILE to determine changes in services just as check_inetd does
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds GREP AWK LS || exit 1
+  haveallfiles BASEDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+haveallcmds LS || exit 1
+haveallfiles BASEDIR || exit 1
+
+echo
+echo "# Performing check of 'xinetd' related services..."
+
+# Set the default location for xinetd.conf if not specified.
+[ -z "$XINETDCONF" ] && XINETDCONF="/etc/xinetd.conf"
+
+check_file_perms()
+{
+	getpermit $1 |
+	while read _namefile _owner _group ur uw ux gr gw gx or ow ox suid sgid stk
+	do
+		eval "case $_owner in
+			$Tiger_ROOT_PATH_OK_Owners)
+				;;
+			*)
+				message FAIL inet020f \"\" \"$_namefile does not have proper ownership (owned by $_owner).\"
+				;;
+		esac"
+
+		[ "$ur$uw$ux$gr$gw$gx$or$ow$ox" != '110000000' ] && \
+			message WARN inet017w "" "$_namefile permissions are not 600."
+
+		eval "case $_group in
+			$Tiger_ROOT_PATH_OK_Group_Write)
+				gw=0
+		esac"
+
+		[ "$gw" != '0' ] && \
+			message WARN inet018w "" "$_namefile has non-administrative group ($_group) write access."
+
+		[ "$ow" != '0' ] && \
+			message ALERT inet019a "" "$_namefile public write access."
+	done
+}
+
+parse_service_block()
+{
+	service=$1
+	enabled='Y'
+	proto='all'
+	
+	while read line 
+	do
+		[[ $line = flags* ]] && {
+			[[ $line = *DISABLE* ]] && enabled='N'
+			continue
+		}
+		
+		[[ $line = disable* ]] && {
+			[ ${line#* } = 'yes' ] && enabled='N'
+			continue
+		}
+
+		[[ $line = protocol* ]] && {
+			proto=`echo ${line#*=}`
+		}
+
+		[[ $line = *} ]] && break
+	done
+
+	if [ "$service" = 'rexd' -a $enabled = 'Y' ]; then
+		message FAIL inet006f "" "'rexd' service is enabled, consider disabling it."
+	elif [ "$service" = 'exec' -a $enabled = 'Y' ]; then
+		message FAIL inet006f "" "'$service' service is enabled, consider disabling it."
+	elif [ "$service" = 'sysstat' -a $enabled = 'Y' ]; then
+		message WARN inet012w "" "'sysstat' service is enabled, consider disabling it."
+	elif [ "$service" = 'netstat' -a $enabled = 'Y' ]; then
+		message WARN inet013w "" "'netstat' service is enabled, consider disabling it."
+	elif [ "$service" = 'telnet' -a $enabled = 'Y' ]; then
+		message WARN inet098w "" "The 'telnet' server is enabled, consider using ssh instead."
+	elif [ "$service" = 'ftp' -a $enabled = 'Y' ]; then
+		message WARN inet098w "" "The 'ftp' server is enabled, consider using ssh/sftp instead."
+	elif [ "$service" = 'login' -a $enabled = 'Y' ]; then
+		message WARN inet098w "" "The 'login' server is enabled, consider using ssh/sftp instead."
+	elif [ "$service" = 'shell' -a $enabled = 'Y' ]; then
+		message WARN inet098w "" "The 'rsh' server is enabled, consider using ssh/sftp instead."
+	elif [ "$service" = 'tftp' -a $enabled = 'Y' ]; then
+		message WARN inet022w "" "The 'tftpd' server is enabled, consider disabling it"
+	elif [ "$service" = 'finger' -a $enabled = 'Y' ]; then
+		message WARN inet023w "" "The 'finger' server is enabled, consider disabling it"
+	elif [ "$service" = 'rusers' -a $enabled = 'Y' ]; then
+		message WARN inet024w "" "The 'rusers' server is enabled, consider disabling it"
+	elif [ "$service" = 'echo' -a $proto = 'udp' -a $enabled = 'Y' ]; then
+		message WARN inet025w "" "The 'echo' udp server is enabled, consider disabling it"
+	elif [ "$service" = 'chargen' -a $proto = 'udp' -a $enabled = 'Y' ]; then
+		message WARN inet025w "" "The 'chargen' udp server is enabled, consider disabling it"
+	fi 
+}
+
+parse_file()
+{
+	while read line
+	do
+		[[ $line = \#* || _$line = _ ]] && continue
+		[[ $line = includedir* ]] && [ $1 = $XINETDCONF ] && {
+			dirs="$dirs ${line#* }"
+			continue
+		}
+
+		[[ $line = service* ]] && {
+			parse_service_block ${line#* }
+			continue
+		}
+	done < $1
+}
+
+# Does the XINETDCONF file exist?
+if [ -r "$XINETDCONF" ] ; then
+
+	check_file_perms $XINETDCONF
+	parse_file $XINETDCONF
+	for dir in $dirs
+	do
+		[ ! -d "$dir/" ] && {
+			message ERROR xnet002e "The directory '$dir' included in $XINETDCONF is not a directory"
+			continue
+		}
+		$LS $dir/ |
+		while read path
+		do
+			check_file_perms $dir/$path
+			parse_file $dir/$path
+		done
+	done
+else
+        if [ ! -f "$XINETDCONF" ] ; then
+                message ERROR xnet001e "It appears that xinetd is not installed, cannot find file $XINETDCONF."
+        else
+                message ERROR xnet003e "Cannot read file $XINETDCONF."
+        fi
+fi
+
+exit 0
