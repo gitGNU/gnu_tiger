@@ -1,0 +1,48 @@
+#
+# Signature file for IRIX 4.0.5 IP17, generated Mon Aug  2 15:19:38 CDT 1993
+# Thanks to Steve Rikli for the sig file
+#@DEST=IRIX/4/4.0.5/IP17
+#@CONFIG=IRIX/4
+#
+Y .       /bin/sh bf8a7a26 25f92549 64876302 bc39cae3 764a960c bca9ddf3 216b8463 92cf59ee IRIX 4.0.5
+Y .       /bin/csh 753670a3 0221d421 7dd26a9f d2db1ec1 7e1ca582 398643f6 6956fb7f 8076892f IRIX 4.0.5
+Y .       /bin/ksh 2f6f01d3 de5656c7 ab9fd453 81c904da 4f9d6275 8ad38511 0f92d16e 01cc06dd IRIX 4.0.5
+Y .       /bin/login 4207a042 f124c767 e58708e7 d75921b0 facbaf54 163189c0 85c00c9c e65feb40 IRIX 4.0.5
+Y .       /bin/su 64637103 034f2526 89e4a871 9a095194 3f0f975d 0570cef8 cb6eb10a 46d9c9b4 IRIX 4.0.5
+Y .       /bin/passwd 356231a9 f85cb909 64c7d997 81928022 16bb14ca e1a24fb9 f092f864 81a0b270 IRIX 4.0.5
+# in.fingerd not found.
+Y .       /usr/etc/fingerd 1ac7c159 8c17711e 1c48d262 d7a238af 3477b793 4bbedb2d 7bf98681 206e260e IRIX 4.0.5
+# in.ftpd not found.
+Y .       /usr/etc/ftpd a4c77809 469eb456 b50542f6 f15439c1 83e4daeb b5e1bc26 9c0675b9 bbc70146 IRIX 4.0.5
+# in.rexecd not found.
+Y .       /usr/etc/rexecd 6aa117fb 2b2ae5c4 0e920d68 555f8d7f 0ed4bb6e 3ddfe989 b698c323 76ad9f98 IRIX 4.0.5
+# in.rlogind not found.
+Y .       /usr/etc/rlogind 1392f9aa 8ee62491 1f031102 8e3ecf92 bee67807 3be5ab6f 1675dadd 7d29fc61 IRIX 4.0.5
+# in.rshd not found.
+Y .       /usr/etc/rshd 4e9f0078 c2ebba82 2ff2f4f7 acd52b9d 4b5d737e 5220effe 0b1ffd80 23820672 IRIX 4.0.5
+# in.telnetd not found.
+Y .       /usr/etc/telnetd 9ced165c c71d3578 96d0eaa2 deb83c70 278b3fa2 4a86e1f0 cc4a7466 b076cc26 IRIX 4.0.5
+# in.tftpd not found.
+Y .       /usr/etc/tftpd 91218ed5 3ab27857 f1c1492b 97de0241 d3584936 dd334c29 9fe2d6e0 4cca2107 IRIX 4.0.5
+# in.uucpd not found.
+# uucpd not found.
+# rpc.yppasswdd not found.
+Y .       /usr/etc/rpc.passwd 4d0b9664 1da9847e 029581ae ee3872ef 66adfdc4 294191f1 7c4ef4c9 02078d98 IRIX 4.0.5
+Y .       /usr/etc/portmap c1f40503 e8f40761 068ea7f3 43c494f5 4b8a2e17 a67cf278 93d3b238 dfb5f439 IRIX 4.0.5
+Y .       /usr/etc/ypserv d8e28f30 f6775ddc 4af015ff 090d85e6 b43ffc83 41c3db82 d7e690c9 f3e1bd9a IRIX 4.0.5
+# ypxfrd not found.
+Y .       /usr/etc/ypbind 8c4ac371 5ac77fba 1c7b9936 bbd8f3ee 9cadad79 f03e50f8 964eefd8 2a75ada9 IRIX 4.0.5
+Y .       /usr/lib/sendmail b0059dde 5d91f291 98b9585f cda29e26 fdac49f4 e09b88f3 3a3b0a75 0bba3919 IRIX 4.0.5
+# sendmail.mx not found.
+Y .       /usr/bsd/rdist 052bd66d 7e39a068 88ed9c8a 491b0965 ecaa7823 3adeae2a ef1be1ef ead66096 IRIX 4.0.5
+Y .       /usr/bsd/rlogin a97a1128 6044469f a1593174 1c4e5a93 05e0e716 283a1433 e56138b9 55d7f1e2 IRIX 4.0.5
+Y .       /usr/bsd/rsh 2bae22e1 a406780f 8d76bdff 3cabe7bc 722e27a9 bee5d8e8 d36b7203 de51719c IRIX 4.0.5
+Y .       /usr/bsd/telnet 7df23ddf 469c7d61 a3b4d48e 545736ec 10bbad49 10613f23 a109a571 9e485e6e IRIX 4.0.5
+Y .       /usr/bin/lpstat a8e6aa80 f7670273 bdf50568 a2fe1f48 9ee6fbce 2390ac30 380a9614 0fdef748 IRIX 4.0.5
+Y .       /usr/etc/lpc 796af71a 1e27cb59 50ed19bf 131916b1 173f3d0e 86daeaf2 981293d4 d9cedf1a IRIX 4.0.5
+Y .       /usr/etc/lpd ce552c9b 179a852d 4ffba698 4e2c60d1 cf9ac531 3a2eb381 e5119c2b d55c8a26 IRIX 4.0.5
+Y .       /usr/bsd/lpr 46461f69 97438f2d 1e913d81 d9386324 37e44f66 04863dac f656b7cc b32b22c1 IRIX 4.0.5
+Y .       /usr/bsd/lprm 25b8b72c 53d6b3ae 70a3dc4b a7c92571 ad098a40 d9d3a921 e3863fba 645ba23a IRIX 4.0.5
+Y .       /usr/etc/lpd ce552c9b 179a852d 4ffba698 4e2c60d1 cf9ac531 3a2eb381 e5119c2b d55c8a26 IRIX 4.0.5
+Y .       /usr/etc/rpc.mountd 41c1d87c 42242f19 e58fae92 b7084886 f336ff87 2a761424 373fc80e 8a3ffee1 IRIX 4.0.5
+Y .       /usr/lib/expreserve acab543d 043dcd58 ac5a4806 5dc75bec bbbbb079 8cac820b 0a0187d4 27c66cfa IRIX 4.0.5
