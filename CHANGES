@@ -3,7 +3,6 @@ August 23rd 2001) see the changelog.Debian file
 
 Changes (v 3.2.1) 
 ----------------
-(unreleased)
 - New checks:
   - check_ndd (for HPUX and SunOS systems)
   - check_passwspec  (for Linux and HPUX) 
@@ -12,12 +11,33 @@ Changes (v 3.2.1)
   - check_xinetd
   - aide_run and integrit_run as new (alternative) integrity file
     checkers (contributed by 'unspawn')
-- Improved/Fixed checks: check_apache, check_devices, check_exports,
-   check_group, check_inetd, check_known, check_netrc, check_passwd,
-   check_patch, check_perms, check_rhosts, check_root, check_services,
-   check_signatures, check_tcpd, check_umask, crack_run, tripwire_run,
+- Improved/Fixed checks: 
+	-check_apache
+	-check_devices (patch from Ryan Bradetich)
+	-check_exports
+	-check_finddeleted (patch from Nicolas François)
+	-check_ftpusers
+	-check_group
+	-check_inetd
+	-check_known
+	-check_listeningprocs (patch from Nicolas François)
+	-check_netrc
+	-check_passwd
+	-check_path
+	-check_patch
+	-check_passwdformat
+	-check_perms
+	-check_rhosts
+	-check_root
+	-check_services
+	-check_signatures
+	-check_tcpd
+	-check_umask
+	-crack_run
+	-tripwire_run
    (Linux) check_inittab, check_rcumask, deb_nopackfiles (patch provided
-   by  Nicolas François)
+   by  Nicolas François), check_accounts (thanks to  Nicolas François),
+   deb_checkmd5sums (improvements by Nicolas François)
 - Other check changes:
   - check_cron moved to check_crontabs
   - removed SunOS check_networkconfig in favour of the new check_ndd
@@ -50,6 +70,19 @@ Changes (v 3.2.1)
   call 'check_system. Added new checks to the cronrc file
 - Updated documentation in README files
 - Added still more TODOs
+- Fixed Makefile (some checks were not getting installed)
+- Added sources for SGI security information in README.sources.
+- Added tigercron manpage.
+- Removed duplicated checks from cronrc
+- Improved variable checks in initdefs and applied patches from Ryan Bradetich
+  and  Nicolas François
+- Added some new configuration directives to site_sample
+- Included check_ssh in the checks run by Tiger
+- Fixed doc/accounts.txt
+- Fixed UUID definition in configuration files for most OS.
+- Fixed difflogs util with patch from Nicholas François and properly sort
+  reports.
+- Fixed util/genmsgidx with patch from Nicholas François
 
 
 Changes (v 3.2) 
