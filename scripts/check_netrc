@@ -196,7 +196,3 @@ $OUTPUTMETHOD
 delete $WORKDIR/pass.list.$$
 #
 exit 0
-#
-exit 0
-#
-exit 0
