@@ -17,12 +17,15 @@
 #
 # check_netrc - 06/14/93
 #
+# Checks if users's netrc files are insecurely configured. This includes
+# complaining if users hold netrc files or if they are a a symbolic link
+# or directory.
+#
+# 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
+# 08/08/2003 jfs Improved temporary file creation.
+# 07/25/2002 jfs Added a sanity check for password files
 # 04/28/93 dls  Added '-L' option to 'ls' to get the permissions from the
 #               file instead of the symbolic link.
-#
-#               Complain if the .netrc is a symbolic link or directory.
-#
-# 07/25/2002 jfs Added a sanity check for password files
 #
 #-----------------------------------------------------------------------------
 #
@@ -61,7 +64,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
+  haveallcmds AWK CAT GEN_PASSWD_SETS JOIN LS RM OUTPUTMETHOD || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME || exit 1
   
@@ -73,9 +76,11 @@ done
 echo
 echo "# Performing check of .netrc files..."
 
-haveallcmds AWK CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
+haveallcmds AWK CAT GEN_PASSWD_SETS JOIN LS RM OUTPUTMETHOD || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
+safe_temp "$WORKDIR/pass.list.$$" "$WORKDIR/home.hosts.$$"
+trap 'delete $WORKDIR/pass.list.$$ $WORKDIR/home.hosts.$$ ; exit 1' 1 2 3 15
 
 check_file()
 {
@@ -152,6 +157,7 @@ process_passwd()
 	$LS $LSGROUP -Rla $homedir/.netrc
 	echo
       else
+	message WARN nrc005w "" "User $user has a .netrc file"
 	check_file $user $homedir/.netrc
       fi
     }
