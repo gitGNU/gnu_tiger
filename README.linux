@@ -7,7 +7,8 @@ package. Made dic 30 01:06:47 CET 1998.
 Changes made by Javier Fernández-Sanguino to add new checks, made
 Fri Aug 24 12:20:43 CEST 2001.
 
-Modifications to support Debian 2.x were made to the following files:
+Modifications to support Debian 2.x (and later) 
+were made to the following files:
 
 CHANGED:
  Makefile
@@ -16,6 +17,8 @@ CHANGED:
  README.linux              - This file
 
 NEW:
+ systems/Linux/2/check_network_config  - Checks the Linux kernel network
+ 	configuration
  systems/Linux/2/check_listeningprocs  - Checks for processes listening on 
 	TCP/IP sockets and warns when user is not root
  systems/Linux/2/deb_nopackfiles - Checks files installed in binary directories
@@ -25,7 +28,8 @@ NEW:
 	using the database installed in /var/lib/dpkg/info/ (Debian specific)
  systems/Linux/2/deb_checkadvisories  - Checks for installed packages vs.
 	Debian advisories in order to determine if an upgrade is needed.
- debin/ - directory including all package related files 
+ debian/ - directory including all package related files  for the Debian 
+ 	GNU/Linux distribution
 
 Debian provides a diff.gz file along with the sources of this package in
 order to inform users of the specific changes made. Please check
