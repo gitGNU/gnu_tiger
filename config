@@ -17,6 +17,7 @@
 #
 #  config (top level) - 06/14/93
 #
+# 08/19/2003 jfs  tara -> Tiger in the usage
 # 08/13/2003 jfs  Added some of ARSC changes including:
 #                 - support for signature generation (enhanced with also
 #                   file_access_list generation and better error checking)
@@ -110,7 +111,7 @@ echo "              Specify  the directory where tiger is installed.  If"
 echo "              not specified, '$BASEDIR' is used."
 echo ""
 echo "       -d name"
-echo "              Specify the name of the directory where  tara  will"
+echo "              Specify the name of the directory where Tiger  will"
 echo "              write  the  security  report.  This defaults to    "
 echo "              '$LOGDIR'. The filename  of  the report will be of "
 echo "              the form 'security.report.host-name.date.time.'    "
