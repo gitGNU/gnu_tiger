@@ -71,7 +71,7 @@ binary-arch: build install
 	dh_testroot
 	dh_installdebconf	
 	dh_installdocs
-	dh_installexamples tigerrc* site* cronrc
+	dh_installexamples tigerrc* site* cronrc debian/server.ignore
 	dh_installmenu
 	dh_installcron
 	dh_installman man/tiger.8 man/tigexp.8 man/tigercron.8
