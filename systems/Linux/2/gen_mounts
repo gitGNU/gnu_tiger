@@ -76,6 +76,11 @@ localfs()
   [ "$1" = "xiafs" ] && LOCAL=0
   [ "$1" = "ext" ] && LOCAL=0
   [ "$1" = "msdos" ] && LOCAL=1
+  # Skip these as they are virtual filesystems
+  [ "$1" = "proc" ] && LOCAL=1
+  [ "$1" = "tmpfs" ] && LOCAL=1
+  [ "$1" = "devpts" ] && LOCAL=1
+  [ "$1" = "usbfs" ] && LOCAL=1
   if [ "$LOCAL" -eq 2 ] ; then
   	echo "--CONFIG-- [init001c] Filesystem $1 used by $2 is not recognised as a local filesystem" >&2
 	LOCAL=1
