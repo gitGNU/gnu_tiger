@@ -17,6 +17,9 @@
 #
 # util/flogit - 06/14/93
 #
+# Locate files based on Tigerrc configuration, this program is used by
+# the 'find_files' script.
+#
 #-----------------------------------------------------------------------------
 
 suidfile="$1"
@@ -25,6 +28,7 @@ linkfile="$3"
 wdirfile="$4"
 nouserfile="$5"
 nogroupfile="$6"
+[ -z "$suidfile" ] && suidfile=
 
 getpermit()
 {
