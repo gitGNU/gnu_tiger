@@ -16,7 +16,7 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # Linux/2/gen_cron - 06/14/93
-# 03/21/2005 - jfs - Fixed -a checks to be POSIX compatbiel
+# 03/21/2005 - jfs - Fixed -a checks to be POSIX compatbile
 # 10/01/2003 - jfs - Added check to see if CRONSPOOL can be read, also
 #    fixed the way the information is read since LS might be locale
 #    dependant and it's cleaner to call FIND than to access the directory
