@@ -1,5 +1,11 @@
-tiger (3.2-1) unstable; urgency=low
+tiger (3.2rc2-1) experimental; urgency=low
 
+  * Experimental version, fixes bugs but might introduce new
+      ones.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Mon, 21 Apr 2003 17:57:40 +0200
+
+tiger (3.2rc1-1) experimental; urgency=low
   * New upstream version 
      - False positives in services fixed (Closes: #132278)
      - Check_exports produces proper output (Closes: #162453)
