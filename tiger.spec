@@ -58,6 +58,7 @@ This is TIGER release %{version}.%{release}
 %setup -q
 
 %build
+autoconf
 ./configure \
 	--prefix=${RPM_BUILD_ROOT} \
 	--mandir=/usr/share/man \
@@ -86,7 +87,7 @@ make install
 # OS Specific 
 # 1.- Cron job installation
 mkdir -p ${DESTDIR}/etc/cron.d/
-chmod 766 ${DESTDIR}/etc/cron.d/
+chmod 755 ${DESTDIR}/etc/cron.d/
 %if  %{want_reloc}
 install -m644 debian/cron.d ${DESTDIR}/etc/cron.d/tiger
 %else
@@ -152,6 +153,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %endif
 
 %changelog
+* Sun Jan 25 2004 Ryan Bradietch <rbradetich@uswest.net>
+- Changed permissions on ${DESTDIR}/etc/cron.d from: 766 to 755.
+- Added a call to autoconf in the %build section.
+
 * Sat Dec 27 2003 Javier Fernandez-Sanguino <jfs@debian.org>
 - Spec file when relocatable now uses /usr/lib instead of /usr/local/tiger
 - Fixed grep of /proc/version so that build does not stop in RH 7.3
@@ -170,6 +175,7 @@ rm -rf ${RPM_BUILD_ROOT}
   I decide what to do with it. If it's relocated Tiger will _NOT_ work
   (until the hardcoded paths are changed), this could be done in the
   %post installation properly, though.
+
 * Wed Sep 24 2003 unSpawn <unSpawn@rootshell.be> XIII
 - Made spec file build relocatable and reflect tru parameterisation
 - Strip CVS dirs on build
