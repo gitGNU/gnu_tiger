@@ -3,22 +3,27 @@
 tigercron \- Cron utility for Tiger UNIX Security Checker 
 .SH SYNOPSIS
 .B tigercron
+.RI [ controlfile ]
 .RB [ -B
 .IR basedir ]
 .RI [ tigeroptions ...]
-.RI [ controlfile ]
 .LP
 .SH DESCRIPTION
 .LP
 \fBTigercron\fR is used to run periodically checks from the Tiger
 UNIX Security Checker. \fBTigercron\fR reads a control file
-which is located in '@tigerconfigdir@/cronrc'. The format
-of this control file is the same as for the \fBcron\fR program, each
+which is usually located in '@tigerconfigdir@/cronrc' although it
+can also be specificied as the first argument when calling the program. 
+The format of this control file is the same as for the \fBcron\fR program, each
 line indicates when different checks from \fBTiger\fR will be run.
+The user can indicate where Tiger is installed through the 
+\fB-B basedir\fR parameter, any other additional options provided
+in the command line will be passed on to configure to configure \fBTiger\fR
+based on them (as described in \fBtiger (8)\fR).
 
 \fBTigercron\fR runs the specified checks and compares their reports 
 with previous stored reports (under @tigerlogdir@). It will then
-mail the user defined in the '@tigerconfigdir@/cronrc' 
+mail the user defined in '@tigerconfigdir@/tigerrc' 
 (\fITiger_Mail_RCPT\fR) the results.
 
 When a module is run, \fBtigercron\fR checks:
