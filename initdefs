@@ -16,6 +16,8 @@
 #
 # initdefs - 06/14/93
 #
+# initdefs - 01/10/2005 - cslater - Modified ignore function so that
+#                     filtering can also be done on msgid and level
 # initdefs - 08/01/2004 - jfs - Allow removal from LOGDIR so that tiger -e
 #                     works as expected
 # initdefs - 10/15/2003 - jfs - Quoted $__File in deleted() in order
@@ -170,7 +172,7 @@ message()
   __len=${Tiger_Output_Width:=79}
 
   # If the message should be ignore it is removed
-  ignore_message "$_mesg" && return 
+  ignore_message "$_level $_msgid $_mesg" && return 
 
   [ "$HTML" = "N" ] && {
 
