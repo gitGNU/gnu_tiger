@@ -16,6 +16,7 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_group  - 06/14/93
+# check_group  - 06/26/2003 - jfs - Added Ryan Braderitch's patch
 #
 #-----------------------------------------------------------------------------
 #
@@ -95,12 +96,15 @@ do
     message WARN grp002w "" "GID $gid exists multiple times in $src1."
   done
 
-  $AWK -F: 'NF != 4 {print}' $WORKDIR/g1gid.$$ |
-  while read entry
-  do
-    message WARN grp003w "$entry" "Malformed entry in $src1:"
-  done
-  
+  # Avoid duplicate warnings (since PWCK should also say this)
+  if [ -z "$PWCK" ]; then
+    $AWK -F: 'NF != 4 {print}' $WORKDIR/g1gid.$$ |
+    while read entry
+    do
+      message WARN grp003w "$entry" "Malformed entry in $src1:"
+    done
+  fi
+ 
   $GREP -v "^$group1\$" $WORKDIR/grp2.$$ |
   while read group2
   do
@@ -147,8 +151,8 @@ do
 done < $WORKDIR/grp.list.$$
 
 [ -n "$GRPCK" ] && {
-  if ! $GRPCK /etc/group /etc/gshadow >/dev/null 2>&1 ; then
-    message WARN grp006w "" "Integrity of group files questionable (grpck -r)."
+  if ! $GRPCK >/dev/null 2>&1 ; then
+    message WARN grp006w "" "Integrity of group files questionable ($GRPCK)."
   fi
 }
 

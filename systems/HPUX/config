@@ -20,6 +20,7 @@
 #                    PWCK properly
 # 06/26/2003 - jfs - Exported command to check for trusted mode and 
 #                    also some variables which were defined but not exported.
+#                    Added GRPCK.
 #
 #-----------------------------------------------------------------------------
 #
@@ -71,6 +72,7 @@ if [ $? -ne 4 ] ; then
 else
        PWCK=/usr/sbin/pwck
 fi
+GRPCK=/usr/sbin/grpck
 #
 # Disable diff because it doesn't support -D... so we can not
 # use diff... this will cause reports to be mailed as is... future
@@ -87,7 +89,7 @@ SENDMAILCF="/usr/lib/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ PASTE
-export BASENAME CHOWN CHMOD LN DIFF MAILER WC MESG PWCK GETPRDEF 
+export BASENAME CHOWN CHMOD LN DIFF MAILER WC MESG PWCK GRPCK GETPRDEF 
 export SENDMAILS SENDMAILCF
 #
 UNAME=/bin/uname
