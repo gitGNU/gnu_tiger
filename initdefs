@@ -16,6 +16,8 @@
 #
 # initdefs - 06/14/93
 #
+# initdefs - 08/01/2004 - jfs - Allow removal from LOGDIR so that tiger -e
+#                     works as expected
 # initdefs - 10/15/2003 - jfs - Quoted $__File in deleted() in order
 #                     for the check_rootkit check to work properly.
 #                     (Debian bug #215882)
@@ -137,6 +139,7 @@ delete()
     [ $goahead -eq 1 ]  &&  {
     eval "case \"\$__file\" in
       $WORKDIR*) $RM -f \"\$__file\";;
+      $LOGDIR*)  $RM -f \"\$__file\";;
       *) echo \"--ERROR-- [post001e] File \\\`\$__file' not removed.\";;
     esac"
     }
