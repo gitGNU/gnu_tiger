@@ -183,7 +183,7 @@ parse_path()
     [ "$user" = 'root' -a "$comp" != '.' ] && checkcmds $user "$comp" "$file"
   done
   [ "$lastcomp" != '.' -a -n "$dotinpath" ] && {
-    message WARN path005w "" "'.' in PATH from $user's $file is not last."
+    message WARN path005w "" "'.' in PATH from $user's $file is not the last entry."
   }
 }
 
