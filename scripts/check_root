@@ -17,6 +17,8 @@
 #
 # check_root - 05/30/99
 #
+# 09/19/2003 jfs Applied patch from Nicolas François in order to properly
+#            work non-interactively (MESG complains if not running in a tty)
 # 09/03/2003 jfs Use SSHD_CONFIG instead of SSHCONF
 # 08/28/2003 jfs Fixed syntax error
 # 08/14/2003 jfs Implemented some of ARSC changes done in Tara 3.0.3, 
@@ -127,7 +129,7 @@ if [ -f /etc/X11/gdm/gdm.conf ]; then
   }
 fi
 [ -n "$MESG" ] && {
-  if $MESG | $GREP "is y" >/dev/null 2>&1
+  if $MESG 2>&1 | $GREP "is y" >/dev/null
     then
       message WARN root003w "" "Root user has message capability turned on."
   fi
