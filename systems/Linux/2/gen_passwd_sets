@@ -30,6 +30,9 @@
 # Linux/2/gen_passwd_sets - 01/15/2004 - jfs 
 #      YPCAT call to avoid errors in hosts that are not properly configured.
 #      (i.e. nsswitch.conf is defined to use NIS but there's no NIS host)
+#      Also, redirect error of ypcat's which to /dev/null since it's not
+#      a requirement of the script (others are) and many systems do not 
+#      include it, specially in Debian (Debian bug #225910)
 #
 #-----------------------------------------------------------------------------
 #
@@ -41,7 +44,7 @@
 [ -z "$AWK" ] && AWK=`which awk`
 [ -z "$RM" ] && RM=`which rm`
 [ -z "$CP" ] && CP=`which cp`
-[ -z "$YPCAT" ] && YPCAT=`which ypcat`
+[ -z "$YPCAT" ] && YPCAT=`which ypcat 2>/dev/null`
 [ -z "$WORKDIR" ] && WORKDIR=/tmp
 
 local=0
