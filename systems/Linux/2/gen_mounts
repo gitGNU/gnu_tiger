@@ -81,6 +81,7 @@ localfs()
   [ "$1" = "tmpfs" ] && LOCAL=1
   [ "$1" = "devpts" ] && LOCAL=1
   [ "$1" = "usbfs" ] && LOCAL=1
+  [ "$1" = "sysfs" ] && LOCAL=1
   if [ "$LOCAL" -eq 2 ] ; then
   	echo "--CONFIG-- [init001c] Filesystem $1 used by $2 is not recognised as a local filesystem" >&2
 	LOCAL=1
