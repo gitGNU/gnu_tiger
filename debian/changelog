@@ -1,3 +1,32 @@
+tiger (3.2.1-1) unstable; urgency=low
+
+  * New upstream version, which includes is fully integrated with
+    TARA 3.0.3 and provides quite a number of bugfixes, checks and new
+    documentation.
+  * Changes relevant to reported Debian bugs include:
+    - Adds support for diversions and conffiles in deb_checkmd5sums
+      (Closes: #211329, #162589)
+    - Provides documentation for check_logfiles (Closes: #195192)
+    - Adds support for HP-UX in several scripts (Closes: #195200, #197220)
+    - Changes gen_passwd_sets under Linux to identify des or md5 
+    (Closes: #197221)
+    - Removes debug messages from check_rootdir (Closes: #197219)
+    - Added tigercron.8 manpage (Closes: #148291)
+    - OS-specific scripts are run before generic ones, since the Linux
+      version of check_listeningprocs is different than the generic one
+      it will be prefered and run (Closes: #200778)
+    - Deb_nopackfiles no longer uses long arguments in the grep call
+      and has been speed-optimized (Closes: #201577)
+    - Deb_nopackfiles also now sends FIND errors to void since they
+      are not used and might confuse users who do not have X
+      installed (Closes: #207904)
+    - check_path now uses -L to follow symlinks (Closes: #161993)
+    - Adds new password check for empty passwords (Closes: #197228)
+  * Added -XMacOSX to exclude the new OS provided upstream.
+  * Added patch for new po-debconf format (Closes: #186800)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri, 19 Sep 2003 02:33:00 +0200
+
 tiger (3.2-4) unstable; urgency=low
 
   * Updated to latest debian advisories

@@ -71,15 +71,15 @@ binary-arch: build install
 	dh_installexamples tigerrc* site* cronrc
 	dh_installmenu
 	dh_installcron
-	dh_installman man/tiger.8 man/tigexp.8
+	dh_installman man/tiger.8 man/tigexp.8 man/tigercron.8
 	dh_installinfo
 	dh_installchangelogs CHANGES
 	dh_link
-	dh_strip -XHPUX -XSunOS -XAIX -XHPUX -XIRIX -XNeXT
+	dh_strip -XHPUX -XSunOS -XAIX -XHPUX -XIRIX -XNeXT -XMacOSX
 	dh_compress
 	dh_fixperms
 	dh_installdeb
-	dh_shlibdeps -XHPUX -XSunOS -XAIX -XHPUX -XIRIX -XNeXT 
+	dh_shlibdeps -XHPUX -XSunOS -XAIX -XHPUX -XIRIX -XNeXT -XMacOSX
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
