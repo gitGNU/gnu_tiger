@@ -7,7 +7,10 @@
 # Select checks to perform.  Specify 'N' (uppercase) for checks
 # you don't want performed.
 #
+TigerNoBuild=Y			# C files are corrupted (ouch.)
 Tiger_Check_PASSWD=Y		# Fast
+Tiger_Check_PASSWD_SHADOW=Y	# Time varies on # of users
+Tiger_Check_PASSWD_NIS=N	# Time varies on # of users
 Tiger_Check_GROUP=Y		# Fast
 Tiger_Check_ACCOUNTS=Y		# Time varies on # of users
 Tiger_Check_RHOSTS=Y		# Time varies on # of users
@@ -16,22 +19,76 @@ Tiger_Check_ALIASES=Y		# Fast
 Tiger_Check_CRON=Y		# Fast
 Tiger_Check_ANONFTP=Y		# Fast
 Tiger_Check_EXPORTS=Y		# Fast
-Tiger_Check_INETD=Y		# Could be faster, not bad though
+Tiger_Check_INETD=Y		# Fast
+Tiger_Check_SERVICES=Y		# Could be faster, not bad though
 Tiger_Check_KNOWN=Y		# Fast
 Tiger_Check_PERMS=Y		# Could be faster, not bad though
 Tiger_Check_SIGNATURES=Y	# Several minutes
 Tiger_Check_FILESYSTEM=Y	# Time varies on disk space... can be hours
+Tiger_Check_ROOTDIR=Y           # Fast, only 2 checks
+Tiger_Check_ROOT_ACCESS=Y       # Fast
 Tiger_Check_PATH=Y		# Fast for just root... varies for all 
 Tiger_Check_EMBEDDED=Y		# Several minutes
+Tiger_Check_OS=Y                # Fast
+Tiger_Check_SINGLE=Y            # Fast
+Tiger_Check_BACKUPS=Y           # Fast
+Tiger_Check_BOOT=Y              # Fast
+Tiger_Check_PATCH=N             # Depends on your network connection
+				# (if no timeout is fixed it might stall)
+Tiger_Check_LOGFILES=Y          # Fast
+Tiger_Check_USERUMASK=Y         # Fast
+Tiger_Check_ETCISSUE=N		# Fast, needs to be customised
+Tiger_Check_STRICTNW=Y		# Fast - stringent N/W server checks
+Tiger_Check_LISTENING=Y		# Fast
+Tiger_Check_SYSTEM=Y		# Depends on the specific system checks
+Tiger_Check_RUNPROC=N		# Fast, needs to be customized per system
+Tiger_Check_DELETED=Y		# Depends on the number of processes on the
+				# system
+Tiger_Check_APACHE=N		# Fast
+Tiger_Check_SENDMAIL=N		# Fast
+Tiger_Check_PRINTCAP=Y		# Fast
+Tiger_Check_EXRC=N		# Depends on the size of the filesystem
+# 
+# Should reports with no info be sent on cron?
+#
+Tiger_Cron_SendOKReports=N
+#
+# How many reports should be kept for each check when run from the
+# crontab?
+#
+TigerCron_Log_Keep_Max=10
+#
+# Should reports be compared with a template? (if available)
+# (Note: takes precedence over previous run check)
+#
+Tiger_Cron_Template=N
+#
+# Should reports be compared with previous runs? (if available)
+#
+Tiger_Cron_CheckPrev=Y
 #
 # Should messages tagged with INFO be shown?
 #
-Tiger_Show_INFO_Msgs=Y
+Tiger_Show_INFO_Msgs=N
 #
 # In order for this to be effective, you should define 'CRACK' in
 # a 'site' file.
 #
-Tiger_Run_CRACK=Y               # First time, ages; subsequent fairly quick
+# Note: Disabled for Debian since it (currently) does not work and 
+# the 'john' package can be configured to crack the passwords periodicly 
+Tiger_Run_CRACK=N               # First time, ages; subsequent fairly quick
+#
+# Should we use canonical fully qualified domain names
+# in the reports?
+#
+Tiger_Output_FQDN=Y
+#
+# Run Tripwire file integrity checker
+#
+# Disabled in Debian since this check is provided by itself when
+# installing either Tripwire or other integrity-checking packages
+# (aide, samhain...)
+Tiger_Run_TRIPW=N		# Slow
 #
 # Line size (for formatting of output)... default is 79...
 # Specifying '0' means unlimited
@@ -45,6 +102,24 @@ Tiger_Output_Width=79
 # lots of changes due to the formatting changes).
 #
 Tiger_CRON_Output_Width=0
+#
+# Global places to confirm some type of default PATH setting.
+# A simple space delimited list
+#
+Tiger_Global_PATH="/etc/profile /etc/csh.login"
+#
+# What password aging/constraints to check for.
+# A simple space delimited list.
+Tiger_Passwd_Constraints="PASS_MIN_DAYS PASS_MAX_DAYS PASS_WARN_AGE PASS_MIN_LEN"
+#
+# Number of days of non-modified files in the home directory for a user
+# to be considered dormant (setting = 0 disables this check)
+Tiger_Dormant_Limit=60
+#
+# What accounts are considered administrative (beyond root)
+# (likely to not be used by humans, and therefore have impossible passwords)
+# List of usernames separated by '|'... no whitespaces
+Tiger_Admin_Accounts='adm|bin|daemon|games|lp|mail|news|operator|sync|sys|uucp|man|proxy|majordom|postgres|www-data|operator|irc|gnats'
 #
 # If an embedded pathname refers to an executable file, this executable
 # will in turn be checked.  This will continue "recursively" until
@@ -69,7 +144,7 @@ Tiger_Embed_Check_Exec_Only=Y
 # file system scans to complete before it can begin checking the
 # embedded pathnames.
 #
-Tiger_Embed_Check_SUID=N
+Tiger_Embed_Check_SUID=Y
 #
 # Only report executables which are writable or not owned by root.  If set
 # to 'Y' only the executables will be reported.  Any other value will result
@@ -82,14 +157,14 @@ Tiger_Embed_Report_Exec_Only=Y
 # Who do you allow to own system files.
 # List of usernames separated by '|'... no whitespace
 #
-#Tiger_Embedded_OK_Owners='root|bin'
-Tiger_Embedded_OK_Owners=root
+Tiger_Embedded_OK_Owners='root|bin|uucp|sys|daemon'
+#Tiger_Embedded_OK_Owners=root
 #
 # What groups can have write access to system files?
 # List of group names separated by '|'... no whitespace.
 # No value means no groups should have write access.
 #
-Tiger_Embedded_OK_Group_Write=
+Tiger_Embedded_OK_Group_Write='root|bin|uucp|sys|daemon'
 #
 # Should all users' PATH variables be checked.  This has the potential
 # of being dangerous because of the way it is done.  You might want to
@@ -101,14 +176,14 @@ Tiger_Check_PATHALL=N           # Check all user PATHs in startup files.
 # Who can own executables in 'root's PATH?
 # List of usernames separated by '|'... no whitespace
 #
-#Tiger_ROOT_PATH_OK_Owners='root|uucp|bin'
-Tiger_ROOT_PATH_OK_Owners='root'
+Tiger_ROOT_PATH_OK_Owners='root|uucp|bin|news|sys|daemon'
+#Tiger_ROOT_PATH_OK_Owners='root'
 #
 # What groups can have write access to executables in 'root's PATH?
 # List of group names separated by '|'... no whitespace.
 # No value means no groups should have write access.
 #
-Tiger_ROOT_PATH_OK_Group_Write=
+Tiger_ROOT_PATH_OK_Group_Write='root|uucp|bin|sys|daemon'
 #
 # Who can own things in other users PATH?
 # List of usernames separated by '|'... no whitespace
@@ -126,13 +201,13 @@ Tiger_PATH_OK_Group_Write=
 # Crack finishes before the rest of the checks.  If it isn't finished
 # 'tiger' will simply report where the output will be stored.
 #
-Tiger_Collect_CRACK=N
+Tiger_Collect_CRACK=Y
 #
 # Run Crack on local password sources only?  If set to Y, no network
 # sources will be used.  If set to 'N', NIS, NIS+, NetInfo, etc
 # sources will also be used.
 #
-Tiger_Crack_Local=N
+Tiger_Crack_Local=Y
 #
 # Who gets output from 'tigercron'?
 #
@@ -146,11 +221,12 @@ Tiger_Files_of_Note="..[!.]*/.* */.*	*/.[!.]/.log/.FSP*"
 # File system scan - things to look for
 #
 Tiger_FSScan_Setuid=Y		# Setuid executables
+Tiger_FSScan_Setgid=Y		# Setgid executables
 Tiger_FSScan_Devs=Y		# device files
 Tiger_FSScan_SymLinks=Y		# strange symbolic links
-Tiger_FSScan_ofNote=Y		# wierd filenames
-Tiger_FSScan_WDIR=N		# world writable directories
-Tiger_FSScan_Unowned=N		# files with undefined owners/groups
+Tiger_FSScan_ofNote=Y		# weird filenames
+Tiger_FSScan_WDIR=Y		# world writable directories
+Tiger_FSScan_Unowned=Y		# files with undefined owners/groups
 #
 # Should we scan read-only filesystems
 #
@@ -162,7 +238,7 @@ Tiger_FSScan_ReadOnly=N
 # Note that .rhosts and .netrc need not appear here, as they will
 # be checked by scan_rhosts or scan_netrc.
 #
-USERDOTFILES=".cshrc .profile .login .mailrc .exrc .emacs .forward .tcshrc .zshenv .zshrc .zlogin .zprofile .rcrc .bashrc .bash_profile .inputrc .xinitrc"
+USERDOTFILES=".alias .kshrc .cshrc .profile .login .mailrc .exrc .emacs .forward .tcshrc .zshenv .zshrc .zlogin .zprofile .rcrc .bashrc .bash_profile .inputrc .xinitrc .fvwm2rc .Xsession .Xclients .less"
 #
 # Rhost sites which are expected to be in the .rhosts files.
 # Anything that doesn't match will be reported.  The patterns
@@ -170,3 +246,43 @@ USERDOTFILES=".cshrc .profile .login .mailrc .exrc .emacs .forward .tcshrc .zshe
 #
 #RHOST_SITES='*.tamu.edu|jupiter'
 
+# What uid's should not give warnings about valid shells 
+# (trusted or default users)
+# Debian GNU/Linux: default is 999, users are generated over 1000
+# Solaris: default should be 99, users are generated over 100
+# HP-UX (?): default should be 499, users are generated over 500
+Tiger_Accounts_Trust=999
+# Should we give warnings on services that listen on all interfaces?
+# (i.e. those that have not been configured to listen only on one)
+# This is useful in servers which might add new interfaces (and thus
+# services will be unexpectedly be offered in them too) or to catch
+# "rogue" services
+Tiger_Listening_Every=Y
+#
+# Which *user* do you allow to have processes listening for incoming connections 
+# on the system?
+# List of usernames separated by '|'... no whitespaces allowed (but wildcards are)
+#
+Tiger_Listening_ValidUsers='root'
+#
+# Which processes are always considered valid, regardless of how are they
+# listening for incoming connections on the system?
+# This allows administrators to disable warnings on processes that might change
+# the listening port dynamically (and thus cannot be removed through the 
+# template definitions)
+# List of processes separated by '|'... no whitespaces allowed (but wildcards are)
+#
+Tiger_Listening_ValidProcs=''
+#
+# Which processess should be checked for by Tiger?
+# Processes in this list (separated by whitespaces) which are not
+# seen in the process table will generate a FAIL:
+#
+# The process list below is just an example, change it to suit your
+# needs
+#Tiger_Running_Procs='syslogd testing'
+#
+# Should we optimize DPKG checks? (by not using dpkg but looking on
+# the file database at /var/lib/dpkg?)
+#
+Tiger_DPKG_Optimize=Y
