@@ -1,3 +1,38 @@
+tiger (3.2-2) unstable; urgency=low
+
+  * Fix tigercron which was broken upstream (when the echo 
+    was removed). This broke the IDS functionality since 
+    tigercron never checked for changes!
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun, 11 May 2003 21:26:04 +0200
+
+tiger (3.2-1) unstable; urgency=low
+
+  * New upstream version 
+     - False positives in services fixed (Closes: #132278)
+     - Check_exports produces proper output (Closes: #162453)
+     - Checks have been separated, now each check file prints it's
+       comment (Closes: #165766)
+     - Using the new ignore mechanism (better than the differential
+       mechanism) this package now provides a baseline for Debian GNU/Linux, 
+       hopefully this will make Matt test again this package :-) 
+       (Closes: #164308, #172375)
+     - The new ignore mechanism can now be used to avoid false positives,
+       please customize as needed and read the notes on the 
+       check_listeningprocs script (Closes: #136991)
+     - Tigexp now gets modified by the Makefile (Closes: #189864)
+  * Fixed dh_make boilerplate
+  * Changed debian/rules to 'mv' the systems to tiger-otheros
+  * Added tiger.ignore to conffiles
+  * Modified Makefile so that it installs scripts with proper (fixed)
+    permissions
+  * Updated Debian advisories (with update-advisories)
+  * Fixed syntax error in check_issue (thanks to lintian!)
+  * Added logo to the docs (!)
+  * Fixed error in IRIX script
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sat, 10 May 2003 00:47:51 +0200
+
 tiger (3.2rc3-3) experimental; urgency=low
 
   * Added -q option to be used when running tigercron
