@@ -20,6 +20,7 @@
 # Checks rhosts files in order to see if user's configuration leaves the
 # system open to attack.
 #
+# 03/31/2005 jfs Printout rhosts accesses
 # 10/19/2003 jfs Patch from Nicolas François which uses -f instead of -e
 #    in order to avoid Solaris problems. And also adds TESTLINK HOSTNAME
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
@@ -101,12 +102,15 @@ check_entry()
     else
       message FAIL rcmd002f "" "User $user's .rhosts file has a '+' for host field."
     fi
-  elif [ -n "$RHOST_SITES" ]; then
+  fi
+  if [ -n "$RHOST_SITES" ]; then
     note=1
     eval case "$rhost" in $rhostcase esac
     [ $note = 1 ] && {
       message WARN rcmd003w "" "User $user's .rhosts file has host \`$rhost'."
     }
+  else 
+      message WARN rcmd003w "" "User $user's .rhosts file provides access for user \`$ruser' at host \`$rhost'."
   fi
 
   if [ "$rhost" != '+' -a "$ruser" = '+' ]; then
