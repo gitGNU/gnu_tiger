@@ -1,3 +1,9 @@
 %trust001w
 Many additional security features are available when running the
-system in trusted mode.
+system in trusted mode. It is recommended that you enable trusted
+mode through SAM. You can find more information on the major
+differences between trusted and non-trusted modes in the HPUX FAQ
+http://www.faqs.org/faqs/hp/hpux-faq/section-68.html
+and at the HP document "Administering your HP-UX Trusted System"
+(B2355-90121) available at 
+http://docs.hp.com/hpux/onlinedocs/B2355-90121/B2355-90121.html

@@ -16,8 +16,17 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_trusted: Verifies the system is running in trusted mode.
-
-# 06.25.2003 rbradetich@uswest.net
+# For more information on trusted mode in HP-UX please read
+# http://docs.hp.com/hpux/onlinedocs/B2355-90121/B2355-90121.html 
+#
+# 06/25/2003 rbradetich@uswest.net - Initial release
+# 06/26/2003 jfs - Added a TODO item
+#
+#-----------------------------------------------------------------------------
+# TODO:
+# HP documentation says that only HP-UX Release 10.10 and later support
+# enabling trusted mode. Consider including a check to determine we
+# are not in an _ancient_ system
 #
 #-----------------------------------------------------------------------------
 #
