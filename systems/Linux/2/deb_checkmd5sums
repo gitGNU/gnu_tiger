@@ -17,6 +17,9 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# 12/20/2003 - jfs - Included patch from Nicholas François which makes 
+#       Tiger not warn on manpage files purged through localepurge 
+#       (Debian bug 219728)
 # 11/16/2003 - jfs - Applied patch from Philipp Weis to avoid giving
 #       warnings for /usr/bin/[ by using the -F switch (Debian bug 220946)
 # 11/09/2003 - jfs - Avoid running into problems if the GREP calls to
@@ -96,7 +99,7 @@ LOCALEPURGE=/etc/locale.nopurge
 if [ -f "$LOCALEPURGE" ]
 then
   LOCALENOPURGED=`for l in $($GREP ^[a-z] $LOCALEPURGE); do echo -n "$l\|"; done; echo -n "[^a-z].*"`
-  SED_REMOVE_LOCALES_PURGED="/  usr\/share\/locale\/\($LOCALENOPURGED\)\//p;/  usr\/share\/locale/d"
+  SED_REMOVE_LOCALES_PURGED="/  usr\/share\/locale\/\($LOCALENOPURGED\)\//p;/  usr\/share\/locale\//d;/  usr\/share\/man\/\($LOCALENOPURGED\|man[1-9]\)\//p;/  usr\/share\/man\//d"
 fi
 DIVERSIONS="/var/lib/dpkg/diversions"
 
