@@ -18,6 +18,8 @@
 # Linux/1/gen_mounts - 04/20/99
 # Linux/2/gen_mounts - 04/20/99
 # Updated by Advanced Research Corporation (R)
+# Linux/2/gen_mounts - 11/19/2003 - Added ext3 and reiserfs as valid 
+#     local filesystems (patch from Ryan Bradetich), also added xfs and jfs.
 #
 #-----------------------------------------------------------------------------
 #
@@ -64,6 +66,10 @@ localfs()
 {
   LOCAL=1
   [ "$1" = "ext2" ] && LOCAL=0
+  [ "$1" = "ext3" ] && LOCAL=0
+  [ "$1" = "reiserfs" ] && LOCAL=0
+  [ "$1" = "xfs" ] && LOCAL=0
+  [ "$1" = "jfs" ] && LOCAL=0
   [ "$1" = "minix" ] && LOCAL=0
   [ "$1" = "xiafs" ] && LOCAL=0
   [ "$1" = "ext" ] && LOCAL=0
