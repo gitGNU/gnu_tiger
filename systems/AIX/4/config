@@ -16,6 +16,8 @@
 #
 # AIX/4/config - 06/14/93
 #
+# 11/18/2003 - jfs - /usr/ucb references changed to /usr/bin. LSGROUP is
+#      now '-l'. Fixed DATECMD. Thanks to patches from Dale Martin.
 # 09/19/2003 - jfs - Added UUID definition or otherwise scripts will not 
 #       be run.
 #-----------------------------------------------------------------------------
@@ -60,13 +62,13 @@ FINDXDEV=-xdev
 export FINDXDEV
 FINDPRUNE='! -fstype jfs -prune'
 export FINDPRUNE
-FMT=/usr/ucb/fmt
+FMT=/usr/bin/fmt
 export FMT
 GETHOSTNAME=/usr/bin/hostname
 export GETHOSTNAME
-GREP=/usr/ucb/grep
+GREP=/usr/bin/grep
 export GREP
-GROUPSS=/usr/ucb/groups
+GROUPSS=/usr/bin/groups
 export GROUPSS
 JOIN=/usr/bin/join
 export JOIN
@@ -84,11 +86,11 @@ SED=/usr/bin/sed
 export SED
 SORT=/usr/bin/sort
 export SORT
-STRINGS=/usr/ucb/strings
+STRINGS=/usr/bin/strings
 export STRINGS
-TAIL=/usr/ucb/tail
+TAIL=/usr/bin/tail
 export TAIL
-TR=/usr/ucb/tr
+TR=/usr/bin/tr
 export TR
 UNAME=/usr/bin/uname
 export UNAME
@@ -118,12 +120,12 @@ export SENDMAILS SENDMAILCF
 #
 # How to get different effects
 #
-DATECMD="$DATE +%D"
+DATECMD="$DATE +%d-%m-%y"
 TIMECMD="$DATE +%H:%M"
 export DATECMD TIMECMD
 SGREP="$EGREP -s"
 export SGREP
-LSGROUP=
+LSGROUP=-l
 export LSGROUP
 LSLINK=-L
 export LSLINK
