@@ -13,6 +13,11 @@
 [new checks for RedHat and Debian GNU/Linux 2.x. made by]
  Paul Telford <paul_telford@hp.com>
  Bryan Gartner <bryang@soccer.fc.hp.com>
-[modifications for support of Debian GNU/Linux 2.x. made by]
+[modifications for support of Debian GNU/Linux 2.x., new checks and 
+ improvemens made by]
  Javier Fernandez-Sanguino Peña <jfs@computer.org>
-
+[modifications for support of HP-UX as well as patches and improvements 
+ by]
+ Ryan Bradetich
+[patches and improvements from]
+ Nicolas François
