@@ -17,19 +17,29 @@
 #
 # check_known - 06/14/93
 #
-# 04/27/93 dls "1's complement" check of /bin/login added
-# 06/06/93 dls Moved 1's complement check to SunOS 4.x specific
-# 14/09/01 jfs Changed to ls -lan so ti cah check user's id (otherwise it
-#              does not work for long user names) affects only SPOOL check
-# 28/03/02 jfs Applied some of the changes described by CHANGES.ARSC from 
-#              mlk.
-# 18/05/02 jfs Changed cat to $CAT in some calls
-# 07/25/2002 jfs Added a sanity check for password files
+# 08/14/2003 jfs Added OUTPUTMETHOD to dependancies. Incorporated tests
+#                implemented by ARSC (quite a time ago....)
+# 08/08/2003 jfs Safe temporary file creation
+# 05/01/2003 jfs Removed RM and CC from dependancies
 # 04/15/2003 jfs Removed the 'cd' to MAILSPOOL since the CAT of the passlist
 #		 will not work if BASEDIR is relative. Fixed the AWK call
 #		 (was being made to the wrong file!)
-# 05/01/2003 jfs Removed RM and CC from dependancies
+# 07/25/2002 jfs Added a sanity check for password files
+# 18/05/2002 jfs Changed cat to $CAT in some calls
+# 28/03/2002 jfs Applied some of the changes described by CHANGES.ARSC from 
+#              mlk.
+# 09/14/2001 ret Added test for promiscous mode in ifconfig
+# 09/24/2001 ret Added test for shell (e.g. bin/sh) in inetd.conf
+# 14/09/2001 jfs Changed to ls -lan so it can check user's id (otherwise it
+#              does not work for long user names) affects only SPOOL check
+# 06/06/1993 dls Moved 1's complement check to SunOS 4.x specific
+# 04/27/1993 dls "1's complement" check of /bin/login added
 #
+#-----------------------------------------------------------------------------
+# TODO
+# - Many exploits run code that make inetd source a different configuration
+#   file through the use of the '-s' flag (available in SunOS and OpenBSD)
+#   or by directly specifying a configuration file (works in FreeBSD and Linux)
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -68,7 +78,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT EGREP FIND GET_MOUNTS LS SED SGREP STRINGS TR TAIL HEAD CUT || exit 1
+  haveallcmds AWK CAT EGREP FIND GET_MOUNTS LS SED SGREP STRINGS TR TAIL HEAD CUT OUTPUTMETHOD RM GEN_INETD_SETS || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -80,10 +90,37 @@ done
 echo
 echo "# Checking for known intrusion signs..."
 
-haveallcmds LS CAT || exit 1
+haveallcmds AWK CAT EGREP FIND GET_MOUNTS LS SED SGREP STRINGS TR TAIL HEAD CUT OUTPUTMETHOD RM GEN_INETD_SETS || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
+safe_temp "$WORKDIR/login.str.$$" "$WORKDIR/pass.list.$$"
+trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
+
 {
+  haveallcmds IFCONFIG && { 
+   echo "# Testing for promiscuous interfaces"
+   promisc="`$IFCONFIG -a | $GREP -i PROMISC`"
+   if [ -n "$promisc" ]; then
+    message ALERT kis013a "" "One of the interfaces is set for promiscuous mode"
+   fi
+  }
+  
+  echo "# Testing for backdoors in inetd.conf"
+  inetd_sets=`$GEN_INETD_SETS`
+  # TODO inetd_sets should be appended with any non-option which 
+  # has been fed to the current running inetd (use PS to locate it)
+  shcase='/bin/sh|/bin/csh|/bin/bash|/bin/tcsh|/bin/ksh'
+  [ -n "$ETCSHELLS" -a -s "$ETCSHELLS" ] && {
+    shells=`$GREP -v '^#' $ETCSHELLS`
+    shcase=`echo $shells | $TR ' ' '|'`
+  }
+  backdoor="`$EGREP $shcase $inetd_sets`"
+  if [ -n "$backdoor" ]; then
+     message ALERT kis014a "" "There is a shell defined in inetd.conf, the backdoor line is: '$backdoor'"
+  fi
+  inetd_srcs=`$CAT $inetd_sets`
+  delete $inetd_sets $inetd_srcs
+
   file_list="/usr/spool/uucppublic/.hushlogin /usr/spool/secretmail/.l /tmp/a
 /usr/spool/secretmail/.log /usr/spool/secretmail/.tty
 /usr/spool/secretmail/.lock /usr/tmp/.log /usr/spool/uucp/.sys
