@@ -37,9 +37,19 @@ if test "$tigerbin" = "no" ; then
         tigerbin=${sbindir}
 fi
 
+dnl Full expansion for when it's needed (in manpage)
+tigerworkdir=`eval echo $tigerwork`
+tigerlogdir=`eval echo $tigerlog`
+tigerconfigdir=`eval echo $tigerconfig`
+tigerhomedir=`eval echo $tigerhome`
 AC_SUBST(tigerhome)
 AC_SUBST(tigerwork)
 AC_SUBST(tigerlog)
 AC_SUBST(tigerbin)
 AC_SUBST(tigerconfig)
-AC_OUTPUT(Makefile)
+AC_SUBST(tigerworkdir)
+AC_SUBST(tigerlogdir)
+AC_SUBST(tigerconfigdir)
+AC_SUBST(tigerhomedir)
+AC_OUTPUT(Makefile
+	man/tiger.8)
