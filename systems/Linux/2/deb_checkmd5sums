@@ -17,6 +17,8 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# 03/21/2005 - jfs - Do not warn if the md5 file is not present in the list file
+#       (Debian bug #299935)
 # 09/13/2004 - jfs - Exclude usr/share/doc better (Debian bug 264111)
 # 05/01/2004 - jfs - Fixed previous patch.
 # 02/26/2004 - jfs - Included patch from Chung-chieh Shan which avoids failure
@@ -129,12 +131,17 @@ do
 				[ -z "`$GREP -xF \"$file\" $DIVERSIONS`" ] &&
 				# and conffiles should not be checked either
 				[ -z "`$GREP -sxF \"$file\" /var/lib/dpkg/info/$package.conffiles`" ] &&
+ 				[ -n "`$GREP \"^$file\$\" /var/lib/dpkg/info/$package.list`" ] &&
 					message FAIL lin005f "" "Installed file \`$file' checksum differs from installed package '$package'."
 # TODO: Consider including the MD5sum to this message
 # notice that some integrity checkers might do this already too.
 				;;
 			ERR)
+# Check if this package 
+ 				if $GREP \"^$file\$\" /var/lib/dpkg/info/$package.list ; then
+
 					message FAIL lin006f "" "Cannot check file \"$file\" provided by \"$package\" since it does not exist"
+				fi
 				;;
 			esac
 		done 
