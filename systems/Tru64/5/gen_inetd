@@ -19,9 +19,44 @@
 # Tru64/5/gen_inetd - 04/01/2004
 #
 #-----------------------------------------------------------------------------
-# TODO: Tru64 has /etc/inetd.conf.local file to deal with as well.
+# NOTE: Tru64 has both /etc/inetd.conf and /etc/inetd.conf.local.  The
+# /etc/inetd.conf is global to the cluster and is over-ridable by the
+# /etc/inetd.conf.local file.  A entry in the global /etc/inetd.conf
+# file can be disabled by specifying "disable" as the serverpath.
 
 $GREP -v '^#' /etc/inetd.conf |
-$SORT > $WORKDIR/etc_inetd.$$
+while read service socket protocol wait user path args
+do
+	echo "$service:$socket:$protocol:$wait:$user $path $args"
+done |
+$SORT -u > foo.conf
+
 echo "/etc/inetd.conf" > $WORKDIR/etc_inetd.$$.src
+
+$GREP -v '^#' /etc/inetd.conf.local |
+while read service socket protocol wait user path args
+do
+	echo "$service:$socket:$protocol:$wait:$user $path $args"
+done |
+$SORT -u > foo.conf.local
+
+echo "/etc/inetd.conf.local" >> $WORKDIR/etc_inetd.$$.src
+
+$JOIN -j 1 -v 1 -v 2 foo.conf foo.conf.local |
+while read key path args
+do
+	key=`echo $key | $TR ':' ' '`
+	echo "$key $path $args"
+done > $WORKDIR/etc_inetd.$$
+
+
+$JOIN -j 1 -v 2 $WORKDIR/etc_inetd.$$ foo.conf.local |
+while read key path args
+do
+	[ "$path" = "disable" ] && continue
+
+	key=`echo $key | $TR ':' ' '`
+	echo "$key $path $args"
+done >> $WORKDIR/etc_inetd.$$
+
 echo $WORKDIR/etc_inetd.$$
