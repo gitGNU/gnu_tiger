@@ -18,6 +18,7 @@
 # check_ssh - Checks for configuration directives in the SSH configuration
 #             file.
 #
+# 09/19/2003 - jfs - Applied patch from Ryan Braderitch fixing typoes (sp?)
 # 09/03/2003 - jfs - Removed PermitRootLogin since that's checked by check_root
 #             (and belongs there, IMHO) also added failsafe checks for 
 #             SSHD_CONFIG which might not be configured in some systems
@@ -186,11 +187,11 @@ elif [ -f /etc/ssh2/sshd2_config ]; then
   SSHD_CONFIG=/etc/ssh2/sshd2_config
 elif [ -f /etc/ssh/sshd_config ]; then
   SSHD_CONFIG=/etc/ssh/sshd_config
-if
+fi
 }
 
 # Main loop, check all the specified sshd_config files.
-if [ -z "$SSHD_CONFIG" ] 
+if [ -n "$SSHD_CONFIG" ] 
 then
 	for file in $SSHD_CONFIG
 	do
