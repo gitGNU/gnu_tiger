@@ -363,5 +363,5 @@ do
   delete $WORKDIR/home.hosts.$$
 done < $WORKDIR/pass.list.$$
 
-delete $WORKDIR/pass.list.$$
+delete "$WORKDIR/pass.list.$$" "$WORKDIR/home.hosts.$$"
 exit 0
