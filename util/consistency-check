@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# Consistency check for Tiger
+
+# 1.- Verify that all scripts called by tigerrc are available
+
+PROGRAM="tiger"
+CONFIG="tigerrc"
+SCRIPTDIR="./scripts"
+
+echo "Checking $PROGRAM call to scripts"
+cat $PROGRAM |
+grep -v ^# |
+grep SCRIPTDIR/ |
+while read line
+do
+	script=`echo $line | awk -F / '{print $2}' | sed -e 's/ .*$//'`
+	if [ ! -f "$SCRIPTDIR/$script" ] 
+	then
+		echo "ERR: $PROGRAM references nonexistant $script in $SCRIPTDIR "
+	fi
+done
+
+# 2.- Verify that all scripts in $SCRIPTDIR are used by tiger
+for script in $SCRIPTDIR/*
+do
+	if [ -f "$script" -a -x "$script" -a -s "$script" ] 
+	then
+		script=`basename $script`
+		found=`cat $PROGRAM | grep -v ^# | grep SCRIPTDIR/$script`
+		[ -z "$found" ] &&
+		echo "WARN: Script $script will not be run by $PROGRAM"
+	fi
+
+done
+
+# 3.- Verify that all check variables used by tiger are in tigerrc
+echo "Checking $PROGRAM use of config lines"
+cat $PROGRAM |
+grep -v ^# |
+grep -E "\[ \"$Tiger_Check_.*\" != '[YN]'" |
+while read line
+do
+	configcheck=`echo $line | sed -ne 's/^.*Tiger_Check_\([a-z]*\)\" !.*/Tiger_Check_\1/p'`
+	[ -n "$configcheck" ] && 
+	[ -z "grep $configcheck $CONFIG | grep -v ^#" ] &&
+	echo "ERR: $PROGRAM uses $configcheck which is not in $CONFIG"
+done
+
