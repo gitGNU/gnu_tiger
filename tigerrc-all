@@ -29,12 +29,7 @@ Tiger_Check_ROOTDIR=Y           # Fast, only 2 checks
 Tiger_Check_ROOT_ACCESS=Y       # Fast
 Tiger_Check_PATH=Y		# Fast for just root... varies for all 
 Tiger_Check_EMBEDDED=Y		# Several minutes
-Tiger_Check_OS=Y                # Fast
-Tiger_Check_SINGLE=Y            # Fast
 Tiger_Check_BACKUPS=Y           # Fast
-Tiger_Check_BOOT=Y              # Fast
-Tiger_Check_PATCH=N             # Depends on your network connection
-				# (if no timeout is fixed it might stall)
 Tiger_Check_LOGFILES=Y          # Fast
 Tiger_Check_USERUMASK=Y         # Fast
 Tiger_Check_ETCISSUE=N		# Fast, needs to be customised
@@ -45,9 +40,28 @@ Tiger_Check_RUNPROC=N		# Fast, needs to be customized per system
 Tiger_Check_DELETED=Y		# Depends on the number of processes on the
 				# system
 Tiger_Check_APACHE=N		# Fast
+Tiger_Check_SSH=Y		# Fast
 Tiger_Check_SENDMAIL=N		# Fast
 Tiger_Check_PRINTCAP=Y		# Fast
 Tiger_Check_EXRC=N		# Depends on the size of the filesystem
+Tiger_Check_ROOTKIT=Y		# Slow if chkrootkit is available
+Tiger_Check_FTPUSERS=Y		# Fast
+# OS specific checks
+# You can comment them if they are not appropiate to your system but
+# they will not run if you are running a different OS
+# - Linux specific
+Tiger_Check_PATCH=N             # Depends on your network connection
+				# (if no timeout is fixed it might stall)
+Tiger_Check_SINGLE=Y            # Fast
+Tiger_Check_BOOT=Y              # Fast
+Tiger_Check_INITTAB=Y           # Fast
+Tiger_Check_RCUMASK=Y           # Fast
+Tiger_Check_NEVERLOG=Y          # Fast
+Tiger_Check_OS=Y                # Fast
+# - Linux, HPUX and Solaris specific
+Tiger_Check_NETWORKCONFIG=Y     # Fast
+# - HPUX specific
+Tiger_Check_TRUSTED=Y
 # 
 # Should reports with no info be sent on cron?
 #
@@ -78,18 +92,62 @@ Tiger_Show_INFO_Msgs=N
 # the 'john' package can be configured to crack the passwords periodicly 
 Tiger_Run_CRACK=N               # First time, ages; subsequent fairly quick
 #
+# Custom Crack binary location (like read-only media),
+# this can be a generic location which can be overriden by the site
+# configuration file.
+#Tiger_CRACK_LOC_OVERRIDE=/mnt/cdrom/crack/Crack
+#Tiger_CRACKREPORTER_LOC_OVERRIDE=/mnt/cdrom/crack/Reporter
+# This directory needs to be writable for Crack to work
+#Tiger_CRACKDIR_LOC_OVERRIDE=/usr/local/crack
+#
 # Should we use canonical fully qualified domain names
 # in the reports?
 #
 Tiger_Output_FQDN=Y
 #
+# Integrity checkers:
+# Note: 
+# - Make sure you don't run more than one integrity checker as it will 
+# slow down checking drastically.
+# - These checks are disabled since they are provided by the own programs
+# when installing most integrity-checking programs (this is the default
+# behaviour in Debian, for example)
+#
 # Run Tripwire file integrity checker
 #
-# Disabled in Debian since this check is provided by itself when
-# installing either Tripwire or other integrity-checking packages
-# (aide, samhain...)
 Tiger_Run_TRIPW=N		# Slow
 #
+# Custom Tripwire binary location (like read-only media)
+# This can be a generic location which can be overriden by the site
+# configuration file.
+#Tiger_TRIPW_LOC_OVERRIDE=/mnt/cdrom/tripw/tripwire
+#
+# Run Aide file integrity checker
+Tiger_Run_AIDE=N                # Slow
+# Verbose reporting (not implemented yet)
+#Tiger_Run_AIDE_VERBOSE=1
+#
+# The options below are usefull if you use custom settings.
+# These can be a generic location which can be overriden by the site
+# configuration file.
+# Custom Aide location (like read-only media)
+#Tiger_AIDE_LOC_OVERRIDE=/mnt/cdrom/aide/aide.bin
+# Custom Aide configuration file (say, read-only media)
+#Tiger_AIDE_CFG_OVERRIDE=/mnt/cdrom/aide/aide.conf
+# Custom database (for instance in read-only media)
+#Tiger_AIDE_DB_OVERRIDE=/mnt/cdrom/aide/in.db
+#
+# I think there are enough hints to best practices like storing
+# crucial data ON READ-ONLY MEDIA.
+#
+# Run Integrit file integrity checker
+Tiger_Run_INTEGRIT=N                # Slow
+Tiger_INTEGRIT_CFG=/etc/integrit/integrit.conf
+#
+# Custom Integrit location (like read-only media)
+#Tiger_INTEGRIT_LOC_OVERRIDE=/mnt/cdrom/integrit/integrit.bin
+
+
 # Line size (for formatting of output)... default is 79...
 # Specifying '0' means unlimited
 #
@@ -112,6 +170,10 @@ Tiger_Global_PATH="/etc/profile /etc/csh.login"
 # A simple space delimited list.
 Tiger_Passwd_Constraints="PASS_MIN_DAYS PASS_MAX_DAYS PASS_WARN_AGE PASS_MIN_LEN"
 #
+# Acceptable password hashes.
+# List of password hashes separated by '|'... no whitespaces
+Tiger_Passwd_Hashes='crypt3|md5'
+#
 # Number of days of non-modified files in the home directory for a user
 # to be considered dormant (setting = 0 disables this check)
 Tiger_Dormant_Limit=60
@@ -131,7 +193,7 @@ Tiger_Admin_Accounts='adm|bin|daemon|games|lp|mail|news|operator|sync|sys|uucp|m
 # On small memory systems, a large search depth can result in out
 # of memory situations for 'sort'... :-(...
 #
-Tiger_Embed_Max_Depth=0
+Tiger_Embed_Max_Depth=3
 #
 # Only search executables for embedded pathnames.  If this is
 # set to 'N', then all regular files will be searched.  Otherwise
@@ -164,8 +226,7 @@ Tiger_Embedded_OK_Owners='root|bin|uucp|sys|daemon'
 # List of group names separated by '|'... no whitespace.
 # No value means no groups should have write access.
 #
-#Tiger_Embedded_OK_Group_Write='root|bin|uucp|sys|daemon'
-Tiger_Embedded_OK_Group_Write=
+Tiger_Embedded_OK_Group_Write='root|bin|uucp|sys|daemon'
 #
 # Should all users' PATH variables be checked.  This has the potential
 # of being dangerous because of the way it is done.  You might want to
@@ -177,15 +238,17 @@ Tiger_Check_PATHALL=N           # Check all user PATHs in startup files.
 # Who can own executables in 'root's PATH?
 # List of usernames separated by '|'... no whitespace
 #
-#Tiger_ROOT_PATH_OK_Owners='root|uucp|bin|news|sys|daemon'
-Tiger_ROOT_PATH_OK_Owners='root'
+Tiger_ROOT_PATH_OK_Owners='root|uucp|bin|news|sys|daemon'
+# If you are paranoid:
+#Tiger_ROOT_PATH_OK_Owners='root'
+# If you are running HP-UX
+# Tiger_ROOT_PATH_OK_Owners='root|uucp|bin|news|sys|daemon|lp'
 #
 # What groups can have write access to executables in 'root's PATH?
 # List of group names separated by '|'... no whitespace.
 # No value means no groups should have write access.
 #
-#Tiger_ROOT_PATH_OK_Group_Write='root|uucp|bin|sys|daemon'
-Tiger_ROOT_PATH_OK_Group_Write=
+Tiger_ROOT_PATH_OK_Group_Write='root|uucp|bin|sys|daemon'
 #
 # Who can own things in other users PATH?
 # List of usernames separated by '|'... no whitespace
@@ -254,6 +317,15 @@ USERDOTFILES=".alias .kshrc .cshrc .profile .login .mailrc .exrc .emacs .forward
 # Solaris: default should be 99, users are generated over 100
 # HP-UX (?): default should be 499, users are generated over 500
 Tiger_Accounts_Trust=999
+#
+# These SSH directive variables are used to specify "allowed" values
+# for the SSH Daemon.
+# Multiple options are seperated by '|', and directive variable can
+# be left blank to ignore the check.
+Tiger_SSH_Protocol='1|2'
+Tiger_SSH_RhostsAuthentication='no'
+Tiger_SSH_PasswordAuthentication='no'
+#
 # Should we give warnings on services that listen on all interfaces?
 # (i.e. those that have not been configured to listen only on one)
 # This is useful in servers which might add new interfaces (and thus
@@ -280,9 +352,9 @@ Tiger_Listening_ValidProcs=''
 # Processes in this list (separated by whitespaces) which are not
 # seen in the process table will generate a FAIL:
 #
-# The process list below is just an example, change it to suit your
-# needs
-#Tiger_Running_Procs='syslogd testing'
+# The process list below is just an example (useful for Linux)
+# change it to suit your needs
+# Tiger_Running_Procs='syslogd cron atd klogd'
 #
 # Should we optimize DPKG checks? (by not using dpkg but looking on
 # the file database at /var/lib/dpkg?)
