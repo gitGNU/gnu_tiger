@@ -17,6 +17,8 @@
 #
 # check_known - 06/14/93
 #
+# 09/19/2003 jfs Fixed deletion of temporary files thanks to a patch
+#                provided by Nicolas François 
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies. Incorporated tests
 #                implemented by ARSC (quite a time ago....)
 # 08/08/2003 jfs Safe temporary file creation
@@ -118,8 +120,7 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
   if [ -n "$backdoor" ]; then
      message ALERT kis014a "" "There is a shell defined in inetd.conf, the backdoor line is: '$backdoor'"
   fi
-  inetd_srcs=`$CAT $inetd_sets`
-  delete $inetd_sets $inetd_srcs
+  delete $inetd_sets $inetd_sets.src
 
   file_list="/usr/spool/uucppublic/.hushlogin /usr/spool/secretmail/.l /tmp/a
 /usr/spool/secretmail/.log /usr/spool/secretmail/.tty
@@ -249,7 +250,7 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
 
     if [ -f $WORKDIR/pass.list.$$ ] ; then
      	for passwd_set in `$CAT $WORKDIR/pass.list.$$`; do
-      		delete $passwd_set.src 
+      		delete $passwd_set $passwd_set.src 
       	done
 	delete $WORKDIR/pass.list.$$
     fi
