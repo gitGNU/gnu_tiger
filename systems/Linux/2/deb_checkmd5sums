@@ -17,6 +17,8 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# 11/16/2003 - jfs - Applied patch from Philipp Weis to avoid giving
+#       warnings for /usr/bin/[ by using the -F switch (Debian bug 220946)
 # 11/09/2003 - jfs - Avoid running into problems if the GREP calls to
 #       diversions or conffiles return more than one line.
 #       Also detect local diversion (Debian bug 219727)
@@ -117,9 +119,9 @@ do
 			case $err in
 			DIFF)
 				# don't check diverted now
-				[ -z "`$GREP -x \"$file\" $DIVERSIONS`" ] &&
+				[ -z "`$GREP -xF \"$file\" $DIVERSIONS`" ] &&
 				# and conffiles should not be checked either
-				[ -z "`$GREP -sx \"$file\" /var/lib/dpkg/info/$package.conffiles`" ] &&
+				[ -z "`$GREP -sxF \"$file\" /var/lib/dpkg/info/$package.conffiles`" ] &&
 					message FAIL lin005f "" "Installed file \`$file' checksum differs from installed package '$package'."
 # TODO: Consider including the MD5sum to this message
 # notice that some integrity checkers might do this already too.
