@@ -27,7 +27,8 @@
 # 10/10/2003 - jfs - Improved message and allowed daemon in uid 1 (for
 #                    debian bug #211328). Also added password content 
 #                    check and do not warn on lengths for locked users.
-#                    (fixes debian bug 211327)
+#                    (fixes debian bug 211327). Finally, added missing
+#                    temporary files to removal and safe_temp calls
 #
 #-----------------------------------------------------------------------------
 #
@@ -88,8 +89,8 @@ haveallfiles BASEDIR WORKDIR || exit 1
 
 OUT=$WORKDIR/passwdcheck.$$
 TMPFILE=$WORKDIR/passwdcheck.tmp.$$
-safe_temp $OUT $TMPFILE
-trap 'delete $OUT $TMPFILE ; exit 1' 1 2 3 15
+safe_temp $OUT $TMPFILE ${TMPFILE}-1 ${TMPFILE}-2
+trap 'delete  $OUT $TMPFILE ${TMPFILE}-1 ${TMPFILE}-2 ; exit 1' 1 2 3 15
  
 #
 # /etc/passwd check
@@ -238,5 +239,5 @@ if [ -s "$OUT" ] ; then
 fi
 }
 
-delete $OUT $TMPFILE
+delete $OUT $TMPFILE ${TMPFILE}-1 ${TMPFILE}-2
 exit 0
