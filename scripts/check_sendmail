@@ -17,7 +17,9 @@
 #
 # check_sendmail - 06/14/93
 #
-# 18/05/2002 jfs Added check on banner (based on Titan's modules/smtpbanner.sh)
+# 05/18/2002 jfs Added check on banner (based on Titan's modules/smtpbanner.sh)
+# 05/01/2003 jfs Added notes on behaviour, this check will only run if 
+#                SENDMAILCF exists (after all, it's a sendmail-only check)
 #
 #-----------------------------------------------------------------------------
 #
@@ -57,9 +59,9 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT CC EGREP FIND GET_MOUNTS LS RM SED SGREP STRINGS TR || exit 1
-  haveallfiles BASEDIR WORKDIR || exit 1
-  haveallvars TESTLINK HOSTNAME
+  haveallcmds SENDMAILS AWK CAT CC EGREP FIND GET_MOUNTS LS RM SED SGREP STRINGS TR || exit 1
+  haveallfiles SENDMAILCF BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
@@ -70,10 +72,16 @@ echo
 echo "# Checking sendmail..."
 
 haveallcmds STRINGS GREP SED AWK SORT LS || exit 1
+haveallfiles SENDMAILCF BASEDIR WORKDIR || exit 1
 
 check_date()
 {
   mailer="$1"
+  # TODO: Doing 'strings' on the mailer will not work as advertised
+  # and might return false positives/negatives. Also, many mailers
+  # might provide a /usr/sbin/sendmail which contains that string
+  # (exim, for example, does).
+
   if [ -r "$mailer" ]; then
     $STRINGS $mailer |
     $GREP '[0-9][0-9]/[0-9][0-9]/[0-9][0-9]' |
