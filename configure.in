@@ -4,6 +4,9 @@ dnl This file is just some unique file that configure will check
 dnl for to make sure it's in the right directory.
 AC_INIT(tiger)
 
+AC_PROG_CC
+AC_PROG_INSTALL
+
 test "x$prefix" != "xNONE" || prefix=/usr/local
 
 AC_ARG_WITH(tigerhome, [  --with-tigerhome=LOCATION        Location of all Tiger files],
@@ -42,6 +45,7 @@ tigerworkdir=`eval echo $tigerwork`
 tigerlogdir=`eval echo $tigerlog`
 tigerconfigdir=`eval echo $tigerconfig`
 tigerhomedir=`eval echo $tigerhome`
+AC_SUBST(install)
 AC_SUBST(tigerhome)
 AC_SUBST(tigerwork)
 AC_SUBST(tigerlog)

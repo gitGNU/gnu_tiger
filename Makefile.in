@@ -21,6 +21,9 @@ localstatedir=@localstatedir@
 mandir=@mandir@
 # To avoid troubles with some systems..
 SHELL = /bin/sh
+# Installation program
+INSTALL=@INSTALL@
+CC=@CC@
 
 # This directory will contain the 'tiger', 'tigercron', 'tigexp'
 # scripts, config files, the 'scripts' subdirectory which will
@@ -204,9 +207,9 @@ installdirs:
 
 installmanpages:
 	@echo "Copying manpages..."
-	install -c -m 0444 man/tiger.8 $(DESTDIR)$(TIGERMANDIR)/man8
-	install -c -m 0444 man/tigexp.8 $(DESTDIR)$(TIGERMANDIR)/man8
-	install -c -m 0444 man/tigercron.8 $(DESTDIR)$(TIGERMANDIR)/man8
+	$INSTALL -m 0444 man/tiger.8 $(DESTDIR)$(TIGERMANDIR)/man8
+	$INSTALL -m 0444 man/tigexp.8 $(DESTDIR)$(TIGERMANDIR)/man8
+	$INSTALL -m 0444 man/tigercron.8 $(DESTDIR)$(TIGERMANDIR)/man8
 
 installbinaries:
 	@echo "Copying binaries..."
