@@ -26,6 +26,8 @@
 #
 # check_issue - 05/01/2003 - jfs - Fixed dependancies
 #
+# check_issue - 05/09/2003 - jfs - Fixed sintax error
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -81,7 +83,7 @@ haveallcmds DIFF || exit 1
 haveallfiles ISSUEFILE ISSUENETFILE BASEDIR WORKDIR || exit 1
 
 # for the local logins
-$DIFF -q /etc/issue $ISSUEFILE >/dev/null 2>&1` ]
+$DIFF -q /etc/issue $ISSUEFILE >/dev/null 2>&1
 if [ $? -ne 0 ] 
   then
    message WARN issue001w "" "/etc/issue does not contain the designated content."
