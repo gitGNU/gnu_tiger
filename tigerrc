@@ -73,7 +73,12 @@ Tiger_Run_CRACK=N               # First time, ages; subsequent fairly quick
 # Should we use canonical fully qualified domain names
 # in the reports?
 #
-Tiger_Output_FQDN=Y
+# Note: some UNIX systems can give the FQN using 'hostname -f'
+# if your system provides this change to 'Y' otherwise keep
+# it as 'N' (or you might change your system's name'!)
+# Known systems in which this works: Linux (all distributions)
+# Known systems in which this does _not_ work: Solaris (all versions)
+Tiger_Output_FQDN=N
 #
 # Run Tripwire file integrity checker
 #
