@@ -17,6 +17,7 @@
 #
 # check_anonftp - 06/14/93
 #
+# 01/13/2004 rbrad Cleanup noise and add additional check to check_anonftp.
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
 # 12/06/2002 jfs Fixed script so that it checks if ftphome/etc/passwd
 #                  exists before using grep on it
@@ -147,44 +148,59 @@ haveallcmds GETUSERHOME && {
   # TODO: this should be fixed to use the password sources (gen_passwd)
   # instead of using the system's directly (might lead to false
   # positives)
-  if $GREP '^ftp:' /etc/passwd && [ $status = 0 ]; then
-    if [ ! -d "$ftphome" ]; then
-      message WARN ftp006w "" "Anonymous FTP enabled, but directory does not exist."
-    elif [ ! -n "$ftphome" ]; then
-      message WARN ftp004w "" "Anonymous FTP directory is '' (null)"
-    elif [ "$ftphome" = "/" ]; then
-      message WARN ftp005f "" "Anonymous FTP directory is '/'"
-    else
-      ftpgroups=
-      haveallcmds GROUPC && ftpgroups=`$GROUPC ftp`
 
-      (
-	for file in "" /bin /dev /usr /usr/lib /usr/lib/ld.so /usr/lib/lib\* /.rhosts /.forward
-	do
-	  echo ${ftphome}$file
-	done |
-	checkfiles FAIL f Y
-      
-	haveallcmds FIND && {
-	  (cd /;$FIND $ftphome -type d -print) |
-	  checkfiles WARN w N
-	}
-      )
-
-     [ -f $ftphome/etc/passwd ] && {
-      $SGREP '^[^:]*:[a-zA-Z0-9\./,]*:' $ftphome/etc/passwd |\
-      	$SGREP -v '::' && {
-	message WARN ftp003w "" '~ftp/etc/passwd contains accounts with passwords.'
-      }
-     }
-      [ -s $ftphome/.rhosts ] && {
-	message ALERT ftp002a "" '~ftp/.rhosts exists and is not empty:'
-	$CAT $ftphome/.rhosts
-	echo
-      }
-    fi
-  else
+  # Get the ftp entry from the password file.
+  ftp_pwentry=`$GREP '^ftp:' /etc/passwd`
+  [ -z "$ftp_pwentry" -o $status != 0 ] && {
     message INFO ftp001i "" 'Anonymous FTP not configured on this machine.'
+    exit
+  }
+
+  # Does the ftp user have a valid shell?
+  shell=`echo $ftp_pwentry | $CUT -d: -f7`
+  case "$shell" in
+    /bin/false|/usr/bin/false|/sbin/nologin)
+      ;;
+
+    *)
+      message WARN ftp011w "" "The anonymous FTP user appears to have a valid shell."
+  esac 
+
+  # Check files in the Anonymous FTP user's home directory.
+  if [ ! -d "$ftphome" ]; then
+    message WARN ftp006w "" "Anonymous FTP enabled, but directory does not exist."
+  elif [ ! -n "$ftphome" ]; then
+    message WARN ftp004w "" "Anonymous FTP directory is '' (null)"
+  elif [ "$ftphome" = "/" ]; then
+    message WARN ftp005f "" "Anonymous FTP directory is '/'"
+  else
+    ftpgroups=
+    haveallcmds GROUPC && ftpgroups=`$GROUPC ftp`
+
+    (
+      for file in "" /bin /dev /usr /usr/lib /usr/lib/ld.so /usr/lib/lib\* /.rhosts /.forward
+      do
+        echo ${ftphome}$file
+      done |
+      checkfiles FAIL f Y
+      
+      haveallcmds FIND && {
+        (cd /; $FIND $ftphome -type d -print) |
+        checkfiles WARN w N
+      }
+    )
+
+    [ -f $ftphome/etc/passwd ] && {
+      $SGREP '^[^:]*:[a-zA-Z0-9\./,]*:' $ftphome/etc/passwd | $SGREP -v '::' && {
+        message WARN ftp003w "" '~ftp/etc/passwd contains accounts with passwords.'
+      }
+    }
+
+    [ -s $ftphome/.rhosts ] && {
+      message ALERT ftp002a "" '~ftp/.rhosts exists and is not empty:'
+      $CAT $ftphome/.rhosts
+      echo
+    }
   fi
 } |
 $OUTPUTMETHOD

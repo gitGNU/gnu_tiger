@@ -96,4 +96,7 @@ removed.
 
 See CERT advisory CA-93:10 for information on setting up an anonymous
 FTP server.
-
+%ftp011w
+The 'ftp' account appears to have a valid shell.  A valid shell is not
+required for the 'ftp' user and can be safely set to /bin/false,
+/sbin/nologin, etc.
