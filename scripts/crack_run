@@ -15,9 +15,24 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# crack_run - 06/14/93
+# crack_run - created 06/14/93
 #
-# 05/01/2003 - Fixed dependancies
+# 08/15/2003 - jfs - Commented out code which is no longer is used in
+#              Tara since probably only works for older Crack versions.
+# 08/14/2003 - jfs - Preserve, for backwards compatibility the definition
+#                    of CRACK, REPORTER and CRACKDIR if available
+#                    (exported through the site configuration)
+# 08/13/2003 - jfs - Use Location overrides in the tigerrc configuration file
+# 08/09/2003 - jfs - Added RM to dependancies.
+# 08/08/2003 - jfs - Improved temporary file creation.
+# 05/01/2003 - jfs - Fixed dependancies.
+#
+# TODO: 
+# This script must be tested further. Also it seems that REPORTER is 
+# no longer a part of CRACK so it might only be needed in older versions...
+# There are two code pieces, one for the old version (with REPORTER)
+# and another with the newer version, maybe the code should be selected
+# once a version has been determined...
 #
 #-----------------------------------------------------------------------------
 #
@@ -57,7 +72,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT GEN_PASSWD_SETS || exit 1
+  haveallcmds AWK CAT GEN_PASSWD_SETS RM WAIT || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -69,22 +84,62 @@ done
 echo
 echo "# Running Crack on password files..."
 
-haveallcmds CRACK REPORTER || exit 1
 
-if [ -e "$CRACK" -a -d "$CRACKDIR" ]; then
-	cd $CRACKDIR
-	$CRACKDIR/scripts/shadmrg.sv > $CRACKDIR/run/tmppass
-	$CRACK $CRACKDIR/run/tmppass
-	sleep 60
-	$CRACKDIR/scripts/plaster
-	$REPORTER -quiet
-	rm $CRACKDIR/run/tmppass
-	make tidy
-fi 
+# Crack binary location|override + default check
+# Which, find, user-supplied var or tigexp's findcmd?:
+if [ -z "$CRACK" ] 
+then
+  if [ -z "${Tiger_CRACK_LOC_OVERRIDE}" ]
+  then
+    CRACK=`which crack`
+  else
+    CRACK=${Tiger_CRACK_LOC_OVERRIDE}
+  fi
+fi
+# Reporter binary location|override + default check
+if [ -z "$REPORTER" ] 
+then
+if [ -z "${Tiger_CRACKREPORTER_LOC_OVERRIDE}" ]
+then
+   REPORTER=`which crack-reporter`
+else
+   REPORTER=${Tiger_CRACKREPORTER_LOC_OVERRIDE}
+fi
+fi
+# Crack directory location
+if [ -z "$CRACKDIR" ]
+then
+if [ -z "${Tiger_CRACKDIR_LOC_OVERRIDE}" ]
+then
+   CRACKDIR=/usr/lib/crack
+else
+   CRACKDIR=${Tiger_CRACKDIR_LOC_OVERRIDE}
+fi
+fi
 
-exit 0
+
+# Tara (which this cod was derived from, has removed the following
+# it is thus removed but the code below should be revised). Maybe
+# the REPORTER stuff is needed for older versions of Crack?
+#haveallcmds RM CRACK REPORTER || exit 1
+#
+#if [ -e "$CRACK" -a -d "$CRACKDIR" ]; then
+#	cd $CRACKDIR
+#	$CRACKDIR/scripts/shadmrg.sv > $CRACKDIR/run/tmppass
+#	$CRACK $CRACKDIR/run/tmppass
+#	sleep 60
+#	$CRACKDIR/scripts/plaster
+#	$REPORTER -quiet
+#	$RM $CRACKDIR/run/tmppass
+#	make tidy
+#fi 
+#
+#exit 0
 ########################################################################
-haveallcmds CRACK GEN_PASSWD_SETS CAT EXPR || exit 1
+# TODO: Check this part, this could work for more passwd sets (like if
+# using NIS, but it is not thoroughly tested)
+
+haveallcmds CRACK GEN_PASSWD_SETS CAT EXPR WAIT || exit 1
 
 localflag=
 [ "$Tiger_Crack_Local" = 'Y' ] && localflag="-l"
@@ -92,10 +147,14 @@ localflag=
 count=1
 pid=$$
 
-$GEN_PASSWD_SETS -p $localflag $WORKDIR/pass.list.$$
+safe_temp $WORKDIR/pass.list.$$ $WORKDIR/crack.out.$pid.$count  $WORKDIR/file.list.$$ $WORKDIR/guess.list.$$
+
+trap 'delete $WORKDIR/pass.list.$$ $WORKDIR/crack.out.$pid.$count \
+$WORKDIR/file.list.$$ $WORKDIR/guess.list.$$ ; exit 1' 1 2 3 15
+
+$GEN_PASSWD_SET -p $localflag $WORKDIR/pass.list.$$
 
 {
-
   while read pass_set
   do
     outfile=$WORKDIR/crack.out.$pid.$count
@@ -106,17 +165,16 @@ $GEN_PASSWD_SETS -p $localflag $WORKDIR/pass.list.$$
     echo $outfile
     count=`$EXPR $count + 1`
   done < $WORKDIR/pass.list.$$
-  wait
+  $WAIT
 } > $WORKDIR/file.list.$$
 
-delete $WORKDIR/passllist.$$
 
 while read filename
 do
   {
     read source
     $AWK '$5 == "Guessed" { print $6, $10; }' > $WORKDIR/guess.list.$$
-    [ -s $WORKDIR/guess.list.$$ ] && {
+    [ -s "$WORKDIR/guess.list.$$" ] && {
       echo "--WARN-- [crk001w] The following login id's have weak passwords:"
       $CAT $WORKDIR/guess.list.$$
     }
@@ -131,3 +189,4 @@ do
 done < $WORKDIR/pass.list.$$
 
 delete $WORKDIR/file.list.$$ $WORKDIR/pass.list.$$
+exit 0
