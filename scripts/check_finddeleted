@@ -28,7 +28,10 @@
 #
 # DATE 	NAME 	DESCRIPTION_OF_CHANGES
 # 02/24/2004 - jfs - Do not operate over 'CHR' file types to avoid false
-#              positives (Closes Debian bug #232704)
+#              positives (Closes Debian bug #232704). 
+#              Reduce verbosity by joining multiple messages into a
+#              single one (Closes Debian Bug #231148)
+#              Also simplify calls to improve performance.
 # 09/13/2003 - jfs - Applied patch from Nicholas François to fix an error
 #              which might allow some rogue processes to slip by
 # 08/08/2003 - jfs - Avoided race conditions.
@@ -36,6 +39,11 @@
 #              (http://www.hackinglinuxexposed.com/articles/20020507.html)
 # 04/17/2002 - jfs - Use safe delete() instead of $RM
 #
+#-----------------------------------------------------------------------------
+#
+# TODO:
+# - Consider generating one message per command instead of per file
+#   (better for reporting but worst for the .ignore mechanism)
 #
 #-----------------------------------------------------------------------------
 #
@@ -75,7 +83,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds GREP CAT LSOF PS CAT || exit 1
+  haveallcmds GREP CAT LSOF PS CUT SORT AWK || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME || exit 1
   
@@ -87,50 +95,64 @@ done
 echo
 echo "# Performing check of deleted files used by processes..."
 
-haveallcmds GREP CAT LSOF PS CAT || exit 1
+haveallcmds GREP CAT LSOF PS CUT SORT AWK || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 
-safe_temp "$WORKDIR/deleted.$$"
-trap 'delete $WORKDIR/deleted.$$ ; exit 1' 1 2 3 15
+safe_temp "$WORKDIR/deleted.$$ $WORKDIR/lsof.$$"
+trap 'delete $WORKDIR/deleted.$$ $WORKDIR/lsof.$$ ; exit 1' 1 2 3 15
 
-$PS -A -o pid,ppid |$GREP -v PID  |
-while read pid ppid
+# TODO: Use Lsof's -f option to only recover the data
+# we need and also to provide some more data useful for us
+# (such as PPID)
+$LSOF -n  >>$WORKDIR.lsof.$$
+# It can be deleted if name includes (deleted) or
+# TYPE = DEL
+$CAT $WORKDIR.lsof.$$ | $GREP "(deleted)" >>$WORKDIR/deleted.$$
+$CAT $WORKDIR.lsof.$$ | $GREP "DEL" >>$WORKDIR/deleted.$$
+delete $WORKDIR/lsof.$$
+
+$CAT $WORKDIR/deleted.$$ | $SORT -u |
+while read command npid user fd type device node name
+# Note: Remove CHR file types also since this leads to false positives
+# (i.e. /dev/null)
 do
-	# It can be deleted if name includes (deleted) or
-	# TYPE = DEL
-	$LSOF -np $pid  | $GREP "(deleted)" >>$WORKDIR/deleted.$$
-	$LSOF -np $pid  | $GREP "DEL" >>$WORKDIR/deleted.$$
-
-	$CAT $WORKDIR/deleted.$$ |
-        while read command npid user fd type device other
-        # Other is composed of 'size node name', except if DEL is used
-        # (in this case size is 0) we use it to print details of the
-	# file
-	# Note: Remove CHR file types also since this leads to false positives
-	# (i.e. /dev/null)
-        do
-		# It can be deleted if name includes (deleted) or
-		# TYPE = DEL, but SYSV 'files' are not considered
-                if [ -n "`echo $other | $GREP \"(deleted)\"`" -a "$type" != "CHR" ] || [ -z "`echo $other | $GREP SYSV`" -a "$type" = "DEL" ] ; then
-			# There can be servers either in the same process or
-			# its children
-			$PS -A -o pid,ppid,cmd | $GREP $npid  |
-			while read pids ppid nameserv
-			do
-				if [ -n "`$LSOF -np $pids | $GREP \"(LISTEN)\"`" ]; then
-					if [ "$pids" != "$npid" ] ; then
-						message FAIL kis011f "" "The parent process of server $nameserv (pid $npid) is using deleted files"
-					else 
-						message FAIL kis011f "" "Server $nameserv (pid $npid) is using deleted files"
-					fi
-				fi
-			done
-		 message WARN kis012w "" "Program $command (pid $npid, parent $ppid) is using a deleted file: $other"
+# It can be deleted if name includes (deleted) or
+# TYPE = DEL, but SYSV or CHR 'files' are not considered
+	if [ -n "`echo $name | $GREP \"(deleted)\"`" -a "$type" != "CHR" ] || [ -z "`echo $name | $GREP SYSV`" -a "$type" = "DEL" ] ; then
+		 ppid=`$PS -p $npid -o pid,ppid | $GREP -v PID |$AWK '{print $2}'`
+		 if [ -n "$ppid" ] ; then
+			 pname=`$PS -p $ppid -o pid,cmd | $GREP -v PID | $AWK '{print $2}'`
+		 fi
+		 mtype="WARN"
+		 mval="kis012w"
+		 pmessage="Program $command (pid $npid, parent $ppid) is using a deleted file: '$name'"
+		# TODO: This lsof calls should probably be possible
+		# using the lsof file created previously, doing so
+		# might avoid false positives or errors
+		# (if proceses disappear)
+		listenport=`$LSOF -np $npid | $GREP \(LISTEN\) |  $SORT -u | $CUT -d : -f 2 | $AWK '{printf "%s ", $1}'`
+		listenpport=`$LSOF -np $ppid | $GREP \(LISTEN\) |  $SORT -u | $CUT -d : -f 2 | $AWK '{printf "%s ", $1}'`
+		# TODO:
+		# There can be servers either in the same process or
+		# its children. This code has to be improved in
+		# order to make it possible to better report that fact.
+		# It currently does _not_ check children processes properly
+		if [ -n "$listenport" ]; then
+			mtype="FAIL"
+			mval="kis011f"
+			pmessage="$pmessage and is a a server listening on port $listenport"
+		fi 
+		if [ -n "$listenpport" ]; then
+			mtype="FAIL"
+			mval="kis011f"
+			pmessage="$pmessage and its parent process $pname is a server listening on port $listenpport"
 		fi
-	done
-	delete $WORKDIR/deleted.$$
+		 message $mtype $mval "" "$pmessage."
+	fi
 done
+
+delete $WORKDIR/deleted.$$
 
 
 exit 0
