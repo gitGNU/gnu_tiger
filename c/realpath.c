@@ -17,7 +17,7 @@
 
  c/realpath.c - 06/14/93
  c/realpath.c - 04/22/2003 - jfs 
- 	applied patch from Jeff Grub changing realpath
+ 	applied patch from Steve Grub changing realpath
  	to my_realpath and adding upper bounds for buffers
 	(libc already implements realpath, maybe it should be used if 
 	available)
