@@ -21,6 +21,8 @@
 # 05/01/2003 jfs Added notes on behaviour, this check will only run if 
 #                SENDMAILCF exists (after all, it's a sendmail-only check).
 #                Fixed dependancies.
+# 11/18/2003 jfs Fixed sintax problem which AIX choked on.
+#                Noticed by Dale Martin.
 #
 #-----------------------------------------------------------------------------
 #
@@ -169,7 +171,7 @@ fi
 }
 
 if [ -r "$SENDMAILCF" ]; then
-	version = "`$GREP \"^O\ SmtpGreetingMessage=\$j\ Sendmail\ \$v\/\$Z\;\ \$b\" $SENDMAILCF`"
+	version="`$GREP \"^O\ SmtpGreetingMessage=\$j\ Sendmail\ \$v\/\$Z\;\ \$b\" $SENDMAILCF`"
 	[ -n "$version" ] &&
 	      message WARN netw019w "" "Sendmail avertises its version in $SENDMAILCF, current line: $version"
 
