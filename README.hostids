@@ -42,6 +42,7 @@ However, Tiger, as a host IDS , is better completed with some other tools:
 - an integrity checker such as Tripwire (or a replacement like Aide). 
 - a logchecker (like logcheck) to look for security information in the
   log files.
+- an specific tool to detect rootkits: chkrootkit
 - (maybe) a Network IDS such as Snort.
 - (maybe) a portscanner detection such as portsentry, scanlogd, 
   scandetd or psad (provided by Bastille)
@@ -67,7 +68,10 @@ other methods. Some ideas:
 	be done either using a permament SSH tunnel, an Ipsec VPN...
 
 2.- there is no such thing (currently) as a Tiger Server, unlike other 
-HIDS (If anyone wants to write one please say so :) so there's no way to:
+HIDS (If anyone wants to write one please say so :) so there's no way to
+receive all the alerts in a single place and correlate them.
+Note: in the contrib directory you will find the 'secauditdb' program
+(not yet integrated into Tiger) which does just this.
 
 3.- Tiger reports are not protected in anyway save for standard UNIX 
 permissions. This means that if the server Tiger is running in is 
@@ -80,10 +84,11 @@ compromised:
 	(if using differentiated reports against either templates or 
 	previous runs)
 
-Not that any other host-based IDS does not have any of these issues,
-after all, if an IDS is running in a compromised host then those
-IDS alarms and reports cannot be trusted anyway.
-
+Not that most host-based IDS have these same issues, after all, if an 
+IDS is running in a compromised host then those IDS alarms and reports
+cannot be trusted anyway. This is not 100% true, however, for HIDS running
+at the kernel level.
 
 -- Javier Fernández-Sanguino Peña <jfs@computer.org>
-Thu, 17 Apr 2003 19:00:20 +0200
+Wed, 12 Nov 2003 03:46:57 +0100
+
