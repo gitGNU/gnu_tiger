@@ -27,6 +27,7 @@
 #     vulnerable.
 #
 # DATE 	NAME 	DESCRIPTION_OF_CHANGES
+# 08/08/2003 - jfs - Avoided race conditions.
 # 04/16/2002 - jfs - First version based on Brian Hatch's articles
 #              (http://www.hackinglinuxexposed.com/articles/20020507.html)
 # 04/17/2002 - jfs - Use safe delete() instead of $RM
@@ -86,6 +87,8 @@ haveallcmds GREP CAT LSOF PS CAT || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 
+safe_temp "$WORKDIR/deleted.$$"
+trap 'delete $WORKDIR/deleted.$$ ; exit 1' 1 2 3 15
 
 $PS -A -o pid,ppid |$GREP -v PID  |
 while read pid ppid
