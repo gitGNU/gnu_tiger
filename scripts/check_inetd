@@ -30,6 +30,9 @@
 #     Separated the services check into a separate script.
 # check_inetd - 04/23/2003 - jfs
 #     Fixed requirements
+# check_inetd - 05/26/2003 - jfs
+#     Fixed calls to test (worked in Linux but not in other OS due
+#     to -n not being implicit)
 #     
 # TODO
 # - This script needs to be improved to warn for some of the 'chatty' issues
@@ -125,7 +128,7 @@ checkinetd ()
     
     [ "$currbinary" = 'internal' ] && continue
 
-    if [ "`echo $currbinary | $GREP '?'`" ] ; then
+    if [ -n "`echo $currbinary | $GREP '?'`" ] ; then
       currbinary=`echo $currbinary | $SED -e "s/\?//"`
     fi
 
@@ -172,10 +175,10 @@ checkinetd ()
 
   while read service exppath currpath parm1 parms
   do
-    if [ "`echo $currpath | $GREP '?'`" ]; then
+    if [ -n "`echo $currpath | $GREP '?'`" ]; then
      currpath=`echo $currpath | $SED -e "s/\?//"`
     fi
-    if [ "`echo $exppath | $GREP '?'`" ]; then
+    if [ -n "`echo $exppath | $GREP '?'`" ]; then
      exppath=`echo $exppath | $SED -e "s/\?//"`
     fi
     if [ "$currpath" != "$exppath" ]; then
@@ -192,8 +195,8 @@ checkinetd ()
   $JOIN -j 1 -o 1.1 2.1 1.6 - $WORKDIR/inet1.$$ |
   while read expservice currservice prog
   do
-   if [ "$prog" ] ; then
-    [ $expservice != $currservice ] && {
+   if [ -n "$prog" ] ; then
+    [ "$expservice" != "$currservice" ] && {
       message WARN inet007w "" "Binary $prog is being used for service $currservice.  Expected service is $expservice."
     }
    fi

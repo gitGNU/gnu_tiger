@@ -19,6 +19,8 @@
 #
 # 05/30/99  Added feature to check for no console root logins
 # 07/25/2002 jfs  Changed TigerInstallDir to .
+# 05/26/2003 jfs Fixed calls to test (worked in Linux but not in other OS due
+#     to -n not being implicit)
 #
 #-----------------------------------------------------------------------------
 #
@@ -73,33 +75,33 @@ haveallcmds AWK GREP CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 if [ -f /etc/default/login ]; then
-  if [ ! "`$GREP '^CONSOLE' /etc/default/login`" ]; then
+  if [ -z "`$GREP '^CONSOLE' /etc/default/login`" ]; then
      message WARN root001w "" "Remote root login allowed in /etc/default/login."
      echo
   fi
 fi
 
 if [ -f /etc/securetty ]; then
-  if [ "`$GREP '^ttyp' /etc/securetty`" ]; then
+  if [ -n "`$GREP '^ttyp' /etc/securetty`" ]; then
      message WARN root001w "" "Remote root login allowed in /etc/securetty"
      echo
   fi
 fi   
 
 if [ -f /etc/ttytab ]; then
-  if [ "`$GREP " secure" /etc/ttytab | $GREP -v console`" ]; then
+  if [ -n "`$GREP " secure" /etc/ttytab | $GREP -v console`" ]; then
      message WARN root001w "" "Remote root login allowed in /etc/ttytab"
      echo
   fi
 fi   
 if [ -f /etc/security/access.conf ]; then
-  if [ "`$GREP '^+:root' /etc/security/access.conf`" ]; then
+  if [ -n "`$GREP '^+:root' /etc/security/access.conf`" ]; then
      message WARN root001w "" "Remote root login allowed in /etc/security/access.conf"
      echo
   fi
 fi
 if [ -f /etc/ftpusers ]; then
-  if [ ! "`$GREP '^root' /etc/ftpusers`" ]; then
+  if [ -z "`$GREP '^root' /etc/ftpusers`" ]; then
      message WARN root002w "" "Remote root access allowed in /etc/ftpusers"
      echo
   fi
