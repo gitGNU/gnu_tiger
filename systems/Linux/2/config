@@ -29,6 +29,12 @@
 #                               also added code to determine Linux distribution
 # Linux/2/config - 04/15/2002 - jfs added check for LSGROUP variable based
 #				on fileutils version
+# Linux/2/config - 06/20/2002 - jfs
+#   Added patch provided by Ryan Bradetich to consider the 
+#   case of RedHat's 7.1 fileutils:
+#   $ ls --version
+#   ls (GNU fileutils) 4.0.36
+ 
 
 
 [ "$UUID" = "" ] && UNAME=`whoami`
@@ -142,7 +148,7 @@ LASTLOG=`findcmd lastlog`
 TEST=`findcmd test`
 
 # Test which options should we use
-__lsver=`$LS --version | $GREP fileutils | $SED -e "s/.*4\.\([[:digit:]]\)/\1/"`
+__lsver=`$LS --version | $GREP fileutils | $SED -e "s/.*4\.\([[:digit:]]*\).*/\1/"`
 LSGROUP="-l"
 [ -n "$__lsver" ] && [ $__lsver -lt 10 ] && {
 	# Since fileutils 4.10, -g doesn't show the owner. In GNU's ls the
