@@ -1,0 +1,48 @@
+#
+# Signature file for IRIX 6.5 IP30, generated Tue Aug 13 08:54:00 EDT 2002
+#
+#@DEST=IRIX/6/6.5
+#@CONFIG=IRIX/6
+Y .       /sbin/sh c65e308ac305456c68074055835d0ea4 IRIX 6.5
+Y .       /sbin/csh 4b650df457b84bb4e0113f8342d9ee69 IRIX 6.5
+# ksh not found.
+# login not found.
+Y .       /sbin/su 651adeccde31e2faf9bd060b8b9c4aa1 IRIX 6.5
+Y .       /usr/bin/passwd b2d71a37f40d6e810681ea6ccefed6c3 IRIX 6.5
+# in.fingerd not found.
+Y .       /usr/etc/fingerd d0f0b5b5a8c61e2f8f4838db0905d3b5 IRIX 6.5
+Y .       /usr/sbin/in.ftpd cb4d23fa74c5f358262672a1adb0ead8 IRIX 6.5
+Y .       /usr/etc/ftpd 07569eb85f2c096cc6177e661d38c3cd IRIX 6.5
+# in.rexecd not found.
+Y .       /usr/etc/rexecd 6a4d08b73ef9419956e7a46963802d80 IRIX 6.5
+# in.rlogind not found.
+Y .       /usr/etc/rlogind 9887f021b660108bb404608d3736e97c IRIX 6.5
+# in.rshd not found.
+Y .       /usr/etc/rshd c82c4f13b763ef7c2b07c850cc1cde9c IRIX 6.5
+# in.telnetd not found.
+Y .       /usr/etc/telnetd 4c52e6e1db4df1fd0825222968677886 IRIX 6.5
+# in.tftpd not found.
+Y .       /usr/etc/tftpd 00d5eff6244da1a069233d162050be67 IRIX 6.5
+# in.uucpd not found.
+# uucpd not found.
+# rpc.yppasswdd not found.
+Y .       /usr/etc/rpc.passwd 514913b0ce89a85b0049b7096780cf23 IRIX 6.5
+Y .       /usr/etc/portmap 2335729fe0e0f239ecfe9617a626f5d1 IRIX 6.5
+# ypserv not found.
+# ypxfrd not found.
+# ypbind not found.
+Y .       /usr/lib/sendmail 13521b3874499a7a3d35a19a12832fc5 IRIX 6.5
+# sendmail.mx not found.
+Y .       /usr/bsd/rdist 79a72055c0640e940e2de09df15508fc IRIX 6.5
+Y .       /usr/bsd/rlogin 79b5851fc59a9d6e3caa36a28ae8b9a2 IRIX 6.5
+Y .       /usr/bsd/rsh d6ba03b99b638aad4c944d84d9c6da44 IRIX 6.5
+Y .       /usr/bsd/telnet d0944f8c0caa1dbbc54ec0926b06a926 IRIX 6.5
+Y .       /usr/bin/lpstat 55ff589c64b58dca9d1d240b7729ee53 IRIX 6.5
+# lpc not found.
+# lpd not found.
+# lpr not found.
+# lprm not found.
+# lpd not found.
+# in.lpd not found.
+Y .       /usr/etc/rpc.mountd 2ffb544986a2e5f177c83729bc1e8c81 IRIX 6.5
+Y .       /usr/lib/expreserve 1da23360572c00bb06a0001fb8561bca IRIX 6.5
