@@ -29,6 +29,9 @@
 #                    check and do not warn on lengths for locked users.
 #                    (fixes debian bug 211327). Finally, added missing
 #                    temporary files to removal and safe_temp calls
+# 11/19/2003 - jfs - Removed shadow password check (per patch from Ryan
+#                    Bradetich) and added note for other systems (non
+#                    HPUX or Linux)
 #
 #-----------------------------------------------------------------------------
 #
@@ -162,6 +165,9 @@ fi
 #
 # /etc/shadow check
 #
+# TODO: Since the shadow password check has been moved to %pass20w
+# systems need to be updated to make this check in other scripts
+# (in HPUX and Linux it's check_passwdspec)
 PW="/etc/shadow"
 [ -r $PW ] &&  {
 $AWK -F: '{
