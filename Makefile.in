@@ -61,7 +61,7 @@ TIGERCONFIG=@tigerconfig@
 #------------------------------------------------------------------------
 #
 
-PLATFORM_SCRIPTS:=$(shell find ./systems/ -type f)
+PLATFORM_SCRIPTS=$(shell find ./systems/ -type f)
 
 BINARIES=./tiger \
 	 ./tigexp  \
