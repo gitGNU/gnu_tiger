@@ -26,10 +26,29 @@ approach)
 - Version 3.4 (stable): bug fixes.
 - Version 3.3 (unstable):
    . Security audit of C source code and 'eval' in scripts.
+   . Revise if all the checks are properly called from Tiger
    . Determine which checks need root privileges and which not, consider
      use of 'sudo' to run root checks (or data gathering) if available.
-   . Integration of new checks including contributed
-   checks and checks/bug fixes from TARA 3.0.3 version.
+
+   . Integration of new checks including contributed checks 
+   NOTE: Many patches have been already included. The following still need
+     to be added:
+      - 1091 - needs to be converted into a shell script
+      - 1353 - mostly redundant with check_ftpusers but needs to be 
+               revised
+      - 1392 - needs to be integrated (it is also part of the CERT's list)
+      - 1431 - mostly done by check_devices but needs to be revised
+      - anacron patch - needs to be integrated
+      - all the checks provided by NIH (36!) need to be integrated in
+        the code of some checks or new checks written for them
+
+   . Integrated the secaudit database manager patch provided by the
+     Center for Information Technology, National Institutes of Health
+
+   . Integration of checks/bug fixes from TARA 3.0.3 version.
+   NOTE: Mostly done for all checks (except for check_sendmail)
+   Other utilities such as buildbins, mksig and all the new configurations
+   (including MacOS!) still needs to be integrated.
    . Full documentation and user manual describing checks, policy 
    (BS-7799) compliance and comparison with other tools and checks.
    . Provide other logging mechanisms (syslog, snmp) if tools are
@@ -37,6 +56,11 @@ approach)
    . Checks for SANS's Top 10 (generic) and Top 20 (UNIX) vulnerabilities
      (notice, however, that most are remote checks which Tiger cannot
      implement that well..)
+   NOTE: Already included an annotated CERT list which determines which
+     are done and which are lacking
+   . Redhat (rpm) packages
+   NOTE: The spec file provided as a patched is now included but it has
+     not been tested (by me) to build RPM packages.
 
 Released:
 - Version 3.2 (stable): major bug fix version
@@ -48,6 +72,10 @@ Released:
 
 DETAILED ITEMS
 --------------
+
+- Revise the trap setting for scripts using temporary files. It might
+  be necessary to remove the trap calls or use a generic call that
+  will clean all the tempfiles (TigerCleanup?)
 
 - Automate the creation of new tar.gz's including a revision that sets
   the proper exec bits to all needed files.
@@ -64,10 +92,14 @@ from Marc Heuse dated Fri Jun 26 1998 - 08:24:17 BST)
   	- Inetd configuration files (are xinetd or inetd files writable?
 	  are they owned by the proper user? does inetd use -l? does
 	  xinetd have filelog or syslog?)
+	  (Note: some checks moved to check_tcpd)
 	- Does /etc/securetty exist? Does it have other entries besides vc/tty?
 	  Is ownership of the file ok?
 	- Is ip forwarding enabled?
 	- Which version of DNS/Wu-ftpd is it running?
+	(Note: this might not be completely feasible since the check_network
+	scripts connects to the server to retrieve the banner which is
+	something that Tiger should leave to other, remote, VA tools)
 	- PermitRooLogin or Rhosts in sshd?
 	- EXPN/VRFY support in mail host?
 	Necessary services:
@@ -86,10 +118,6 @@ from Marc Heuse dated Fri Jun 26 1998 - 08:24:17 BST)
 	- R-exd?
 	- NFS
 
-- Modify Tiger so it can use a system's scripts if it exists and substitute
-  the one under scripts/ by introducing a run_script funcion (check
-  if the script is under scripts and under systems/$OS/... and run it)
-
 - Update signatures using TAMU's (and maybe knowngoods.org's) signature
 database.
 See http://savannah.nongnu.org/pm/task.php?group_project_id=472&group_id=2247&func=browse
@@ -98,6 +126,7 @@ See http://savannah.nongnu.org/pm/task.php?group_project_id=472&group_id=2247&fu
 https://savannah.nongnu.org/pm/task.php?group_id=2247&group_project_id=632
 
 - Modified the rhosts check so that it will check for shosts files too
+  (or create a new check_shosts file)
 
 - Modify check_network to include hosts.lpd in the tests
 
@@ -128,6 +157,7 @@ https://savannah.nongnu.org/pm/task.php?group_id=2247&group_project_id=632
        or /tmp nosuid. Separate /var,/usr,/tmp from /
      - Solaris /etc/notrouter to disable
      - Rootkits check, like chkrootkit 
+     Note: partially done
      Reference: 
      http://linux.oreillynet.com/pub/a/linux/2002/02/07/rootkits.html
 
@@ -153,13 +183,14 @@ https://savannah.nongnu.org/pm/task.php?group_id=2247&group_project_id=632
 	http://www.nswc.navy.mil/ISSEC/Docs/Ref/GeneralInfo/unixsecurity.nrl.txt
 
 
-
 - Possible integration with other security tools:
  	- Tripwire: the 'tripwire_run' script has not been tested thoroughly
 	  (mainly because in Debian it is already configured to execute
 	  regular checks standalone)
-	- Crack: same for 'crack_run' (and for the same reason)
+	- Crack: same for 'crack_run' (for the same reason as for tripwire
+	  it has not been tested thoroughly yet)
 	- Other integrity checkers: aide, samhain, integrit...
+	(Note: done for aide and integrit for the moment)
 	- Other password crackers: john
 	- Logcheckers: swatch, logcheck, loganalysis, snort-logcheck
         Tiger currently does not do any log checking (see below)
@@ -174,6 +205,7 @@ https://savannah.nongnu.org/pm/task.php?group_id=2247&group_project_id=632
 
 	- User anaylisis: sac, hostsentry (part of Abacus, but non-free)
 	- Network checks: Arpwatch, Snort
+	- Other tools: chkrootkit
 
 - Compare checks against other tools'
 	- Bastille/Titan: verify that each thing that they 'fix' (harden)
@@ -207,7 +239,14 @@ OpenBSD's or SuSE's)
 	- IDEA http://idea-arch.sourceforge.net/
 	- Prelude http://www.prelude-ids.org/
 
+- Implement a check for configuration files for user's password policies
+  and other sensible configuration such as /etc/login.access, /etc/login.defs,
+  /etc/login.conf
+
+- Add more information to the messages outputed for inetd services which
+  might expose password information (Unix CERT configuration list item #2.4)
+
 
 --- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
-Sun, 15 Jun 2003 23:26:16 +0200
+Tue, 12 Aug 2003 21:33:51 +0200
 

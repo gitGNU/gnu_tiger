@@ -1,12 +1,21 @@
 NOTE: To read changes made to the Debian package (since
 August 23rd 2001) see the changelog.Debian file
 
-Changes (v 3.2) 
+Changes (v 3.3) 
 ----------------
 (unreleased)
 - Fixed issue with tigercron, did not work as advertised
 - Fixed syntax errors in grep calls
 - Modified SunOS config file to look for the MAILSPOOL in /var/mail
+- Added aide_run and integrit_run as new (alternative) integrity file
+  checkers.
+- Tiger now uses a function (run_script) to run either the scripts in
+  the $SCRIPTDIR or system-specific scripts if available. This allows
+  developers to create more specific checks for a given OS and have them
+  override the generic scripts.
+- Review of temporary file creation in all files including the creation
+  of a new function (safe_temp) to handle temporary file usage.
+- Included a RedHat spec file to create rpm packages
 
 
 Changes (v 3.2) 
