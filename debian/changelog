@@ -12,6 +12,7 @@ tiger (3.2-1) unstable; urgency=low
      - The new ignore mechanism can now be used to avoid false positives,
        please customize as needed and read the notes on the 
        check_listeningprocs script (Closes: #136991)
+     - Tigexp now gets modified by the Makefile (Closes: #189864)
 
  -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 16 Apr 2003 00:29:45 +0200
 
