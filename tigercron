@@ -272,6 +272,7 @@ fi
   haveallcmds MAILER && [ "$send" = "Y" ] &&  {
 	# Mail header (so it does not just say it's root
 	echo "From: Tiger automatic auditor at $HOSTNAME <root@$HOSTNAME>" 
+	echo "To: $Tiger_Mail_RCPT"
 	echo "Subject: Tiger Auditing Report for $HOSTNAME"
 	echo 
 	cat  $WORKDIR/tigcron.diff.$$ 
