@@ -16,7 +16,9 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_known - 06/14/93
-#
+# 11/19/2003 jfs Linux: accurate, per interface, promiscuous mode detection
+#                Contributed by unspawn with some changes to make it POSIX
+#                correct.
 # 10/01/2003 jfs Do not delete passwd files if the Tiger_PasswdFiles is
 #                defined, otherwise checks relying on it will break
 # 09/19/2003 jfs Fixed deletion of temporary files thanks to a patch
@@ -102,11 +104,28 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
 
 {
   haveallcmds IFCONFIG && { 
-   echo "# Testing for promiscuous interfaces"
-   promisc="`$IFCONFIG -a | $GREP -i PROMISC`"
-   if [ -n "$promisc" ]; then
-    message ALERT kis013a "" "One of the interfaces is set for promiscuous mode"
-   fi
+     # Note: This is Linux specific 
+     # (maybe should be moved to systems/Linux/2/check_known)
+     [ ! -x "$IP" -o "$OS" != "Linux" ] && message INFO kisXXX "" "Using $IFCONFIG instead of $IP, promiscuous mode detection incomplete. Installing $IP adds libpcap/libnet-based sniffer detection capabilities."
+
+     VER=`echo $REV | $CUT -f 2 -d .`
+     if [ -x "$IP" -a $VER -ge 4 ] 
+     then
+         echo "# Testing for promiscuous interfaces with $IP"
+         $IP link show |
+	 $EGREP '^[0-9].*PROMISC' |
+	 # Alternative:
+         # $IP link show|
+	 # $AWK '/^[0-9].*UP/{printf "Device \t%s promisc. \t%s\n", $2, $3}'
+         while read number intf flags other
+         do
+            message ALERT kis013a "" "Interface $intf set for promiscuous mode"
+         done
+     else
+         echo "# Testing for promiscuous interfaces with $IFCONFIG"
+         promisc="`$IFCONFIG -a | $GREP -i PROMISC`"
+         [ -n "$promisc" ] && message ALERT kis013a "" "One of the interfaces is set for promiscuous mode"
+     fi
   }
   
   echo "# Testing for backdoors in inetd.conf"
@@ -170,7 +189,7 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
     }' |
     while read dir
     do
-      [ -d "$dir" ] && {
+      [ -d "$dir" -a -r "$dir" ] && {
 	cd "$dir"
 	files=`$FIND . -print | $SED -e 's%^./%%' -e '/^.$/d' -e '/^..$/d'`
 	# On HP-UX change to:
