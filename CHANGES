@@ -1,7 +1,7 @@
 NOTE: To read changes made to the Debian package (since
 August 23rd 2001) see the changelog.Debian file
 
-Changes (v 3.3) 
+Changes (v 3.2.1) 
 ----------------
 (unreleased)
 - Fixed issue with tigercron, did not work as advertised
