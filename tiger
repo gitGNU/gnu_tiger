@@ -21,6 +21,8 @@
 # all the checks configured for your system in the tigerrc configuration 
 # file.
 #
+# 01/15/2003 jfs Check should use INETDCONF (and not INETDFILE).
+#                (Temporary fix: defined it if undefined)
 # 09/03/2003 jfs Included check_ssh to the checks
 # 08/19/2003 jfs check_cron is now check_crontabs
 # 08/15/2003 jfs Integrated ARSC log to syslog mechanism but modified
@@ -301,7 +303,12 @@ aidepid=
 }
 
 [ "$Tiger_Check_INETD" != 'N' ] && {
-  [ -n "$INETDFILE" ] && [ -f "$INETDFILE" ] && {
+  # Temporary definition until all the config files (and gen_inetd
+  # scripts) are updated.
+  [ -z "$INETDCONF" ] && INETDCONF="/etc/inetd.conf"
+  [ -z "$XINETDCONF" ] && XINETDCONF="/etc/xinetd.conf"
+
+  [ -n "$INETDCONF" ] && [ -f "$INETDCONF" ] && {
     echo "`$TIMECMD`> Checking 'inetd' configuration..."
     run_script check_inetd >> $logtmp
     echo "`$TIMECMD`> Checking 'tcpd' configuration..."

@@ -19,6 +19,7 @@
 # 
 # Generates sets for Linux systems, based on the SunOS version.
 #
+# 01/15/2004 - jfs - Use XINETDCONF and INETDCONF instead
 # 01/13/2004 - jfs - Do not use inetd.conf if it does not exist
 #
 #-----------------------------------------------------------------------------
@@ -34,12 +35,12 @@
 #
 #-----------------------------------------------------------------------------
 
-[ -f /etc/inetd.conf ] && {
-$GREP -v '^#' /etc/inetd.conf |
+[ -n "$INETDCONF" ] && [ -f $INETDCONF ] && {
+$GREP -v '^#' $INETDCONF |
 $SORT > $WORKDIR/etc_inetd.$$
-echo "/etc/inetd.conf" > $WORKDIR/etc_inetd.$$.src
+echo "$INETDCONF" > $WORKDIR/etc_inetd.$$.src
 echo $WORKDIR/etc_inetd.$$
 }
 
-#[ -f /etc/xinetd.conf ] && {
+#[ -n "$XINETDCONF" ] && [ -f $XINETDCONF ] && {
 #}
