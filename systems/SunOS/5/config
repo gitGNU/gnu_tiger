@@ -58,6 +58,8 @@ TR=/usr/bin/tr
 JOIN=/usr/bin/join
 GROUPSS=/usr/ucb/groups
 FILECMD=/usr/bin/file
+IFCONFIG=/sbin/ifconfig 
+# Is this the proper location for ifconfig?
 UNIQ=/usr/bin/uniq
 BASENAME=/usr/bin/basename
 CHMOD=/usr/bin/chmod
@@ -68,6 +70,7 @@ DIFF=/usr/bin/diff
 MAILER=/usr/bin/mail
 ID=/usr/bin/id
 WC=/usr/bin/wc
+NDD=/usr/bin/ndd
 EXPAND=/usr/bin/expand
 SHOWREV=/usr/bin/showrev
 NETSTAT=/usr/bin/netstat
@@ -76,7 +79,7 @@ SENDMAILCF="/etc/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED CUT HEAD
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME
-export CHMOD CHOWN LN PASTE DIFF MAILER ID WC
+export CHMOD CHOWN LN PASTE DIFF MAILER ID WC NDD IFCONFIG
 export SHOWREV NETSTAT SENDMAILS SENDMAILCF EXPAND
 #
 UNAME=/usr/bin/uname
@@ -178,5 +181,7 @@ GEN_INETD_SETS gen_inetd
 GETDISKS getdisks
 EMBEDDEDLIST embedlist
 GETUSERHOME getuserhome
+NDD_PARMS ndd_parms
+NDD_PARMS_LOCAL ndd_parms_local
 EOL
 `
