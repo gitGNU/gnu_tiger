@@ -19,6 +19,7 @@
 #
 # Script to make signatures for a supported operating system.
 #
+# 08/28/2003 - jfs - Added ARSC change to use MAJOR instead of REV
 # 04/23/2003 - jfs - added missing MD5 definition and check
 #                    merged with original (2.2.3) mksig and removed games
 #                    added @DEST and @CONFIG definitions
@@ -78,6 +79,7 @@ DIRLIST="$DIRLIST /usr/etc /usr/ucb /usr/mbin /usr/bsd /usr/5bin /usr/sysv"
 
 
 outfile="signatures.$OS-$REV-$ARCH"
+MAJOR=`echo $REV | awk -F\. '{print $1}'`
 
 echo "Working..."
 
@@ -85,8 +87,8 @@ echo "Working..."
   echo "#"
   echo "# Signature file for $OS $REV $ARCH, generated `date`"
   echo "#"
-  echo "#@DEST=$OS/$REV/$ARCH"
-  echo "#@CONFIG=$OS/$REV"
+  echo "#@DEST=$OS/$MAJOR/$ARCH"
+  echo "#@CONFIG=$OS/$MAJOR"
 
   while read file
   do

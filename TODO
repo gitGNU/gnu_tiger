@@ -41,14 +41,12 @@ approach)
       - anacron patch - needs to be integrated
       - all the checks provided by NIH (36!) need to be integrated in
         the code of some checks or new checks written for them
-
    . Integrated the secaudit database manager patch provided by the
      Center for Information Technology, National Institutes of Health
 
    . Integration of checks/bug fixes from TARA 3.0.3 version.
    NOTE: Mostly done for all checks (except for check_sendmail)
-   Other utilities such as buildbins, mksig and all the new configurations
-   (including MacOS!) still needs to be integrated.
+   Other utilities, such as buildbins changes, need to be checked.
    . Full documentation and user manual describing checks, policy 
    (BS-7799) compliance and comparison with other tools and checks.
    . Provide other logging mechanisms (syslog, snmp) if tools are
