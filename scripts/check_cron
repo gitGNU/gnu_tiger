@@ -19,8 +19,18 @@
 #
 # Ideas from Dan Farmer's 'cron.chk' from COPS 1.04.
 # 
+# check_cron  - 08/14/2003 - jfs Added OUTPUTMETHOD to dependancies 
+#                            incorporated changes from ARSC tara version 3.0.3
+# check_cron  - 08/13/2003 - jfs Fixed a call to grep and added lost changes
+#                            made by ARSC
+# check_cron  - 08/08/2003 - jfs Avoided race conditions in temporary file
+#                            usage.
 # check_cron  - 08/12/2002 - jfs Fixed to use CRONSPOOL
 # check_cron  - 04/25/2002 - jfs Fixed dependancies
+# check_cron  - 04/28/1999 Modified by Advanced Research Corp (R) to 
+#                        correct errors
+# check_cron  - 04/20/1999 Modified by Advanced Research Corp (R) to 
+#                        correct errors
 # 
 #-----------------------------------------------------------------------------
 #
@@ -59,7 +69,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK BASENAME CAT GEN_CRON_FILES LS RM TR SED || exit 1
+  haveallcmds AWK BASENAME CAT GEN_CRON_FILES LS RM TR SED GREP OUTPUTMETHOD || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -70,8 +80,13 @@ done
 echo
 echo "# Performing check of \`cron' entries..."
 
-haveallcmds AWK BASENAME CAT GEN_CRON_FILES LS RM TR SED || exit 1
+haveallcmds AWK BASENAME CAT GEN_CRON_FILES LS RM TR SED GREP OUTPUTMETHOD || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
+
+
+safe_temp "$WORKDIR/cron.in.$$"
+trap 'delete $WORKDIR/cron.in.$$ ; exit 1' 1 2 3 15
+ 
 
 realpath="$REALPATH -d"
 [ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath=echo
@@ -97,16 +112,27 @@ lowner=
   
     base=`$BASENAME "$cmd"`
     case "$base" in
-      sh|csh|ksh|tcsh|zsh|bash)
+      sh|csh|ksh|tcsh|zsh|bash|if|cd)
       [ "$2" != "-c" ] && cmd="`echo \"$com\" | $AWK '{print $2}'`";;
     esac
 
     [ -n "$TigerCheckEmbedded" -a -f "$cmd" -a "$owner" = 'root' ] && {
       echo "$cmd root.crontab" >> $TigerCheckEmbedded
     }
-    if [ -z "`echo $cmd | grep \"^\/\"`" ] ; then
-    	message WARN cron001w "command = $command" "cron entry for $owner does not use full pathname"
+# This is removed from tara's version 3.0.3 
+#    case "$cmd" in
+#          |cd|echo|if|else|then) ;;
+#          *)
+#           if [ -z "`echo $cmd | $GREP \"^\/\"`" ] ; then
+#             message WARN cron001w "command = $command" "cron entry for $owner does not use full pathname"
+#          fi ;;
+#    esac
+# And subsituted by this:
+    if [ -z "`echo $cmd | $GREP \"^[\/\[]\"`" -a "$cmd" != "umask" ]; then
+        message WARN cron001w "" "cron entry for $owner does not use full pathname ($cmd):"
     fi
+
+
 
     [ "$owner" != "$lowner" ] && {
       curdir=/
