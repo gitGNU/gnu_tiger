@@ -78,7 +78,7 @@ $SED -e 's%\([^/]\)$%\1/%' $file |
 eval $greps > $WORKDIR/wdir.tmp.$$
 
 [ -s $WORKDIR/wdir.tmp.$$ ] && {
-  echo "--INFO-- [fsys008i] The following directories are world writable:"
+  message FAIL fsys008f "" 'The following directories are world writable:'
   $SORT $WORKDIR/wdir.tmp.$$
 }
 

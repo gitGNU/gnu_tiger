@@ -89,7 +89,7 @@ haveallcmds SORT COMM CAT && {
 
 haveallcmds LS AWK && {
   [ -s $WORKDIR/sgid.list.$$ ] && {
-    message INFO fsys011i "" 'The following setgid programs are non-standard:'
+    message ALERT fsys011a "" 'The following setgid programs are non-standard:'
     while read file
     do
       $LS $LSGROUP -ld "$file"

@@ -301,12 +301,12 @@ Tiger_Files_of_Note="..[!.]*/.* */.*	*/.[!.]/.log/.FSP*"
 #
 # File system scan - things to look for
 #
-Tiger_FSScan_Setuid=Y		# Setuid executables
-Tiger_FSScan_Setgid=Y		# Setgid executables
+Tiger_FSScan_Setuid=N		# Setuid executables
+Tiger_FSScan_Setgid=N		# Setgid executables
 Tiger_FSScan_Devs=Y		# device files
 Tiger_FSScan_SymLinks=Y		# strange symbolic links
 Tiger_FSScan_ofNote=Y		# weird filenames
-Tiger_FSScan_WDIR=Y		# world writable directories
+Tiger_FSScan_WDIR=N		# world writable directories
 Tiger_FSScan_Unowned=Y		# files with undefined owners/groups
 #
 # Should we scan read-only filesystems

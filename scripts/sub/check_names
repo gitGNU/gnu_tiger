@@ -53,10 +53,10 @@ haveallcmds LS BASENAME || exit 1
     file="`$BASENAME \"$pathname\"`"
     case "$file" in
       .FSP*)
-        echo "--WARN-- [fsys009w] FSP server control file found:"
+	message WARN fsys009w "" "FSP server control file found:"
 	$LS $LSGROUP -ld "$pathname";;
       *)
-        echo "--ALERT-- [fsys005a] Unusual filename \`$file' found:"
+	message ALERT fsys005a "" "Unusual filename \`$file' found:"
 	$LS $LSGROUP -ld "$pathname";;
     esac
   done

@@ -59,7 +59,7 @@ do
   $LS -ld $LSGROUP "$file" | {
     read p l owner group s a b c f
     [ "$owner" != 'root' -a "$owner" != 'bin' ] && {
-      echo "--INFO-- [fsys007i] Symbolic link \`$file' points to \`$realfile'."
+      message INFO fsys007i "" "Symbolic link \`$file' points to \`$realfile'."
     }
   }
 done

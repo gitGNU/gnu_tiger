@@ -174,7 +174,7 @@ haveallcmds SORT COMM CAT && {
 
 haveallcmds LS AWK && {
   [ -s $WORKDIR/suid.list.$$ ] && {
-    message INFO fsys004i "" 'The following setuid programs are non-standard:'
+    message ALERT fsys004a "" 'The following setuid programs are non-standard:'
     while read file
     do
       $LS $LSGROUP -ld "$file"
