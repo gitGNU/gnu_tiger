@@ -1,0 +1,133 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2002 Javier Fernandez-Sanguino 
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_network_config: checks for security configuration paramenters of the
+#                network environment (using ndd)
+#
+# 11/25/2002 jfs - Initial version for Linux derived from Hispasec's bulletin
+#                  (which is based on documentation online)
+# 15/04/2003 jfs - Solaris version
+#
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds CAT NDD || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+#------------------------------------------------------------------------
+haveallcmds CAT NDD || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+echo
+echo "# Checking network configuration"
+
+
+read_set() {
+# Reads a setting if it exists
+# Otherwise returns -1
+	type=$1
+	setting=$2
+	value=`ndd $type $setting`
+	return $value
+}
+
+
+read_set /dev/ip ip_forwarding
+ip_fwd=$?
+read_set /dev/ip ip_forward_src_route
+ip_source_route=$?
+read_set /dev/ip ip_respond_to_address_mask
+icmp_amask=$?
+read_set /dev/ip ip_respond_to_timestamp
+icmp_time=$?
+read_set /dev/ip ip_respond_to_timestamp_broadcast
+icmp_time_bcst=$?
+read_set /dev/ip ip_ignore_redirect
+icmp_redirect_def=$?
+read_set /dev/ip ip_respond_to_echo_broadcast
+icmp_echo_bcst=$?
+read_set /dev/ip ip_respond_to_address_mask_broadcast
+icmp_amask_bcst=$?
+
+# TODO: add messages for these
+read_set /dev/ip ip_forward_directed_broadcasts
+ip_fwd_bcst=$?
+read_set /dev/ip ip_strict_dst_multihoming
+ip_strict_multih=$?
+read_set /dev/tcp tcp_strong_iss
+tcp_strong_iss=$?
+
+
+# Now start checking and sending messages
+
+[ $icmp_echo_bcst -eq 1 ] && \
+	message FAIL sol001f "The system is configured to answer to ICMP broadcasts"
+[ $icmp_amask_bcst -eq 1 ] && \
+	message FAIL sol001f "The system is configured to answer to ICMP address mask broadcasts"
+[ $icmp_time_bcst -eq 1 ] && \
+	message FAIL sol001f "The system is configured to answer to ICMP timestamp broadcasts"
+
+[ $icmp_time -eq 1 ] && \
+	message FAIL sol001f "The system is configured to answer to ICMP timestamp requests"
+
+[ $icmp_time -eq 1 ] && \
+	message FAIL sol001f "The system is configured to answer to ICMP addressmask requests"
+
+[ $icmp_redirect -eq 0 ] && \
+	message WARN sol002w "The system accepts ICMP redirection messages"
+
+[ $ip_fwd -eq 1 ]  && \
+	message WARN sol003w "The system has IP forwarding enabled"
+
+[ $ip_source_route -eq 1 ] && \
+	message FAIL sol004f "The system permits source routing from incoming packets"
+
