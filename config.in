@@ -19,6 +19,8 @@
 #
 # 04/29/93 dls  Added support for 'tigerrc' file.
 # 04/15/2003 jfs  Modified to support -B to work in the local dir 
+# 04/21/2003 jfs  Modified to only use hostname -f for Linux _and_
+#		  moved hostname check after RCFILE parsing!
 #
 #-----------------------------------------------------------------------------
 #
@@ -183,24 +185,6 @@ checkfile()
   }
   export OUTPUTMETHOD
   
-  HOSTNAME=`$GETHOSTNAME`
-  if [ "$Tiger_Output_FQDN" = 'Y' -a "$OS" = "Linux" ]
-  then
-  # Linux hostname has the -f option for FQDN... (jfs)
-  # (others?)
-          HOSTNAME=`$GETHOSTNAME -f`
-  fi
-
-  for file in './site-$HOSTNAME' '$BASEDIR/site-$HOSTNAME' './site' '$BASEDIR/site'
-  do
-    eval rc=$file
-    if checkfile $rc $file; then
-      SITECONFIG=$rc
-      break
-    fi
-  done
-
-  [ -n "$SITECONFIG" -a -r "$SITECONFIG" ] && . $SITECONFIG
 
   [ -n "$RCFILE" -a ! -f "$RCFILE" ] && {
     echo "Control file "$RCFILE" not found... exiting..."
@@ -228,6 +212,25 @@ checkfile()
     . $WORKDIR/rcfile.$$
     $RM -f $WORKDIR/rcfile.$$
   }
+
+  HOSTNAME=`$GETHOSTNAME`
+  if [ "$Tiger_Output_FQDN" = 'Y' -a "$OS" = "Linux" ]
+  then
+  # Linux hostname has the -f option for FQDN... (jfs)
+  # (others?)
+          HOSTNAME=`$GETHOSTNAME -f`
+  fi
+
+  for file in './site-$HOSTNAME' '$BASEDIR/site-$HOSTNAME' './site' '$BASEDIR/site'
+  do
+    eval rc=$file
+    if checkfile $rc $file; then
+      SITECONFIG=$rc
+      break
+    fi
+  done
+
+  [ -n "$SITECONFIG" -a -r "$SITECONFIG" ] && . $SITECONFIG
     
   HOSTNAMESLIST=${HOSTNAMESLIST:=$HOSTNAME}
 
