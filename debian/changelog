@@ -1,3 +1,20 @@
+tiger (3.2-1) unstable; urgency=low
+
+  * New upstream version 
+     - False positives in services fixed (Closes: #132278)
+     - Check_exports produces proper output (Closes: #162453)
+     - Checks have been separated, no each check file prints it's
+       comment (CloseS: #165766)
+     - Using the new ignore mechanism (better than the differential
+       mechanism) this package now provides a baseline for Debian GNU/Linux, 
+       hopefully this will make Matt test again this package :-) 
+       (Closes: #164308, #172375)
+     - The new ignore mechanism can now be used to avoid false positives,
+       please customize as needed and read the notes on the 
+       check_listeningprocs script (Closes: #136991)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 16 Apr 2003 00:29:45 +0200
+
 tiger (3.1-5) unstable; urgency=low
 
   * Included some of the changes that will be in the next Tiger release

@@ -1,6 +1,67 @@
 NOTE: To read changes made to the Debian package (since
 August 23rd 2001) see the changelog.Debian file
 
+Changes (v 3.2) 14 April 2003
+-----------------------------
+
+- New ignore mechanism for all modules through the ignore_message 
+  function in initdefs provides a way for administrators to configure
+  (with extended regular expressions) messages that no modules of Tiger
+  will report (wether run in a full run or through a cron job). This 
+  helps administrator improve Tiger output and remove spurious errors
+  or false positives 
+  (like the DNS UDP listeners reported by check_listeningprocs)
+- Updated the README and USING files with current information on how to
+  run/install Tiger
+- Updated the README.linux file
+- Updated the README.hostids file
+- Wrote a new READMe.ignore file explaining the new mechanism
+- Fixed configuration so that the -f option is not used on non-Linux systems
+  ('hostname -f' is not an option available in some of them and this breaks
+    Solaris!)
+- Modified Linux' configuration file in order to work with new checks
+- Modified Linux' configuration file so that LSGROUPS is set properly
+  depending on the fileutils version (enables Tiger to be used in 
+  Debian's 'woody' by fixing, at least, this know issue)
+- Fixed the check_inittab script for linux (did not look for the proper
+  string!)
+- Improved the check_logfiles check in order to check also for logfile 
+  permissions and to be more flexible depending on OS.
+- Modified some of the util/ scripts:
+	. Linux call is modified to return the proper value in gethostinfo
+	. LS and AWK are no longer hardcoded in getpermit
+	. [security] 'installsig' has been modified so that the DESTDIR 
+	  in the file cannot be use to run local commands through 'eval'
+
+New checks:
+- scripts/check_deleted: detects processes or services (servers) using 
+     deleted files. It is based on Brian Hatch's article on deleted files
+     and the article "The Upgrade Process: Restarting vs Rebooting."
+     published at hackinglinuxexposed.com. 
+- scripts/check_services: derived from check_inetd, so that it only checks
+     for service information 
+- scripts/check_umask: derived from check_logfiles, check for user's umask.
+- scripts/check_passwdformat: Checks format of password files to determine 
+     if there is any inconsitency
+- scripts/check_apache: checks configuration of the Apache web server
+- scripts/check_exrc: checks for .exrc files (which might be loaded by
+     a user inadvertendly when running some editors
+- Linux/2/check_network_config: checks for the values of the network 
+     configuration in order to determine if the system is susceptible
+     to some attacks
+- Solaris/5/5.8/check_listeningprocs: preliminary version for Solaris to
+     detect which processes/user are opening inbound sockets (note that
+     NETSTAT will not provide process or user information and LSOF might
+     not be available in all systems)
+- HPUX/check_ftpusers: new version of the check_ftpusers script. This one is
+     specific for HPUX and has been contributed as a patch at Savannah. It
+     does not do the same check as the generic one, and users might want to
+     use this or the other one.
+- Solaris/5/check_network_config: preliminary version for Solaris to
+     detect the network configuration parameters (stills need to be tested)
+- HPUX/check_network_config: preliminary version for HPUX of the same script
+
+
 Changes (v 3.1) 10/09/2002
 ---------------------------
 

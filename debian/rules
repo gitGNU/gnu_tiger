@@ -48,6 +48,7 @@ install: build
 	install -m 755 tigercron debian/tmp/usr/lib/tiger/
 	install -m 600 cronrc debian/tmp/etc/tiger/
 	install -m 600 tigerrc debian/tmp/etc/tiger/
+	install -m 600 debian/debian.ignore debian/tmp/etc/tiger/tiger.ignore
 	install -m 644 version.h debian/tmp/usr/lib/tiger/
 	-find debian/tmp/ -type d -a -name "CVS" |xargs rm -rf 
 
