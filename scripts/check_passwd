@@ -49,6 +49,7 @@
 # 01/21/2004 jfs Moved comment from check_accounts to here and expanded
 #       shcase definition to be equivalent to the one there.
 # 03/03/2004 jfs Check if users do not have a shell defined
+# 05/03/2004 jfs Define Tiger_Passwd_Hashes if not defined (Debian bug #246885)
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -124,6 +125,7 @@ check_passwd_entries()
   do
 
     # Check the password hash.
+    [ -z "$Tiger_Passwd_Hashes" ] && Tiger_Passwd_Hashes='crypt3|md5'
     eval "case \"$hash\" in
       \"\")
         message FAIL pass011f \"\" \"Username \\\`$login' has an empty password field.\"
