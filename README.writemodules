@@ -102,8 +102,21 @@ way (eg., grep'ing or cat'ing it)
 In any case, it has to verify that these commands are available even
 if they are properly defined.
 
+Temporary files
+----------------
+If the script needs to use temporary files it must _always_ create them
+under the $WORKDIR directory, you can use the safe_temp() function to create
+them properly. This function will try to avoid the script being vulnerable
+through a race condition and will create them if the file does not exist.
+
+In any case, all temporary files must be removed if the script receives
+a signal or at the end. The delete() function must be used for this 
+(defined in initdefs), if the script uses this function then it must
+_always_ include RM in the 'haveallcmds' call.
+
+
 -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>
-Sat, 18 May 2002 20:35:26 +0200
+Sat,  9 Aug 2003 11:50:33 +0200
 
 ---------------------- SAMPLE module --------------------------------
 
@@ -182,6 +195,13 @@ echo "# Performing DESCRIPTION OF WHAT DOES IT DO..."
 haveallcmds AWK GREP CAT JOIN LS RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 haveallvars TESTLINK HOSTNAME || exit 1
+
+# IF you use temporary files define them here to generate them
+# properly and avoid race conditions.
+#tempfiles=
+#safe_temp $tempfiles
+#trap 'delete $tempfiles ; exit 1' 1 2 3 15
+
 
 { ......... Commands for the test ................... }
  message FAIL XXXX0??f "" "MESSAGE TO WRITE IN REPORT"
