@@ -16,6 +16,8 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # syslist - 06/14/93
+# 
+#  Retrieve the list of supported systems in this Tiger release
 #
 #-----------------------------------------------------------------------------
 #
