@@ -16,6 +16,8 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # HPUX/genmounts - 06/14/93
+# HPUX/genmounts - 11/19/2003 - Applied patch from Ryan Bradetich which adds
+#           hfs and vxfs as valid local filesystems.
 #
 #-----------------------------------------------------------------------------
 #
@@ -37,7 +39,8 @@ ronly()
 localfs()
 {
   LOCAL=1
-  [ "$1" = "ufs" ] && LOCAL=0
+  [ "$1" = "hfs" ] && LOCAL=0
+  [ "$1" = "vxfs" ] && LOCAL=0
 
   return $LOCAL
 }
