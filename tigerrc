@@ -238,7 +238,10 @@ Tiger_Check_PATHALL=N           # Check all user PATHs in startup files.
 # List of usernames separated by '|'... no whitespace
 #
 Tiger_ROOT_PATH_OK_Owners='root|uucp|bin|news|sys|daemon'
+# If you are paranoid:
 #Tiger_ROOT_PATH_OK_Owners='root'
+# If you are running HP-UX
+# Tiger_ROOT_PATH_OK_Owners='root|uucp|bin|news|sys|daemon|lp'
 #
 # What groups can have write access to executables in 'root's PATH?
 # List of group names separated by '|'... no whitespace.
