@@ -25,17 +25,17 @@ Release: %{rev}.%{cvs}
 %endif
 License: GPL
 Group: System Environment/Base
+URL: http://www.tigersecurity.org
 Source: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}
 Provides: %{name}
 %if %{want_reloc}
+Prefix: /usr/sbin
 Prefix: /usr/lib
 Prefix: /var
 Prefix: /etc
 %else
 Prefix: /usr/local
-Prefix: /var
-Prefix: /etc
 %endif
 
 
@@ -65,7 +65,7 @@ This is TIGER release %{version}.%{release}
 	--with-tigerbin=/usr/sbin \
 	--with-tigerconfig=/etc/tiger \
 	--with-tigerwork=/var/run/tiger \
-	--with-tigerlog=/var/log
+	--with-tigerlog=/var/log/tiger
 %else
 	--with-tigerhome=/usr/local/tiger \
 	--with-tigerbin=/usr/local/tiger/bin \
@@ -136,9 +136,14 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files
 %defattr(-,root,root)
+# Common directories regardless of if its relocated or not
+/etc/cron.d
+# Directories that will change if relocated
 %if %{want_reloc}
+/usr/sbin/
 /usr/lib/%{name}
 /var/run/%{name}
+/var/log/%{name}
 /etc/%{name}
 %else
 /usr/local/%{name}
@@ -152,8 +157,17 @@ rm -rf ${RPM_BUILD_ROOT}
 - Cron file is now installed in /etc/cron.d/tiger
 - Version.h file is now installed (should be done by the Makefile)
 - Install ignore file (but needs to be revised)
+- Always remove the systems we don not care for (just leave Linux)
 - Remove the systems we don not care for (just leave Linux) based on
   the keep_other_sys variable
+- Added /usr/sbin (if relocatable) and /etc/cron.d/ in the generic case
+  to the distributed files.
+- Changed /var/log to /var/log/tiger
+- NOTE: I don't expect the relocatable part to work properly (since Tiger
+  has been already 'configured'). I'll leave it momentarily until
+  I decide what to do with it. If it's relocated Tiger will _NOT_ work
+  (until the hardcoded paths are changed), this could be done in the
+  %post installation properly, though.
 * Wed Sep 24 2003 unSpawn <unSpawn@rootshell.be> XIII
 - Made spec file build relocatable and reflect tru parameterisation
 - Strip CVS dirs on build
