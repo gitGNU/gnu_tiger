@@ -3,21 +3,36 @@
 #     tiger - A UN*X security checking system
 #     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
-#    any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# SunOS/4/config - 06/14/93
+#     Developed by Advanced Research Corporation (R)
+#
+# Linux/1/config - 04/20/99
+# Linux/2/config - 04/20/99
+# Linux/1/config - 09/14/01  Added test for ifconfig
+# Linux/2/config - 09/14/01  ditto
+# Linux/2/config - 10/09/01  Changed reserved word GROUPS to GROUPSS
 #
 #-----------------------------------------------------------------------------
+findcmd()
+{
+  CMD=$1
+
+  SRCH=/bin:/usr/bin:/etc:/usr/etc:/usr/ucb:/sbin:/usr/sbin:/usr/bsd:/usr/lib
+  TESTEXEC="-x"
+  SAVEIFS=$IFS
+  IFS=:
+  set $SRCH
+  IFS=$SAVEIFS
+  for dir
+  do
+    [ $TESTEXEC $dir/$CMD ] && {
+      echo $dir/$CMD
+echo $dir/$CMD >> /tmp/zap
+      return
+    }
+  done
+}      
 #
 #   UUID=`/usr/bin/id | /usr/bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
 [ "$UUID" = "" ] &&
@@ -29,58 +44,60 @@ export UNAME
   echo " " 1>&2
   echo "This script should be run from a super-user account." 1>&2
   echo " " 1>&2
-#  exit 1
+  exit 1
 }
 
-CAT=/usr/bin/cat
-LS=/bin/ls
+CAT=`findcmd cat`
+LS=`findcmd ls`
 # -g to show group ownership
 LSGROUP="-lg"
 # -L to show file instead of symlink
 LSLINK="-L"
 RM=/bin/rm
-AWK=/usr/bin/awk
-GREP=/usr/bin/grep
-EGREP=/usr/bin/egrep
+AWK=`findcmd awk`
+GREP=`findcmd grep`
+EGREP=`findcmd egrep`
 # Silent grep
 SGREP="$EGREP -s"
-SED=/usr/bin/sed
-SORT=/usr/bin/sort
-COMM=/usr/bin/comm
-TAIL=/usr/bin/tail
-MV=/bin/mv
-TR=/usr/bin/tr
-JOIN=/usr/bin/join
-GROUPSS=/usr/bin/groups
-FILECMD=/usr/bin/file
-UNIQ=/usr/bin/uniq
-BASENAME=/usr/bin/basename
-CHMOD=/bin/chmod
-CHOWN=/bin/chown
-LN=/bin/ln
-PASTE=/usr/bin/paste
-DIFF=/usr/bin/diff
-MAILER=/usr/bin/mail
-SENDMAILS="/usr/bin/smail"
+SED=`findcmd sed`
+SORT=`findcmd sort`
+COMM=`findcmd comm`
+TAIL=`findcmd tail`
+TCPD=`findcmd tcpd`
+MV=`findcmd mv`
+TR=`findcmd tr`
+JOIN=`findcmd join`
+GROUPSS=`findcmd groups`
+FILECMD=`findcmd file`
+UNIQ=`findcmd uniq`
+BASENAME=`findcmd basename`
+CHMOD=`findcmd chmod`
+CHOWN=`findcmd chown`
+LN=`findcmd ln`
+PASTE=`findcmd paste`
+DIFF=`findcmd diff`
+MAILER=`findcmd mail`
+SENDMAILS=`findcmd sendmail`
+IFCONFIG=`findcmd ifconfig`
 # I'm not sure what a SMAIL config file looks like...
 SENDMAILCF=""
 export SENDMAILS SENDMAILCF
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME
-export CHMOD CHOWN LN PASTE DIFF MAILER
+export CHMOD CHOWN LN PASTE DIFF MAILER TCPD IFCONFIG
 #
-UNAME=/usr/bin/uname
-GETHOSTNAME=/bin/hostname
-EXPR=/usr/bin/expr
-STRINGS=/usr/bin/strings
-FIND=/usr/bin/find
+UNAME=`findcmd uname`
+GETHOSTNAME=`findcmd hostname`
+EXPR=`findcmd expr`
+STRINGS=`findcmd strings`
+FIND=`findcmd find`
 FINDXDEV=-xdev
-FMT=/usr/bin/fmt
-GETFS=/etc/mount
-CC=/usr/bin/cc
-PS=/bin/ps
-DATE=/usr/bin/date
+FMT=`findcmd fmt`
+GETFS=`findcmd mount`
+CC=`findcmd cc`
+PS=`findcmd ps`
+DATE=`findcmd date`
 DATECMD="$DATE +%y%m%d"
 TIMECMD="$DATE +%H:%M"
 TESTLINK=-L
@@ -96,9 +113,9 @@ WAIT=wait
 #WAIT=simple_wait
 #
 # Using NIS (YP)?
-#YPCAT=/usr/bin/ypcat
+YPCAT=`findcmd ypcat`
 #
-YP=
+#YP=
 #($PS -auxww | $GREP ypbind | $SGREP -v $GREP) && YP=Y
 export YP
 #
@@ -109,7 +126,15 @@ export WAIT YPCAT YPSERVER
 #
 MAILSPOOL=/var/spool/mail
 #
-CRONSPOOL=/usr/spool/cron/crontabs
+if [ -d /usr/spool/cron/crontabs ]; then
+  CRONSPOOL=/usr/spool/cron/crontabs
+elif [ -d /var/spool/cron/crontabs ]; then
+  CRONSPOOL=/var/spool/cron/crontabs 
+elif [ -d /var/spool/cron ]; then
+  CRONSPOOL=/var/spool/cron
+else
+CRONSPOOL=NULL
+fi
 #
 ETCSHELLS=/etc/shells
 #
