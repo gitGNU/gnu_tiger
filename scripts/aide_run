@@ -15,8 +15,21 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# aide_run - 24/04/2003
+# aide_run - 04/24/2003
 # unSpawn <unspawn@rootshell.be>
+#
+# Implement system integrity checks using aide.
+#
+# aide_run - 05/05/2003 - jfs
+#	Fixed integrity checks (commands)
+#	Moved namespace of variables to Tiger_Aide
+#	Added some more TODOs
+#	Converted direct calls to grep, cut, tr to $GREP...
+#
+# TODO:
+# - the config files for systems need to locate AIDE 
+# - consider using Tiger_Run_INTEGRITY_AIDE_XXX for all variables or keep
+#   as the current namespace for external commands (Tiger_Run)
 #
 #-----------------------------------------------------------------------------
 #
@@ -56,7 +69,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT FMT GEN_PASSWD_SETS JOIN LS RM || exit 1
+  haveallcmds CUT GREP TR || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -67,60 +80,70 @@ done
 #------------------------------------------------------------------------
 echo
 echo "# Performing Aide filesystem integrity check..."
+haveallcmds CUT GREP TR || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
 
 # REMARKS
-# If acceptable and accepted, this check should be triggered by Tiger_Run_INTEGRIT_AIDE in tigerrc, 
-# and Tiger_Run_TRIPW should be moved to Tiger_Run_INTEGRIT_TRIPW before we 
-# try to add Samhain, Prelude Osiris and/or Integrit.
+# If acceptable and accepted, this check should be triggered by 
+# Tiger_Run_AIDE in tigerrc.
 
 # TODO
-# - Toggle verbose reporting using Tiger_Run_INTEGRIT_AIDE_VERBOSE=1
+# - Toggle verbose reporting using Tiger_Run_AIDE_VERBOSE=1
 # - User input custom aide location (pref from read-only media)
-#   Proposed user input var (tigerrc): Tiger_Run_INTEGRIT_AIDE_LOC_OVERRIDE
+#   Proposed user input var (tigerrc): Tiger_Run_AIDE_LOC_OVERRIDE
 # - User input custom aide config(s) (pref from read-only media)
-#   Proposed user input var (tigerrc): Tiger_Run_INTEGRIT_AIDE_CFG_OVERRIDE
+#   Proposed user input var (tigerrc): Tiger_Run_AIDE_CFG_OVERRIDE
 # - User input custom db (pref from read-only media)
-#   Proposed user input var (tigerrc): Tiger_Run_INTEGRIT_AIDE_DB_OVERRIDE
+#   Proposed user input var (tigerrc): Tiger_Run_AIDE_DB_OVERRIDE
 # - Expand with Integrit, Osiris and Prelude.
 
-# For all of the below commands to fill in the gaps I'm thinking "how portable is this?"...
+# For all of the below commands to fill in the gaps I'm thinking 
+# "how portable is this?"...
 
 # Aide binary location|override + default check
 # Which, find, user-supplied var or tigexp's findcmd?:
-if [ -z "${Tiger_Run_INTEGRIT_AIDE_LOC_OVERRIDE}" ]; 
-then AIDE=$(which aide)
-else AIDE=${Tiger_Run_INTEGRIT_AIDE_LOC_OVERRIDE}
+if [ -z "${Tiger_Run_AIDE_LOC_OVERRIDE}" ]
+then 
+	AIDE=$(which aide)
+else 
+	AIDE=${Tiger_Run_AIDE_LOC_OVERRIDE}
 fi
+
 # Aide binary default location, not using "eval" or "[ -x":
 case "${#AIDE}" in 0) AIDE="/usr/local/bin/aide";; esac
 
 # Aide configuration file location|override + default check
-if [ -z "${Tiger_Run_INTEGRIT_AIDE_CFG_OVERRIDE}" ]; 
-then AIDE_CFG=$($AIDE -v 2>&1| $GREP -e "^CONFIG_FILE" | cut -d " " -f 3| tr -d "\"")
-else AIDE_CFG=${Tiger_Run_INTEGRIT_AIDE_CFG_OVERRIDE}
+if [ -z "${Tiger_Run_AIDE_CFG_OVERRIDE}" ]; 
+then AIDE_CFG=$($AIDE -v 2>&1| $GREP -e "^CONFIG_FILE" | $CUT -d " " -f 3| $TR -d "\"")
+else AIDE_CFG=${Tiger_Run_AIDE_CFG_OVERRIDE}
 fi
+
 # Aide default configuration file, not using "eval" or "[ -z|-f":
 case "${#AIDE_CFG}" in 0) AIDE_CFG="/usr/local/etc/aide.conf";; esac
 
 # Aide database override, else this variable is taken from the configuration file of course
-if [ ! -z "${Tiger_Run_INTEGRIT_AIDE_DB_OVERRIDE}" ]; 
-then AIDE_DB="--after=database=file:${Tiger_Run_INTEGRIT_AIDE_DB_OVERRIDE}"
+if [ ! -z "${Tiger_Run_AIDE_DB_OVERRIDE}" ]; 
+then AIDE_DB="--after=database=file:${Tiger_Run_AIDE_DB_OVERRIDE}"
 fi
 
 # Run Aide using std conf, report to stdout
 AIDE_RPT="$WORKDIR/aide.out.tmp.$$"
-$AIDE --check --config=${AIDE_CFG} --report=stdout ${AIDE_DB} 2>/dev/null > ${AIDE_RPT}
+AIDE_ERR_RPT="$WORKDIR/aide.err.tmp.$$"
+$AIDE --check --config=${AIDE_CFG} --report=stdout ${AIDE_DB} \
+	2>${AIDE_ERR_RPT} > ${AIDE_RPT}
+# TODO: calling AIDE should check the errors (if any)
+# i.e. check $? and determine what happened
 
 # Check temporary report for the changes signal:
-grep ${AIDE_RPT} -qe "AIDE found differences"
+$GREP ${AIDE_RPT} -qe "AIDE found differences"
 
 case "$?" in
 0)	# Summary
-	AIDE_SUMMARY=$(grep ${AIDE_RPT} -e "^Total number"
+	AIDE_SUMMARY=`$GREP ${AIDE_RPT} -e "^Total number"`
 	message INFO aide003s "" "Summary: ${AIDE_SUMMARY}"
 	# Differentiate between added, changed and removed files
 	for status in changed removed detected; do
-		grep ${AIDE_RPT} -e "^${status}:" \
+		$GREP ${AIDE_RPT} -e "^${status}:" \
 		| $CUT -d ":" -f 2 | while read result; do
 		case "${status}" in
 			changed) exp="aide003c";;
@@ -134,6 +157,6 @@ case "$?" in
 	message INFO aide001k "" "No changes detected.";;
 esac
 
-$RM -f ${AIDE_RPT}
+delete ${AIDE_RPT} ${AIDE_ERR_RPT}
 
 exit 0
