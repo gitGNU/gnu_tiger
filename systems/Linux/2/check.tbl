@@ -16,20 +16,18 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# Linux/2/check.tbl - 23/08/2001
+# Linux/2/check.tbl - 08/23/2001
+# Linux/2/check.tbl - 04/23/2003 - jfs
+#             Removed Debian specific checks (moved to check now)
 #
 #-----------------------------------------------------------------------------
 #
 # Add new system specific checks here.  One script name per line.
 #
-# The new Linux system checks, written by Paul Telford, are 
-# called from in the check script. This file only provides services
-# that are not checked against any tigerrc variable.
-# ----------------------------------------------------------------
+# The new Linux system checks, written by Paul Telford and
+# Javier Fernandez-Sanguino, are called from the Linux 'check' script.
+# And configured through tigerrc. This file is useful for administrators
+# to add local checks that will _always_ be executed, regardless of the
+# tigerrc variables.
+#-----------------------------------------------------------------------------
 #
-# The following scripts have been added to provide new checks (mostly)
-# specific to the Debian system, written by Javier Fernandez-Sanguino
-# 
-/usr/lib/tiger/systems/Linux/2/deb_nopackfiles
-/usr/lib/tiger/systems/Linux/2/deb_checkmd5sums
-/usr/lib/tiger/systems/Linux/2/deb_checkadvisories

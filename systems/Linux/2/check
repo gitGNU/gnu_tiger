@@ -21,6 +21,8 @@
 # 
 # Linux/2/check - 04/23/2003 - jfs
 # 	Removed CC dependancy, added TODO
+#       Debian specific checks moved into an if and check.tbl cleared
+#       (that file should be user-only)
 #-----------------------------------------------------------------------------
 # TODO:
 #
@@ -79,7 +81,8 @@ haveallfiles BASEDIR WORKDIR || exit 1
 SYSTEMDIR=$BASEDIR/systems/Linux/2
 #
 # The following scripts have been added to provide new checks 
-# for any Linux system, written by Paul Telford
+# for any Linux system, written by Paul Telford and
+# Javier Fernandez-Sanguino
 # 
 # Note: cannot echo TIMECMD since we lose the handle to the tmplog
 [ "$Tiger_Check_OS" != 'N' ] && {
@@ -121,3 +124,29 @@ SYSTEMDIR=$BASEDIR/systems/Linux/2
 # echo "`$TIMECMD`> Checking for values of the network configuration."
   $SYSTEMDIR/check_network_config
 }
+
+# The following scripts have been added to provide new checks 
+# specific to the Debian system, written by Javier Fernandez-Sanguino
+#
+if [ "$LXDISTRIBUTION" == "debian" ]; then
+
+# The following checks, for the moment, work only for Debian but
+# they could be generalised (there is a tigerrc variable for them)
+[ "$Tiger_Check_OS" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for correct OS version..."
+  $SCRIPTDIR/check_release >> $logtmp
+}
+
+[ "$Tiger_Check_PATCH" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for up-to-date patches..."
+  $SCRIPTDIR/check_patches >> $logtmp
+}
+
+# No tigerrc variables defined for these, but they are only 
+# Debian specific
+$SCRIPTDIR/deb_checkadvisories >> $logtmp
+$SCRIPTDIR/deb_checkmd5sums >>$logtmp
+$SCRIPTDIR/deb_nopackfiles >>$logtmp
+# End of Debian-specific checks
+
+fi 
