@@ -1,4 +1,7 @@
 # -*- sh -*-
+# ------------------------- WARN ----------------------------------
+# DO NOT USE or EDIT! This file is not current used in autoconfiguration
+# ------------------------- WARN ----------------------------------
 #
 #     tiger - A UN*X security checking system
 #     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
