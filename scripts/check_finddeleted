@@ -27,6 +27,8 @@
 #     vulnerable.
 #
 # DATE 	NAME 	DESCRIPTION_OF_CHANGES
+# 09/13/2003 - jfs - Applied patch from Nicholas François to fix an error
+#              which might allow some rogue processes to slip by
 # 08/08/2003 - jfs - Avoided race conditions.
 # 04/16/2002 - jfs - First version based on Brian Hatch's articles
 #              (http://www.hackinglinuxexposed.com/articles/20020507.html)
@@ -95,8 +97,8 @@ while read pid ppid
 do
 	# It can be deleted if name includes (deleted) or
 	# TYPE = DEL
-	$LSOF -np $pid  | $GREP -v PID | $GREP "(deleted)" >>$WORKDIR/deleted.$$
-	$LSOF -np $pid  | $GREP -v PID | $GREP "DEL" >>$WORKDIR/deleted.$$
+	$LSOF -np $pid  | $GREP "(deleted)" >>$WORKDIR/deleted.$$
+	$LSOF -np $pid  | $GREP "DEL" >>$WORKDIR/deleted.$$
 
 	$CAT $WORKDIR/deleted.$$ |
         while read command npid user fd type device other
