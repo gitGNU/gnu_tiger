@@ -1,9 +1,33 @@
 NOTE: To read changes made to the Debian package (since
 August 23rd 2001) see the changelog.Debian file
 
-Changes (v 3.2) 14 April 2003
------------------------------
-
+Changes (v 3.2) 
+----------------
+(23 April 2003 - rc3)
+- Applied Steve Grubb's patch to avoid a buffer overflow in realpath
+- Changed the behaviour of autoconf to avoid messing
+  with binaries in the source copy.
+- Improved the Makefile:
+	- better segmentation on targets (for testing and error checking)
+	- follows better GNU's standards (including use of DESTDIR)
+	- binaries and config are sed' on installation
+	- missing (new) scripts have been included 
+	- removed config-local target (no sense ATM)
+- Fixed tigercron (removed CONFIGDIR and added some sanity checks)
+- Added sanity checks to Tiger_Accounts_Trust
+(22 April 2003 - rc2)
+- Makefile changes:
+	- now installs WORK and LOGS dir as 700
+	- new targets (mantainerclean, config, config-local, distclean)
+- config modified to:
+	- _only_ use hostname -f with Linux
+	- hostname check is done after Tiger_Output_FQDN is defined
+	- determine location of RCFILE and IGNOREFILE properly so that
+	  cli arguments can change them
+	- configure now sets  ${prefix}
+- Fixed ignore mechanism (wasn't working at all due to missing quotes)
+- Debian packaging fixes
+(14 April 2003 - rc1)
 - New ignore mechanism for all modules through the ignore_message 
   function in initdefs provides a way for administrators to configure
   (with extended regular expressions) messages that no modules of Tiger
