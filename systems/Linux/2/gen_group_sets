@@ -15,10 +15,24 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# SunOS/4/gen_group_sets - 06/14/93
+# Linux/2/gen_group_sets - 06/14/93 (based on the SunOS)
+# 
+# 01/15/2004 - jfs - Added some defaults to test the script standalon
+#                    and avoid errors when using YPCAT even if its not defined.
 #
 #-----------------------------------------------------------------------------
 #
+
+# If run directly do this, just in case:
+[ -z "$GREP" ] && GREP=`which grep`
+[ -z "$AWK" ] && AWK=`which awk`
+[ -z "$SED" ] && SED=`which sed`
+[ -z "$SORT" ] && SORT=`which sort`
+[ -z "$COMM" ] && COMM=`which comm`
+[ -z "$RM" ] && RM=`which rm`
+[ -z "$YPCAT" ] && YPCAT=`which ypcat 2>/dev/null`
+[ -z "$WORKDIR" ] && WORKDIR=/tmp
+
 
 $GREP -v '^[-+]' /etc/group |
 $SORT > $WORKDIR/etc_group.$$
@@ -26,12 +40,16 @@ echo "/etc/group" > $WORKDIR/etc_group.$$.src
 echo $WORKDIR/etc_group.$$
 
 [ -n "$YPCAT" ] && {
-  $YPCAT group |
-  $SORT |
+  $YPCAT group >$WORKDIR/nis_group.orig.$$
+  if [ $? -eq 0 ] ; then
+  $SORT < $WORKDIR/nis_group.orig.$$
   $AWK '{print substr($0, 1, 255);}' |
   $COMM -23 - $WORKDIR/etc_group.$$ > $WORKDIR/nis_group.$$
   echo "NIS" > $WORKDIR/nis_group.$$.src
   echo $WORKDIR/nis_group.$$
+  fi
+  # Ypcat has not succeded (ouch), remove the temporary file
+  $RM $WORKDIR/nis_group.orig.$$
 }
 
 [ "$SERVERCHECK" = "Y" ] && {
