@@ -54,6 +54,10 @@ TIGERBIN=@tigerbin@
 #
 TIGERCONFIG=@tigerconfig@
 #
+# Where do manpages go to
+# 
+TIGERMANDIR=@mandir@
+#
 #------------------------------------------------------------------------
 #
 # End of user customization...
@@ -139,7 +143,6 @@ MISCFILES=./initdefs \
 MISCDIRS=./bin \
 	./doc \
 	./html \
-	./man \
 	./scripts/sub \
 	./systems
 
@@ -184,6 +187,19 @@ installdirs:
 	  mkdir -p $(DESTDIR)$(TIGERCONFIG); \
 	  chmod 700 $(DESTDIR)$(TIGERCONFIG); \
 	fi
+	@echo "Creating $(TIGERMANDIR)..."
+	@if [ ! -d $(DESTDIR)$(TIGERMANDIR) ]; then \
+	  mkdir -p $(DESTDIR)$(TIGERMANDIR); \
+	  mkdir -p $(DESTDIR)$(TIGERMANDIR)/man8; \
+	  chmod 755 $(DESTDIR)$(TIGERMANDIR); \
+	  chmod 755 $(DESTDIR)$(TIGERMANDIR)/man8; \
+	fi
+
+installmanpages:
+	@echo "Copying manpages..."
+	$(INSTALL) -c -m 0444 man/tiger.8 $(DESTDIR)$(TIGERMANDIR)/man8
+	$(INSTALL) -c -m 0444 man/tigexp.8 $(DESTDIR)$(TIGERMANDIR)/man8
+	$(INSTALL) -c -m 0444 man/tigercron.8 $(DESTDIR)$(TIGERMANDIR)/man8
 
 installbinaries:
 	@echo "Copying binaries..."
@@ -212,7 +228,7 @@ installconfig:
 	 ./config >$(DESTDIR)$(TIGERHOME)/config
 	@chmod 644 $(DESTDIR)$(TIGERHOME)/config
 
-install: installdirs installbinaries installconfig
+install: installdirs installbinaries installconfig installmanpages
 	cd c && $(MAKE) install
 	@echo "Copying miscellaneus dirs..."
 	@for dir in $(MISCDIRS); do \
