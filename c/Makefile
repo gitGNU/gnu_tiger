@@ -34,3 +34,5 @@ install:  all
 
 clean:
 	-rm -f ${BINLIST}
+
+distclean: clean
