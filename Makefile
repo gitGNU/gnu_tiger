@@ -110,12 +110,11 @@ MISCDIRS=./bin \
 	./systems
 
 all:
-	cd c && $(MAKE) all
+	cd c && $(MAKE) install
 	cd util && sh doc2html
 	./util/genmsgidx
 
 install: 
-	cd c && $(MAKE) install
 	if [ ! -d $(prefix)/$(TIGERHOME) ]; then \
 	  mkdir -p $(prefix)/$(TIGERHOME); \
 	  chmod 755 $(prefix)/$(TIGERHOME); \
