@@ -46,8 +46,6 @@ TigerInstallDir="@tigerhome@"
 #      TigerInstallDir installed location
 #
 basedir=${TIGERHOMEDIR:=$TigerInstallDir}
-CONFIGDIR="@tigerconfig@"
-TEMPLATEDIR="$CONFIGDIR/templates"
 
 for parm
 do
@@ -66,6 +64,7 @@ done
 }
 
 . $basedir/config
+TEMPLATEDIR="$TigerConfigDir/templates"
 
 . $BASEDIR/initdefs
 
