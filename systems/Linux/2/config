@@ -22,6 +22,9 @@
 # Linux/1/config - 04/20/99
 # Linux/2/config - 04/20/99
 #   UUID=`/usr/bin/id | /usr/bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
+# Linux/2/config - 10/09/99
+#  Added the new check_neverlogin script
+
 [ "$UUID" = "" ] && UNAME=`whoami`
 
 export UNAME
@@ -118,13 +121,15 @@ GRPCK=`findcmd grpck`
 [  -n "$GRPCK" ] && GRPCK="$GRPCK -r"
 CHAGE=`findcmd chage`
 MESG=`findcmd mesg`
+LASTLOG=`findcmd lastlog`
+TEST=`findcmd test`
 
 
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPC FILECMD UNIQ BASENAME HEAD
 export CHMOD CHOWN LN PASTE DPKG LSOF NETSTAT MD5SUM CUT 
 export SNEFRU REALPATH PWCK GRPCK CHAGE MESG DIFF WC
-export PWD AUTORPM APT ID EXPAND
+export PWD AUTORPM APT ID EXPAND LASTLOG TEST
 
 
 UNAME=`findcmd uname`
