@@ -39,6 +39,8 @@ outfile=$1
 # these are output with just the cron owner and the file 
 for dir in /etc/cron.hourly /etc/cron.daily /etc/cron.weekly /etc/cron.monthly
 do
+# TODO (fix): this code will return sometimes errors if the directory
+# is empty. Maybe find should be used instead
     if [ -d $dir ]; then 
     (
       cd $dir
@@ -56,6 +58,7 @@ do
 done 
 
 # Then check the cron's spool (both of the system's and the user's)
+# TODO (fix): same as above
 if [ -d $CRONSPOOL ]; then 
 (
   cd $CRONSPOOL
