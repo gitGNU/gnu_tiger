@@ -137,7 +137,7 @@ MISCDIRS=./bin \
 	./systems
 
 all:
-	cd c && $(MAKE) all
+	cd c && $(MAKE) install
 	cd util && sh doc2html
 	./util/genmsgidx
 
