@@ -21,6 +21,7 @@
 # 11/25/2002 jfs - Initial version derived from Hispasec's bulletin
 #                  (which is based on documentation online)
 # 15/04/2003 jfs - Changed ERROR into FAIL
+# 10/15/2003 jfs - Return '1' instead of '-1' (Debian bug #215891)
 #
 # References:
 # http://www.linuxsecurity.com/articles/network_security_article-4528.html
@@ -88,9 +89,9 @@ echo "# Checking network configuration"
 
 read_if_exist() {
 # Reads a file if it exists
-# Otherwise returns -1
+# Otherwise returns 1
 	file=$1
-	value=-1
+	value=1
 	[ -f $1 ] && value=`$CAT $file`
 	return $value
 }
