@@ -9,6 +9,7 @@
 #
 TigerNoBuild=Y			# C files are corrupted (ouch.)
 Tiger_Check_PASSWD=Y		# Fast
+Tiger_Check_PASSWD_FORMAT=N	# Fast - not needed on systems with pwck
 Tiger_Check_PASSWD_SHADOW=Y	# Time varies on # of users
 Tiger_Check_PASSWD_NIS=N	# Time varies on # of users
 Tiger_Check_GROUP=Y		# Fast

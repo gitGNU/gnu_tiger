@@ -20,7 +20,8 @@
 # The UN*X security check system. This is the main program that will run
 # all the checks configured for your system in the tigerrc configuration 
 # file.
-#
+# 01/25/2005 cslater Added separate config variable for 
+		 check_passwdformat.
 # 01/15/2003 jfs Check should use INETDCONF (and not INETDFILE).
 #                (Temporary fix: defined it if undefined)
 # 09/03/2003 jfs Included check_ssh to the checks
@@ -245,6 +246,9 @@ aidepid=
 [ "$Tiger_Check_PASSWD" != 'N' ] && {
   echo "`$TIMECMD`> Checking password files..."
   run_script check_passwd >> $logtmp
+}
+
+[ "$Tiger_Check_PASSWD_FORMAT" != 'N' ] && {
   echo "`$TIMECMD`> Checking password format..."
   run_script check_passwdformat >> $logtmp
 }
