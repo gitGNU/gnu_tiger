@@ -22,4 +22,3 @@
 # Add other checks that should be attempted for all systems
 # here.  One script name per line.
 #
-check_sendmail
