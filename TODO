@@ -1,5 +1,4 @@
 
-
 Note: the up-to-date TODO list is maintained through Savannah's Task Manager
 (http://savannah.nongnu.org/pm/?group=tiger) this list is provided for the
 commodity of those browsing the source code
@@ -17,9 +16,109 @@ See http://savannah.nongnu.org/pm/task.php?group_project_id=472&group_id=2247&fu
 - Improve support non-Linux OSs
 https://savannah.nongnu.org/pm/task.php?group_id=2247&group_project_id=632
 
+- Modified the rhosts check so that it will check for shosts files too
+
+- Modify check_network to include hosts.lpd in the tests
+
+- Add .bash_profile into check_path
+
+- Create the following scripts:
+     - Detect promiscous mode
+     - Check root $HOME files (might be redundant with check_path's)
+     - Do alias give the same as check_aliases?
+     - writable/executable check + word writable? (in find_files)
+     - Check for SAMBA configuration (checklist #20 SANS):
+     	. encrypted passwords.
+	. 600 /etc/smbpasswd or /etc/samba/smbpasswd
+	. shares enabled/disabled
+	. guest access
+	. create mask (770)
+     - Check newer FTP (/etc/ftpaccess in newer Linux systems, ftpusers
+       is deprecated) see checklist #22 of SANS.
+     - The check_inetd script should be improved to warn if echo/chargen..
+       services are enabled (SANS unix checklist #3 and Linux #4)
+     - SANS unix checklist #18 
+	. Solaris /etc/system (noexec stack)
+	. Solaris locked accounts (#18 and #21)
+	. Solaris default/login
+	. Solaris /etc/default/kbd
+     - Partition checks (in Linux /etc/fstab, in Solars /etc/vfstab,
+       if there is a /usr, /opt then read-only, if /var
+       or /tmp nosuid. Separate /var,/usr,/tmp from /
+     - Solaris /etc/notrouter to disable
+     - Rootkits check, like chkrootkit 
+     Reference: 
+     http://linux.oreillynet.com/pub/a/linux/2002/02/07/rootkits.html
+
+     - Suggested by Bob Hall:
+        * Check if any local file systems are being exported to
+       'localhost'. Also check if the local host is in a netgroups
+        entry in its own exports file.
+	* Look for (unexpected) normal files under /dev.
+	(Note: include in 'check_devices')
+	* Check for user startup files that call 'umask' with weak
+	settings. (Should be 022 or 027.)
+	(Note: include in 'check_umask' using GENPASSWDSETS)
+	* Check that '-' is not the first character in a /etc/hosts.equiv
+	/etc/hosts.lpd, or .rhosts files. Also check for a '+' entry in
+	hosts.lpd file. 
+	(Note: include in 'check_rhosts')
+	* If a system allows it, check for an /etc/shells file and look
+	if the permitted shells are in the system directories.
+	References:
+	http://www.cert.org/tech_tips/usc20.html
+	http://www.cert.org/advisories/CA-2001-30.html
+	http://www.ciac.org/ciac/bulletins/b-37.shtml
+	http://www.nswc.navy.mil/ISSEC/Docs/Ref/GeneralInfo/unixsecurity.nrl.txt
+
+
+
+- Possible integration with other security tools:
+ 	- Tripwire: the 'tripwire_run' script has not been tested thoroughly
+	  (mainly because in Debian it is already configured to execute
+	  regular checks standalone)
+	- Crack: same for 'crack_run' (and for the same reason)
+	- Other integrity checkers: aide, samhain, integrit...
+	- Other password crackers: john
+	- Logcheckers: swatch, logcheck, loganalysis, snort-logcheck
+        Tiger currently does not do any log checking (see below)
+	I'm not sure if Tiger should provide a new one or re-use 
+	existing ones and include them as an 'external' program to run 
+	through a Tiger module.  The benefit of using an accepted and use 
+	log analysis tool is that Tiger can benefit from the database of 
+	signatures of known attacks/non-issues. The problem is that the 
+	sysadmin has to install yet another tool (if he is not using an OS 
+	that already includes them) and, probably, some other stuff 
+	(like Perl) on which the tool itself is based.
+
+	- User anaylisis: sac, hostsentry (part of Abacus, but non-free)
+	- Network checks: Arpwatch, Snort
+
+- Compare checks against other tools'
+	- Bastille/Titan: verify that each thing that they 'fix' (harden)
+		is checked by Tiger. Provide a relationship of modules in
+		each and Tiger checks (at README.sources)
+	- CIS benchmark: verify that each "scoring" check is also done
+		at Tiger through a check module.
+	- OpenBSD or SuSE security checks (DONE)
+	- SAINT/SARA: which do some local checks (on NFS for example)
+
+NOTE: Tiger modular behaviour makes it difficult to share data but it's easier
+to make simple checks than if using other monolythic tools (like CIS's, 
+OpenBSD's or SuSE's)
+
+- Implement IDMEF to send message on alerts. Consider the use of the XML
+  library available at  http://www.silicondefense.com/idwg/snort-idmef/
+
+- Consider sending encrypted mail. Check  http://karl.jorgensen.com/smash/
+  or add 'gpg -e -a ' in tigercron
+
+- Implementation of a generic OVAL interpreter: http://oval.mitre.org
+
+- Checks need to have a timeout otherwise some checks like 'check_patches'
+  (which depend on net access) will never end on a normal
+  Tiger run.
+
 
 --- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
-Tue, 10 Dec 2002 15:54:20 +0100
-
-
-
+Mon, 14 Apr 2003 21:45:12 +0100
