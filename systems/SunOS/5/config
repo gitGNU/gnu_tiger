@@ -117,6 +117,10 @@ YPSERVER="NO"
 export WAIT YPCAT YPSERVER
 #
 MAILSPOOL=/var/spool/mail
+# This is needed for SunOS 5.8 and later, I believe
+if [ ! -d $MAILSPOOL -a -d /var/mail ] ; then
+	MAILSPOOL=/var/mail
+fi
 #
 CRONSPOOL=/var/spool/cron/crontabs
 #
