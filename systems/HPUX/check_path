@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 #     tiger - A UN*X security checking system
 #     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
@@ -81,7 +81,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT EGREP GEN_PASSWD_SETS JOIN LS OUTPUTMETHOD SED SORT TR || exit 1
+  haveallcmds AWK CAT EGREP GEN_PASSWD_SETS JOIN LS OUTPUTMETHOD SED SORT TR REALPATH || exit 1
   haveallfiles BASEDIR BINDIR WORKDIR || exit 1
   haveallvars HOSTNAME || exit 1
   
@@ -94,7 +94,7 @@ done
 echo
 echo "# Performing check of PATH components..."
 
-haveallcmds AWK CAT EGREP GEN_PASSWD_SETS JOIN LS OUTPUTMETHOD SED SORT TR || exit 1
+haveallcmds AWK CAT EGREP GEN_PASSWD_SETS JOIN LS OUTPUTMETHOD SED SORT TR REALPATH || exit 1
 haveallfiles BASEDIR BINDIR WORKDIR || exit 1
 haveallvars HOSTNAME || exit 1
 
@@ -300,7 +300,7 @@ parse_file()
       }
       
       # Handle the directory tokens.
-      $BINDIR/realpath "$token" >> $outfile
+      $REALPATH "$token" >> $outfile
    done
 }
 
@@ -337,14 +337,14 @@ check_global_paths()
    if [ -s $SYS_BSH_PATH ]; then
       $CAT $SYS_BSH_PATH >> $SYS_PATH.$$
    else
-      message WARN path009w "" "The Bourne shell initizlization file(s) does not export an initial setting for PATH."
+      message WARN path009w "" "The Bourne shell initialization file(s) does not export an initial setting for PATH."
    fi
 
    # Verify the PATH is initilized for the C style shells.
    if [  -s $SYS_CSH_PATH ]; then
       $CAT $SYS_CSH_PATH >> $SYS_PATH.$$
    else
-      message WARN path009w "" "The C shell initizlization file(s) does not export an initial setting for PATH."
+      message WARN path009w "" "The C shell initialization file(s) does not export an initial setting for PATH."
    fi
 
    # Seperate out the System Default Path into the proper format in the $SYS_PATH file.
@@ -352,7 +352,7 @@ check_global_paths()
    $TR ':' '\012' |
    while read dir
    do
-      $BINDIR/realpath $dir >> $SYS_PATH.$$
+      $REALPATH $dir >> $SYS_PATH.$$
    done
 
    # Sort and uniq the generic $SYS_PATH file.
@@ -378,7 +378,7 @@ check_user()
    while read dir1
    do
       eval dir=`echo $dir1 | $SED -e 's/~\$user/$home/'`
-      $BINDIR/realpath $dir >> $USR_PATH
+      $REALPATH $dir >> $USR_PATH
    done
 
    # Check for PATH settings in these 'dot' files.
