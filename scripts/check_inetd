@@ -162,6 +162,8 @@ checkinetd ()
       message WARN inet025w "" "The 'chargen' udp server is enabled, consider disabling it"
     fi
 
+    # TODO: Might not make sense for the "small servers" services
+    # (discard, chargen, echo....)
     if [ "$t" = "nowait" -a -n "$tcpdpath" -a "$currbinary" != "$tcpdpath" ]; then
       message WARN inet099w "" "'$currservice' is not protected by tcp wrappers."
     fi
