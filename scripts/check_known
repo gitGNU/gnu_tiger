@@ -17,6 +17,8 @@
 #
 # check_known - 06/14/93
 #
+# 10/01/2003 jfs Do not delete passwd files if the Tiger_PasswdFiles is
+#                defined, otherwise checks relying on it will break
 # 09/19/2003 jfs Fixed deletion of temporary files thanks to a patch
 #                provided by Nicolas François 
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies. Incorporated tests
@@ -249,9 +251,11 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
     done # of the while read
 
     if [ -f $WORKDIR/pass.list.$$ ] ; then
-     	for passwd_set in `$CAT $WORKDIR/pass.list.$$`; do
-      		delete $passwd_set $passwd_set.src 
-      	done
+    	if [ -z "$Tiger_PasswdFiles" ] ; then
+ 	     	for passwd_set in `$CAT $WORKDIR/pass.list.$$`; do
+      			delete $passwd_set $passwd_set.src 
+      		done
+	fi
 	delete $WORKDIR/pass.list.$$
     fi
   )
