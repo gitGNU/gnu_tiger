@@ -64,6 +64,11 @@
 #               Now checks *all* accounts, not just disabled ones
 #               and checks config files in home directories for
 #               writability.
+#-----------------------------------------------------------------------------
+# TODO:
+# - Some 'valid' shells such as nologin or noshell might be listed under
+#  /etc/shells but are really invalid. The script should maybe check these
+#  cases or provide a way to define $NOSHELL in order to exclude these.
 #
 #-----------------------------------------------------------------------------
 #
