@@ -22,8 +22,10 @@ If you operating system is not supported by Tiger you need to:
 4.- Create the services file under systems/$OS/$REL/$REV with 
     util/read_services.sh
 
-5.- Other files such as the file_access_list or suid_list can be manually
-    created.
+5.- Create the file_access_list file under systems/$OS/$REL/$REV 
+    with util/mkfilelst
+
+6.- Other files such as the suid_list can be manually created.
 
 Tiger will use the scripts under systems/default which will work in most
 systems, but you might need to make them work properly if the default
@@ -89,8 +91,6 @@ UNICOS 7
 UNICOS 7.0.0 
 UNICOSMK
 
-
 ------------------------------
 Javier Fernandez-Sanguino
-Fri, 18 Apr 2003 00:27:38 +0200
-
+Wed, 13 Aug 2003 03:39:06 +0200

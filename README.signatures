@@ -16,15 +16,21 @@ operating systems (systems/).
 Note that this files might not be as up to date as it would be desired for
 some operating systems. 
 
-You can retrieve updated signatures from:
+If you want to generate fresh signature and file_access_list for your
+system you can use the scripts 'util/mksig' and 'util/mkfilelst' which
+will, respectively, create a signatures.$OS-$REV-$ARCH and
+file_access_list.$OS-$REV-$ARCH file in the current directory you can
+install under the appropiate systems/$OS/$REV/$ARCH directory (and
+rename them to 'signatures' and 'file_access_list')
 
-- http://www.net.tamu.edu/ftp/security/TAMU/tiger-sigs/ (these are being
-integrated into the tiger source code, note, however, they are no
-longer current)
+You can retrieve updated signatures (MD5 and SHA-1 signatures) from
+different sources including:
 
 - http://www.knowngoods.org/download.html (these will probably be in the 
 near future too), for a good discussion on this service check
 http://slashdot.org/articles/02/12/09/0411224.shtml?tid=172
+
+# TODO: add pointer to NIST reference list
 
 Some vendors provide signatures or patch information for their
 operating systems:
@@ -40,7 +46,9 @@ operating systems:
   http://techsupport.services.ibm.com/server/aix.fdc51
   http://techsupport.services.ibm.com/server/aix.fixsearch5L
 
-
+Notice that the old location for signatures (at TAMU
+http://www.net.tamu.edu/ftp/security/TAMU/tiger-sigs/) have already
+been integrated into the latest tiger source code.
 
 --- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
-Thu, 17 Apr 2003 23:53:28 +0200
+Wed, 13 Aug 2003 03:35:59 +0200
