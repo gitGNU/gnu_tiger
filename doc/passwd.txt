@@ -70,3 +70,8 @@ typical search paths.
 The listed login ID does not have password aging enabled.  Good
 password management practices indicate that passwords should not
 be static, but rather should be changed on a regular basis.
+%pass20w
+The listed login ID is not configured to use shadow passwords.  This
+indicates the specified login ID has its cypher text publicly available
+and is subject to brute force password cracking, even though shadow
+passwords are implimented on the system.

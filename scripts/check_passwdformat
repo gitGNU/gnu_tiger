@@ -110,12 +110,12 @@ $AWK -F: '{
                 printf("Line %d has an empty login field.\n", NR);
         else if ($1 !~ /^[A-Za-z0-9][A-Za-z0-9_\.-]*$/)
                 printf("Login %s has non-alphanumeric characters.\n", $1);
+# Consider removing this since many recent OS will not have any problems
+# with this
         if (length($1) > 8)
                 printf("Login %s has more than 8 characters.\n", $1);
         if ($2 == "")
                 printf("Login %s has no password.\n", $1);
-        else if ($2 !~ /^[x*!]+$/)
-		printf("Login %s has a real password (it is not shadowed).\n", $1);
 #if ($2 != "" && length($2) != 13 && ($10 ~ /.*sh$/ || $10 == "") &&
 #   ($2 !~ /^\$[0-9a-f]+\$/)) {
 #       if (system("test -d "$9" -a ! -r "$9"") == 0)
