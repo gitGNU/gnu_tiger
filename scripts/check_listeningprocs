@@ -30,6 +30,9 @@
 # (this bug was reported for Debian GNU/Linux) in order for multiple
 # ValidUsers/ValidProcs to work ok. Check systems/Linux/2/check_listeningprocs
 # (once it has been tested it will be included here too)
+# - there are know problems related to services open TCP/UDP ports spuriously
+# to contact the outside world. Tiger cannot distinguish these from 
+# normal servers.
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
