@@ -16,6 +16,7 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_group  - created 06/14/93
+# check_group  - 10/07/2003 - jfs - Delete temporary files
 # check_group  - 08/14/2003 - jfs - Added OUTPUTMETHOD to dependancies
 # check_group  - 08/09/2003 - jfs - Re-added RM to dependancies.
 # check_group  - 08/08/2003 - jfs - Safe temporary file creation
@@ -166,3 +167,6 @@ done < $WORKDIR/grp.list.$$
 }
 
 delete $WORKDIR/grp.list.$$ $WORKDIR/grp2new.$$
+delete $WORKDIR/g2gid.$$ $WORKDIR/g2name.$$
+
+exit 0
