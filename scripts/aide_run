@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 #     tiger - A UN*X security checking system
-#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#     Copyright (C) 2003 Javier Fernandez-Sanguino
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,17 +19,29 @@
 # unSpawn <unspawn@rootshell.be>
 #
 # Implement system integrity checks using aide.
+# The script checks for the aide binary and configuration file
+# location, if not found and no user-supplied vars are given, it will use
+# the # default installation location. 
+# The default database location is in the configuration file unless 
+# overridden by the user. 
+# It then runs Aide and parses/presents the result.
 #
-# aide_run - 05/05/2003 - jfs
+# Tested on RH-7.1 using non-custom Aide configuration
+#
+# 08/13/2003 - jfs - Respect the AIDE override (if done) in the site
+#              configuration file.
+# 08/09/2003 - jfs - Minor fixes and removed bashisms. Renamed messages to
+#               either 'info', 'warn' or 'fail' and moved from Tiger_Run_AIDE
+#               to Tiger_AIDE namespace.
+# 05/05/2003 - jfs
 #	Fixed integrity checks (commands)
 #	Moved namespace of variables to Tiger_Aide
 #	Added some more TODOs
 #	Converted direct calls to grep, cut, tr to $GREP...
 #
+#
 # TODO:
 # - the config files for systems need to locate AIDE 
-# - consider using Tiger_Run_INTEGRITY_AIDE_XXX for all variables or keep
-#   as the current namespace for external commands (Tiger_Run)
 #
 #-----------------------------------------------------------------------------
 #
@@ -69,7 +81,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds CUT GREP TR || exit 1
+  haveallcmds CUT GREP TR RM || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -80,21 +92,17 @@ done
 #------------------------------------------------------------------------
 echo
 echo "# Performing Aide filesystem integrity check..."
-haveallcmds CUT GREP TR || exit 1
+haveallcmds CUT GREP TR RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
-# REMARKS
-# If acceptable and accepted, this check should be triggered by 
-# Tiger_Run_AIDE in tigerrc.
-
 # TODO
-# - Toggle verbose reporting using Tiger_Run_AIDE_VERBOSE=1
+# - Toggle verbose reporting using Tiger_AIDE_VERBOSE=1
 # - User input custom aide location (pref from read-only media)
-#   Proposed user input var (tigerrc): Tiger_Run_AIDE_LOC_OVERRIDE
+#   Proposed user input var (tigerrc): Tiger_AIDE_LOC_OVERRIDE
 # - User input custom aide config(s) (pref from read-only media)
-#   Proposed user input var (tigerrc): Tiger_Run_AIDE_CFG_OVERRIDE
+#   Proposed user input var (tigerrc): Tiger_AIDE_CFG_OVERRIDE
 # - User input custom db (pref from read-only media)
-#   Proposed user input var (tigerrc): Tiger_Run_AIDE_DB_OVERRIDE
+#   Proposed user input var (tigerrc): Tiger_AIDE_DB_OVERRIDE
 # - Expand with Integrit, Osiris and Prelude.
 
 # For all of the below commands to fill in the gaps I'm thinking 
@@ -102,33 +110,41 @@ haveallfiles BASEDIR WORKDIR || exit 1
 
 # Aide binary location|override + default check
 # Which, find, user-supplied var or tigexp's findcmd?:
-if [ -z "${Tiger_Run_AIDE_LOC_OVERRIDE}" ]
+if [ -z "$AIDE" ]
+if [ -z "${Tiger_AIDE_LOC_OVERRIDE}" ]
 then 
-	AIDE=$(which aide)
+	AIDE=`which aide`
 else 
-	AIDE=${Tiger_Run_AIDE_LOC_OVERRIDE}
+	AIDE=${Tiger_AIDE_LOC_OVERRIDE}
+fi
 fi
 
 # Aide binary default location, not using "eval" or "[ -x":
 case "${#AIDE}" in 0) AIDE="/usr/local/bin/aide";; esac
 
+# If AIDE is not available don't continue
+haveallcmds AIDE || exit 1
+
 # Aide configuration file location|override + default check
-if [ -z "${Tiger_Run_AIDE_CFG_OVERRIDE}" ]; 
-then AIDE_CFG=$($AIDE -v 2>&1| $GREP -e "^CONFIG_FILE" | $CUT -d " " -f 3| $TR -d "\"")
-else AIDE_CFG=${Tiger_Run_AIDE_CFG_OVERRIDE}
+if [ -z "${Tiger_AIDE_CFG_OVERRIDE}" ]; 
+then AIDE_CFG=`$AIDE -v 2>&1| $GREP -e "^CONFIG_FILE" | $CUT -d " " -f 3| $TR -d "\""`
+else AIDE_CFG=${Tiger_AIDE_CFG_OVERRIDE}
 fi
 
 # Aide default configuration file, not using "eval" or "[ -z|-f":
 case "${#AIDE_CFG}" in 0) AIDE_CFG="/usr/local/etc/aide.conf";; esac
 
 # Aide database override, else this variable is taken from the configuration file of course
-if [ ! -z "${Tiger_Run_AIDE_DB_OVERRIDE}" ]; 
-then AIDE_DB="--after=database=file:${Tiger_Run_AIDE_DB_OVERRIDE}"
+if [ ! -z "${Tiger_AIDE_DB_OVERRIDE}" ]; 
+then AIDE_DB="--after=database=file:${Tiger_AIDE_DB_OVERRIDE}"
 fi
 
 # Run Aide using std conf, report to stdout
 AIDE_RPT="$WORKDIR/aide.out.tmp.$$"
 AIDE_ERR_RPT="$WORKDIR/aide.err.tmp.$$"
+safe_temp "$AIDE_RPT" "$AIDE_ERR_RPT"
+trap 'delete $AIDE_RPT $AIDE_ERR_RPT ; exit 1' 1 2 3 15
+
 $AIDE --check --config=${AIDE_CFG} --report=stdout ${AIDE_DB} \
 	2>${AIDE_ERR_RPT} > ${AIDE_RPT}
 # TODO: calling AIDE should check the errors (if any)
@@ -140,21 +156,21 @@ $GREP ${AIDE_RPT} -qe "AIDE found differences"
 case "$?" in
 0)	# Summary
 	AIDE_SUMMARY=`$GREP ${AIDE_RPT} -e "^Total number"`
-	message INFO aide003s "" "Summary: ${AIDE_SUMMARY}"
+	message INFO aide003i "" "Summary: ${AIDE_SUMMARY}"
 	# Differentiate between added, changed and removed files
 	for status in changed removed detected; do
 		$GREP ${AIDE_RPT} -e "^${status}:" \
 		| $CUT -d ":" -f 2 | while read result; do
 		case "${status}" in
-			changed) exp="aide003c";;
-			removed) exp="aide004r";;
-			added)   exp="aide005a";;
+			changed) exp="aide003w";;
+			removed) exp="aide004w";;
+			added)   exp="aide005w";;
 		esac
 		message WARN ${exp} "" "Detected ${status} file ${result}"
 		done
 	done;;
 1)	# No changes to report
-	message INFO aide001k "" "No changes detected.";;
+	message INFO aide001i "" "No changes detected.";;
 esac
 
 delete ${AIDE_RPT} ${AIDE_ERR_RPT}
