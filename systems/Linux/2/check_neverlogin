@@ -26,7 +26,10 @@
 # but were logged on to. Meaning that they might still have their 
 # initial weak password!
 #
-# 10/09/2002 jfs       Adapted for Tiger
+# 10/01/2003 jfs  Modified to do better error checking on the use of 
+#                 Tiger_PasswdFiles. Also added code to remove temporary
+#                 files created by the script.
+# 10/09/2002 jfs  Adapted for Tiger
 #
 #-----------------------------------------------------------------------------
 #
@@ -77,9 +80,16 @@ haveallcmds AWK GREP LASTLOG TEST GEN_PASSWD_SETS || exit 1
 haveallfiles BASEDIR WORKDIR ETCSHELLS || exit 1
 
 {
-	if [ -n "$Tiger_PasswdFiles" ]; then
-		[ -f $Tiger_PasswdFiles ] && $CAT $Tiger_PasswdFiles > $WORKDIR/pass.list.$$
-	else
+	> $WORKDIR/pass.list.$$
+	if [ -n "$Tiger_PasswdFiles" -a -f "$Tiger_PasswdFiles" ]; then
+  		$CAT $Tiger_PasswdFiles |
+		while read passfile 
+		do
+			[ -f "$passfile" ] && echo "$passfile" >>$WORKDIR/pass.list.$$
+		done
+	fi
+	if [ ! -s "$WORKDIR/pass.list.$$" ] 
+	then
 		$GEN_PASSWD_SETS $WORKDIR/pass.list.$$
 	fi
 }
@@ -94,11 +104,11 @@ fi
 for user in `$LASTLOG | $AWK '/Never logged in/ {print$1}'`; do
   result=0
   $CAT $WORKDIR/pass.list.$$  |
-  while read passwdfile ; do
-  	SHELL=`$GREP "^$user:" $passwdfile | $AWK -F: '{print$7}'`
+  while read passwd_set ; do
+  	SHELL=`$GREP "^$user:" $passwd_set | $AWK -F: '{print$7}'`
 	$TEST -z "$SHELL" && SHELL="/bin/sh"
 	$GREP -q "^$SHELL" $ETCSHELLS && export result=1
-	$TEST "$result" = 1 && result=`$AWK -F:  "/^$user:/ "'{ if (length($2) > 12) printf("2\n"); if ($2 == "") printf("3\n"); }' $passwdfile` 
+	$TEST "$result" = 1 && result=`$AWK -F:  "/^$user:/ "'{ if (length($2) > 12) printf("2\n"); if ($2 == "") printf("3\n"); }' $passwd_set` 
 	# Note: if length is less than 2 then the account is locked (system
 	# account)
 
@@ -110,5 +120,15 @@ for user in `$LASTLOG | $AWK '/Never logged in/ {print$1}'`; do
 		message FAIL acc024f "" "User $user has got NO password and a valid shell ($SHELL)."
    done 
 done
+
+
+if [ -f $WORKDIR/pass.list.$$ ] ; then
+   if [ -z "$Tiger_PasswdFiles" ] ; then
+         for passwd_set in `$CAT $WORKDIR/pass.list.$$`; do
+                 delete $passwd_set $passwd_set.src
+         done
+   fi
+   delete $WORKDIR/pass.list.$$
+fi
 
 exit 0
