@@ -150,9 +150,16 @@ cdevs=`ls -d /cluster/members/member*/dev/`
 	DEVDIRSYS="$DEVDIRSYS $cdevs"
 }
 export DEVDIRSYS
-
+#
+#
 FS_WDIRSYS="/tmp/ /var/tmp/ /var/spool/mail/"
+wdirs=`ls -d /cluster/members/member*/tmp/`
+[ -n "$wdirs" ] && {
+	wdirs=`echo $wdirs`
+	FS_WDIRSYS="$FS_WDIRSYS $wdirs"
+}
 export FS_WDIRSYS
+#
 #
 SYSDEFAULTPATH="/usr/bin:/usr/ucb"
 export SYSDEFAULTPATH
