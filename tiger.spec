@@ -60,6 +60,7 @@ This is TIGER release %{version}.%{release}
 %build
 ./configure \
 	--prefix=${RPM_BUILD_ROOT} \
+	--mandir=/usr/share/man \
 %if %{want_reloc}
 	--with-tigerhome=/usr/lib/tiger \
 	--with-tigerbin=/usr/sbin \
@@ -138,6 +139,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %defattr(-,root,root)
 # Common directories regardless of if its relocated or not
 /etc/cron.d
+/usr/share/man
 # Directories that will change if relocated
 %if %{want_reloc}
 /usr/sbin/
