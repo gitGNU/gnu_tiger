@@ -28,7 +28,7 @@ outfile="$1"
   echo "/etc/aliases" > $WORKDIR/etc_aliases.$$.src
   echo $WORKDIR/etc_aliases.$$
 
-  [ -n "$YP" ] && {
+  [ -n "$YPCAT" ] && {
     $YPCAT -k aliases |
     $SED -e 's/ /:/' | 
     $SORT |

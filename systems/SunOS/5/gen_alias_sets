@@ -65,7 +65,7 @@ do
 	}
 	;;
     nis)
-	[ -n "$YP" ] && {
+	[ -n "$YPCAT" ] && {
 	  $YPCAT -k aliases |
 	  $SED -e 's/ /:/' | 
 	  $SORT |
@@ -75,9 +75,11 @@ do
 	}
 	 ;;
     nisplus)
+        [ -n "$NISCAT" ] && {
         $NISCAT mail_aliases.org_dir > $WORKDIR/nisplus_aliases.$$
 	echo "NIS+" > $WORKDIR/nisplus_passwd.$$.src
 	echo "$WORKDIR/nisplus_passwd.$$"
+	}
          ;;
     *)
          ;;

@@ -74,7 +74,7 @@ $SORT |
 echo "/etc/passwd" > $WORKDIR/etc_passwd.$$.src
 echo $WORKDIR/etc_passwd.$$ >> $outfile
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] && {
   $YPCAT passwd |
   $SORT |
   $COMM -23 - $WORKDIR/etc_passwd.$$ > $WORKDIR/nis_passwd.$$

@@ -25,7 +25,7 @@ $SORT > $WORKDIR/etc_services.$$
 echo "/etc/services" > $WORKDIR/etc_services.$$.src
 echo $WORKDIR/etc_services.$$
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] && {
   $YPCAT services |
   $SORT |
   $COMM -23 - $WORKDIR/etc_services.$$ > $WORKDIR/nis_services.$$

@@ -17,8 +17,22 @@
 #
 # default/gen_passwd_sets - 06/14/93
 #
+# 11/18/2003 - jfs - Check if YPCAT is available before calling it. Also
+#        sanity checks for other commands.
+#
 #-----------------------------------------------------------------------------
 #
+
+[ ! -n "$SORT" ] && SORT=`which sort`
+[ ! -n "$GREP" ] && GREP=`which grep`
+[ ! -n "$AWK" ] && AWK=`which awk`
+[ ! -n "$JOIN" ] && JOIN=`which join`
+[ ! -n "$CAT" ] && CAT=`which cat`
+[ ! -n "$RM" ] && RM=`which rm`
+[ ! -n "$SED" ] && SED=`which sed`
+[ ! -n "$YPCAT" ] && YPCAT=`which ypcat`
+[ ! -n "$NISCAT" ] && NISCAT=`which niscat`
+[ ! -n "$WORKDIR" ] && WORKDIR=/tmp
 
 local=0
 for parm
@@ -34,7 +48,7 @@ $CAT /etc/passwd > $WORKDIR/etc_passwd.$$
 echo "/etc/passwd" > $WORKDIR/etc_passwd.$$.src
 echo $WORKDIR/etc_passwd.$$ >> $outfile
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] &&  {
   $YPCAT passwd > $WORKDIR/nis_passwd.$$
   echo "NIS" > $WORKDIR/nis_passwd.$$.src
   echo $WORKDIR/nis_passwd.$$ >> $outfile

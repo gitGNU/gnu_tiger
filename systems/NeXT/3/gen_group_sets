@@ -40,7 +40,7 @@ $AWK '{ print substr($1,5,length($1) - 4) }' | (
     exit $COUNT
 )
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] && {
   $YPCAT group |
   $SORT |
   $COMM -23 - $WORKDIR/etc_group.$$ > $WORKDIR/nis_group.$$

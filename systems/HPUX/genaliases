@@ -31,7 +31,7 @@ aliasfile=`$GREP '^A' /usr/lib/sendmail.cf 2>/dev/null | $SED -e 's/^.//'`
   echo $WORKDIR/etc_aliases.$$
 }
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] && {
   $YPCAT -k aliases 2>/dev/null >/dev/null && {
     $YPCAT -k aliases |
     $SED -e 's/ /:/' | 

@@ -15,10 +15,23 @@
 #    GNU General Public License for more details.
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# MacOSX/5/gen_passwd_sets - 06/14/93
+# MacOSX/5/gen_passwd_sets - 08/26/2003
+# 11/18/2003 - jfs - Check if YPCAT is available before calling it. Also
+#        sanity checks for other commands.
 #
 #-----------------------------------------------------------------------------
 #
+
+[ -z "$SORT" ] && SORT=`which sort`
+[ -z "$GREP" ] && GREP=`which grep`
+[ -z "$AWK" ] && AWK=`which awk`
+[ -z "$JOIN" ] && JOIN=`which join`
+[ -z "$CAT" ] && CAT=`which cat`
+[ -z "$RM" ] && RM=`which rm`
+[ -z "$SED" ] && SED=`which sed`
+[ -z "$YPCAT" ] && YPCAT=`which ypcat`
+[ -z "$NISCAT" ] && NISCAT=`which niscat`
+[ -z "$WORKDIR" ] && WORKDIR=/tmp
 
 local=0
 passwordflag=
@@ -90,7 +103,7 @@ $RM -f $WORKDIR/pass.tmp.$$
 echo "/etc/passwd" > $WORKDIR/etc_passwd.$$.src
 echo $WORKDIR/etc_passwd.$$ >> $outfile
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] &&  {
   $YPCAT passwd |
   $SED -e 's/:$/: /' |
   $SORT |

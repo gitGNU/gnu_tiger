@@ -25,7 +25,7 @@ expandgrp()
   done
 }
 
-[ "$YP" = "" ] && {
+[ "$YPCAT" = "" ] && {
    echo "$targets"
    exit 0
 }

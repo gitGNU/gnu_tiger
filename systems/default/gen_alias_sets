@@ -53,7 +53,7 @@
   echo $WORKDIR/etc_aliases.$$
 }
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] && {
   $YPCAT -k aliases |
   $SED -e 's/ /:/' | 
   $SORT |

@@ -16,9 +16,22 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # IRIX/4/gen_passwd_sets - 06/14/93
+# 11/18/2003 - jfs - Check if YPCAT is available before calling it. Also
+#        sanity checks for other commands.
 #
 #-----------------------------------------------------------------------------
 #
+
+[ -z "$SORT" ] && SORT=`which sort`
+[ -z "$GREP" ] && GREP=`which grep`
+[ -z "$AWK" ] && AWK=`which awk`
+[ -z "$JOIN" ] && JOIN=`which join`
+[ -z "$CAT" ] && CAT=`which cat`
+[ -z "$RM" ] && RM=`which rm`
+[ -z "$SED" ] && SED=`which sed`
+[ -z "$YPCAT" ] && YPCAT=`which ypcat`
+[ -z "$NISCAT" ] && NISCAT=`which niscat`
+[ -z "$WORKDIR" ] && WORKDIR=/tmp
 
 local=0
 for parm
@@ -34,7 +47,7 @@ $CAT /etc/passwd > $WORKDIR/etc_passwd.$$
 echo "/etc/passwd" > $WORKDIR/etc_passwd.$$.src
 echo $WORKDIR/etc_passwd.$$ >> $outfile
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] && {
   $YPCAT passwd > $WORKDIR/nis_passwd.$$
   echo "NIS" > $WORKDIR/nis_passwd.$$.src
   echo $WORKDIR/nis_passwd.$$ >> $outfile

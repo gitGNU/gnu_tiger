@@ -17,8 +17,19 @@
 #
 # SunOS/4/gen_passwd_sets - 06/14/93
 #
+# 11/18/2003 - jfs - Check if YPCAT is available before calling it. Also
+#        sanity checks for other commands.
+#
 #-----------------------------------------------------------------------------
 #
+
+[ -z "$SORT" ] && SORT=`which sort`
+[ -z "$GREP" ] && GREP=`which grep`
+[ -z "$AWK" ] && AWK=`which awk`
+[ -z "$JOIN" ] && JOIN=`which join`
+[ -z "$CAT" ] && CAT=`which cat`
+[ -z "$YPCAT" ] && YPCAT=`which ypcat`
+
 
 local=0
 for parm
@@ -45,7 +56,7 @@ echo $WORKDIR/etc_passwd.$$ >> $outfile
 
 [ $local -eq 1 ] && exit
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] && {
   $YPCAT passwd |
   $SORT |
   $AWK -F: '

@@ -44,7 +44,7 @@ $AWK '{ print substr($1,5,length($1) - 4) }' |
   done
 }
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] && {
   BOOTPARAM_SET=$WORKDIR/bootparam.set.nis.$$
   $YPCAT bootparams > $BOOTPARAM_SET
   echo "NIS" > $BOOTPARAM_SET.src

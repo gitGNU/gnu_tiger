@@ -31,7 +31,7 @@ $SORT > $WORKDIR/etc_group.$$
 echo "/etc/group" > $WORKDIR/etc_group.$$.src
 echo $WORKDIR/etc_group.$$
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] && {
   $YPCAT group |
   $SORT |
   $COMM -23 - $WORKDIR/etc_group.$$ > $WORKDIR/nis_group.$$

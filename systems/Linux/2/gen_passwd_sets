@@ -24,6 +24,9 @@
 # Linux/2/gen_passwd_sets - 06/21/2003 - jfs
 #      applied patch from Ryan Bradetich to identify which cryptographic
 #      is used in the passwd format and simplify MD5 hashes check
+# Linux/2/gen_passwd_sets - 11/18/2003 - jfs
+#      Fixed call to YPCAT (only do it if it has been found). Thanks to
+#      Dale Martin for the patch.
 #
 #-----------------------------------------------------------------------------
 #
@@ -35,6 +38,7 @@
 [ -z "$AWK" ] && AWK=`which awk`
 [ -z "$RM" ] && RM=`which rm`
 [ -z "$CP" ] && CP=`which cp`
+[ -z "$YPCAT" ] && YPCAT=`which ypcat`
 [ -z "$WORKDIR" ] && WORKDIR=/tmp
 
 local=0
@@ -135,14 +139,14 @@ do
 	     echo "--WARN-- [miscxxxx] The '+' key in the /etc/passwd file should only be used in nsswitch 'compat' mode."
 	   }
 
-	    [ "$source" = compat ] && [ -n "$YP" ] && {
+	    [ "$source" = compat ] && [ -n "$YPCAT" ] && {
 		$YPCAT passwd > $WORKDIR/nis_passwd.$$
 		echo "NIS" > $WORKDIR/nis_passwd.$$.src
 		echo $WORKDIR/nis_passwd.$$ >> $outfile
 	    }
 
 	 ;;
-    nis)   [ "$local" != 1 ] && {
+    nis)   [ "$local" != 1 ] && [ -n "$YPCAT" ] && {
              $YPCAT passwd > $WORKDIR/nis_passwd.$$
 	     echo "NIS" > $WORKDIR/nis_passwd.$$.src
 	     echo $WORKDIR/nis_passwd.$$ >> $outfile

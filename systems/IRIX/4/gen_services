@@ -24,7 +24,7 @@ $GREP -v '^#' /etc/services > $WORKDIR/etc_services.$$
 echo "/etc/services" > $WORKDIR/etc_services.$$.src
 echo $WORKDIR/etc_services.$$
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] && {
   $YPCAT services > $WORKDIR/nis_services.$$
   echo "NIS" > $WORKDIR/nis_services.$$.src
   echo $WORKDIR/nis_services.$$

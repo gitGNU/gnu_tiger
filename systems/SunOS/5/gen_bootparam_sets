@@ -45,7 +45,7 @@ do
 	   }
 	 ;;
     nis)
-           [ -n "$YP" ] && {
+           [ -n "$YPCAT" ] && {
 	     $YPCAT bootparams > $WORKDIR/nis_bootparams.$$
 	     echo "NIS" > $WORKDIR/nis_bootparams.$$.src
 	     echo "$WORKDIR/nis_bootparams.$$"

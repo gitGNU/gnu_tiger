@@ -37,7 +37,7 @@ $AWK '{ print substr($1,5,length($1) - 4) }' | (
 
 COUNT=$?
 
-[ -n "$YP" ] && {
+[ -n "$YPCAT" ] && {
     SERVICES_SET=$WORKDIR/services.set$COUNT.$$
     $YPCAT services > $SERVICES_SET
     echo "NIS" > $SERVICES_SET.src
