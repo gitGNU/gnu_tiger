@@ -23,6 +23,10 @@ tiger (3.2.1-1) unstable; urgency=low
     - check_path now uses -L to follow symlinks (Closes: #161993)
     - Adds new password check for empty passwords (Closes: #197228)
     - Fixed typo in accounts.txt spotted by Philipp Weis (Closes: #211793)
+    - check_passwdformat provides an improved message and allows daemon 
+      in uid 1 (Closes: #211328)
+    - also, check_passwdformat now will not warn on lenght issues for 
+      locked users. (Closes: #211327)
   * Added -XMacOSX to exclude the new OS provided upstream.
   * Modified debian/rules to move the MacOSX and Tru64 directories to
     tiger-otheros

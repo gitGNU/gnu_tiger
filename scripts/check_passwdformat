@@ -24,6 +24,10 @@
 #       This script is based on SuSE's and OpenBSD's daily security check.
 # 08/08/2003 - jfs - Improved temporary file creation.
 # 10/07/2003 - jfs - Delete temporary files created.
+# 10/10/2003 - jfs - Improved message and allowed daemon in uid 1 (for
+#                    debian bug #211328). Also added password content 
+#                    check and do not warn on lengths for locked users.
+#                    (fixes debian bug 211327)
 #
 #-----------------------------------------------------------------------------
 #
@@ -120,17 +124,17 @@ $AWK -F: '{
 #                  printf("Login %s is off but still has a valid shell and alternate access files in\n\t home directory are still readable.\n",$1);
 #}
         if ($3 == 0 && $1 != "root")
-                printf("Login %s has a user id of 0.\n", $1);
-        if ($3 == 1 && $1 != "bin")
-		printf("Login %s has a user id of 1.\n", $1);
+                printf("Login %s has a user id of 0 which should be reserved for root\n", $1);
+        if ($3 == 1 && $1 != "bin" && $1 != "daemon" )
+		printf("Login %s has a user id of 1 which should be reserved for bin or daemon\n", $1);
         if ($3 < 0)
                 printf("Login %s has a negative user id.\n", $1);
         if ($4 < 0)
                 printf("Login %s has a negative group id.\n", $1);
 	if ($4 == 0 && $1 != "root")
-		printf("Login %s has a group id of 0.\n", $1);
-	if ($4 == 1 && $1 != "bin")
-		printf("Login %s has a group id of 1.\n", $1);
+		printf("Login %s has a group id of 0 which should be reserved for root\n", $1);
+	if ($4 == 1 && $1 != "bin" && $1 != "daemon" )
+		printf("Login %s has a group id of 1 which should be reserved for bin or daemon.\n", $1);
 }' < $PW > $OUT
 
 if [ -s "$OUT" ] ; then
@@ -177,8 +181,10 @@ $AWK -F: '{
         if ($2 == "")
                 printf("Login %s has no password.\n", $1);
 	if ($2 != "" && length($2) != 13 && length($2) != 34 &&
-	    length($2) != 1 && $2 !~ /^\$[0-9a-f]+\$/)
-		printf("Login %s has an unsual password field length\n", $1);
+	    length($2) != 1 && $2 !~ /^\$[0-9a-f]+\$/ && $2 !~ /^!/ )
+		printf("Login %s has an unsual password field length.\n", $1);
+	if ($2 != "" && $2 !~ /^\$[0-9a-f]+\$/ && $2 !~ /^[!*]/ )
+		printf("Login %s has an unsual password content.\n", $1);
 }' < $PW > "$OUT"
 
 if [ -s "$OUT" ] ; then
