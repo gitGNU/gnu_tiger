@@ -142,6 +142,15 @@ ETCSHELLS=/etc/shells
 #
 export MAILSPOOL CRONSPOOL ETCSHELLS
 #
+#
+DEVDIRSYS="/dev/ /devices/"
+cdevs=`ls -d /cluster/members/member*/dev/`
+[ -n "$cdevs" ] && {
+	cdevs=`echo $cdevs`
+	DEVDIRSYS="$DEVDIRSYS $cdevs"
+}
+export DEVDIRSYS
+
 FS_WDIRSYS="/tmp/ /var/tmp/ /var/spool/mail/"
 export FS_WDIRSYS
 #
