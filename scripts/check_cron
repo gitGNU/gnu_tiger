@@ -20,7 +20,7 @@
 # Ideas from Dan Farmer's 'cron.chk' from COPS 1.04.
 # 
 # check_cron  - 08/12/2002 - jfs Fixed to use CRONSPOOL
-# 
+# check_cron  - 04/25/2002 - jfs Fixed dependancies
 # 
 #-----------------------------------------------------------------------------
 #
@@ -70,7 +70,7 @@ done
 echo
 echo "# Performing check of \`cron' entries..."
 
-haveallcmds AWK BASENAME LS GEN_CRON_FILES LS SED RM TR || exit 1
+haveallcmds AWK BASENAME CAT GEN_CRON_FILES LS RM TR SED || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 realpath="$REALPATH -d"
