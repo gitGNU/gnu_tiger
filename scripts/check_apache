@@ -23,6 +23,8 @@
 # http://www.intersectalliance.com/projects/ApacheConfig/index.html 
 # SANS's Linux Security Checklist (item #25)
 #
+# 08/12/2003 - jfs - Fixed a typo in the call to SED
+#
 # TODO (generic)
 # - include checks for problematic modules
 # - analyse authenticating methods
@@ -92,7 +94,7 @@ haveallfiles APACHECONFDIR BASEDIR WORKDIR || exit 1
 	while read listen ipaddr
 	do
 		port=`echo $ipaddr | $CUT -f : -d 2`
-		ipaddr=`echo $ipaddr | SED -e 's/:.*$//'`
+		ipaddr=`echo $ipaddr | $SED -e 's/:.*$//'`
 	done
 	# TODO: this check should warn only if this is a multihomed host
 	# (we probably need to check this in other places so a utils function
