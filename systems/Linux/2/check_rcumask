@@ -21,6 +21,8 @@
 #       Changed TigerInstallDir to .
 # check_rcumask - 09/10/2002 - jfs
 #	Fixed to work in sh properly (and added necessary checks)
+# check_rcumask - 08/09/2003 - jfs
+#       Included patch to check for more source files
 #
 # Checks if there is a umask setting for the init.d scripts (rc) so that
 # these create files with a proper mode (644).
@@ -88,8 +90,12 @@ haveallcmds HEAD TAIL GREP EXPAND SED CAT SORT LS AWK || exit 1
 
 Foundumask=0
 
-# Files include Debian's rcS and Titan's umask.sh file
-for file in '/etc/init.d/rcS' '/etc/rc.d/init.d/umask.sh' '/etc/init.d/umask.sh'
+# Files include Debian's rcS, Titan's umask.sh file and Red Hat default 
+# source for initscripts
+# /etc/rc.d/init.d/functions, C-Shell's /etc/csh.login, Bash's /etc/profile
+# and PAM's /etc/login.defs 
+# (deprecated, but for backward compatibility)
+for file in '/etc/init.d/rcS' '/etc/rc.d/init.d/umask.sh' '/etc/init.d/umask.sh' '/etc/rc.d/init.d/functions' '/etc/csh.login' '/etc/profile'
 do
    [ -r $file ] && {
 
