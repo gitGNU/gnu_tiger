@@ -19,6 +19,8 @@
 #
 # Script to make signatures for a supported operating system.
 #
+# 04/23/2003 - jfs - added missing MD5 definition and check
+#
 #-----------------------------------------------------------------------------
 #
 
@@ -37,6 +39,9 @@ done
 }
 
 . $basedir/config
+# MD5 by default is in BINDIR but could be defined on configuration
+# too (i.e. not use Tiger's)
+[ -z "$MD5" ] && MD5="$BINDIR/md5"
 
 haveallof()
 {
@@ -54,11 +59,12 @@ haveallof()
   return $retval
 }
 
-haveallof commands CAT CC || exit 1
+haveallof commands CAT CC MD5 || exit 1
 haveallof variables BASEDIR TESTLINK WORKDIR
 
 [ ! $TESTEXEC $MD5 ] && {
-  echo "Don't see MD5... exiting..."
+  echo "Don't see MD5 (have you compiled Tiger binaries?)... exiting..."
+  exit 1
 }
 
 comment="$OS $REV"
