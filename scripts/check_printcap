@@ -20,6 +20,8 @@
 # Checks the printer control file.
 #
 # 05/01/2003 - jfs - Fixed dependancies
+# 01/11/2004 - rbrad - Check for /etc/printcap before parseing.
+#		Bug reported by: Michael Schleif.
 #
 #-----------------------------------------------------------------------------
 #
@@ -131,6 +133,8 @@ check_filter()
 
 src=/etc/printcap
 infile=/etc/printcap
+
+[ ! -r $infile ] && exit
 
 $SED -e 's/^#.*$//' -e '/^$/d' $infile |
 $AWK '
