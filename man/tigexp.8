@@ -1,8 +1,7 @@
-.\" @(#)tigexp.8 1.00 93/06/04 TAMUSCC;
-.TH TIGEXP 8 "04 Jun 1993" "Security" "Administrator Commands"
+.TH TIGEXP 8 "12 August 2003" "Security" "Administrator Commands"
 .SH NAME
 tigexp \- UNIX Security Checker Explanation Generator
-.SH SYNONPSIS
+.SH SYNOPSIS
 .B "tigexp msgid [msgid [msgid...]]"
 .LP
 .B "tigexp [-f|-F] [security_report]"
@@ -21,6 +20,46 @@ in the security report, whereas the
 .I "\-F"
 option will output the security report with explanations inserted
 after each entry in the report.
+.PP
+There are five different message levels produced by Tiger. Each of 
+the message levels is the last letter of the message id. The are:
+.TP 
+.I ALERT
+A message of this level indicates that Tiger has detected a 
+possible intrusion attempt or troublesome misconfiguration which can
+expose the whole system to attack.
+.TP 
+.I FAIL
+Messages of this level indicate a violation of a generic security policy
+or a possible intrusion. Appropiate action should be taken to fix this
+security issue.
+.TP 
+.I WARN
+Messages of this level indicate a security issue which should be checked
+further and might indicate a probable vulnerability or exposure. Most
+.I Tiger
+messages appear in this category.
+.TP 
+.I INFO
+These includes information messages which are not necessarily a security
+violation but might be useful for the administrator. Note that the 
+.I tigerrc
+configuration file through the 
+.I Tiger_Show_INFO_Msgs
+option determines wether or not 
+.I Tiger
+shows these items. The default behaviour is to 
+.I not
+show them.
+.TP 
+.I ERR
+These messages are errors in the execution of
+.I Tiger
+(or any of its scripts), this is probably due to a misconfiguration 
+in the program, because of a problem in the installation or because 
+a file needed for the test is missing. The script who outputs this error 
+should be investigated further.
+
 .SS OPTIONS
 .TP
 .I "\-f"
