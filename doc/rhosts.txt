@@ -54,7 +54,7 @@ The /etc/hosts.equiv file contains a '+' entry.  This is a major
 security hole.  It allows anyone to login to the machine as any
 user except `root'.  This needs to be removed immediately.  Note
 that SunOS 4.x systems ship with the '+' entry.
-%rcmd010i
+%rcmd010w
 The contents of the /etc/hosts.equiv file is listed.  The hosts
 listed here should be examined for correctness.
 %rcmd011f

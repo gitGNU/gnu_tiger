@@ -29,7 +29,6 @@
 # 07/25/2002 jfs Added a sanity check for password files
 # 04/28/93 dls  Added '-L' option to 'ls' to get the permissions from the
 #               file instead of the symbolic link.
-#
 #               Complain if the .rhosts is a symbolic link or directory.
 #
 #-----------------------------------------------------------------------------
@@ -293,7 +292,7 @@ $entry";;
 	hosts="$hosts `$BASEDIR/util/getnetgroup $netgroup`"
       }
       [ -n "$hosts" ] && {
-	message INFO rcmd010i "" "/etc/hosts.equiv contents:"
+	message WARN rcmd010w "" "/etc/hosts.equiv contains the following hosts:"
 	wildcard=0
 	saveifs=$IFS
 	IFS="
