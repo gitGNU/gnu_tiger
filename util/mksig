@@ -126,6 +126,7 @@ dos
 dump
 dumpreg
 expreserve
+file
 fingerd
 ftpd
 gpasswd
