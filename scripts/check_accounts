@@ -21,7 +21,7 @@
 # with cron, rhosts, .forward, and valid shells.
 #
 # 09/19/2003 jfs  Add root to Tiger_Admin_Accounts if already defined.
-#                 Also permit empty USERDOTFILES
+#                 Also permit empty USERDOTFILES and fix dependancies.
 # 08/15/2003 jfs  ETCSHELLS is not indispensable to running this script.
 # 08/14/2003 jfs  Included ARSC changes including an update for Linux
 #                 in which no shell equals shell to address no
@@ -103,6 +103,7 @@ done
 [ "$Tiger_TESTMODE" = 'Y' ] && {
   haveallcmds AWK CAT CHECK_CRON FIND GEN_PASSWD_SETS GREP JOIN LS TR WC RM || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars HOSTNAME TESTEXEC || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
@@ -113,7 +114,7 @@ echo "# Performing check of user accounts..."
 
 haveallcmds AWK CAT CHECK_CRON FIND GEN_PASSWD_SETS GREP JOIN LS TR WC RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
-haveallcmds CHECK_CRON || CHECK_CRON=
+haveallvars HOSTNAME TESTEXEC || exit 1
 
 safe_temp "$WORKDIR/pass.list.$$" "$WORKDIR/home.hosts.$$"
 trap 'delete $WORKDIR/pass.list.$$ $WORKDIR/home.hosts.$$ ; exit 1' 1 2 3 15
