@@ -132,7 +132,7 @@ if [ "$OS" = "HPUX" ] ; then
 	MESSAGES=""
 fi
 
-if [ ! -r "$WTMP" ] ; then
+if [ ! -f "$WTMP" ] ; then
     #echo "...Warning: $WTMP does not exist"
     message FAIL logf001f "" "Log file $WTMP does not exist"
 else
@@ -147,7 +147,7 @@ else
 fi
 
 if [ -n "$BTMP" ] ; then
-    if [ ! -r "$BTMP" ] ; then
+    if [ ! -f "$BTMP" ] ; then
         #echo "...Warning: $BTMP does not exist"
         message FAIL logf002f "" "Log file $BTMP does not exist"
     else
@@ -162,11 +162,11 @@ if [ -n "$BTMP" ] ; then
     fi
 fi
 
-[ -n "$LASTLOG" -a ! -r "$LASTLOG" ] && 
+[ -n "$LASTLOG" -a ! -f "$LASTLOG" ] && 
     #echo "...Warning: $LASTLOG does not exist"
     message FAIL logf003f "" "Log file $LASTLOG does not exist"
 
-if [ ! -r "$UTMP" ] ; then
+if [ ! -f "$UTMP" ] ; then
     #echo "...Warning: $UTMP does not exist"
     message FAIL logf004f "" "Log file $UTMP does not exist"
 else
@@ -181,7 +181,7 @@ else
 fi
 
 if [ -n "$LOGINLOG" ] ; then
-    if [ ! -r "$LOGINLOG" ] ; then
+    if [ ! -f "$LOGINLOG" ] ; then
         #echo "...Warning: $LOGINGLOG does not exist"
         message FAIL logf006f "" "Log file $LOGINLOG does not exist"
     else
@@ -191,7 +191,7 @@ if [ -n "$LOGINLOG" ] ; then
 fi
  
 if [ -n "$MESSAGES" ] ; then
-    if [ ! -r "$MESSAGES" ] ; then
+    if [ ! -f "$MESSAGES" ] ; then
         #echo "...Warning: $MESSAGES does not exist"
         message FAIL logf007f "" "Log file $MESSAGES does not exist"
     else 
