@@ -39,6 +39,9 @@
 #      characters (which might make some lines be swapped and some users 
 #      not be accounted for properly)
 #      NOTE: This should be done in other systems too
+# Linux/2/gen_passwd_sets - 06/27/2004 - jfs 
+#      Fixed location of sort call which made duplicates appear, also
+#      define CAT if not defined (for local testing)
 #
 #-----------------------------------------------------------------------------
 #
@@ -48,6 +51,7 @@
 [ -z "$JOIN" ] && JOIN=`which join`
 [ -z "$GREP" ] && GREP=`which grep`
 [ -z "$AWK" ] && AWK=`which awk`
+[ -z "$CAT" ] && CAT=`which cat`
 [ -z "$RM" ] && RM=`which rm`
 [ -z "$CP" ] && CP=`which cp`
 [ -z "$YPCAT" ] && YPCAT=`which ypcat 2>/dev/null`
@@ -114,8 +118,8 @@ do
 	    then
 		if [ -r /etc/shadow ] 
 		then
-		$CAT /etc/passwd /etc/shadow | $SORT -u |
-		$AWK -F : '{ print $1 } ' >$WORKDIR/u.$$
+		$CAT /etc/passwd /etc/shadow | 
+		$AWK -F : '{ print $1 } ' | $SORT -u >$WORKDIR/u.$$
 		>$WORKDIR/p.$$
 		>$WORKDIR/s.$$
 		$CAT $WORKDIR/u.$$ |
