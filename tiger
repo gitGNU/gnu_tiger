@@ -276,7 +276,7 @@ aidepid=
 
 # Note: TARA calls this script with Tiger_Check_ROOT so we keep it
 # there for compatibility purposes
-[ "$Tiger_Check_ROOT" != 'N' -o "$Tiger_Check_ROOT_ACCESS" != 'N' ] && {
+[ \( "$Tiger_Check_ROOT" != 'N' -a -n "$Tiger_Check_ROOT" \) -o "$Tiger_Check_ROOT_ACCESS" != 'N' ] && {
   echo "`$TIMECMD`> Checking ttytab, securetty, and login configuration files..."
   run_script check_root >> $logtmp
 }
@@ -309,7 +309,7 @@ aidepid=
   run_script check_tcpd >> $logtmp
 }
 
-[ "$Tiger_Check_SERVICES" != 'Y' ] && {
+[ "$Tiger_Check_SERVICES" != 'N' ] && {
   echo "`$TIMECMD`> Checking 'services' configuration..."
   run_script check_services >> $logtmp
 }
