@@ -17,18 +17,24 @@
 #
 # tiger - 06/14/93
 #
+# The UN*X security check system. This is the main program that will run
+# all the checks configured for your system in the tigerrc configuration 
+# file.
+#
 # 04/29/93 dls Added support for 'tigerrc' file.
 #
 # 04/27/93 dls check_passwd is now check_accounts
 #
 # 05/26/2002 jfs Added check_tcpd test
 #
+# 04/15/2003 jfs Added new year
+#
 #-----------------------------------------------------------------------------
 #
 echo "Tiger UN*X security checking system"
 echo "   Developed by Texas A&M University, 1994"
 echo "   Updated by the Advanced Research Corporation, 1999"
-echo "   Further updated by Javier Fernandez-Sanguino, 2001-2002"
+echo "   Further updated by Javier Fernandez-Sanguino, 2001-2003"
 echo "   Covered by the GNU General Public License (GPL)"
 echo
 TigerInstallDir="@tigerhome@"
@@ -240,6 +246,11 @@ trippid=
   $SCRIPTDIR/check_tcpd >> $logtmp
 }
 
+[ "$Tiger_Check_SERVICES" != 'Y' ] && {
+  echo "`$TIMECMD`> Checking 'services' configuration..."
+  $SCRIPTDIR/check_services >> $logtmp
+}
+
 [ "$Tiger_Check_EXPORTS" != 'N' ] && {
   echo "`$TIMECMD`> Checking NFS export entries..."
   $SCRIPTDIR/check_exports >> $logtmp
@@ -311,6 +322,11 @@ trippid=
   $SCRIPTDIR/check_logfiles >> $logtmp
 }
 
+[ "$Tiger_Check_USERUMASK" != 'N' ] && {
+  echo "`$TIMECMD`> Checking for the setting of user's umask..."
+  $SCRIPTDIR/check_umask >> $logtmp
+}
+
 #
 # The following check has been "promoted" from Linux to
 # any system since it is pretty general
@@ -324,6 +340,11 @@ trippid=
 [ "$Tiger_Check_RUNPROC" != 'N' ] && {
   echo "`$TIMECMD`> Checking for running processes..."
   $SCRIPTDIR/check_runprocs >> $logtmp
+}
+
+[ "$Tiger_Check_DELETED" != 'N' ] && {
+  echo "`$TIMECMD`> Checking for processes using deleted files..."
+  $SCRIPTDIR/check_finddeleted >> $logtmp
 }
 
 # This test should be changed from Perl to shell script, also there

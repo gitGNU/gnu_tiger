@@ -19,7 +19,8 @@ Tiger_Check_ALIASES=Y		# Fast
 Tiger_Check_CRON=Y		# Fast
 Tiger_Check_ANONFTP=Y		# Fast
 Tiger_Check_EXPORTS=Y		# Fast
-Tiger_Check_INETD=Y		# Could be faster, not bad though
+Tiger_Check_INETD=Y		# Fast
+Tiger_Check_SERVICES=Y		# Could be faster, not bad though
 Tiger_Check_KNOWN=Y		# Fast
 Tiger_Check_PERMS=Y		# Could be faster, not bad though
 Tiger_Check_SIGNATURES=Y	# Several minutes
@@ -32,14 +33,17 @@ Tiger_Check_OS=Y                # Fast
 Tiger_Check_SINGLE=Y            # Fast
 Tiger_Check_BACKUPS=Y           # Fast
 Tiger_Check_BOOT=Y              # Fast
-Tiger_Check_PATCH=Y             # Depends on your network connection
+Tiger_Check_PATCH=N             # Depends on your network connection
+				# (if no timeout is fixed it might stall)
 Tiger_Check_LOGFILES=Y          # Fast
+Tiger_Check_USERUMASK=Y         # Fast
 Tiger_Check_ETCISSUE=Y		# Fast
 Tiger_Check_STRICTNW=Y		# Fast - stringent N/W server checks
 Tiger_Check_LISTENING=Y		# Fast
 Tiger_Check_SYSTEM=Y		# Depends on the specific system checks
 Tiger_Check_RUNPROC=N		# Fast, needs to be customized per system
-Tiger_Check_NEVERLOG=Y		# Fast, Depends on users in the system
+Tiger_Check_DELETED=Y		# Depends on the number of processes on the
+				# system
 # 
 # Should reports with no info be sent on cron?
 #
@@ -73,12 +77,7 @@ Tiger_Run_CRACK=N               # First time, ages; subsequent fairly quick
 # Should we use canonical fully qualified domain names
 # in the reports?
 #
-# Note: some UNIX systems can give the FQN using 'hostname -f'
-# if your system provides this change to 'Y' otherwise keep
-# it as 'N' (or you might change your system's name'!)
-# Known systems in which this works: Linux (all distributions)
-# Known systems in which this does _not_ work: Solaris (all versions)
-Tiger_Output_FQDN=N
+Tiger_Output_FQDN=Y
 #
 # Run Tripwire file integrity checker
 #
@@ -155,9 +154,6 @@ Tiger_Embed_Report_Exec_Only=Y
 # List of usernames separated by '|'... no whitespace
 #
 Tiger_Embedded_OK_Owners='root|bin|uucp|sys|daemon'
-# If you are using HP-UX or Solaris use the following:
-Tiger_Embedded_OK_Owners='root|bin|uucp|daemon|adm'
-# If you are paranoid use:
 #Tiger_Embedded_OK_Owners=root
 #
 # What groups can have write access to system files?
