@@ -1,0 +1,100 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2003 Javier Fernandez-Sanguino
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_ndd: checks for security configuration parameters of the
+#            network environment (using ndd)
+#            This modules provides generic support routines for the ndd
+#            checks, allowing for better sharing of code between HP-UX,
+#            Solaris, and potentialy other Unixes.
+#
+# 07/11/2003 rbradetich@uswest.net - Initial version. 
+#
+# 08/09/2003 jfs - Placed in the generic default directory for Unix systems
+#            so that systems can run them using 'check'
+#
+#-----------------------------------------------------------------------------
+# NOTES: 
+# Several of the help entries for these ndd commands were pulled
+# from: http://www.fish.com/titan/arch/sol2sun4/lib/nddconfig
+# Another good reference of the HP-UX ndd values is at:
+# http://www.carumba.com/talk/random/hp.annotated_ndd.txt
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallfiles NDD_PARMS NDD_PARMS_LOCAL BASEDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+#------------------------------------------------------------------------
+haveallfiles NDD_PARMS NDD_PARMS_LOCAL BASEDIR || exit 1
+
+echo
+echo "# Checking network (ndd) configuration"
+
+for file in $NDD_PARMS $NDD_PARMS_LOCAL
+do
+  [ ! -r $file ] && continue
+
+  while read dev parm good level mesgid mesg
+  do
+    ([ -z "$dev" ] || [[ $dev = \#* ]]) && continue
+    val=`$NDD -get $dev $parm 2>/dev/null`
+    eval "case $val in
+        $good)
+          ;;
+        *)
+          message $level $mesgid \"\" \"$mesg\"
+          ;;
+      esac"
+  done < $file
+done
+
+exit 0

@@ -1,0 +1,76 @@
+%ndd001f
+This option determines whether to forward broadcast packets directed
+to a specific net or subnet, if that net or subnet is directly
+connected to the machine. If the system is acting as a router, this
+option can be exploited to generate a great deal of broadcast network
+traffic. Turning this option off will help prevent broadcast traffic
+attacks.  
+To disable this do:
+ # ndd -set /dev/ip ip_forward_directed_broadcasts 0
+%ndd002f
+This option determines whether to forward packets that are source
+routed. These packets define the path the packet should take instead
+of allowing network routers to define the path.
+To disable this do:
+  # ndd -set /dev/ip ip_forward_src_routed 0
+%ndd003w
+IP forwarding is the option that permits the system to act as a router
+and thus resend packets from one network interface to another. If your
+system is not acting as such this option should be disabled.
+To disable this do:
+ # ndd -set /dev/ip ip_forwarding 0
+%ndd004f
+The echo-request PMTU strategy can be used for amplification attacks.
+Use either strategy 1 or strategy 0.
+To disable this do:
+ # ndd -set /dev/ip ip_pmtu_straegy [0|1]
+%ndd005w
+This option determines whether to send ICMP redirect messages which
+can introduce changes into remote system's routing table. It should
+only be used on systems that act as routers.
+To disable this do:
+ # ndd -set /dev/ip ip_send_redirects 0
+%ndd006w
+The system is configured to send ICMP source quench messages.  These
+ICMP messages have been deprecated.
+To disable this do:
+ # ndd -set /dev/ip ip_send_source_sqench 0
+%ndd007f
+This options determines whether to respond to ICMP netmask requests
+which are typically sent by diskless clients when booting. An
+attacker may use the netmask information for determining network
+topology or the broadcast address for the subnet.
+To disable this do:
+ # ndd -set /dev/ip ip_respond_to_address_mask_broadcast 0
+%ndd008f
+This option determines whether to respond to ICMP broadcast echo
+requests (ping). An attacker may try to create a denial of service
+attack on subnets by sending many broadcast echo requests to which all
+systems will respond. This also provides information on systems that
+are available on the network.
+To disable this do:
+ # ndd -set /dev/ip ip_respond_to_echo_broadcast 0
+%ndd009f
+This option determines whether to respond to ICMP broadcast timestamp
+requests which are used to discover the time on all systems in the
+broadcast range. This option is dangerous for the same reasons as 
+responding to a single timestamp request. Additionally, an attacker
+may try to create a denial of service attack by generating many
+broadcast timestamp requests.
+To disable this do:
+ # ndd -set /dev/ip ip_respond_to_timestamp_broadcast 0
+%ndd010f
+This option determines whether to respond to ICMP timestamp requests
+which some systems use to discover the time on a remote system. An
+attacker may use the time information to schedule an attack at a
+period of time when the system may run a cron job (or other time-
+based event) or otherwise be busy. It may also be possible predict
+ID or sequence numbers that are based on the time of day for spoofing
+services.
+ # ndd -set /dev/ip ip_respond_to_timestamp 0
+%ndd011w
+This option determins if HP-UX will include explanitory text in the
+RST segement it sends.  This text is helpful for debugging, but is also
+useful to potential intruders.
+To disable this do:
+ # ndd -set /dev/tcp tcp_text_in_resets 0

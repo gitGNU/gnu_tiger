@@ -1,0 +1,22 @@
+# This file contains the necessary ndd information for the check_ndd module.
+# Blank lines and lines starting with '#' in this file are ignored by the check_ndd module.
+#
+# The fields are defined as:
+#   device file:   This is the /dev files used by ndd.
+#   ndd parameter: This is the parameter checked by ndd.
+#   good values:   This is the '|' seperated lists of "good" values returned by ndd
+#   message label: This is the label associated with the check if the value returned by ndd is "bad".
+#   message id:    This is the message id used with the check if the value returned by ndd is "bad".
+#   message:       This is the message used with the check if the value returned by ndd is "bad".
+
+/dev/ip  ip_forward_directed_broadcasts       0   FAIL ndd001f The system is configured to forward directed broadcasts.
+/dev/ip  ip_forward_src_routed                0   FAIL ndd002f The system is configured to forward packets with source route options.
+/dev/ip  ip_forwarding                        0   WARN ndd003w The system has IP forwarding enabled.
+/dev/ip  ip_pmtu_strategy                     0|1 FAIL ndd004f The system has echo-request PMTU strategy enabled.
+/dev/ip  ip_send_redirects                    0   WARN ndd005w The system has ICMP redirect messages enabled.
+/dev/ip  ip_send_source_quench                0   WARN ndd006w The system has ICMP source quench messages enabled.
+/dev/ip  ip_respond_to_address_mask_broadcast 0   FAIL ndd007f The system is configured to respond to ICMP address mask request broadcasts.
+/dev/ip  ip_respond_to_echo_broadcast         0   FAIL ndd008f The system is configured to respond to ICMP echo request broadcasts.
+/dev/ip  ip_respond_to_timestamp_broadcast    0   FAIL ndd009f The system is configured to respond to ICMP timestamp request broadcasts.
+/dev/ip  ip_respond_to_timestamp              0   FAIL ndd010f The system is configured to respond to ICMP timestamp requests.
+/dev/tcp tcp_text_in_resets                   0   WARN ndd011w The system is configured to allow text messages in TCP RST segments.

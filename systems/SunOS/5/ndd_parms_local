@@ -1,0 +1,19 @@
+# This file contains the local, custom checks performed by the check_ndd 
+# module.  This file is available to place additional, site specific 
+# checks that are not directly related to security.
+# i.e. Performance enhancements, etc.
+#
+# Blank lines and lines starting with '#' in this file are ignored by the 
+# check_ndd module.
+#
+# The fields are defined as:
+#   device file:   This is the /dev files used by ndd.
+#   ndd parameter: This is the parameter checked by ndd.
+#   good values:   This is the '|' seperated lists of "good" values returned 
+#                  by ndd
+#   message label: This is the label associated with the check if the value 
+#                  returned by ndd is "bad".
+#   message id:    This is the message id used with the check if the value
+#                  returned by ndd is "bad".
+#   message:       This is the message used with the check if the value 
+#                  returned by ndd is "bad".

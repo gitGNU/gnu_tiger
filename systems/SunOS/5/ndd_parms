@@ -1,0 +1,29 @@
+# This file contains the necessary ndd information for the check_ndd module.
+# Blank lines and lines starting with '#' in this file are ignored by the 
+# check_ndd module.
+#
+# The fields are defined as:
+#   device file:   This is the /dev files used by ndd.
+#   ndd parameter: This is the parameter checked by ndd.
+#   good values:   This is the '|' seperated lists of "good" values returned 
+#                  by ndd
+#   message label: This is the label associated with the check if the value 
+#                  returned by ndd is "bad".
+#   message id:    This is the message id used with the check if the value 
+#                  returned by ndd is "bad".
+#   message:       This is the message used with the check if the value 
+#                  returned by ndd is "bad".
+
+/dev/ip  ip_forwarding                         0 WARN sol003w The system has IP forwarding enabled.
+/dev/ip  ip_forward_src_route                  0 FAIL sol004f The system permits source routing from incoming packets.
+/dev/ip  ip_respond_to_address_mask            0 FAIL sol001f The system is configured to answer to ICMP addressmask requests.
+/dev/ip  ip_respond_to_timestamp               0 FAIL sol001f The system is configured to answer to ICMP timestamp requests.
+/dev/ip  ip_respond_to_timestamp_broadcast     0 FAIL sol001f The system is configured to answer to ICMP timestamp broadcasts.
+/dev/ip  ip_ignore_redirect                    1 WARN sol002w The system accepts ICMP redirection messages.
+/dev/ip  ip_respond_to_echo_broadcast          0 FAIL sol001f The system is configured to answer to ICMP broadcasts.
+/dev/ip  ip_respond_to_address_mask_broadcast  0 FAIL sol001f The system is configured to answer to ICMP address mask broadcasts.
+# 
+# TODO: add messages for these
+#/dev/ip  ip_forward_directed_broadcasts
+#/dev/ip  ip_strict_dst_multihoming
+#/dev/tcp tcp_strong_iss
