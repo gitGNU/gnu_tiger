@@ -17,9 +17,14 @@
 #
 # installsig - 10/22/93
 #
+# 10/12/2002 - jfs - changed to use proper defaults if not available. 
+#                    changed the way DESC and CONFIG are retrieved to
+#                    avoid attacks through the signature files (those
+#                    'eval' ARE nasty things)
+#
 #-----------------------------------------------------------------------------
 #
-#  Usage:  ./installsig sigfile [sigfile [sigfile...]]
+#  Usage:  util/installsig sigfile [sigfile [sigfile...]]
 #
 # This script must be run from the top level of the tiger directory.
 # sigfiles must use names of the form:
@@ -31,6 +36,18 @@
 #
 # For SunOS 5.2 running on a sun4
 #
+# Note, however, that the destination directory is extracted from the
+# signature file (#@DEST) regardless of the name given to the file
+# itself.
+
+# Default to current dir
+[ -z "$WORKDIR" ] && WORKDIR=run/
+[ -z "$CONFIG" ] && CONFIG=.
+[ ! -d $WORKDIR ] && {
+	echo "ERROR: Cannot find $WORKDIR. Exiting"
+	exit 1
+}
+
 
 findcmd()
 {
@@ -119,9 +136,16 @@ AWK="`findcmd awk`"
 
 for sigfile
 do
-  eval `
-  $GREP '^#@' $sigfile |
-  $SED -e 's/^#@//'`
+  # Just in case, prevent @ to be used to run commands
+  # as the user that installs signatures
+  # We just need DEST and CONFIG
+  DEST=`$GREP '^#@DEST' $sigfile | $SED -e 's/^#@DEST=//'`
+  CONFIG=`$GREP '^#@CONFIG' $sigfile | $SED -e 's/^#@CONFIG=//'`
+
+  # Some sanity checks to prevent attacks outside the
+  # current dir
+  DEST=`echo $DEST | $SED -e 's/^\\\//' | $SED -e 's/\.//g'`
+  CONFIG=`echo $CONFIG | $SED -e 's/^\\\//' | $SED -e 's/\.//g'`
 
   echo "Target directory: $DEST"
   echo "Configuration: $CONFIG"
