@@ -25,8 +25,8 @@ of what is normally expected there.  Unexpected differences should
 be checked, and if anything unusual is found, the system should
 be checked for other signs of intrusion.
 %inet006f
-The 'rexd' service is very insecure and should never be enabled.
-Known rexd servers have little or no security in their design
+The 'rexd' (or 'exec') service is very insecure and should never be
+nabled.  Known rexd servers have little or no security in their design
 or implementation. Intruders can exploit this service to execute 
 commands as any user.
 
