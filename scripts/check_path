@@ -17,7 +17,9 @@
 #
 # check_path  - 06/14/93
 #
-# 09/19/2003 jfs Use -L to check properly for symlinks (I've check and
+# 10/07/2003 jfs Redirected LS error to /dev/null since dangling symlinks
+#                will print errors. Properly cleaned temporary file.
+# 09/19/2003 jfs Use -L to check properly for symlinks (I've checked and
 #                its supported by all the LS implementations I've seen)
 #                (Fixes Debian Bug #161993)
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
@@ -100,7 +102,7 @@ checkcmds()
   [ "$_user" != 'root' ] && okgroup=$Tiger_PATH_OK_Group_Write
 
   [ -d $_dir ] &&
-  $LS -Ld $_dir/* |
+  $LS -Ld $_dir/*  2>/dev/null|
   getpermit |
   while read _execfile _owner _group ur uw ux gr gw gx or ow ox suid sgid stk
   do
@@ -394,3 +396,7 @@ realpath="$REALPATH -d"
   fi
 } |
 $OUTPUTMETHOD
+
+delete $WORKDIR/pth.$$
+
+exit 0
