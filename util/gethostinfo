@@ -17,9 +17,16 @@
 #
 # util/gethostinfo - 04/22/93
 #
+# 08/14/2003 jfs Applied code from TARA 3.0.3 to recognise MacOS
+# 08/09/2003 jfs Applied patch from Ryan Braderitch which fixes a bug so the
+#                directory structure works for HPUX.
 # 07/26/2002 jfs Modified so it can work if called directly. Removed
 #                unnecesary exit's
 #
+#-----------------------------------------------------------------------------
+# TODO:
+# - Investigate if it's better to use uname -rms, which probably is
+#   better to parse (and less error-prone) as suggested by Nicolas François
 #-----------------------------------------------------------------------------
 #
 [ -z "$WORKDIR" ] && WORKDIR=./run
@@ -80,7 +87,7 @@ UNAME=`findcmd uname`
 	        printf("%s %s.%s RS6000\n", $1, $4, $3);
 	   }
 	   else if($1 == "HP-UX"){
-                printf("HPUX %s %s\n", $3, $5);
+                printf("HPUX %s %s\n", substr($3,3), $5);
            }
            else if($1 == "IRIX"){
                 printf("IRIX %s %s\n", $3, $5);
@@ -91,6 +98,13 @@ UNAME=`findcmd uname`
 	   else if($1 == "Linux"){
 		printf("Linux %s %s\n",$3, $12);
 	   }
+	   else if($1 == "Darwin"){
+	        printf("MacOSX %s %s\n",$3, $11);
+	   }
+	   else if($1 == "Jaguar"){
+	        printf("MacOSX %s %s\n",$3, $11);
+	   }
+
 	 }
   '
 # In some uname's we might need this ...
