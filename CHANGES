@@ -1,6 +1,15 @@
 NOTE: To read changes made to the Debian package (since
 August 23rd 2001) see the changelog.Debian file
 
+Changes (v 3.2.2) 
+(Unreleased)
+----------------
+- Applied patches from Ryan Bradetich to fix Makefiles in HPUX
+- Fixed bashisms in scripts
+- Fixed YPCAT calls
+[TODO: write more of the changes done here]
+
+
 Changes (v 3.2.1) 
 ----------------
 - New checks:
