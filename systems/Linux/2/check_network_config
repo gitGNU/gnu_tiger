@@ -1,0 +1,151 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2002 Javier Fernandez-Sanguino 
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_network_config: checks for security configuration paramenters of the
+#                network environment (using /proc)
+#
+# 11/25/2002 jfs - Initial version derived from Hispasec's bulletin
+#                  (which is based on documentation online)
+#
+# References:
+# http://www.linuxsecurity.com/articles/network_security_article-4528.html
+# http://linux.oreillynet.com/pub/a/linux/2000/11/16/LinuxAdmin.html
+# 
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds CAT || exit 1
+  haveallfiles PROCDIR BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+#------------------------------------------------------------------------
+haveallcmds CAT || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+haveallfiles PROCDIR || {
+        message FAIL lin008f "" "The $PROCDIR filesystem is not available. Please make sure you have configured support for this pseudo-filesystem."
+	exit 1
+}
+echo
+echo "# Checking network configuration"
+
+# Instead of using the sysctl interface we are going to $CAT from the
+# specified locations
+
+read_if_exist() {
+# Reads a file if it exists
+# Otherwise returns -1
+	file=$1
+	value=-1
+	[ -f $1 ] && value=`$CAT $file`
+	return $value
+}
+
+read_if_exist /proc/sys/net/ipv4/icmp_echo_ignore_all
+icmp_echo_ignore=$?
+read_if_exist /proc/sys/net/ipv4/icmp_echo_ignore_broadcast
+icmp_broadcast_ignore=$?
+read_if_exist /proc/sys/net/ipv4/icmp_bogus_error_responses
+icmp_bogus_error=$?
+read_if_exist /proc/sys/net/ipv4/conf/all/accept_redirects
+icmp_redirect=$?
+read_if_exist /proc/sys/net/ipv4/conf/default/accept_redirects
+icmp_redirect_def=$?
+read_if_exist /proc/sys/net/ipv4/tcp_syncookies
+tcp_syncookies=$?
+read_if_exist /proc/sys/net/ipv4/conf/all/rp_filter
+rp_filter_all=$?
+read_if_exist /proc/sys/net/ipv4/default/all/rp_filter
+rp_filter_def=$?
+read_if_exist /proc/sys/net/ipv4/ip_forward
+ip_fwd=$?
+read_if_exist /proc/sys/net/ipv4/conf/all/accept_source_route
+ip_source_route_all=$?
+read_if_exist /proc/sys/net/ipv4/conf/default/accept_source_route
+ip_source_route_def=$?
+read_if_exist /proc/sys/net/ipv4/conf/all/log_martians
+log_martian_all=$?
+read_if_exist /proc/sys/net/ipv4/conf/default/log_martians
+log_martian_def=$?
+# Only useful for kernel's 2.2 and previous
+read_if_exist /proc/sys/net/ipv4/conf/all/hidden
+ip_weak_end=$?
+
+# Now start checking and sending messages
+
+[ $icmp_echo_ignore -eq 0 ] && \
+	message INFO lin009i "The system is configured to answer ICMP ECHO requests"
+[ $icmp_broadcast_ignore -eq 0 ] && \
+	message ERROR lin010e "The system is configured to answer to ICMP broadcasts"
+[ $icmp_bogus_error -eq 0 ] && \
+	message ERROR lin011e "The system is configured to answer bogus errors"
+
+[ $icmp_redirect -eq 0 -o $icmp_redirect_def -eq 0 ] && \
+	message WARN lin012w "The system accepts ICMP redirection messages"
+
+[ $tcp_syncookies -eq 0 ] && \
+	message ERROR lin013e "The system is not protected against Syn flooding attacks"
+
+[ $rp_filter_all -eq 0 -o $rp_filter_def -eq 0 ] && \
+	message ERROR lin014e "The system permits the transmission of IP packets with invalid addresses"
+
+[ $ip_fwd -eq 1 ]  && \
+	message WARN lin015w "The system has IP forwarding enabled"
+
+[ $ip_source_route_all -eq 1 -o $ip_source_route_def -eq 1 ] && \
+	message ERROR lin016e "The system permits source routing from incoming packets"
+
+[ $log_martian_all -eq 0 -o $log_martian_def -eq 0 ] && \
+	message WARN lin017w "The system is not configured to log suspicious (martian) packets"
+
+# TODO: add a test that is useful for post-2.2 kernels
+[ $ip_weak_end -eq 0 ] && \
+	message WARN lin018w "The system implements weak end host RFC"
