@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -16,19 +16,20 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_logfiles - 11/10/2001
+# 
+# Check for the presence of a given number of logfiles and their permissions.
+# Note that these check is operating system dependant.
 #
 # check_logfiles - 08/09/2001 - jfs - fixed to add GREP and WC to haveallcmds
 #                  detected when testing in Solaris 8. Also changed == to =
 #
+# check_logfiles - 04/15/2003 - jfs - separated logfiles and umask checks
+#                  added permission checks for the logfiles based on 
+#                  Solaris recommendations. 
+#                  Logfile location is no longer hardcoded but can be changed
+#                  depending on $OS
+#
 #-----------------------------------------------------------------------------
-# TODO:
-# 
-# -logfile location should not be hardcoded in this script since it might
-#  not be proper for the system that is running.
-# Sample:
-#   in Solaris: wtmp is /var/adm/wtmpx, utmp is /var/adm/utmpx, lastlog is
-#		/var/log/lastlog, btmp does not seem to exist.
-#		And maybe also sulog and messages should be checked.
 #
 TigerInstallDir="."
 
@@ -66,7 +67,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds TAIL SED HEAD EXPAND GREP WC CAT SORT AWK LS RM || exit 1
+#  haveallcmds LS || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -79,79 +80,78 @@ done
 echo
 echo "# Checking for existence of log files..."
 
-haveallcmds TAIL SED HEAD EXPAND GREP WC SORT RM LS AWK || exit 1
+#haveallcmds LS || exit 1
+
+check_fileperm () {
+  file=$1
+  permission=$2
+  value=-1
+  getpermit $1 |
+  while read file owner group ur uw ux gr gw gx or ow ox suid sgid sticky
+  do
+    [ "${ur}${uw}${ux}${gr}${gw}${gx}${or}${ow}${ox}" = '$permission' ] &&
+	value=1
+  done
+  return $value
+}
 
 
 #####
 # Check various accounting files
 #####
+WTMP=/var/log/wtmp
+BTMP=/var/log/btmp
+LASTLOG=/var/log/lastlog
+UTMP=/var/run/utmp
+LOGINLOG=/var/log/loginlog
+MESSAGES=/var/log/messages
 
-[ ! -r /var/log/wtmp ] &&
-    #echo "...Warning: /var/log/wtmp does not exist"
-    message FAIL logf001f "" "Log file wtmp does not exist"
-
-[ ! -r /var/log/btmp ] &&
-    #echo "...Warning: /var/log/btmp does not exist"
-    message FAIL logf002f "" "Log file btmp does not exist"
-
-[ ! -r /var/log/lastlog ] && 
-    #echo "...Warning: /var/log/lastlog does not exist"
-    message FAIL logf003f "" "Log file lastlog does not exist"
-
-[ ! -r /var/run/utmp ] &&
-    #echo "...Warning: /var/run/utmp does not exist"
-    message FAIL logf004f "" "Log file utmp does not exist"
-
-
-#####
-# Check to ensure that the umask is set correctly
-#####
-
-echo
-echo "# Checking for correct umask settings..."
-
-for file in '/etc/profile' '/etc/csh.login' '/etc/bashrc'
-do
-   [ -r $file ] && {
-
-   Occurance=`$GREP umask $file | $WC -l`
-
-   if [ $Occurance = 0 ]; then
-	#echo "No umask entry"
-	message WARN logf005w "" "There are no umask entries in $file"
-
-   elif [ $Occurance = 1 ]; then
-	UMASK1=`$GREP umask $file  \
-           | $EXPAND \
-           | $SED -e "s/^.*umask//"\
-           | $CUT -d" " -f2`
-
-	[ $UMASK1 != 002 -a $UMASK1 != 022 ] && 
-		#echo "The umask setting in $file is insecure"
-		message FAIL logf006f '' "The umask setting in $file is insecure"
-
-
-    elif [ $Occurance = 2 ]; then
-	UMASK1=`$GREP umask $file  \
-             | $EXPAND \
-             | $HEAD -n 1 \
-             | $SED -e "s/^.*umask//" \
-             | $CUT -d" "  -f2`
-    	UMASK2=`$GREP umask $file  \
-             | $EXPAND \
-             | $TAIL -n 1 \
-             | $SED -e "s/^.*umask//" \
-             | $CUT -d" " -f2`
-
- 	[ $UMASK1 != 002 -a $UMASK1 != 022 -o $UMASK2 != 002 -a $UMASK2 != 022 ] &&
-		#echo "The umask setting in $file is insecure"
-                message FAIL logf006f '' "The umask setting in $file is insecure"
-	else
-		#echo "There are > 2 umask entries in the config file $file"
-		message WARN logf007w '' "More than 2 umask entries in $file"
-
+if [ "$OS" = "SunOS" ] ; then
+	WTMP=/var/adm/wtmpx
+	UTMP=/var/adm/utmpx
+# Check: Note BTMP does not seem to exist
+# And maybe also sulog and messages should be checked.
 fi
 
-}
+if [ ! -r $WTMP ] ; then
+    #echo "...Warning: $WTMP does not exist"
+    message FAIL logf001f "" "Log file $WTMP does not exist"
+else
+    check_fileperm $WTMP 110100100 || 
+    	message FAIL logf004f "" "Log file $WTMP permission should be 644"
+fi
 
-done
+[ ! -r $BTMP ] &&
+    #echo "...Warning: $BTMP does not exist"
+    message FAIL logf002f "" "Log file $BTMP does not exist"
+
+[ ! -r $LASTLOG ] && 
+    #echo "...Warning: $LASTLOG does not exist"
+    message FAIL logf003f "" "Log file $LASTLOG does not exist"
+
+if [ ! -r $UTMP ] ; then
+    #echo "...Warning: $UTMP does not exist"
+    message FAIL logf004f "" "Log file $UTMP does not exist"
+else
+    check_fileperm $UTMP 110100100 || 
+   	message FAIL logf004f "" "Log file $UTMP permission should be 644"
+fi
+ 
+
+if [ ! -r $LOGINLOG ] ; then
+    #echo "...Warning: $LOGINGLOG does not exist"
+    message FAIL logf004f "" "Log file $LOGINLOG does not exist"
+else
+    check_fileperm $LOGINLOG 110000000 || 
+    	message FAIL logf004f "" "Log file $LOGINLOG permission should be 600"
+fi
+ 
+if [ ! -r $MESSAGES  ] ; then
+    #echo "...Warning: $MESSAGES does not exist"
+    message FAIL logf004f "" "Log file $MESSAGEs does not exist"
+else 
+    check_fileperm $MESSAGES 110100000 || 
+    	message FAIL logf004f "" "Log file $MESSAGES permission should be 640"
+fi
+ 
+exit 0

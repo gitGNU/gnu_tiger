@@ -1,0 +1,125 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2003 Javier Fernandez-Sanguino
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_umask - 04/15/2003
+#
+# Check for umask setting in configuration files. This check has been 
+# separated from check_logfiles since it's a broader check. The command
+# requirements have been modified to adjust to what it's really needed.
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir="."
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds TAIL SED HEAD EXPAND GREP WC CUT  || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+haveallcmds TAIL SED HEAD EXPAND GREP WC CUT  || exit 1
+
+#####
+# Check to ensure that the umask is set correctly
+#####
+
+echo
+echo "# Checking for correct umask settings..."
+
+for file in '/etc/profile' '/etc/csh.login' '/etc/bashrc'
+do
+   [ -r $file ] && {
+
+   Occurance=`$GREP umask $file | $WC -l`
+
+   if [ $Occurance = 0 ]; then
+	#echo "No umask entry"
+	message WARN misc021w "" "There are no umask entries in $file"
+
+   elif [ $Occurance = 1 ]; then
+	UMASK1=`$GREP umask $file  \
+           | $EXPAND \
+           | $SED -e "s/^.*umask//"\
+           | $CUT -d" " -f2`
+
+	[ $UMASK1 != 002 -a $UMASK1 != 022 -a $UMASK1 != 027 ] && 
+		#echo "The umask setting in $file is insecure"
+		message FAIL misc022f '' "The umask setting in $file is insecure"
+
+
+    elif [ $Occurance = 2 ]; then
+	UMASK1=`$GREP umask $file  \
+             | $EXPAND \
+             | $HEAD -n 1 \
+             | $SED -e "s/^.*umask//" \
+             | $CUT -d" "  -f2`
+    	UMASK2=`$GREP umask $file  \
+             | $EXPAND \
+             | $TAIL -n 1 \
+             | $SED -e "s/^.*umask//" \
+             | $CUT -d" " -f2`
+
+ 	[ $UMASK1 != 002 -a $UMASK1 != 022  -a $UMASK1 != 027 -o $UMASK2 != 002 -a $UMASK2 != 022  -a $UMASK2 != 027 ] &&
+		#echo "The umask setting in $file is insecure"
+                message FAIL misc022f '' "The umask setting in $file is insecure"
+	else
+		#echo "There are > 2 umask entries in the config file $file"
+		message WARN misc023w '' "More than 2 umask entries in $file"
+
+fi
+
+}
+
+done
