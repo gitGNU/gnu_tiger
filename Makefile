@@ -4,14 +4,31 @@
 #  on a regular basis, or to compile the binaries (sources under c/)
 #  for your platform (these binaries might be needed by some checks)
 #
-#------------------------------------------------------------------------
+#  TODO:
+#  - This Makefile should follow better GNU's coding standards
+#  as described in http://www.gnu.org/prep/standards_50.html#SEC50
+#  (including using $(INSTALL) and mkinstalldirs)
 #
+#------------------------------------------------------------------------
+# These definitions follow GNU's coding standards:
+#
+prefix=/usr/local
+exec_prefix=${prefix}
+bindir=${exec_prefix}/bin
+sbindir=${exec_prefix}/sbin
+datadir=${prefix}/share
+sysconfdir=${prefix}/etc
+localstatedir=${prefix}/var
+mandir=${prefix}/man
+# To avoid troubles with some systems..
+SHELL = /bin/sh
+
 # This directory will contain the 'tiger', 'tigercron', 'tigexp'
 # scripts, config files, the 'scripts' subdirectory which will
 # contain the checking scripts, the platform specific scripts, etc.
 # None of this will need to be writable once installed.
 #
-TIGERHOME=.
+TIGERHOME=/usr/local/tiger
 #
 # This directory is used for scratch files while the scripts
 # are running.  It can be /tmp.  By using something other
@@ -21,21 +38,22 @@ TIGERHOME=.
 # 
 # Of course, it is necessary that this directory be writable.
 #
-TIGERWORK=run/
+TIGERWORK=${prefix}/var/tiger/run
 #
 # Where do log files go.  This directory must be writable.
 #
-TIGERLOGS=log/
+TIGERLOGS=${prefix}/var/tiger/log
 #
 # Where do binary executables go... this is only used if the
 # binary executables don't exist in the appropriate platform
 # sub-directory under $(TIGERHOME)/systems
 #
-TIGERBIN=.
-#
-# Which is the prefix of where the system is going to be installed.
+TIGERBIN=${exec_prefix}/sbin
 # 
-prefix=/usr/local/tiger
+# Where does the configuration go to? Tigerrc and cronrc get
+# installed there
+#
+TIGERCONFIG=${prefix}/etc/tiger
 #
 #------------------------------------------------------------------------
 #
@@ -44,51 +62,66 @@ prefix=/usr/local/tiger
 #------------------------------------------------------------------------
 #
 
-PLATFORM_SCRIPTS:=$(shell find ./systems/ -type f)
+PLATFORM_SCRIPTS=$(shell find ./systems/ -type f)
 
 BINARIES=./tiger \
 	 ./tigexp  \
-	 ./tigercron \
+	 ./tigercron 
+
+# Maybe this should be modified to be a generic ./scripts/check_*
+# otherwise sometimes a check might be 'forgotten'
 SCRIPTS=./scripts/check_accounts \
 	./scripts/check_aliases \
 	./scripts/check_anonftp \
-	./scripts/check_cron \
+	./scripts/check_apache \
+	./scripts/check_crontabs \
 	./scripts/check_devices \
 	./scripts/check_embedded \
 	./scripts/check_exports \
+	./scripts/check_exrc \
+	./scripts/check_finddeleted \
+	./scripts/check_ftpusers \
 	./scripts/check_group \
 	./scripts/check_inetd \
 	./scripts/check_issue \
 	./scripts/check_known \
+	./scripts/check_listeningprocs \
 	./scripts/check_logfiles \
 	./scripts/check_netrc \
 	./scripts/check_network \
 	./scripts/check_nisplus \
 	./scripts/check_passwd \
+	./scripts/check_passwdformat \
 	./scripts/check_path \
 	./scripts/check_perms \
 	./scripts/check_printcap \
 	./scripts/check_rhosts \
 	./scripts/check_root \
 	./scripts/check_rootdir \
+	./scripts/check_rootkit \
+	./scripts/check_runprocs \
 	./scripts/check_sendmail \
+	./scripts/check_services \
 	./scripts/check_signatures \
+	./scripts/check_ssh \
 	./scripts/check_system \
-	./scripts/check_listeningprocs \
-	./scripts/check_ftpusers \
 	./scripts/check_tcpd \
+	./scripts/check_umask \
+	./scripts/check_xinetd \
 	./scripts/crack_run \
 	./scripts/tripwire_run \
+	./scripts/aide_run \
+	./scripts/integrit_run \
 	./scripts/find_files \
 	./util/buildbins \
 	$(PLATFORM_SCRIPTS)
 
+CONFIGFILES=./tigerrc \
+	./cronrc \
 
 MISCFILES=./initdefs \
 	./check.tbl \
 	./syslist \
-	./tigerrc \
-	./cronrc \
 	./util/difflogs \
 	./util/flogit \
 	./util/genmsgidx \
@@ -114,66 +147,116 @@ all:
 	cd util && sh doc2html
 	./util/genmsgidx
 
-install: 
-	if [ ! -d $(prefix)/$(TIGERHOME) ]; then \
-	  mkdir -p $(prefix)/$(TIGERHOME); \
-	  chmod 755 $(prefix)/$(TIGERHOME); \
-        fi; \
-	if [ ! -d $(prefix)/$(TIGERWORK) ]; then \
-	  mkdir -p $(prefix)/$(TIGERWORK); \
-	  chmod 700 $(prefix)/$(TIGERWORK); \
-	fi; \
-	if [ ! -d $(prefix)/$(TIGERLOGS) ]; then \
-	  mkdir -p $(prefix)/$(TIGERLOGS); \
-	  chmod 700 $(prefix)/$(TIGERLOGS); \
-	fi; \
-	if [ ! -d $(prefix)/$(TIGERHOME)/scripts ]; then \
-	  mkdir $(prefix)/$(TIGERHOME)/scripts; \
-	  chmod 755 $(prefix)/$(TIGERHOME)/scripts; \
-	fi; \
-	if [ ! -d $(prefix)/$(TIGERHOME)/util ]; then \
-	  mkdir $(prefix)/$(TIGERHOME)/util; \
-	  chmod 755 $(prefix)/$(TIGERHOME)/util; \
-	fi; \
-	if [ ! -d $(prefix)/$(TIGERBIN) ]; then \
-	  mkdir $(prefix)/$(TIGERBIN); \
-	  chmod 755 $(prefix)/$(TIGERBIN); \
-	fi; \
-        for dir in $(MISCDIRS); do \
-	  tar cf - $$dir | (cd $(prefix)/$(TIGERHOME); tar xpf -); \
-	done; \
-	for file in $(MISCFILES); do \
-	  cp -p $$file $(prefix)/$(TIGERHOME)/$$file; \
-	done; \
-	for file in $(BINARIES); do \
-	  cp -p $$file $(prefix)/$(TIGERBIN)/$$file; \
-	  chmod 755 $(prefix)/$(TIGERBIN)/$$file ; \
-	done; \
-	for file in $(SCRIPTS); do \
+installdirs:
+	@echo "Creating $(TIGERHOME)..."
+	@if [ ! -d $(DESTDIR)$(TIGERHOME) ]; then \
+	  mkdir -p $(DESTDIR)$(TIGERHOME); \
+	  chmod 755 $(DESTDIR)$(TIGERHOME); \
+        fi
+	@echo "Creating $(TIGERWORK)..."
+	@if [ ! -d $(DESTDIR)$(TIGERWORK) ]; then \
+	  mkdir -p $(DESTDIR)$(TIGERWORK); \
+	  chmod 700 $(DESTDIR)$(TIGERWORK); \
+	fi
+	@echo "Creating $(TIGERLOGS)..."
+	@if [ ! -d $(DESTDIR)$(TIGERLOGS) ]; then \
+	  mkdir -p $(DESTDIR)$(TIGERLOGS); \
+	  chmod 700 $(DESTDIR)$(TIGERLOGS); \
+	fi
+	@echo "Creating $(TIGERHOME)/scripts..."
+	@if [ ! -d $(DESTDIR)$(TIGERHOME)/scripts ]; then \
+	  mkdir $(DESTDIR)$(TIGERHOME)/scripts; \
+	  chmod 755 $(DESTDIR)$(TIGERHOME)/scripts; \
+	fi
+	@echo "Creating $(TIGERHOME)/util..."
+	@if [ ! -d $(DESTDIR)$(TIGERHOME)/util ]; then \
+	  mkdir $(DESTDIR)$(TIGERHOME)/util; \
+	  chmod 755 $(DESTDIR)$(TIGERHOME)/util; \
+	fi
+	@echo "Creating $(TIGERBIN)..."
+	@if [ ! -d $(DESTDIR)$(TIGERBIN) ]; then \
+	  mkdir -p $(DESTDIR)$(TIGERBIN); \
+	  chmod 755 $(DESTDIR)$(TIGERBIN); \
+	fi
+	@echo "Creating $(TIGERCONFIG)..."
+	@if [ ! -d $(DESTDIR)$(TIGERCONFIG) ]; then \
+	  mkdir -p $(DESTDIR)$(TIGERCONFIG); \
+	  chmod 700 $(DESTDIR)$(TIGERCONFIG); \
+	fi
+
+installbinaries:
+	@echo "Copying binaries..."
+	@for file in $(BINARIES); do \
+	   sed -e 's%^TigerLogDir=.*$$%TigerLogDir="'$(TIGERLOGS)'"%' \
+	         -e 's%^TigerWorkDir=.*$$%TigerWorkDir="'$(TIGERWORK)'"%' \
+	         -e 's%^TigerConfigDir=.*$$%TigerConfigDir="'$(TIGERCONFIG)'"%' \
+	         -e 's%^TigerBinDir=.*$$%TigerBinDir="'$(TIGERBIN)'"%' \
+	         -e 's%^TigerInstallDir=.*$$%TigerInstallDir="'$(TIGERHOME)'"%' \
+	         $$file > $(DESTDIR)$(TIGERBIN)/$$file; \
+	  chmod 755 $(DESTDIR)$(TIGERBIN)/$$file ; \
+	done
+
+installconfig:
+	@echo "Copying configuration files..."
+	@for file in $(CONFIGFILES); do \
+	  cp $$file $(DESTDIR)$(TIGERCONFIG)/$$file; \
+	  chmod 640 $(DESTDIR)$(TIGERCONFIG)/$$file; \
+	done
+	@echo "Copying general configuration..."
+	@sed -e 's%^TigerLogDir=.*$$%TigerLogDir="'$(TIGERLOGS)'"%' \
+         -e 's%^TigerWorkDir=.*$$%TigerWorkDir="'$(TIGERWORK)'"%' \
+         -e 's%^TigerConfigDir=.*$$%TigerConfigDir="'$(TIGERCONFIG)'"%' \
+         -e 's%^TigerBinDir=.*$$%TigerBinDir="'$(TIGERBIN)'"%' \
+         -e 's%^TigerInstallDir=.*$$%TigerInstallDir="'$(TIGERHOME)'"%' \
+	 ./config >$(DESTDIR)$(TIGERHOME)/config
+	@chmod 644 $(DESTDIR)$(TIGERHOME)/config
+
+install: installdirs installbinaries installconfig
+	cd c && $(MAKE) install
+	@echo "Copying miscellaneus dirs..."
+	@for dir in $(MISCDIRS); do \
+	  tar cf - $$dir | (cd $(DESTDIR)$(TIGERHOME); tar xpf -); \
+	done
+	@echo "Copying miscellaneus files..."
+	@for file in $(MISCFILES); do \
+	  cp -p $$file $(DESTDIR)$(TIGERHOME)/$$file; \
+	done
+	@echo "Copying scripts..."
+	@for file in $(SCRIPTS); do \
 	  sed -e 's%^TigerInstallDir=.*$$%TigerInstallDir="'$(TIGERHOME)'"%' \
-	      $$file > $(prefix)/$(TIGERHOME)/$$file;\
-	  chmod 755 $(prefix)/$(TIGERHOME)/$$file; \
-	done; \
-#	sed -e 's%^TigerLogDir=.*$$%TigerLogDir="'$(TIGERLOGS)'"%' \
-#	    -e 's%^TigerWorkDir=.*$$%TigerWorkDir="'$(TIGERWORK)'"%' \
-#	    -e 's%^TigerBinDir=.*$$%TigerBinDir="'$(TIGERBIN)'"%' \
-#	    ./config > $(prefix)/$(TIGERHOME)/config; \
-	chmod 644 $(prefix)/$(TIGERHOME)/config;
-	(cd $(prefix)/$(TIGERHOME); ./util/genmsgidx doc/*.txt)
+	      $$file > $(DESTDIR)$(TIGERHOME)/$$file;\
+	  chmod 755 $(DESTDIR)$(TIGERHOME)/$$file; \
+	done
+	@echo "Copying platform scripts..."
+	@for file in $(PLATFORM_SCRIPTS); do \
+	  if [ -x $$file ] ; then \
+	  sed -e 's%^TigerInstallDir=.*$$%TigerInstallDir="'$(TIGERHOME)'"%' \
+	      $$file > $(DESTDIR)$(TIGERHOME)/$$file;\
+	  chmod 755 $(DESTDIR)$(TIGERHOME)/$$file; \
+	  else \
+	  cp -p $$file $(DESTDIR)$(TIGERHOME)/$$file; \
+	  fi; \
+	done
+
+distribution:
+# TODO: it should  create the proper tiger-$VERSION.tgz file
+# TODO: The following should be done carefully, there are some
+# more changes in tigerrc-all than the 'yes' flag for checks
+#	cat tigerrc |sed -e 's/=N/=Y/' >tigerrc-all
+	cp tigerrc tigerrc-dist
 
 clean: 
 	cd c && $(MAKE) clean
 	-find bin/ -type f -exec rm -f {} \;
-	-rm -f man/index.bt config.{status,log,cache}
+	-rm -f man/index.bt 
 
 distclean: clean
 	cd c && $(MAKE) distclean 
 	-find log/ -type f -exec rm -f {} \;
 	-find run/ -type f -exec rm -f {} \;
-	-rm -f Makefile 
+	-rm -f Makefile config.{status,log,cache}
 
-maintainerclean: distclean
-	-rm -f configure tiger config tigercron
+maintainer-clean: distclean
 
 configure: configure.in
 	autoconf
@@ -181,11 +264,4 @@ configure: configure.in
 # Configure the package with the defaults (will install to /usr/local/)
 config: configure
 	./configure
-	chmod 755 tiger tigercron config tigexp
 
-# Configure the package to run in the local dir
-config-local: configure
-	./configure --with-tigerhome=. --with-tigerconfig=. \
-		--with-tigerwork=run/ --with-tigerlog=log/ --with-tigerbin=. \
-		--prefix=/usr/local/tiger
-	chmod 755 tiger tigercron config tigexp
