@@ -26,6 +26,9 @@
 # Linux/2/check - 05/09/2003 - jfs
 # 	Removed ambiguous redirect
 #       Fixed SCRIPTDIR to SYSTEMDIR
+# Linux/2/check - 06/26/2003 - jfs
+#       Commented out the first call to CHECK_PATCH since it is done
+#       only if running on Debian GNU/Linux
 #-----------------------------------------------------------------------------
 # TODO:
 #
@@ -93,10 +96,11 @@ SYSTEMDIR=$BASEDIR/systems/Linux/2
   $SYSTEMDIR/check_release 
 }
 
-[ "$Tiger_Check_PATCH" != 'N' ] && {
+# This only works for Debian at the moment (checked below)
+#[ "$Tiger_Check_PATCH" != 'N' ] && {
 #  echo "`$TIMECMD`> Checking for up-to-date patches..."
-  $SYSTEMDIR/check_patches 
-}
+#  $SYSTEMDIR/check_patches 
+#}
 
 [ "$Tiger_Check_SINGLE" != 'N' ] && {
 #  echo "`$TIMECMD`> Checking for single user mode password..."
