@@ -16,7 +16,8 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_embedded - 06/29/93
-#
+# 05/02/2004 jfs  Try to avoid eval problems if handling variables with
+#                 special characters (such as space)
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -79,7 +80,7 @@ haveallfiles BASEDIR WORKDIR || exit 1
     $GREP -v '^#' "$EMBEDDEDLIST" |
     while read file
     do
-      eval echo $file | $AWK '{for(i=1;i<=NF;i++)print $i}' 
+      eval echo "$file" | $AWK '{for(i=1;i<=NF;i++)print $i}' 
     done
   }
 } |

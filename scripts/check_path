@@ -17,6 +17,8 @@
 #
 # check_path  - 06/14/93
 #
+# 05/02/2004 jfs  Try to avoid eval problems if handling variables with
+#                 special characters (such as space)
 # 10/07/2003 jfs Redirected LS error to /dev/null since dangling symlinks
 #                will print errors. Properly cleaned temporary file.
 # 09/19/2003 jfs Use -L to check properly for symlinks (I've checked and
@@ -112,7 +114,7 @@ checkcmds()
       }
       
       [ "$gw" = '1' -a -n "$okgroup" ] && {
-	eval "case $_group in
+	eval "case \"$_group\" in
 	  $okgroup) gw=0;;
 	esac"
       }
@@ -129,14 +131,14 @@ checkcmds()
 	changelog "WARN : chmod : $__newmode : $_execfile"
       }
       if [ "$suid" = '0' ]; then
-	eval "case \$_owner in
+	eval "case \"\$_owner\" in
 	  $okown);;
 	  *) message WARN path002w \"\" \"$_execfile in $_user's PATH from $_srcfile is not owned by root (owned by $_owner).\"
 	  changelog \"WARN : chown : root : $_execfile\"
 	  ;;
 	esac"
       else
-	eval "case $_owner in
+	eval "case \"$_owner\" in
 	  $okown);;
 	  *) message INFO path008i \"\" \"Setuid program $_execfile in $_user's PATH from $_srcfile is not owned by root (owned by $_owner).\";;
 	esac"

@@ -16,6 +16,8 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # default/gendlclients - MM/DD/YY
+# 05/02/2004 jfs  Try to avoid eval problems if handling variables with
+#                 special characters (such as space)
 #
 #-----------------------------------------------------------------------------
 #
@@ -49,5 +51,5 @@ done |
 $SORT -u |
 while read client server filesys
 do
-  eval "case $server in $HOSTNAMESLIST) echo $client $filesys;; esac"
+  eval "case \"$server\" in $HOSTNAMESLIST) echo \"$client $filesys\";; esac"
 done

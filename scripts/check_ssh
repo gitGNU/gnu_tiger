@@ -120,7 +120,7 @@ parse_directive()
 	list=$2
 
 	[ -z "$list" ] && return 1
-	eval "case $value in
+	eval "case \"$value\" in
 		$list)
 			return 1
 			;;

@@ -104,7 +104,7 @@ check_entry()
     fi
   elif [ -n "$RHOST_SITES" ]; then
     note=1
-    eval case $rhost in $rhostcase esac
+    eval case "$rhost" in $rhostcase esac
     [ $note = 1 ] && {
       message WARN rcmd003w "" "User $user's .rhosts file has host \`$rhost'."
     }

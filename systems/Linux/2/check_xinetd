@@ -20,6 +20,8 @@
 # 
 #  Checks which xinetd services are enabled or disabled.
 #
+#  05/02/2004 jfs  Try to avoid eval problems if handling variables with
+#                 special characters (such as space)
 #  01/15/2004 - jfs - Fixed syntax error (at least in RH 8) and added TODO
 #  11/19/2003 - jfs - Linux-specific version based on patch from Ryan
 #      Bradetich which introduces many more checks for services and
@@ -107,7 +109,7 @@ check_file_perms()
 	getpermit $1 |
 	while read _namefile _owner _group ur uw ux gr gw gx or ow ox suid sgid stk
 	do
-		eval "case $_owner in
+		eval "case \"$_owner\" in
 			$Tiger_ROOT_PATH_OK_Owners)
 				;;
 			*)
@@ -118,7 +120,7 @@ check_file_perms()
 		[ "$ur$uw$ux$gr$gw$gx$or$ow$ox" != '110000000' ] && \
 			message WARN inet017w "" "$_namefile permissions are not 600."
 
-		eval "case $_group in
+		eval "case \"$_group\" in
 			$Tiger_ROOT_PATH_OK_Group_Write)
 				gw=0
 		esac"

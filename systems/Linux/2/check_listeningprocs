@@ -17,6 +17,8 @@
 #
 # check_listeningprocs - 08/23/2001
 #
+# 05/02/2004 jfs  Try to avoid eval problems if handling variables with
+#                 special characters (such as space)
 # 09/19/2003 - jfs - Allow empty okprocess and okprocessuser with the patch
 #   provided by Nicolas François. Also added patch improving the 
 #   use of NETSTAT and LSOF. Information gathered by both is piped to
@@ -160,11 +162,11 @@ do
 	# TODO This should change into a function since it's used twice in the
 	# code
 	[ -n "$okprocess" ] && \
-	isokprocess=`eval "case $proc in ${okprocess})  echo \"yes\" ;; \
+	isokprocess=`eval "case \"$proc\" in ${okprocess})  echo \"yes\" ;; \
 	*) echo \"no\" ;; esac"`
 	# Probably redundant since this is done already at the top
 	[ -n "$okprocessusers" ] && \
-	isokuser=`eval "case $user in ${okprocessusers})  echo \"yes\" ;; \
+	isokuser=`eval "case \"$user\" in ${okprocessusers})  echo \"yes\" ;; \
 	*) echo \"no\" ;; esac"`
 	if [ "$isokprocess" = "no" ] ; then
 		if [ "$isokuser" = "yes" ] ; then

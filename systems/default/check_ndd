@@ -23,6 +23,8 @@
 #
 # 07/11/2003 rbradetich@uswest.net - Initial version. 
 #
+# 05/02/2004 jfs  Try to avoid eval problems if handling variables with
+#                 special characters (such as space)
 # 08/09/2003 jfs - Placed in the generic default directory for Unix systems
 #            so that systems can run them using 'check'
 #
@@ -87,7 +89,7 @@ do
   do
     ([ -z "$dev" ] || [[ $dev = \#* ]]) && continue
     val=`$NDD -get $dev $parm 2>/dev/null`
-    eval "case $val in
+    eval "case \"$val\" in
         $good)
           ;;
         *)

@@ -137,7 +137,7 @@ do
 	else
 		#echo "There are > 2 umask entries in the config file $file"
 		message WARN misc023w '' "More than 2 umask entries in $file"
-
+	
 fi
 
 }

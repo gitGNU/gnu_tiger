@@ -287,7 +287,7 @@ rw=rw
         # Not sure why we're cd'ing to /, but it breaks all relative paths
 	#     being used in the find options.  Commented out --mlk
         #     cd /
-	eval nice -5 $FIND $mountpt $findpruneopt $findopt -print 2>/dev/null
+	eval nice -5 $FIND "$mountpt" $findpruneopt $findopt -print 2>/dev/null
       done | nice -6 $output
     } &
     echo $! >> $pidlist

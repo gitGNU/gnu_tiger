@@ -17,6 +17,8 @@
 #
 # check_path  - 06/14/93
 #
+# 05/02/2004 jfs  Try to avoid eval problems if handling variables with
+#                 special characters (such as space)
 # 11/19/2003 rbrad Reimplementation to handle additional methods for 
 #      introducing directories into the PATH environment including
 #      $(<FILE) and /path/*/path. Common paths are only checked once.
@@ -121,7 +123,7 @@ check_permissions()
 
       # Pretend the gw bit is not set if group in okgroup
       [ "$gw" = '1' ] && {
-         eval "case $_group in
+         eval "case \"$_group\" in
               $okgroup) gw='0'
          esac"
       }
@@ -166,7 +168,7 @@ check_permissions()
 
 
       # Check the file ownership.
-      eval "case $_owner in
+      eval "case \"$_owner\" in
          $okown)
             msg=''
             ;;
@@ -377,7 +379,7 @@ check_user()
    $GREP '^~\$user' $SYS_PATH |
    while read dir1
    do
-      eval dir=`echo $dir1 | $SED -e 's/~\$user/$home/'`
+      eval dir=`echo "$dir1" | $SED -e 's/~\$user/$home/'`
       $REALPATH $dir >> $USR_PATH
    done
 

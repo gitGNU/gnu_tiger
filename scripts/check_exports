@@ -35,6 +35,8 @@
 #
 #-----------------------------------------------------------------------------
 #
+# 05/02/2004 jfs  Try to avoid eval problems if handling variables with
+#                 special characters (such as space)
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
 # 05/01/2003 jfs Fixed dependancies, added note.
 # 05/30/99 ARC  Fixed problems with IRIX and other false alarms
@@ -188,7 +190,7 @@ check_entry()
     # roothost is a magic variable name... don't change it.
     for roothost
     do
-      eval "case $dir in $casediskless esac"
+      eval "case \"$dir\" in $casediskless esac"
     done
 
     roothosts=`
@@ -245,7 +247,7 @@ haveallcmds GEN_BOOTPARAM_SETS && {
   $SORT -u |
   while read client server filesys
   do
-    eval "case $server in
+    eval "case \"$server\" in
       $HOSTNAMESLIST)
       echo $filesys') 
       case \\$roothost in

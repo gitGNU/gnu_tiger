@@ -22,6 +22,9 @@
 # (home directory accesibility, shell configuration files, dormant accounts
 # and .hushlogin files)
 #
+# 05/02/2004 jfs  Try to avoid eval problems if user/shells/directories contain
+#                 non-empty (but invalid) characters (such as space) 
+#                 (Debian bug #246987)
 # 01/21/2004 jfs  Removed TODO (no longer applies here), expanded description and
 #                fixed typo.
 # 01/18/2004 rbrad Applying 4 Savannah patches:
@@ -241,7 +244,7 @@ check_users()
        getpermit ${home%/*}/ | {
          read _f owner group ur uw ux gr gw gx or ow ox suid sgid sticky
 
-	 eval "case $owner in
+	 eval "case \"$owner\" in
 		$Tiger_Admin_Accounts)
 			;;
 		*)
@@ -266,7 +269,7 @@ check_users()
      # Dormant account check.
      [ "$home" != / -a -n "$home" -a "$Tiger_Dormant_Limit" != 0 ] && {
        eval "
-         case $user in
+         case \"$user\" in
            $Tiger_Admin_Accounts)
              ;;
            *)
@@ -291,7 +294,7 @@ check_users()
      [ -z "$shell" ] && shell=/bin/sh
      [ $TESTEXEC $shell ] && [ $uid -gt $Tiger_Accounts_Trust ] && {
        eval "
-         case $shell in
+         case \"$shell\" in
            $shcase)
              [ ! -r "${home}/.${shell##*/}rc" ] && {
                message WARN acc019w \"\" \"Logon ID $user may be missing a shell initialization file ${home}/.${shell##*/}rc.\"
