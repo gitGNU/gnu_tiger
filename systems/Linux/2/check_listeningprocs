@@ -16,15 +16,17 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_listeningprocs - 08/23/2001
-# check_listeningprocs - 10/16/2002 - jfs
-#              Changed the case statement into an eval in order
-#              to properly work for more than two processes or users
-#              (i.e. with "process1|process2")
-# check_listeningprocs - 04/23/2003 - jfs
-#		Changed TigerInstallDir to '.'
-# check_listeningprocs - 09/19/2003 - jfs
-#             Allow empty okprocess and okprocessuser with the patch
-#            provided by Nicolas François
+#
+# 09/19/2003 - jfs - Allow empty okprocess and okprocessuser with the patch
+#   provided by Nicolas François. Also added patch improving the 
+#   use of NETSTAT and LSOF. Information gathered by both is piped to
+#   the same block to generated the report.
+#   Reordered changelog.
+# 04/23/2003 - jfs - Changed TigerInstallDir to '.'
+# 10/16/2002 - jfs - Changed the case statement into an eval in order
+#   to properly work for more than two processes or users
+#   (i.e. with "process1|process2")
+#         
 #
 # TODO:
 # - this script seems to have problems if a program opens an UDP socket
@@ -72,7 +74,7 @@ done
 [ "$Tiger_TESTMODE" = 'Y' ] && {
   haveallcmds CUT GREP || exit 1
 # Just netstat is needed to run this program, lsof is an addon
-  haveallcmds NETSTAT || exit 1
+  haveallcmds LSOF || haveallcmds NETSTAT || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -91,11 +93,61 @@ okprocessusers=${Tiger_Listening_ValidUsers-"root"}
 okprocess=${Tiger_Listening_ValidProcs-""}
 export okprocess okprocessusers
 
-if [ ! -z "$LSOF" ] 
+[ ! -x "$LSOF" ] && message INFO lin004i "" "Using $NETSTAT instead of lsof, information regarding processes will be more limited"
+
+if [ -x "$LSOF" ] 
 then
-$LSOF -nPi | $GREP "IPv" | $GREP -v "\->" | 
-$AWK '{printf("%s %s %s %s\n", $1, $3, $7, $8)}' | $SORT | $UNIQ |
-while read proc user type asocket 
+	$AWK '
+	BEGIN {
+		cmd = "$LSOF -FpPcnLt -nPi"
+
+		while ((cmd | getline field) > 0){
+			fieldtype = substr(field,1,1)
+			sub("^.","",field)
+			if      ("p" == fieldtype) {
+			}
+			else if ("c" == fieldtype) {
+				command = field
+			}
+			else if ("L" == fieldtype) {
+				user = field
+			}
+			else if ("t" == fieldtype) {
+				type = field
+			}
+			else if ("P" == fieldtype) {
+				proto = field
+			}
+			else if ("n" == fieldtype) {
+				addr = field
+				if (( type == "IPv4" ) && ( addr !~ "->" )) {
+					printf ("%s %s %s %s\n", user, proto, addr, command)
+				}
+			}
+		}
+		close(cmd)
+	}'
+else
+	$NETSTAT -lpeutw --numeric-hosts --numeric-ports |
+	# remove header
+	$SED -e '1d;2d' |
+	while read type x y local remote listen user inode proc
+	do
+		[ "$type" = "udp" ] && {
+			# there is no listen filed, every field are shifted left
+			user=$listen
+			proc="$inode $proc"
+			type="UDP"
+		}
+
+		[ "$type" = "tcp" ] && type="TCP"
+
+		echo $user $type $local "`echo $proc | $CUT -f 2 -d /`"
+	done
+fi |
+# sort on process and remove duplicates
+$SORT -k 4 | $UNIQ |
+while read user type asocket proc
 do
 	socket=`echo $asocket |  $CUT -f 2 -d :`
 	address=`echo $asocket | $CUT -f 1 -d :`
@@ -115,46 +167,17 @@ do
 	isokuser=`eval "case $user in ${okprocessusers})  echo \"yes\" ;; \
 	*) echo \"no\" ;; esac"`
 	if [ "$isokprocess" = "no" ] ; then
-	if [ "$isokuser" = "yes" ] ; then
-	[ "$address" = "every" -a "$Tiger_Listening_Every" != "N" ] && \
-	message WARN lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." || \
-	message INFO lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." 
-	else
-		[ "$address" != "127.0.0.1" ]  && {
-			message WARN lin003w "" "The process \`$proc' is listening on socket $socket ($type on $address interface) is run by $user."
-		} 
-	fi # of if okuser
+		if [ "$isokuser" = "yes" ] ; then
+			[ "$address" = "every" -a "$Tiger_Listening_Every" != "N" ] && \
+				message WARN lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." || \
+				message INFO lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." 
+		else
+			[ "$address" != "127.0.0.1" ]  && {
+				message WARN lin003w "" "The process \`$proc' is listening on socket $socket ($type on $address interface) is run by $user."
+			} 
+		fi # of if okuser
 	fi # of if okprocess
 
 done 
-else
-# Note: This is not that true due to the -p option  (jfs)
-message INFO lin004i "" "Using $NETSTAT instead of lsof, information regarding processes will be more limited"
-$NETSTAT -ptuan | $GREP -v STREAM |
-while read type x y local remote listen proc
-do
-	[ "$type" = "udp" ] && { 
-		proc=$listen
-		listen=""
-	} 
-	[ ! -z "`echo $listen |$GREP LISTEN`" -o "$type" = "udp" ] &&  {
-	pid=`echo $proc | $CUT -f 1 -d /`
-	proc=`echo $proc | $CUT -f 2 -d /`
-	socket=`echo $local | $CUT -f 2 -d : `
-	address=`echo $local | $CUT -f 1 -d : `
-	[ "$address" = "127.0.0.1" ] && address="loopback"
-	isokprocess="no"
-	[ -n "$okprocess" ] && \
-	isokprocess=`eval "case $proc in ${okprocess})  echo \"yes\" ;; \
-	*) echo \"no\" ;; esac"`
-	if [ "$isokprocess" = "no" ] ; then
-		[ "$address" = "0.0.0.0" -o "$address" = "*" ] && address="every"
-		[ "$address" = "every" ] && \
-			message WARN lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." || \
-			message INFO lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface."
-	fi
-	}
-done
-fi
 
 exit 0 
