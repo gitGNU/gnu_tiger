@@ -4,11 +4,31 @@ August 23rd 2001) see the changelog.Debian file
 Changes (v 3.2.1) 
 ----------------
 (unreleased)
+- New checks:
+  - check_ndd (for HPUX and SunOS systems)
+  - check_passwspec  (for Linux and HPUX) 
+  - check_trusted (for HPUX)
+  - check_rootkit
+  - check_xinetd
+  - aide_run and integrit_run as new (alternative) integrity file
+    checkers.
+- Improved/Fixed checks: check_apache, check_devices, check_exports,
+   check_group, check_inetd, check_known, check_netrc, check_passwd,
+   check_patch, check_perms, check_rhosts, check_root, check_services,
+   check_signatures, check_tcpd, check_umask, crack_run, tripwire_run,
+   (Linux) check_inittab, check_rcumask, deb_nopackfiles (patch provided
+   by  Nicolas François)
+- Other check changes:
+  - check_cron moved to check_crontabs
+  - removed SunOS check_networkconfig in favour of the new check_ndd
+- Default Tigerrc has been modified to account for the new checks
+- Applied Ryan Bradetich's patches for HPUX support and to some of the
+  checks (check_accounts, check_passwd, check_rootdir
+- Added CERT's Unix security checklist comparison so users or admins
+  can check which checks does Tiger implement automatically.
 - Fixed issue with tigercron, did not work as advertised
 - Fixed syntax errors in grep calls
 - Modified SunOS config file to look for the MAILSPOOL in /var/mail
-- Added aide_run and integrit_run as new (alternative) integrity file
-  checkers.
 - Tiger now uses a function (run_script) to run either the scripts in
   the $SCRIPTDIR or system-specific scripts if available. This allows
   developers to create more specific checks for a given OS and have them
@@ -16,6 +36,19 @@ Changes (v 3.2.1)
 - Review of temporary file creation in all files including the creation
   of a new function (safe_temp) to handle temporary file usage.
 - Included a RedHat spec file to create rpm packages
+- New utilities: mkfilelst
+- Full integration with TARA 3.0.3 including:
+  * Update of all SunOS 5 checks based on ARSC's implementation in TARA
+  * Preliminary MacOSX implementation based on ARSC's implementation in TARA
+  * New check_rookit check
+  * Improvements in checks
+- Tiger now can generate signatures for new systems 
+- Tiger now shows usage
+- Updated manpages for tiger and tigexp
+- Removed Debian-specific checks from the default cronrc file and instead
+  call 'check_system. Added new checks to the cronrc file
+- Updated documentation in README files
+- Added still more TODOs
 
 
 Changes (v 3.2) 
