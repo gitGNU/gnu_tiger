@@ -274,8 +274,10 @@ else
 fi
 #
 ETCSHELLS=/etc/shells
+CRONALLOW=/etc/cron.allow
+CRONDENY=/etc/cron.deny
 #
-export MAILSPOOL CRONSPOOL ETCSHELLS
+export MAILSPOOL CRONSPOOL ETCSHELLS CRONALLOW CRONDENY
 
 LOCFS=ext2
 export LOCFS
