@@ -1,3 +1,40 @@
+tiger (1:3.2.1-19) unstable; urgency=low
+
+  * tigercron
+     - Fixed invalid From: header based on Robert Loomans' patch. This bug
+       was introduced by the previous release. (Closes: #287780)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 30 Dec 2004 09:00:19 +0100
+
+tiger (1:3.2.1-18) unstable; urgency=low
+
+  * systems/Linux/2/check_lilo:
+     - Fixed grub.conf naming (Closes: #286641)
+  * scripts/check_passwd:
+     - Delete temporary passwd files only on exit (Closes: #284899)
+  * debian/server.ignore:
+     - Added a sample ignore line for users accessing a remote server 
+      with X11Forwarding set to 'on' (Closes: #284220)
+  * scripts/check_passwdformat:
+     - Maximum user and group length set to 32 (Closes: #283446)
+     (probably needs to be moved to systems/Linux/2/ since it's
+     Debian-specific)
+  * tigercron, tigerrc:
+     - Added Tiger_Mail_FROM feature (Closes: #243517)
+  * Disabling signature checks since they cannot be relied on (use
+    Tripwire, Aide, Samhain, Integrit, bsign or any other intecrity checker
+    instead), moreover deb_checkmd5sums already does it for Debian...
+    (Closes: #274625)
+  * Added Czech debconf translation provided by Miroslav Kure (Closes: #287301)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Mon, 27 Dec 2004 19:18:53 +0100
+
+tiger (1:3.2.1-17) unstable; urgency=low
+
+  * Quoted homedir uses in check_rhosts and check_netrc (Closes: #282211)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun, 21 Nov 2004 11:56:57 +0100
+
 tiger (1:3.2.1-16) unstable; urgency=low
 
   * Updated advisories

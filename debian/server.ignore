@@ -11,3 +11,5 @@ Program cupsd \(pid [[:digit:]]+, parent [[:digit:]]+\) is using a deleted file:
 Program python \(pid [[:digit:]]+, parent [[:digit:]]+\) is using a deleted file: .* /var/log/mailman/.* \(deleted\)
 # Squid proxy
 Server \(squid\) .*  \(pid [[:digit:]]+\) is using deleted files
+# SSH users accessing remotely with X11 forwarding 'on'
+The process `sshd' is listening on socket 6[[:digit:]]+ (TCP on loopback interface) is run by .*
