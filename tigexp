@@ -17,6 +17,9 @@
 #
 # tigexp  - 06/13/93
 #
+# This program retrieves information explaining what a given message 
+# (INFO, WARN or ERR) given out by Tiger means.
+#
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
 
