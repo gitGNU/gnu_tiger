@@ -111,3 +111,7 @@ SYSTEMDIR=$BASEDIR/systems/Linux/2
   $SYSTEMDIR/check_neverlogin
 }
 
+[ "$Tiger_Check_NETWORKCONFIG" != 'N' ] && {
+# echo "`$TIMECMD`> Checking for values of the network configuration."
+  $SYSTEMDIR/check_network_config
+}

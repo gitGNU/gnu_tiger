@@ -208,6 +208,10 @@ export FS_WDIRSYS
 SYSDEFAULTPATH="/bin:/usr/bin"
 export SYSDEFAULTPATH
 
+# For check_network
+PROCDIR="/proc"
+export PROCDIR
+
 CDIR="$BASEDIR/systems"
 eval `
   while read var file
