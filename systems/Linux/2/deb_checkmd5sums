@@ -17,6 +17,9 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# 11/09/2003 - jfs - Avoid running into problems if the GREP calls to
+#       diversions or conffiles return more than one line.
+#       Also detect local diversion (Debian bug 219727)
 # 10/15/2003 - jfs - Modify ERROR to FAIL
 # 09/19/2003 - jfs - Add patches provided by Nicolas François to 
 #      greatly improve the speed and add support for diversions 
@@ -114,9 +117,9 @@ do
 			case $err in
 			DIFF)
 				# don't check diverted now
-				[ -z `$GREP -x "$file" $DIVERSIONS` ] &&
+				[ -z "`$GREP -x \"$file\" $DIVERSIONS`" ] &&
 				# and conffiles should not be checked either
-				[ -z `$GREP -sx "$file" /var/lib/dpkg/info/$package.conffiles` ] &&
+				[ -z "`$GREP -sx \"$file\" /var/lib/dpkg/info/$package.conffiles`" ] &&
 					message FAIL lin005f "" "Installed file \`$file' checksum differs from installed package '$package'."
 # TODO: Consider including the MD5sum to this message
 # notice that some integrity checkers might do this already too.
@@ -132,7 +135,8 @@ done
 # check diversions
 /usr/sbin/dpkg-divert --list |
 # extract the file diverted, the backup file and the diverter package
-$SED -e 's/diversion of \(\/.*\) to \(\/.*\) by \(.*\)$/\1;\2;\3/' | {
+$SED -e 's/diversion of \(\/.*\) to \(\/.*\) by \(.*\)$/\1;\2;\3/' \
+     -e 's/local diversion of \(\/.*\) to \(\/.*\)$/\1;\2;LOCAL/' | {
   saveIFS=$IFS
   IFS=";"
   while read file tofile bypackage
@@ -150,7 +154,7 @@ $SED -e 's/diversion of \(\/.*\) to \(\/.*\) by \(.*\)$/\1;\2;\3/' | {
       [ -f "/var/lib/dpkg/info/$2.md5sums" ] && {
         md5pck=`$GREP "$(echo "$file\$"|$CUT -c2-)" /var/lib/dpkg/info/$2.md5sums | $CUT -f 1 -d " "`
         [ -n "$md5pck" ] && {
-          if [ -f $currentfile ]
+          if [ -f "$currentfile" ]
           then
             md5sum=`$MD5SUM "$currentfile" | $CUT -f 1 -d " "`
             [ "$md5pck" != "$md5sum" ] &&
