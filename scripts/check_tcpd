@@ -20,6 +20,8 @@
 #
 # check_tcpd - 07/25/2002 - jfs
 #       Changed TigerInstallDir to .
+# check_tcpd - 04/23/2003 - jfs
+#	Fixed requirements
 #
 # Script made based on checkd_inetd in order to only test for existance
 # of tcp-wrappers and changes in their configuration.
@@ -62,8 +64,8 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds SED AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
-  haveallfiles BASEDIR WORKDIR INETDFILE SERVICESFILE || exit 1
+  haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT  UNIQ || exit 1
+  haveallfiles BASEDIR WORKDIR INETDFILE || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
@@ -73,8 +75,8 @@ done
 echo
 echo "# Performing check of services with tcp wrappers..."
 
-haveallcmds SED CAT AWK LS SORT GREP COMM JOIN || exit 1
-haveallfiles BASEDIR WORKDIR || exit 1
+haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT  UNIQ || exit 1
+haveallfiles BASEDIR WORKDIR INETDFILE || exit 1
 
 saveifs=$IFS
 
@@ -142,7 +144,7 @@ realpath="$REALPATH -d"
 [ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath="echo"
 
 
-haveallcmds GEN_INETD_SETS UNIQ TAIL &&
+haveallcmds GEN_INETD_SETS UNIQ  &&
 haveallfiles INETDFILE && {
     $GEN_INETD_SETS |
     while read inetd_set

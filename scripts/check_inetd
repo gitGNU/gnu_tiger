@@ -69,7 +69,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds SED AWK CAT COMM GEN_INETD_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
+  haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT UNIQ || exit 1
   haveallfiles BASEDIR WORKDIR INETDFILE || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -80,7 +80,7 @@ done
 echo
 echo "# Performing check of 'inetd'..."
 
-haveallcmds SED AWK CAT COMM GEN_INETD_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
+haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT UNIQ || exit 1
 haveallfiles BASEDIR WORKDIR INETDFILE || exit 1
 
 saveifs=$IFS
@@ -227,7 +227,7 @@ realpath="$REALPATH -d"
 
 {
 
-  haveallcmds GEN_INETD_SETS UNIQ TAIL &&
+  haveallcmds GEN_INETD_SETS UNIQ &&
   haveallfiles INETDFILE && {
     $GEN_INETD_SETS |
     while read inetd_set
