@@ -90,7 +90,7 @@ echo
 echo "# Checking installed files against packages..."
 
 haveallcmds FIND GREP || exit 1
-[ "$Tiger_DPKG_Optimize" = "N" ] && haveallcmds DPKG || exit 1
+[ "$Tiger_DPKG_Optimize" = "N" ] || haveallcmds DPKG || exit 1
 
 safe_temp $WORKDIR/dpkg-packages.list
 trap 'delete $WORKDIR/dpkg-packages.list ; exit 1' 1 2 3 15
