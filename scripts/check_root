@@ -17,10 +17,14 @@
 #
 # check_root - 05/30/99
 #
-# 05/30/99  Added feature to check for no console root logins
-# 07/25/2002 jfs  Changed TigerInstallDir to .
+# 08/14/2003 jfs Implemented some of ARSC changes done in Tara 3.0.3, 
+#            including a bugfix and checks for SSH PermitRootLogin's
+#            (although changes have been implemented to allow for OS
+#            and site configuration of the SSHCONF file location)
 # 05/26/2003 jfs Fixed calls to test (worked in Linux but not in other OS due
 #     to -n not being implicit)
+# 07/25/2002 jfs  Changed TigerInstallDir to .
+# 05/30/1999  Added feature to check for no console root logins
 #
 #-----------------------------------------------------------------------------
 #
@@ -69,7 +73,7 @@ done
 
 #------------------------------------------------------------------------
 echo
-echo "# Performing common access checks for root..."
+echo "# Performing common access checks for root (in /etc/default/login, /securetty, and /etc/ttytab..."
 
 haveallcmds AWK GREP CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
@@ -89,7 +93,7 @@ if [ -f /etc/securetty ]; then
 fi   
 
 if [ -f /etc/ttytab ]; then
-  if [ -n "`$GREP " secure" /etc/ttytab | $GREP -v console`" ]; then
+  if [ -n "`$GREP ' secure' /etc/ttytab | $GREP -v console`" ]; then
      message WARN root001w "" "Remote root login allowed in /etc/ttytab"
      echo
   fi
@@ -126,4 +130,30 @@ fi
       message WARN root003w "" "Root user has message capability turned on."
   fi
 }
+
+[ -z "$SSHCONF" ] && {
+if [ -f /usr/local/etc/sshd_config ]; then
+  SSHCONF=/usr/local/etc/sshd_config
+elif [ -f /etc/sshd_config ]; then
+  SSHCONF=/etc/sshd_config
+elif [ -f /etc/ssh2/sshd2_config ]; then
+  SSHCONF=/etc/ssh2/sshd2_config
+elif [ -f /etc/ssh/sshd_config ]; then
+  SSHCONF=/etc/ssh/sshd_config
+fi
+}
+
+[ -f "$SSHCONF" ] && {
+rootssh=`$GREP PermitRootLogin $SSHCONF`
+if [ -n "$rootssh" ]; then
+  if [ ! "`echo $rootssh | $GREP \"^#\"`" ]; then
+    if [ "`echo $rootssh | $GREP -i yes`" ]; then
+      message WARN root001w "" "Remote root login allowed in $path"
+    fi
+    if [ "`echo $rootssh | $GREP -i nopwd`" ]; then
+       message WARN root001w "" "root login without pwd allowed in $path"
+    fi
+fi
+}
+
 exit 0
