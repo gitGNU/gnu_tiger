@@ -1,8 +1,7 @@
 #!bin/sh
 #
 #     tiger - A UN*X security checking system
-#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
-#     Copyright (C) 2003 Michael Sconzo
+#     Copyright (C) 2003 Michael Sconzo, Javier Fernandez-Sanguino Peña
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,7 +15,26 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-#  check_xinetd - 02/11/03
+#  check_xinetd - 02/11/2003
+# 
+#  Checks which xinetd services are enabled or disabled.
+#
+#  08/11/2003 - jfs - Fixed dependancies. Now uses XINETDFILE instead of 
+#               hardcoding the location. Added additional checks
+#               to avoid errors and use message instead of echo.
+#  08/12/2003 - jfs - Now write messages for disabled services too. Also
+#               fixed some errors.
+#
+#-----------------------------------------------------------------------------
+# TODO:
+#
+# - write the messages for these warnings/information
+# - xinetd checks should determine if insecure services are active or
+#   running as root when not needed.
+# - check if the xinetd configuration file is writable
+# - check if the xinetd files under the xinetd directory are writable 
+# - it could also check vs the system's provided XINETDFILE to determine
+#   changes in services just as check_inetd does
 #
 #-----------------------------------------------------------------------------
 #
@@ -53,43 +71,49 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds SED AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN LS R
-M SORT TAIL UNIQ || exit 1
-  haveallfiles BASEDIR WORKDIR INETDFILE SERVICESFILE || exit 1
+  haveallcmds GREP AWK LS || exit 1
+  haveallfiles BASEDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
 }
 
 #------------------------------------------------------------------------
+haveallcmds GREP AWK LS || exit 1
+haveallfiles BASEDIR || exit 1
+
 echo
 echo "# Performing check of 'xinetd' related services..."
 
-check_config()
+check_xinetconfig()
 {
-
 	xinetd_dir="$1"
-	cd $xinetd_dir
-	for FILE in `$LS`
+	$LS $xinetd_dir |
+	while read file
 	do
-		if ["`$GREP -i 'disable' $FILE | $AWK '{print $NF}'`" = "no" ] ; 
+		if [ "`$GREP -i 'disable' $file | $AWK '{print $NF}'`" = "no" ] ; 
 		then
-			BINARY=`$GREP -w 'server' $FILE | $GREP '=' | $AWK '{print $NF}'`
-			echo "--WARN-- [xnet001w] $FILE service is enabledi using: $BINARY"
+			service=`$GREP -w 'server' $file | $GREP '=' | $AWK '{print $NF}'`
+			message INFO xnet002i "Service $file is enabled using: $service."
+		else
+			message INFO xnet002i "Service $file is disabled."
 		fi
 	done
 }
 
-if [ -r /etc/xinetd.conf ] ;
+XINETDCONF="/etc/xinetd.conf"
+
+if [ -r $XINETDCONF ] ;
 then
-        echo "--INFO-- [xnet001i] using /etc/xinetd.conf as config file" 
-	xinetd_directory=`$GREP 'includedir' /etc/xinetd.conf | $AWK '{print $NF}'`
-	check_config $xinetd_directory
-elif [ -r /usr/local/etc/xinetd.conf ] ;
-then
-        echo "--INFO-- [xnet001i] using /usr/local/etc/xinetd.conf as config file" 
-	xinetd_directory=`$GREP 'includedir' /usr/local/etc/xinetd.conf | $AWK '{print $NF}'`
-	check_config $xinetd_directory
+	$GREP 'includedir' $XINETDCONF | $AWK '{print $NF}' |
+	while read xinetd_directory
+	if [ -d "$xinetd_directory" ] 
+	then
+		check_xinetconfig $xinetd_directory
+	else
+		message FAIL xnet002f "The location included in $XINETDCONF is not a directory"
+	fi
+	done
 else
-	echo "--FAIL-- [xnet001f] It appears that xinetd is not installed"
+	message FAIL xnet001f "It appears that xinetd is not installed, cannot find file $XINETDFILE."
 fi
