@@ -29,6 +29,8 @@
 #
 # 04/15/2003 jfs Added new year
 #
+# 05/01/2003 jfs Added missing checks
+#
 #-----------------------------------------------------------------------------
 #
 echo "Tiger UN*X security checking system"
@@ -354,6 +356,11 @@ trippid=
 [ "$Tiger_Check_APACHE" != 'N' ] && {
   echo "`$TIMECMD`> Checking the Apache configuration..."
   $SCRIPTDIR/check_apache >> $logtmp
+}
+
+[ "$Tiger_Check_PRINTCAP" != 'N' ] && {
+  echo "`$TIMECMD`> Checking the printers control file..."
+  $SCRIPTDIR/check_printcap >> $logtmp
 }
 
 [ "$Tiger_Check_EXRC" != 'N' ] && {
