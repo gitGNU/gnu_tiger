@@ -3,6 +3,7 @@
 #include <sys/stat.h>
 #include <pwd.h>
 #include <grp.h>
+#include <string.h>
 /*
    tiger - A UN*X security checking system
    Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
