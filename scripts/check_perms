@@ -24,7 +24,7 @@
 # 11/05/2002 jfs Small fix to prevent shell expansion to ocur while testing
 #                filenames (discovered due a broken self-made package that
 #                created a /usr/bin/*config directory, ouch.)
-# 05/01l/2003 jfs Fixed dependancies
+# 05/01/2003 jfs Fixed dependancies
 #
 #-----------------------------------------------------------------------------
 #
