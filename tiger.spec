@@ -6,6 +6,10 @@
 %define want_distr 1
 %{?build_want_distr:%define want_distr 1}
 
+# Do we want to keep non-Linux systems
+%define keep_other_sys 0 
+%{?build_want_distr:%define keep_other_sys 0}
+
 %define maj 3
 %define min 2
 %define rev 1
@@ -101,14 +105,17 @@ install -m 644 version.h ${DESTDIR}/usr/lib/tiger/
 install -m 644 version.h ${DESTDIR}/usr/local/tiger/
 %endif
 # Removed unnecesary stuff 
-%if ! %{want_distr}
+%if ! %{keep_other_sys}
+for system in AIX HPUX IRIX NeXT SunOS UNICOS UNICOSMK Tru64 MacOSX ; 
+do
 %if %{want_reloc}
-find ${RPM_BUILD_ROOT}/usr/local/tiger/systems -maxdepth 1 -type d -a -name \*IX -o -name \*UX -o -name \*SX -o -name \*XT -o -name \*OS -o -name \*64 -o -name UNI\* | xargs -iX rm -rf "X"
+rm -rf ${RPM_BUILD_ROOT}/usr/lib/tiger/systems/${system}; 
 %else 
-find ${RPM_BUILD_ROOT}/usr/lib/tiger/systems -maxdepth 1 -type d -a -name \*IX -o -name \*UX -o -name \*SX -o -name \*XT -o -name \*OS -o -name \*64 -o -name UNI\* | xargs -iX rm -rf "X"
+rm -rf ${RPM_BUILD_ROOT)/usr/local/tiger/systems/${system}; 
+%endif
+done
 %endif
 find ${RPM_BUILD_ROOT} -type d -name CVS | xargs -iX rm -rf "X"
-%endif
 
 
 %clean
@@ -145,6 +152,8 @@ rm -rf ${RPM_BUILD_ROOT}
 - Cron file is now installed in /etc/cron.d/tiger
 - Version.h file is now installed (should be done by the Makefile)
 - Install ignore file (but needs to be revised)
+- Remove the systems we don not care for (just leave Linux) based on
+  the keep_other_sys variable
 * Wed Sep 24 2003 unSpawn <unSpawn@rootshell.be> XIII
 - Made spec file build relocatable and reflect tru parameterisation
 - Strip CVS dirs on build
