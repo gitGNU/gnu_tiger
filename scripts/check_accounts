@@ -17,6 +17,8 @@
 #
 # check_accounts - 06/14/93
 #
+# 05/01/93 jfss  Fixed dependancy
+#
 # 07/26/2002 jfs Fixed to work in Solaris. Added WC as required command
 #
 # 07/25/2002 jfs Added a sanity check for password files
@@ -74,7 +76,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds ID AWK CAT CHECK_CRON GEN_PASSWD_SETS GREP JOIN LS RM OUTPUTMETHOD SGREP TR SORT UNIQ CUT  WC || exit 1
+  haveallcmds ID AWK CAT CHECK_CRON GEN_PASSWD_SETS GREP JOIN LS OUTPUTMETHOD SGREP TR SORT UNIQ CUT  WC || exit 1
   haveallfiles ETCSHELLS BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -85,10 +87,10 @@ done
 echo
 echo "# Performing check of user accounts..."
 
-haveallcmds ID GREP GEN_PASSWD_SETS LS CAT AWK JOIN OUTPUTMETHOD SORT UNIQ CUT WC || exit 1
-haveallfiles WORKDIR BASEDIR || exit 1
+haveallcmds ID AWK CAT GEN_PASSWD_SETS GREP JOIN LS OUTPUTMETHOD SGREP TR SORT UNIQ CUT  WC || exit 1
+haveallfiles ETCSHELLS BASEDIR WORKDIR || exit 1
 haveallcmds CHECK_CRON || CHECK_CRON=
-haveallvars HOSTNAME
+haveallvars TESTLINK HOSTNAME
 
 # Just in case: sanity check
 # If Not defined Tiger_Accounts_Trust then it's the lowest 
