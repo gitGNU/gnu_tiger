@@ -26,11 +26,6 @@
 # policy). 
 # 
 # ----------------------------------------------------------------------
-#
-# Make system-specific checks every day at 1 am
-#
-1 * * check_system
-# ----------------------------------------------------------------------
 # Check for known intrusion signs every 8 hours
 #
 0,8,16 * *	check_known check_rootkit check_finddeleted check_logfiles check_runprocs check_rootdir check_root
