@@ -20,6 +20,8 @@
 # 09/19/2003 - jfs - Applied patch from Nicolas François  which enhances
 #            speed by restricting the list of files to check to those that
 #            will be, indeed, tested and improved DPKG dependancy.
+#            Send FIND errors to /dev/null just in case some of the
+#            directories do not exist.
 # 08/08/2003 - jfs - Improved temporary file creation and removed RM dependancy.
 # 08/08/2003 - jfs - Applied patch from Nicolas François. 
 #              Instead of grepping each file all the files are appended to
@@ -98,7 +100,7 @@ trap 'delete $WORKDIR/dpkg-packages.list ; exit 1' 1 2 3 15
 # or use grep (optimal but not on the safe side)
 if [ "$Tiger_DPKG_Optimize" = "N" ]
 then
-        $FIND /bin/ /usr/bin/ /sbin/ /usr/sbin/ /lib/ /usr/X11R6/bin/ -type f |
+        $FIND /bin/ /usr/bin/ /sbin/ /usr/sbin/ /lib/ /usr/X11R6/bin/ -type f 2>/dev/null|
         # We are not using -maxdepth here, but we could...
         while read file
         do
