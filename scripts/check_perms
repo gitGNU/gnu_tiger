@@ -21,6 +21,9 @@
 #               file instead of symbolic link.
 # ??/??/99 ARC  Changed echo to message and limited giving warnings if owner
 #               of files is 'bin'
+# 11/05/2002 jfs Small fix to prevent shell expansion to ocur while testing
+#                filenames (discovered due a broken self-made package that
+#                created a /usr/bin/*config directory, ouch.)
 #
 #-----------------------------------------------------------------------------
 #
@@ -178,7 +181,7 @@ check_file()
     getpermit $file |
     while read filename rowner rgroup rur ruw rux rgr rgw rgx ror row rox rsuid rsgid rstk
     do
-      [ ! $TESTLINK $filename ] && [ -f $filename -o -d $filename ] &&
+      [ ! $TESTLINK '$filename' ] && [ -f '$filename' -o -d '$filename' ] &&
       if [ "$file" = "$filename" ]; then
 	check_file "$filename"
       else
@@ -251,9 +254,5 @@ check_file()
   }
 } |
 $OUTPUTMETHOD
-#
-exit 0
-#
-exit 0
 #
 exit 0
