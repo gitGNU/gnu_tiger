@@ -18,6 +18,8 @@
 # check_passwdspec: Perform system specific password checks here like
 #               password aging checks, etc.
 # 
+# 03/21/2005 jfs - Fixed password aging check. Separate all checks so that
+#                  they prevent bugs if pwd="!" (Debian Bug #297889)
 # 01/10/2004 cslater - Added logic to skip password aging check if the
 #                  account is disabled (! or * in password)
 # 11/19/2003 jfs - Patch from Ryan Bradetich changing acc016w to pass19w
@@ -82,7 +84,7 @@ IFS=:
   while read user pwd
   do
  
-    [ "$Tiger_Check_PASSWD_SHADOW" = 'Y' -a -s /etc/passwd -a "$pwd" != "x" ] && {
+    [ "$Tiger_Check_PASSWD_SHADOW" = 'Y' ] && [ -s /etc/passwd ] && [ "$pwd" != "x" ] && {
       message WARN pass20w "" "Login ID $user is not configured to use shadow passwords."
     }
 
@@ -90,13 +92,13 @@ IFS=:
    [ -r /etc/shadow ] && { 
         pwd=`$GREP $user /etc/shadow | $CUT -d: -f2`
    }
-    # Skip this check if the user account is locked
-     [ "x${pwd%${pwd#?}}" != 'x!' -a "x${pwd%${pwd#?}}" != 'x*' ] && {
+   # Skip this check if the user account is locked
+   [ "$pwd" != '!' ] && [ "$pwd" != '*' ] && {
     	if $CHAGE -l $user 2>/dev/null | $GREP "Password Expires:" | $GREP Never >/dev/null 2>&1
     	then
           message WARN pass19w "" "Login ID $user does not have password aging enabled."
     	fi
-      }
+   }
 
   done
 }

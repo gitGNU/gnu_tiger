@@ -16,6 +16,7 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # Linux/2/gen_cron - 06/14/93
+# 03/21/2005 - jfs - Fixed -a checks to be POSIX compatbiel
 # 10/01/2003 - jfs - Added check to see if CRONSPOOL can be read, also
 #    fixed the way the information is read since LS might be locale
 #    dependant and it's cleaner to call FIND than to access the directory
@@ -47,7 +48,7 @@ for dir in /etc/cron.hourly /etc/cron.daily /etc/cron.weekly /etc/cron.monthly
 # TODO: consider using cron.* as suggested by unspawn instead of
 # an explicit for
 do
-    if [ -d "$dir" -a -r "$dir" ]; then 
+    if [ -d "$dir" ] && [ -r "$dir" ]; then 
     	$FIND "$dir" -type f -printf "%p %u\n" |
 	while read  file owner
 	do
@@ -61,7 +62,7 @@ done
 
 # Then check the cron's spool (both of the system's and the user's)
 # TODO (fix): same as above
-if [ -d $CRONSPOOL -a -r $CRONSPOOL ]; then 
+if [ -d $CRONSPOOL ] && [ -r $CRONSPOOL ]; then 
 $FIND "$CRONSPOOL" -type f -printf "%p %u %f\n" |
 while read  file owner name
 do
