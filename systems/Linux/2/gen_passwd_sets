@@ -66,8 +66,8 @@ zappasswd()
       [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./])
 	     passwd="crypt3"
 	   ;;
-# For MD5 passwds (35 chars) starting with $1$ (Linux)
-      \$1\$[a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/])
+# For MD5 passwds (34 chars) starting with $1$ (Linux)
+      \$1\$[a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./]\$[a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./])
 	     passwd="md5"
 	   ;;
       " ") passwd=""
