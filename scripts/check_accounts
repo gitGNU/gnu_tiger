@@ -20,6 +20,7 @@
 # Checks the accounts provided in the system, looking for disabled accounts
 # with cron, rhosts, .forward, and valid shells.
 #
+# 09/19/2003 jfs  Add root to Tiger_Admin_Accounts if already defined
 # 08/15/2003 jfs  ETCSHELLS is not indispensable to running this script.
 # 08/14/2003 jfs  Included ARSC changes including an update for Linux
 #                 in which no shell equals shell to address no
@@ -124,7 +125,12 @@ trap 'delete $WORKDIR/pass.list.$$ $WORKDIR/home.hosts.$$ ; exit 1' 1 2 3 15
 [ -z "$Tiger_Accounts_Trust" ] && Tiger_Accounts_Trust=-1
 # If not defined we disable this check
 [ -z "$Tiger_Dormant_Limit" ] && Tiger_Dormant_Limit=0
-[ -z "$Tiger_Admin_Accounts" ] && Tiger_Admin_Accounts="root"
+if [ -z "$Tiger_Admin_Accounts" ] 
+then
+	Tiger_Admin_Accounts="root"
+else
+	Tiger_Admin_Accounts="$Tiger_Admin_Accounts|root"
+fi
 
 #
 # This function checks for potential access to an "disabled" account.
