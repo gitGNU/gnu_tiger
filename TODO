@@ -192,6 +192,7 @@ OpenBSD's or SuSE's)
 
 - Implement IDMEF to send message on alerts. Consider the use of the XML
   library available at  http://www.silicondefense.com/idwg/snort-idmef/
+  or Prelude's libprelude
 
 - Consider sending encrypted mail. Check  http://karl.jorgensen.com/smash/
   or add 'gpg -e -a ' in tigercron
@@ -202,6 +203,11 @@ OpenBSD's or SuSE's)
   (which depend on net access) will never end on a normal
   Tiger run.
 
+- Implement a way to hook into a distributed architecture. Possible candidates:
+	- IDEA http://idea-arch.sourceforge.net/
+	- Prelude http://www.prelude-ids.org/
+
 
 --- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
-Mon, 14 Apr 2003 21:45:12 +0100
+Sun, 15 Jun 2003 23:26:16 +0200
+
