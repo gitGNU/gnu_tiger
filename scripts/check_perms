@@ -17,14 +17,15 @@
 #
 # check_perms - 06/14/93
 #
-# 04/28/93 dls  Added '-L' option to 'ls' so we get permissions from
-#               file instead of symbolic link.
-# ??/??/99 ARC  Changed echo to message and limited giving warnings if owner
-#               of files is 'bin'
+# 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
+# 05/01/2003 jfs Fixed dependancies
 # 11/05/2002 jfs Small fix to prevent shell expansion to ocur while testing
 #                filenames (discovered due a broken self-made package that
 #                created a /usr/bin/*config directory, ouch.)
-# 05/01/2003 jfs Fixed dependancies
+# ??/??/1999 ARC  Changed echo to message and limited giving warnings if owner
+#               of files is 'bin'
+# 04/28/1993 dls  Added '-L' option to 'ls' so we get permissions from
+#               file instead of symbolic link.
 #
 #-----------------------------------------------------------------------------
 #
@@ -63,7 +64,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK GET_MOUNTS GREP LS SGREP 
+  haveallcmds AWK GET_MOUNTS GREP LS SGREP OUTPUTMETHOD || exit 1
   haveallfiles FILE_ACL BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK || exit 1
   
@@ -76,7 +77,7 @@ done
 echo
 echo "# Performing check of system file permissions..."
 
-haveallcmds AWK GREP LS SGREP || exit 1
+haveallcmds AWK GET_MOUNTS GREP LS SGREP OUTPUTMETHOD || exit 1
 haveallfiles FILE_ACL WORKDIR BASEDIR ||
 haveallvars TESTLINK || exit 1
 
