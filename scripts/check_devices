@@ -19,9 +19,15 @@
 # 	checks permissions on tape devices
 # 10-30-2001
 # Paul Telford <paul_telford@hp.com>
+#
+# 07/25/2002 jfs  Changed TigerInstallDir to .
+# 08/09/2002 jfs  Fixed to work in Solaris (added pseudo devices and changed
+#                 -L to -h)
+# 08/12/2002 jfs  Added /devices/pseudo/pts to terminal lists.
+#
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.
@@ -86,16 +92,28 @@ check_dev_file()
 echo
 echo "# Checking device permissions..."
 
-    for file in /dev/[a-z]*[0-9]*
-    do
+dirs="/dev/"
+# For Solaris but maintain compatibility with others
+# (in Solaris /dev/ are symlinks to devices in /devices/pseudo)
+[ -d /devices ] && dirs="$dirs /device"
+[ -d /devices/pseudo ] && dirs="$dirs /devices/pseudo"
+for dir in dirs
+do
+for file in $dirs/[a-z0-9]*
+do
     	case $file in
-	/dev/pty*|/dev/tty*)
+	/dev/pty*|/dev/tty*|/devices/pseud/pts*)
 	# Do not check for virtual terminals
 	;;
 	*)
 	# Do not check directories or symbolic links
-		[ ! -d $file -a ! -L $file ] && check_dev_file $file
+		if [ ! -d "$file"  -a  ! -h "$file" ] 
+		then
+		   check_dev_file $file
+		fi
 	;;
 	esac
-    done
+done
+done
 
+exit 0

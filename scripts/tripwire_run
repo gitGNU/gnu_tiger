@@ -18,9 +18,12 @@
 # tripwire_run - 11/07/2001
 # Paul Telford <paul_telford@hp.com>
 #
+# tripwire_run - 07/25/2002 - jfs
+#       Changed TigerInstallDir to .
+#
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.

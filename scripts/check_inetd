@@ -17,13 +17,15 @@
 #
 # check_inetd - 06/14/93
 #
-#     Portions corrected y Advanced Research Corporation (R)
 # check_inetd - 04/20/99
-#     Fixes to avoid false positives by Javier Fernandez-Sanguino
-# check_inetd - 12/13/01
+#     Portions corrected y Advanced Research Corporation (R)
+# check_inetd - 12/13/01 - jfs
+#     Fixes to avoid false positives 
+# check_inetd - 05/27/2002 - jfs
+#     Changed TigerInstallDir to .
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.

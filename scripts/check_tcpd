@@ -18,16 +18,18 @@
 #
 # check_tcpd - 26/05/2002
 #
+# check_tcpd - 07/25/2002 - jfs
+#       Changed TigerInstallDir to .
+#
 # Script made based on checkd_inetd in order to only test for existance
 # of tcp-wrappers and changes in their configuration.
 #
 # TODO: it is not currently able to determine services which are compiled
 # against libwrap (many in Debian GNU/Linux) and tell the user that they
 # are protected this way.
-#
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.

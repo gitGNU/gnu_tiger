@@ -22,6 +22,8 @@
 #
 #               Complain if the .rhosts is a symbolic link or directory.
 #
+# 07/25/2002 jfs Added a sanity check for password files
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -287,11 +289,13 @@ $entry";;
 
   {
     if [ -n "$Tiger_PasswdFiles" ]; then
-      $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+      [ -f $Tiger_PasswdFiles ] && $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
     else
       $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
     fi
   }
+
+  [ -r $WORKDIR/pass.list.$$ ] && {
   while read passwd_set
   do
     echo
@@ -307,13 +311,11 @@ $entry";;
     [ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
     delete $WORKDIR/home.hosts.$$
   done < $WORKDIR/pass.list.$$
+  }
 
   delete $WORKDIR/pass.list.$$
 } |
 $OUTPUTMETHOD
-#
-exit 0
-#
-exit 0
+
 #
 exit 0

@@ -17,9 +17,12 @@
 #
 # check_rootdir - 11/10/2001
 #
+# check_rootdir - 07/25/2002 - jfs
+#       Changed TigerInstallDir to .
+#
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.

@@ -19,6 +19,9 @@
 #
 # Ideas from Dan Farmer's 'cron.chk' from COPS 1.04.
 # 
+# check_cron  - 08/12/2002 - jfs Fixed to use CRONSPOOL
+# 
+# 
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -143,7 +146,7 @@ delete $WORKDIR/cron.in.$$
 
 
 # Check for existence of root crontab
-[ ! -r /var/spool/cron/root ] &&
+[ ! -r $CRONSPOOL/root ] &&
      message WARN cron004w "" "Root crontab does not exist"
 
 # Check for existence of root cron.allow

@@ -17,6 +17,9 @@
 #
 # check_accounts - 06/14/93
 #
+# 07/26/2002 jfs Fixed to work in Solaris. Added WC as required command
+#
+# 07/25/2002 jfs Added a sanity check for password files
 #
 # 12/26/2001 jfs  Added Tiger_Accounts_Trust to define valid users which will
 #		not be so thoroughly checked. Useful for UN*X systems that
@@ -71,7 +74,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT CHECK_CRON GEN_PASSWD_SETS GREP JOIN LS RM OUTPUTMETHOD SGREP TR SORT UNIQ CUT || exit 1
+  haveallcmds ID AWK CAT CHECK_CRON GEN_PASSWD_SETS GREP JOIN LS RM OUTPUTMETHOD SGREP TR SORT UNIQ CUT  WC || exit 1
   haveallfiles ETCSHELLS BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -82,7 +85,7 @@ done
 echo
 echo "# Performing check of user accounts..."
 
-haveallcmds GREP GEN_PASSWD_SETS LS CAT AWK JOIN OUTPUTMETHOD SORT UNIQ CUT || exit 1
+haveallcmds ID GREP GEN_PASSWD_SETS LS CAT AWK JOIN OUTPUTMETHOD SORT UNIQ CUT WC || exit 1
 haveallfiles WORKDIR BASEDIR || exit 1
 haveallcmds CHECK_CRON || CHECK_CRON=
 haveallvars HOSTNAME
@@ -98,8 +101,8 @@ check_disabled()
 	  $shcase)
 		# Just in case: some sanity checks
 	  	[ -z "$Tiger_Accounts_Trust" ] && Tiger_Accounts_Trust=-1
-                [ -z "$uid" ] && uid=-1
-	  	[ $uid -gt $Tiger_Accounts_Trust ] && \
+                [ -z "$uid" ] && uid=$Tiger_Accounts_Trust
+	  	[ $Tiger_Accounts_Trust -lt $uid ] && \
 		message WARN acc001w \"\" \"Login ID $user is disabled, but still has a valid shell ($shell).\"
 	   ;;
 	  *)  [ $TESTEXEC $shell -a ! -c $shell ] &&
@@ -128,8 +131,9 @@ check_users()
 {
   while read user home host shell uid
   do
+    [ -z "$uid" ] && uid=$Tiger_Accounts_Trust
     [ "$host" = "$HOSTNAME" ] && \
-    [ $uid -gt $Tiger_Accounts_Trust ] && {
+    [ $Tiger_Accounts_Trust -lt $uid ] && {
       [ ! -d $home/ ] && {
 	message WARN acc022w "" "Login ID $user home directory ($home) is not accessible."
       }
@@ -138,9 +142,9 @@ check_users()
 	  eval "case \"$shell\" in
 	    $shcase)
               [ \"$user\" = \"root\" ] && [ -d $home/ ] && {
-                #myshell=$($BASENAME $shell)
-                [ ! -r $home/.$($BASENAME $shell)rc ] && {
-                  message WARN acc019w \"\" \"Logon ID $user may be missing a shell initialization file $home/.$($BASENAME $shell)rc.\"
+                myshell=`$BASENAME $shell`
+                [ ! -r ${home}/.${myshell}rc ] && {
+                  message WARN acc019w \"\" \"Logon ID $user may be missing a shell initialization file ${home}/.${myshell}rc.\"
                 }
               }
 	      ;;
@@ -157,7 +161,7 @@ check_users()
             $Tiger_Admin_Accounts)
               ;;
             *)
-              [ $($FIND $home/ -mtime -$Tiger_Dormant_Limit | $WC -l | $AWK '{print $1}') -eq 0 ] && {
+              [ `$FIND $home/ -mtime -$Tiger_Dormant_Limit | $WC -l` -eq 0 ] && {
 	        message WARN acc021w \"\" \"Login ID $user appears to be a dormant account.\"
               }
               ;;
@@ -188,7 +192,7 @@ check_users()
 
        # To check for permissions on user's (UID > Tiger_Accounts_Trust) 
        # parent directory
-        [ `id -u $user` -gt $Tiger_Accounts_Trust ] && {
+        [ `$ID $user |$CUT -d " " -f 1 |$SED -e 's/.*=\([0-9]*\)(.*/\1/'` -gt $Tiger_Accounts_Trust ] && {
                 PARENT_DIR=`echo $home | $CUT -d"/" -f2` 
                 PARENT_DIR="/$PARENT_DIR"
                 #echo $PARENT_DIR
@@ -250,12 +254,13 @@ saveifs=$IFS
 
 {
   if [ -n "$Tiger_PasswdFiles" ]; then
-    $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+    [ -f $Tiger_PasswdFiles ] && $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
   else
     $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
   fi
 }
 
+[ -r $WORKDIR/pass.list.$$ ] && {
 while read passwd_set
 do
   source=`$CAT $passwd_set.src`
@@ -297,17 +302,19 @@ do
     fi
     IFS=:
   done < $passwd_set
+
   IFS=$saveifs
   
   $AWK -F: '{print $1, $6}' $passwd_set |
   $BASEDIR/util/${GETFSHOST:=getfs-std} > $WORKDIR/home.hosts.$$
 
-  for duphome in $($AWK -F: '{print $6}' $passwd_set | $SORT | $UNIQ -c | $AWK '$1 > 1 { print $2 }')
+  for duphome in `$AWK -F: '{print $6}' $passwd_set | $SORT | $UNIQ -c | $AWK '$1 > 1 { print $2 }'`
     do
       $GREP ":$duphome:" $passwd_set | $AWK -F: '{ print $1, $3 }' |
       while read dupuser dupid 
-      do
-	[ $dupid -gt $Tiger_Accounts_Trust ] && \
+      do 
+        [ -z "$dupid" ] && dupid=$Tiger_Accounts_Trust
+	[ $Tiger_Accounts_Trust -lt $dupid ] && \
           message WARN acc015w "" "Login ID $dupuser has a duplicate home directory ($duphome) with another user."
       done
   done
@@ -321,7 +328,7 @@ do
   $JOIN -o 1.1 1.2 2.3 1.3 1.4 - $WORKDIR/home.hosts.$$ | 
   check_users
 
-  for user in $($AWK -F: 'length($2) > 1 { print $1 }' $passwd_set)
+  for user in `$AWK -F: 'length($2) > 1 { print $1 }' $passwd_set`
     do
       [ -n \"$Tiger_Admin_Accounts\" ] && {
         eval "case $user in
@@ -345,16 +352,16 @@ do
       else
         PWFILES="/etc/passwd"
     fi
-    for user in $($CAT $PWFILES | $AWK -F: '{print $1}')
+    for user in `$CAT $PWFILES | $AWK -F: '{print $1}'`
       do
         [ -r /etc/passwd ] && {
-          if ! $GREP "^${user}:" /etc/passwd >/dev/null 2>&1
+          if  [ -z "`${GREP} \"^${user}:\" /etc/passwd 2>/dev/null`" ]
             then
               message WARN acc017w "" "Login ID $user missing corresponding entry from either /etc/passwd or /etc/shadow."
           fi
         }
         [ -r /etc/shadow ] && {
-          if ! $GREP "^${user}:" /etc/shadow >/dev/null 2>&1
+          if  [ -z "`${GREP} \"^${user}:\" /etc/shadow 2>/dev/null`" ]
             then
               message WARN acc017w "" "Login ID $user missing corresponding entry from either /etc/passwd or /etc/shadow."
           fi
@@ -366,6 +373,7 @@ do
   delete $WORKDIR/home.hosts.$$
 done < $WORKDIR/pass.list.$$ |
 $OUTPUTMETHOD
+}
 
 delete $WORKDIR/pass.list.$$
 #

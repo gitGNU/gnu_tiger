@@ -17,9 +17,16 @@
 #
 # check_issue - 11/10/2001
 #
+# check_issue - 05/27/2002 - jfs
+#        Changed TigerInstallDir to .
+#
+# check_issue - 08/09/2002 - jfs
+#        Fixed some ! problems in Solaris by changing the ! DIFF to a
+#        check of the exit status
+#
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.
@@ -69,15 +76,18 @@ echo
 echo "# Performing check of /etc/issue(s) login message..."
 
 haveallcmds DIFF || exit 1
+haveallfiles ISSUEFILE ISSUENETFILE BASEDIR WORKDIR || exit 1
 
 # for the local logins
-if ! $DIFF -q /etc/issue $ISSUEFILE >/dev/null 2>&1
+$DIFF -q /etc/issue $ISSUEFILE >/dev/null 2>&1` ]
+if [ $? -ne 0 ] 
   then
    message WARN issue001w "" "/etc/issue does not contain the designated content."
 fi
 
 # for the networked logins
-if ! $DIFF -q /etc/issue.net $ISSUENETFILE >/dev/null 2>&1
+$DIFF -q /etc/issue.net $ISSUENETFILE >/dev/null 2>&1
+if [ $? -ne 0 ] 
   then
    message WARN issue002w "" "/etc/issue.net does not contain the designated content."
 fi

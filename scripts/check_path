@@ -18,6 +18,8 @@
 # check_path  - 06/14/93
 # ARC check_path - 05/10/99  Fixed problem with parse_csh
 #
+# 07/25/2002 jfs Added a sanity check for password files
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir="."
@@ -315,7 +317,7 @@ realpath="$REALPATH -d"
       [ -r $file ] && {
         case $file in
           /etc/profile|/etc/bashrc)
-            if ! $GREP -v '#' $file | $GREP PATH | $GREP export >/dev/null 2>&1
+            if [ ! "`$GREP -v '#' $file | $GREP PATH | $GREP export >/dev/null 2>&1`" ] 
               then
                 message WARN path009w "" "$file does not export an initial setting for PATH."
             fi
@@ -343,7 +345,7 @@ realpath="$REALPATH -d"
     haveallvars HOSTNAME && {
       {
 	if [ -n "$Tiger_PasswdFiles" ]; then
-	  $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+	  [ -f $Tiger_PasswdFiles ] && $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
 	else
 	  $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
 	fi

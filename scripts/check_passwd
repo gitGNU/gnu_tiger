@@ -17,6 +17,9 @@
 #
 # check_passwd  - 06/14/93
 #
+# 07/27/2002 jfs Added a sanity check for password files
+# 08/09/2002 jfs Fixed some ! tests 
+#
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
 
@@ -70,13 +73,20 @@ haveallfiles BASEDIR WORKDIR || exit 1
 
 {
   if [ -n "$Tiger_PasswdFiles" ]; then
-    $CAT $Tiger_PasswdFiles > $WORKDIR/pass.list.$$
+     [ -f $Tiger_PasswdFiles ] && $CAT $Tiger_PasswdFiles > $WORKDIR/pass.list.$$
   else
     $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
   fi
 }
 
 saveifs=$IFS
+
+# Just make this check just in case
+if [ ! -r $WORKDIR/pass.list.$$ ] 
+then
+    message FAIL pass008e "" "File $WORKDIR/pass.list.$$ is not readable" 
+    exit 1
+fi
 
 $CAT $WORKDIR/pass.list.$$ > $WORKDIR/pass2.$$
 newfile=$WORKDIR/pass2new.$$
@@ -165,7 +175,7 @@ $OUTPUTMETHOD
 }
 
 [ -n "$PWCK" ] && {
-  if ! $PWCK /etc/passwd /etc/shadow >/dev/null 2>&1 ; then
+  if [ ! `$PWCK /etc/passwd /etc/shadow >/dev/null 2>&1` ] ; then
     message WARN pass006w "" "Integrity of password files questionable (pwck -r)."
   fi
 }
@@ -173,7 +183,7 @@ $OUTPUTMETHOD
 [ -r "$LOGINDEF" ] && [ -n "$Tiger_Passwd_Constraints" ]  && {
   for param in $Tiger_Passwd_Constraints
     do
-    if ! $GREP -v '#' $LOGINDEF | $GREP $param >/dev/null 2>&1
+    if [ ! `$GREP -v '#' $LOGINDEF | $GREP "$param"` ] >/dev/null 2>&1
       then
         message WARN pass007w "" "Password control $param missing from $LOGINDEF."
     fi
@@ -188,3 +198,4 @@ $OUTPUTMETHOD
 }
 
 delete $WORKDIR/pass.list.$$ $WORKDIR/pass2new.$$
+

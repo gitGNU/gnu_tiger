@@ -17,13 +17,17 @@
 #
 # check_ftpusers -  Sat May 18 18:39:35 CEST 2002
 #
-# 18/05/2002 jfs Created based on check_root with ideas inspired on Titan's
+# 07/25/2002 jfs Added a sanity check for password files.
+#                Changed TigerInstallDir to .
+#
+# 05/18/2002 jfs Created based on check_root with ideas inspired on Titan's
 #		 modules/ftpusers.sh
 #
+# 08/09/2002 jfs Fixed call to grep adding quotes (now works in Solaris)
 #
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.
@@ -84,7 +88,7 @@ haveallvars TESTLINK HOSTNAME || exit 1
 if [ -f /etc/ftpusers ]; then
 
 if [ -n "$Tiger_PasswdFiles" ]; then
-    $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+    [ -f $Tiger_PasswdFiles ] && $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
 else
      $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
 fi
@@ -100,7 +104,7 @@ do
 #	user=`echo $line | $AWK -F: '($3 <= $Tiger_Accounts_Trust) { print $1 }'`
 
 	# Note: root is removed since it is checked for in check_root
-	[ -n "$user" -a "$user" != "root" ] && [ -z "`$GREP ^$user /etc/ftpusers`" ]  && 
+	[ -n "$user" -a "$user" != "root" ] && [ -z "`$GREP \"^$user\" /etc/ftpusers`" ]  && 
 		message FAIL netw018f "" "Administrative user $user allowed access in /etc/ftpusers"
 	done 
 done

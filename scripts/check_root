@@ -18,11 +18,11 @@
 # check_root - 05/30/99
 #
 # 05/30/99  Added feature to check for no console root logins
-#
+# 07/25/2002 jfs  Changed TigerInstallDir to .
 #
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.

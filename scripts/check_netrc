@@ -22,6 +22,8 @@
 #
 #               Complain if the .netrc is a symbolic link or directory.
 #
+# 07/25/2002 jfs Added a sanity check for password files
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -161,12 +163,13 @@ saveifs="$IFS"
 
 {
   if [ -n "$Tiger_PasswdFiles" ]; then
-    $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+    [ -f $Tiger_PasswdFiles ] && $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
   else
     $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
   fi
 }
 
+[ -r $WORKDIR/pass.list.$$ ] && {
 while read passwd_set
 do
   echo
@@ -183,6 +186,7 @@ do
   delete $WORKDIR/home.hosts.$$
 done < $WORKDIR/pass.list.$$ |
 $OUTPUTMETHOD
+}
 
 delete $WORKDIR/pass.list.$$
 #
