@@ -104,7 +104,7 @@ do
 for file in $dirs/[a-z0-9]*
 do
     	case $file in
-	/dev/pty*|/dev/tty*|/devices/pseud/pts*)
+	/dev/pty*|/dev/tty*|/devices/pseudo/pts*)
 	# Do not check for virtual terminals
 	;;
 	/dev/urandom|/dev/random|/dev/zero|/dev/full)
