@@ -1,13 +1,38 @@
 #!/bin/sh
-
 # Consistency check for Tiger
+#
+# This program can be used to determine if the Tiger sources are ok.
+# By looking for common mistakes 
+# - scripts not available but executed by the program
+# - scripts available but not executed
+# - configuration options which are not used
+#
+# (c) 2003 Javier Fernandez-Sanguino
+
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 
 # 1.- Verify that all scripts called by tigerrc are available
 
 PROGRAM="tiger"
 CONFIG="tigerrc"
 SCRIPTDIR="./scripts"
+if [ ! -r "$PROGRAM" -o ! -r "$CONFIG" -o ! -d "$SCRIPTDIR" ] 
+then
+	echo "ERR: $0 cannot find $PROGRAM, $CONFIG or $SCRIPTDIR"
+	echo "¿Are you running it from the distribution root dir?"
+	exit 1
+fi
 
+
+check_progcall () {
 echo "Checking $PROGRAM call to scripts"
 cat $PROGRAM |
 grep -v ^# |
@@ -20,7 +45,9 @@ do
 		echo "ERR: $PROGRAM references nonexistant $script in $SCRIPTDIR "
 	fi
 done
+}
 
+check_scriptuse () {
 # 2.- Verify that all scripts in $SCRIPTDIR are used by tiger
 for script in $SCRIPTDIR/*
 do
@@ -33,17 +60,70 @@ do
 	fi
 
 done
+}
 
-# 3.- Verify that all check variables used by tiger are in tigerrc
+# 3.- Verify that all check variables used by tiger are in tigerrc and
+#     viceversa
+
+check_configuse () {
 echo "Checking $PROGRAM use of config lines"
 cat $PROGRAM |
 grep -v ^# |
-grep -E "\[ \"$Tiger_Check_.*\" != '[YN]'" |
-while read line
+sed -ne 's/^.*Tiger_Check_\([a-z]*\)\" != '[YN]' !.*/Tiger_Check_\1/pg' |
+while read configcheck
 do
-	configcheck=`echo $line | sed -ne 's/^.*Tiger_Check_\([a-z]*\)\" !.*/Tiger_Check_\1/p'`
 	[ -n "$configcheck" ] && 
-	[ -z "grep $configcheck $CONFIG | grep -v ^#" ] &&
+	[ -z "`grep $configcheck $CONFIG | grep -v ^#`" ] &&
 	echo "ERR: $PROGRAM uses $configcheck which is not in $CONFIG"
 done
 
+echo "Checking configuration lines of $CONFIG in $PROGRAM"
+cat $CONFIG |
+grep -v ^# |
+grep ^Tiger_Check |
+awk -F = '{ print $1; }' |
+while read configcheck
+do
+	[ -n "$configcheck" ] && 
+	[ -z "`grep $configcheck $PROGRAM | grep -v ^#`" ] &&
+	echo "ERR: $CONFIG defines $configcheck which is not used by $PROGRAM"
+done
+}
+
+# 4.- Check all the dependancies of scripts
+
+check_haveall () {
+# TODO: ugly hack, needs much improvement 
+	script=$1
+	type=$2
+	grep $type $script |
+	head -1 | 
+	sed -e "s/$type \(.*\) ||/\1/" |
+	awk '{ split ($0,list,/ /); for (value in list) {print list[value]} ; } ' |
+	while read cmd
+	do
+		if [ -n "$cmd" ] ; then
+		count=`grep $cmd $script | grep $type | wc -l`
+		[ "$count" -lt 2 ] &&
+		echo "ERR: $type not sincronised, missing $cmd in $script"
+		fi
+	done
+}
+
+check_scriptdepend () {
+for script in $SCRIPTDIR/*
+do
+	check_haveall "$script" haveallcmds
+	check_haveall "$script" haveallfiles
+#	check_haveall "$script" haveallvars
+done
+}
+
+# Checks to do
+check_progcall
+check_scriptuse
+check_configuse
+check_scriptdepend
+
+
+exit 0
