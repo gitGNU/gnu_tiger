@@ -27,6 +27,9 @@
 #     vulnerable.
 #
 # DATE 	NAME 	DESCRIPTION_OF_CHANGES
+# 03/01/2004 - jfs - Fix error in lsof temporary file creation
+#              (Debian bug #235951)
+# 02/25/2004 - jfs - Fix error in safe_temp call
 # 02/24/2004 - jfs - Do not operate over 'CHR' file types to avoid false
 #              positives (Closes Debian bug #232704). 
 #              Reduce verbosity by joining multiple messages into a
@@ -116,17 +119,17 @@ haveallcmds GREP CAT LSOF PS CUT SORT AWK || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 
-safe_temp "$WORKDIR/deleted.$$ $WORKDIR/lsof.$$"
+safe_temp "$WORKDIR/deleted.$$" "$WORKDIR/lsof.$$"
 trap 'delete $WORKDIR/deleted.$$ $WORKDIR/lsof.$$ ; exit 1' 1 2 3 15
 
 # TODO: Use Lsof's -f option to only recover the data
 # we need and also to provide some more data useful for us
 # (such as PPID)
-$LSOF -n  >>$WORKDIR.lsof.$$
+$LSOF -n  >>$WORKDIR/lsof.$$
 # It can be deleted if name includes (deleted) or
 # TYPE = DEL
-$CAT $WORKDIR.lsof.$$ | $GREP "(deleted)" >>$WORKDIR/deleted.$$
-$CAT $WORKDIR.lsof.$$ | $GREP "DEL" >>$WORKDIR/deleted.$$
+$CAT $WORKDIR/lsof.$$ | $GREP "(deleted)" >>$WORKDIR/deleted.$$
+$CAT $WORKDIR/lsof.$$ | $GREP "DEL" >>$WORKDIR/deleted.$$
 delete $WORKDIR/lsof.$$
 
 $CAT $WORKDIR/deleted.$$ | $SORT -u |
