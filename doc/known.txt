@@ -46,6 +46,11 @@ of intrusion.
 There is an .exrc file outside of any user's home directory. This file can
 be loaded inadvertenly by a user if executing an editor in that directory
 and could introduce unexpected commands through it.
+Note that in all modern versions of vi, you have to set the exrc option
+in your home's directory .exrc file before vi will read the exrc in
+the current directory (using 'set exrc').
+If you are using an old version of vi or users have this option enabled,
+however, commands in .exrc might compromise the security of your system.
 %kis010w
 The indicated file in the system mail spool does not belong to any user
 in the system. This might indicate that a user has been removed but not his
