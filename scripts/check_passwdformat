@@ -32,6 +32,8 @@
 # 11/19/2003 - jfs - Removed shadow password check (per patch from Ryan
 #                    Bradetich) and added note for other systems (non
 #                    HPUX or Linux)
+# 01/15/2004 - jfs - Fixed password definitions (Debian bug #227596) adding
+#                    the sets 'g-Z' 'A-Z' and '.'
 #
 #-----------------------------------------------------------------------------
 #
@@ -188,11 +190,13 @@ $AWK -F: '{
         if ($2 == "")
                 printf("Login %s has no password.\n", $1);
 	if ($2 != "" && length($2) != 13 && length($2) != 34 &&
-	    length($2) != 1 && $2 !~ /^\$[0-9a-f]+\$/ && $2 !~ /^!/ )
+	    length($2) != 1 && $2 !~ /^\$[0-9a-zA-Z\.]+\$/ && $2 !~ /^!/ )
 		printf("Login %s has an unsual password field length.\n", $1);
 	if ($2 != "" && $2 !~ /^\$[0-9a-f]+\$/ && $2 !~ /^[!*]/ )
 		printf("Login %s has an unsual password content.\n", $1);
 }' < $PW > "$OUT"
+
+# NOTE: I've found some passwords with '/'. Is this common?
 
 if [ -s "$OUT" ] ; then
         $CAT "$OUT" |
