@@ -20,6 +20,8 @@
 # 04/28/93 dls  Added '-L' to 'ls' to get permissions from file instead of
 #               symbolic link.
 # 10/28/2002 jfs LS and AWK are no longer hardcoded
+# 08/11/2003 jfs getpermit now interates through more than one name and 
+#            aborts with error if the file or directory does not exist.
 #
 #-----------------------------------------------------------------------------
 #
@@ -65,6 +67,13 @@ lgetpermit()
   '
 }
 
-lgetpermit $1
+for __file
+do
+	if [ -e $__file ] ; then
+		lgetpermit $__file
+	else
+		exit 1
+	fi
+done
 #
 exit 0
