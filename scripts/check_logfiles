@@ -35,6 +35,9 @@
 #                  warn if LOGINLOG does not exist (as is the Linux case)
 #                  Also, file permissions in systems in which WTMP and UTMP
 #                  are group 'utmp' should be 664
+# check_logfiles - 10/19/2003 - jfs - based on patch from Ryan Bradetich fixed
+#                  location of logfiles for HP-UX, btmp file check, and btmp
+#                  location for Linux (previously undefined)
 #
 #-----------------------------------------------------------------------------
 #
@@ -118,7 +121,15 @@ fi
 if [ "$OS" = "Linux" ] ; then
 # Loginlog and btmp do not exist
 	LOGINLOG=""
-	BTMP=""
+fi
+
+if [ "$OS" = "HPUX" ] ; then
+	WTMP=/var/adm/wtmp
+	BTMP=/var/adm/btmp
+	LASTLOG=""
+	UTMP=/etc/utmp
+	LOGINLOG=""
+	MESSAGES=""
 fi
 
 if [ ! -r "$WTMP" ] ; then
@@ -135,11 +146,23 @@ else
     fi
 fi
 
-[ -n "$BTMP" -a ! -r "$BTMP" ] &&
-    #echo "...Warning: $BTMP does not exist"
-    message FAIL logf002f "" "Log file $BTMP does not exist"
+if [ -n "$BTMP" ] ; then
+    if [ ! -r "$BTMP" ] ; then
+        #echo "...Warning: $BTMP does not exist"
+        message FAIL logf002f "" "Log file $BTMP does not exist"
+    else
+        group=`getpermit $BTMP | $AWK '{ print $3 }'`
+        if [ "$group" = "utmp" ] ; then
+	    check_fileperm $BTMP 110110000 || 
+ 	    message FAIL logf005f "" "Log file $BTMP permission should be 660"
+        else
+	    check_fileperm $BTMP 110000000 || 
+ 	    message FAIL logf005f "" "Log file $BTMP permission should be 600"
+	fi
+    fi
+fi
 
-[ ! -r "$LASTLOG" ] && 
+[ -n "$LASTLOG" -a ! -r "$LASTLOG" ] && 
     #echo "...Warning: $LASTLOG does not exist"
     message FAIL logf003f "" "Log file $LASTLOG does not exist"
 
@@ -157,22 +180,24 @@ else
     fi
 fi
 
-[ -n "$LOGINLOG" ] && {
-if [ ! -r "$LOGINLOG" ] ; then
-    #echo "...Warning: $LOGINGLOG does not exist"
-    message FAIL logf006f "" "Log file $LOGINLOG does not exist"
-else
-    check_fileperm $LOGINLOG 110000000 || 
-    	message FAIL logf005f "" "Log file $LOGINLOG permission should be 600"
+if [ -n "$LOGINLOG" ] ; then
+    if [ ! -r "$LOGINLOG" ] ; then
+        #echo "...Warning: $LOGINGLOG does not exist"
+        message FAIL logf006f "" "Log file $LOGINLOG does not exist"
+    else
+        check_fileperm $LOGINLOG 110000000 || 
+    	    message FAIL logf005f "" "Log file $LOGINLOG permission should be 600"
+    fi
 fi
-}
  
-if [ ! -r "$MESSAGES"  ] ; then
-    #echo "...Warning: $MESSAGES does not exist"
-    message FAIL logf007f "" "Log file $MESSAGES does not exist"
-else 
-    check_fileperm $MESSAGES 110100000 || 
-    	message FAIL logf005f "" "Log file $MESSAGES permission should be 640"
+if [ -n "$MESSAGES" ] ; then
+    if [ ! -r "$MESSAGES" ] ; then
+        #echo "...Warning: $MESSAGES does not exist"
+        message FAIL logf007f "" "Log file $MESSAGES does not exist"
+    else 
+        check_fileperm $MESSAGES 110100000 || 
+    	    message FAIL logf005f "" "Log file $MESSAGES permission should be 640"
+    fi
 fi
  
 exit 0
