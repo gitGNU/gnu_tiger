@@ -16,6 +16,10 @@
 #
 # initdefs - 06/14/93
 #
+# initdefs - 08/13/2003 - jfs - Run_script now returns error number
+# initdefs - 08/09/2003 - jfs - Delete now checks if RM exists
+# initdefs - 08/08/2003 - jfs - Added safe_temp and run_script functions
+#
 #-----------------------------------------------------------------------------
 #
 # Routines for verifying environment
@@ -25,6 +29,10 @@
 # haveallvars - verify variables
 #
 haveallcmds()
+# Note:
+# In some cases haveallcmds might fail if the program is not installed
+# (such as when looking for SNEFRU) it might be necessary to have config
+# files use ../../bin as part of the SRCH for this to work.
 {
   __retval=0
 
@@ -84,6 +92,10 @@ haveallvars()
 #
 delete()
 {
+  if [ -z "$RM" ] ; then
+  	echo "--ERROR-- [init001e] The variable RM is not defined. Aborting."
+	exit 1
+  fi
   for __file
   do
     eval "case \"\$__file\" in
@@ -398,7 +410,9 @@ changelog()
 }
 
 #
-# Generic cleanup routine...
+# Generic cleanup routine.
+# It will clean all the files available in the TigerCleanup variable
+# scripts can either use this or define their own cleanup routine.
 #
 cleanup()
 {
@@ -406,5 +420,70 @@ cleanup()
     delete $TigerCleanup
   }
 }
+
+#
+# Given a temporary file determines if it exists
+# if it does bails out since it shouldn't be there
+safe_temp()
+{
+  for __tmpfile
+  do
+    if [ -f "$__tmpfile" ] ; then
+        echo  "--ERROR-- [init009e] Tempfile \`$__tmpfile' exists."
+        exit 1
+    else
+        >$__tmpfile
+    fi
+  done
+}
+#
+# Run_script() function
+# This function will run a script first looking for it in the most
+# specific directories (those belonging to a given operating system
+# release, revision and architecture) and to the most generic
+# (the 'default' system and the scripts directory) afterwards.
+# It will also check that the script is owned by the same user running
+# the program and wether or not it is executable.
+#
+run_script()
+{
+  __script_run=""
+  __error=0
+  for __script
+  do
+	for dir in $BASEDIR/systems/default $SCRIPTDIR 
+        do
+	  if [ -f "$dir/$__script" ] ; then
+            __script_run="$dir/$__script"
+          fi
+        done
+	for dir in $OS $OS/$REL $OS/$REL/$REV $OS/$REL/$REV/$ARCH 
+	do
+	  if [ -f "$BASEDIR/systems/$dir/$__script" ] ; then
+            __script_run="$BASEDIR/systems/$dir/$__script"
+          fi
+	done
+#	echo "Script is $__script_run"
+	if [ "$__script_run" != "" ] ; then
+            __script_owner=`$LS -nl $__script_run | $AWK '{ print $3; }'`
+            if [ $TESTEXEC $__script_run ]; then
+	            if [ $__script_owner -eq $UID ]; then
+			$__script_run
+		    else
+			echo "--ERROR-- [misc024w] The $__script_run script will not be run since it is owned by a user ($__script_owner) different than the one running Tiger ($UID)"
+  			__error=1
+		    fi
+	    else
+          	echo "--ERROR-- [misc025w] The $__script_run will not be run since it is not executable"
+                __error=1
+            fi
+        else
+          echo "--ERROR-- [misc005w] Can't find '$script'..."
+          __error=1
+        fi
+  done
+  return $__error
+}
+
 
 trap cleanup 0
