@@ -15,10 +15,21 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# SunOS/4/gen_bootparam_sets - 06/14/93
+# Linux/2/gen_bootparam_sets - 06/14/93
+#
+# 01/15/2004 - jfs - Modified to avoid yelling for systems with 
+#                    broken NIS configurations. Also added config
+#                    to work if being called standalone (for testing purposes)
 #
 #-----------------------------------------------------------------------------
 #
+
+# If run directly do this, just in case:
+[ -z "$AWK" ] && AWK=`which awk`
+[ -z "$SED" ] && AWK=`which sed`
+[ -z "$RM" ] && RM=`which rm`
+[ -z "$YPCAT" ] && YPCAT=`which ypcat 2>/dev/null`
+[ -z "$WORKDIR" ] && WORKDIR=/tmp
 
 [ -r /etc/bootparams ] && {
   $SED -e 's/#.*$//' /etc/bootparams |
@@ -33,7 +44,12 @@
 }
 
 [ -n "$YPCAT" ] && {
-  $YPCAT bootparams > $WORKDIR/nis_bootparams.$$
+  $YPCAT bootparams > $WORKDIR/nis_bootparams.$$ 2>/dev/null
+  if [ $? -eq 0 ] ; then
   echo "NIS" > $WORKDIR/nis_bootparams.$$.src
   echo "$WORKDIR/nis_bootparams.$$"
+  else
+  # Ypcat has not succeded, remove the temporary file
+  $RM $WORKDIR/nis_bootparams.$$
+  fi
 }
