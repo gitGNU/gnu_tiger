@@ -17,6 +17,9 @@
 #
 # Linux/deb_nopackfiles - 23/08/2001
 # 
+# 09/19/2003 - jfs - Applied patch from Nicolas François  which enhances
+#            speed by restricting the list of files to check to those that
+#            will be, indeed, tested and improved DPKG dependancy.
 # 08/08/2003 - jfs - Improved temporary file creation and removed RM dependancy.
 # 08/08/2003 - jfs - Applied patch from Nicolas François. 
 #              Instead of grepping each file all the files are appended to
@@ -24,9 +27,14 @@
 # 11/05/2002 - jfs - Changed from a 'for' statement to a 'find'
 #
 # TODO:
-# Consider if the the path '/bin/ /usr/bin/ /sbin/ /usr/sbin/
+# - Consider if the the path '/bin/ /usr/bin/ /sbin/ /usr/sbin/
 # /lib/ /usr/X11R6/bin/' should be customizable in tigerrc.
 # Also, the maxpath could be set in another option.
+# - Consider the use of 'dlocate' which will be faster than DPKG. Notice
+# however that it's priority "optional"
+# dlocate could be faster
+# DLOCATE=`which dlocate`
+# DLOCATE=${DLOCATE:-$DPKG}
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -66,7 +74,8 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds FIND DPKG GREP || exit 1
+  haveallcmds FIND GREP || exit 1
+  [ "$Tiger_DPKG_Optimize" = "N" ] && haveallcmds DPKG || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -78,7 +87,8 @@ done
 echo
 echo "# Checking installed files against packages..."
 
-haveallcmds FIND DPKG GREP || exit 1
+haveallcmds FIND GREP || exit 1
+[ "$Tiger_DPKG_Optimize" = "N" ] && haveallcmds DPKG || exit 1
 
 safe_temp $WORKDIR/dpkg-packages.list
 trap 'delete $WORKDIR/dpkg-packages.list ; exit 1' 1 2 3 15
@@ -99,7 +109,8 @@ then
         done       
 else
         # Alternative (optimal but not following standard way)
-	$FIND /var/lib/dpkg/info -name "*.list" -exec cat {} \; > $WORKDIR/dpkg-packages.list
+	$FIND /var/lib/dpkg/info -name "*.list" -exec cat {} \; |
+        $SED -ne "/^\/\(bin\|usr\/bin\|sbin\|usr\/sbin\|lib\|usr\/X11R6\/bin\)/p" > $WORKDIR/dpkg-packages.list
         $FIND /bin/ /usr/bin/ /sbin/ /usr/sbin/ /lib/ /usr/X11R6/bin/ -type f |
         # We are not using -maxdepth here, but we could...
         $GREP -x -F -v -f $WORKDIR/dpkg-packages.list |
