@@ -183,10 +183,13 @@ do
   delete $filename
 done < $WORKDIR/file.list.$$
 
+# Cleanup temporary files
+[ ! -n "$Tiger_PasswdFiles" ] && {
 while read pass_set
 do
   delete $pass_set $pass_set.src
 done < $WORKDIR/pass.list.$$
+}
 
 delete $WORKDIR/file.list.$$ $WORKDIR/pass.list.$$
 exit 0
