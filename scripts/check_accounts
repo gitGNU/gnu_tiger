@@ -15,9 +15,32 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# check_accounts - 06/14/93
+# check_accounts - created 06/14/93
 #
-# 05/01/93 jfss  Fixed dependancy
+# Checks the accounts provided in the system, looking for disabled accounts
+# with cron, rhosts, .forward, and valid shells.
+#
+# 08/15/2003 jfs  ETCSHELLS is not indispensable to running this script.
+# 08/14/2003 jfs  Included ARSC changes including an update for Linux
+#                 in which no shell equals shell to address no
+#                 login programs.
+# 08/08/2003 jfs  Changed the creation of temporary file to avoid race
+#                 conditions. 
+# 08/08/2003 jfs  Added Ryan Bradetich's patch which:
+#     * Fixed the join statement to properly handle empty fields for
+#      check_user.
+#     * Fixed the home directory permission check.
+#     * Simplified the parent directory check.
+#     * Removed the "root" requirement for checking the shell initilizaion
+#       files.
+#     * Added .bashrc and .kshrc to the default list of .dotfiles.
+#     * Removed the following checks (Duplicates will be merged, the
+#     remaining checks will be relocated to a more appropriate module:
+#     check_passwd or check_passwdformat): acc001w, acc020w, acco14f,
+#     acc013w, acc010a, acc011w, acc012w, acc015w, add018w, acc016w,
+#     acc017w
+#
+# 05/01/2003 jfs  Fixed dependancy
 #
 # 07/26/2002 jfs Fixed to work in Solaris. Added WC as required command
 #
@@ -76,9 +99,8 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds ID AWK CAT CHECK_CRON GEN_PASSWD_SETS GREP JOIN LS OUTPUTMETHOD SGREP TR SORT UNIQ CUT  WC || exit 1
-  haveallfiles ETCSHELLS BASEDIR WORKDIR || exit 1
-  haveallvars TESTLINK HOSTNAME
+  haveallcmds AWK CAT CHECK_CRON FIND GEN_PASSWD_SETS GREP JOIN LS TR WC RM || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
@@ -87,43 +109,53 @@ done
 echo
 echo "# Performing check of user accounts..."
 
-haveallcmds ID AWK CAT GEN_PASSWD_SETS GREP JOIN LS OUTPUTMETHOD SGREP TR SORT UNIQ CUT  WC || exit 1
-haveallfiles ETCSHELLS BASEDIR WORKDIR || exit 1
+haveallcmds AWK CAT CHECK_CRON FIND GEN_PASSWD_SETS GREP JOIN LS TR WC RM || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
 haveallcmds CHECK_CRON || CHECK_CRON=
-haveallvars TESTLINK HOSTNAME
+
+safe_temp "$WORKDIR/pass.list.$$" "$WORKDIR/home.hosts.$$"
+trap 'delete $WORKDIR/pass.list.$$ $WORKDIR/home.hosts.$$ ; exit 1' 1 2 3 15
+
+
 
 # Just in case: sanity check
-# If Not defined Tiger_Accounts_Trust then it's the lowest 
+# If Not defined Tiger_Accounts_Trust then it's the lowest
 # possible to assure that -lt checks will be always false
 [ -z "$Tiger_Accounts_Trust" ] && Tiger_Accounts_Trust=-1
 # If not defined we disable this check
 [ -z "$Tiger_Dormant_Limit" ] && Tiger_Dormant_Limit=0
 [ -z "$Tiger_Admin_Accounts" ] && Tiger_Admin_Accounts="root"
 
+#
+# This function checks for potential access to an "disabled" account.
+#
 check_disabled()
 {
-  while read user home host shell uid
+  while read user home host shell
   do
-    [ ! -n "$shell" ] && shell=/bin/sh
-    # TODO: Bob Hall suggest disabling the check for standard UNIX accounts. In HP-UX
-    # these are: daemon|bin|sys|adm|lp|nobody|hpdb. However, this might leave some
-    # "holes" open (just rename the account so that it will not be check for).
-    # A secure approach has to be determined for this to work properly.
-    [ $TESTEXEC $shell ] && {
+    if [ "$OS" = "Linux" -a -z "$shell" ]
+    then
+        shell="/bin/sh"
+    fi
+
+    [ $TESTEXEC "$shell" ] && {
       eval "
 	case \"$shell\" in
 	  $shcase)
-		# Just in case: some sanity checks
-                [ -z "$uid" ] && uid=$Tiger_Accounts_Trust
-	  	[ $Tiger_Accounts_Trust -lt $uid ] && \
-		message WARN acc001w \"\" \"Login ID $user is disabled, but still has a valid shell ($shell).\"
+	  message WARN acc001w \"\" \"Login ID $user is disabled, but still has a valid shell.\"
 	   ;;
+           "/bin/false")
+           ;;
+           "/dev/null")
+           ;;
+           "/sbin/nologin")
+           ;;
 	  *)  [ $TESTEXEC $shell -a ! -c $shell ] &&
-	  message INFO acc002i \"\" \"Login ID $user is disabled, and has a shell of $shell.\"
+	  message INFO acc002i \"\" \"Login ID $user is disabled, and has a shell\"
 	    ;;
         esac "
     }
-    [ "$host" = "$HOSTNAME" ] && {
+  [ -d "$home/" -a "$host" = "$HOSTNAME" ] && {
       [ -d $home/ ] && {
 	[ -s $home/.forward ] && $SGREP '\|' $home/.forward &&
 	message WARN acc003w "" "Login ID $user is disabled, but has a .forward file which executes commands."
@@ -142,254 +174,181 @@ check_disabled()
 
 check_users()
 {
-  while read user home host shell uid
+  saveifs=$IFS
+  IFS=:
+  while read user home host shell uid hash
   do
-    [ -z "$uid" ] && uid=$Tiger_Accounts_Trust
-    [ "$host" = "$HOSTNAME" ] && \
-    [ $Tiger_Accounts_Trust -lt $uid ] && {
-      [ ! -d $home/ ] && {
-	message WARN acc022w "" "Login ID $user home directory ($home) is not accessible."
-      }
-      if [ $TESTEXEC "$shell" ]
-        then
-	  eval "case \"$shell\" in
-	    $shcase)
-              [ \"$user\" = \"root\" ] && [ -d $home/ ] && {
-                myshell=`$BASENAME $shell`
-                [ ! -r ${home}/.${myshell}rc ] && {
-                  message WARN acc019w \"\" \"Logon ID $user may be missing a shell initialization file ${home}/.${myshell}rc.\"
-                }
-              }
-	      ;;
-	    *) 
-	      message WARN acc020w \"\" \"Login ID $user does not have a valid shell ($shell).\"
-	      ;;
-          esac"
-        else
-	  message WARN acc020w "" "Login ID $user does not have a valid shell ($shell)."
-      fi
-      [ -d $home/ ] && [ "$home" != "/" ] && {
-        [ "$Tiger_Dormant_Limit" != 0 ] && {
-          eval "
-	   case $user in
-            $Tiger_Admin_Accounts)
-              ;;
-            *)
-              [ `$FIND $home/ -mtime -$Tiger_Dormant_Limit | $WC -l` -eq 0 ] && {
-	        message WARN acc021w \"\" \"Login ID $user appears to be a dormant account.\"
-              }
-              ;;
-          esac"
-        }
-      }
-      [ -d $home/ ] && {
-	getpermit $home/ | {
-	  read _f owner group ur uw ux gr gw gx or ow ox suid sgid sticky
-# Note: in Debian GNU/Linux systems, there might be one user in a single
-# group so this check does
-# TODO: make it check if there are more than a single user in the group
-# and if it is = owmer
-	  [ "${gw}${ow}" != '00' ] && [ "$owner" != "$group" ] && {
-	    str="Login ID $user's home directory ($home) has"
-	    case "$gw$ow" in
-	      01) str="$str world write"
-	      mode='o-w';;
-	      10) str="$str group \`$group' write"
-	      mode='g-w';;
-	      11) str="$str group \`$group' and world write"
-	      mode='go-w';;
-	    esac
-	    message FAIL acc006w "" "${str} access."
-	    changelog "WARN : chmod : $mode : $home/."
-	  }
-	}
+     # Perform checks on "disabled" accounts (i.e. accounts without
+     # a valid password).
+     case $hash in
+       '*')
+         check_disabled "$user" "$home" "$host"
+         ;;
+     esac
 
-       # To check for permissions on user's (UID > Tiger_Accounts_Trust) 
-       # parent directory
-        [ `$ID $user |$CUT -d " " -f 1 |$SED -e 's/.*=\([0-9]*\)(.*/\1/'` -gt $Tiger_Accounts_Trust ] && {
-                PARENT_DIR=`echo $home | $CUT -d"/" -f2` 
-                PARENT_DIR="/$PARENT_DIR"
-                #echo $PARENT_DIR
-                [ -d $PARENT_DIR ] && {
-                        getpermit $PARENT_DIR/ | {
-                        read _f owner group ur uw ux gr gw gx or ow ox suid sgid sticky
-                        [ "${gw}${ow}" != '00' ] && {
-                                str="Login ID $user's parent directory ($PARENT_DIR) has"
-                                case "$gw$ow" in
-                                  01) str="$str world write";;
-                                  10) str="$str group \`$group' write";;
-                                  11) str="$str group \`$group' and world write"
-                                esac
-                                message WARN acc023w "" "${str} access."
-                        }
-                        }
-        	}
-        }
+     # Verify the home directory is accessable.
+     [ ! -d "$home/" ] && {
+       [ $Tiger_Accounts_Trust -lt $uid ] && [ "$host" = "$HOSTNAME" ] && {
+         message WARN acc022w "" "Login ID $user home directory ($home) is not accessable."
+       }
+       continue
+     }
 
-	
-	[ -s $home/.hushlogin ] &&
-	message ALERT acc007a '' "Logon ID $user has a non-zero length .hushlogin"
+     IFS=$saveifs
 
-	dotfiles=${USERDOTFILES:-".cshrc .profile .login .exrc .forward"}
+     # Check the permissions on $home.
+     getpermit "$home/" | {
+       read _f owner group ur uw ux gr gw gx or ow ox suid sgid sticky
 
-	for file in $dotfiles
-	do
-	  [ -f $home/$file ] && {
-	    getpermit $home/$file | {
-	      read _f owner group ur uw ux gr gw gx or ow ox suid sgid stk
-	      [ "${gw}${ow}" != '00' ] && {
-		str="Login ID $user's $file config file has"
-		case "$gw$ow" in
-		  01) str="$str world write"
-		  mode='o-w';;
-		  10) str="$str group \`$group' write"
-		  mode='g-w';;
-		  11) str="$str group \`$group' and world write"
-		  mode='go-w';;
-		esac
-		message WARN acc008w '' "${str} access."
-		changelog "WARN : chmod : $mode : $home/$file"
-	      }
-	    }
-	  }
-	done
-      }
-    }
+       # Note: in Debian GNU/Linux systems, there might be one user in a single
+       # group so this check does
+       # TODO: make it check if there are more than a single user in the group
+       # and if it is = owner
+
+       [ "$ow" = 1 ] || [ "$owner" != "$group" -a "$gw" = 1 ] && {
+         str="Login ID $user's home directory ($home) has"
+         case "$gw$ow" in
+           01) str="$str world write"
+               mode='o-w'
+               ;;
+           10) str="$str group \`$group' write"
+               mode='g-w'
+               ;;
+           11) mode='o=w'
+               [ "$owner" != "$group" ] && {
+                 str="$str group \`$group' and "
+                 mode='go-w'
+               }
+               str="$str world write"
+               ;;
+         esac
+         message FAIL acc006w "" "${str} access."
+         changelog "WARN : chmod : $mode : $home/."
+       }
+     }
+
+     # Check permissions on the parent home directory
+     [ $uid -gt $Tiger_Accounts_Trust ] && {
+       getpermit ${home%/*}/ | {
+         read _f owner group ur uw ux gr gw gx or ow ox suid sgid sticky
+
+         [ "${gw}${ow}" != '00' ] && {
+           str="Login ID $user's parent directory (${home%/*}/) has"
+           case "$gw$ow" in
+             01) str="$str world write"
+                 ;;
+             10) str="$str group \`$group' write"
+                 ;;
+             11) str="$str group \`$group' and world write"
+                 ;;
+           esac
+           message WARN acc023w "" "${str} access."
+         }
+       }
+     }
+
+     # Dormant account check.
+     [ "$home" != / -a "$Tiger_Dormant_Limit" != 0 ] && {
+       eval "
+         case $user in
+           $Tiger_Admin_Accounts)
+             ;;
+           *)
+             [ `$FIND $home/ -mtime -$Tiger_Dormant_Limit | $WC -l` -eq 0 ] && {
+               message WARN acc021w \"\" \"Login ID $user appears to be a dormant account.\"
+             }
+             ;;
+         esac"
+     }
+
+     # Non-zero sized .hushlogin
+     [ -s "$home/.hushlogin" ] &&
+       message ALERT acc007a '' "Logon ID $user has a non-zero length .hushlogin"
+
+     # Check shell initialization files.
+     # TODO: Bob Hall suggest disabling the check for standard UNIX accounts. 
+     # In HP-UX these are: daemon|bin|sys|adm|lp|nobody|hpdb.
+     # However, this might leave some  "holes" open 
+     # (just rename the account so that it will not be check for).
+     # A secure approach has to be determined for this to work properly.
+
+     [ -z "$shell" ] && shell=/bin/sh
+     [ $TESTEXEC $shell ] && [ $uid -gt $Tiger_Accounts_Trust ] && {
+       eval "
+         case $shell in
+           $shcase)
+             [ ! -r "${home}/.${shell##*/}rc" ] && {
+               message WARN acc019w \"\" \"Logon ID $user may be missing a shell initialization file ${home}/.${shell##*/}rc.\"
+             }
+             ;;
+           *)
+             # Invalid shells are handled in the check_password module.
+             ;;
+         esac"
+     }
+
+     # Check permissions on user dotfiles.
+     dotfiles=${USERDOTFILES:-".cshrc .bashrc .kshrc .profile .login .exrc .forward"}
+     for file in $dotfiles
+     do
+       [ -f "$home/$file" ] && {
+         getpermit "$home/$file" | {
+           read _f owner group ur uw ux gr gw gx or ow ox suid sgid stk
+
+           [ "${gw}${ow}" != '00' ] && {
+             str="Login ID $user's $file config file has"
+             case "$gw$ow" in
+               01) str="$str world write"
+                   mode='o-w'
+                   ;;
+               10) str="$str group \`$group' write"
+                   mode='g-w'
+                   ;;
+               11) str="$str group \`$group' and world write"
+                   mode='go-w'
+                   ;;
+             esac
+
+             message WARN acc008w '' "${str} access."
+             changelog "WARN : chmod : $mode : $home/$file"
+           }
+         }
+       }
+     done
+     IFS=:
   done
+  IFS=$saveifs
 }
-  
-shcase='/bin/sh|/bin/csh'
+
+# Define shcase to be a list of valid shells, so we can check for
+# shell initilization files.
+shcase='/bin/sh|/bin/csh|/bin/bash|/bin/tcsh|/bin/ksh'
 [ -n "$ETCSHELLS" -a -s "$ETCSHELLS" ] && {
   shells=`$GREP -v '^#' $ETCSHELLS`
   shcase=`echo $shells | $TR ' ' '|'`
 }
 
-saveifs=$IFS
+if [ -n "$Tiger_PasswdFiles" ]; then
+  [ -f $Tiger_PasswdFiles ] && $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+else
+  $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
+fi
 
-{
-  if [ -n "$Tiger_PasswdFiles" ]; then
-    [ -f $Tiger_PasswdFiles ] && $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
-  else
-    $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
-  fi
-}
-
-[ -r $WORKDIR/pass.list.$$ ] && {
 while read passwd_set
 do
   source=`$CAT $passwd_set.src`
   echo "# Checking accounts from $source."
 
-  IFS=:
-  while read user pass uid gid gecos homedir shell
-  do
-
-    # Check for UID-0 user's home directory
-    [ "$uid" = 0 -a "$homedir" = "/" ] &&
-        message FAIL acc014f '' "UID-$uid is having $homedir as home directory"
-
-    IFS=$saveifs
-    [ "$pass" = ' ' ] && pass=''
-    comment='no'
-    msgid=
-    [ "$PASSWD_COMMENTS_ALLOWED" != 'Y' ] && {
-      case $user in
-	"#*") cmsg='Comments are not allowed in password file.'; msgid='c';;
-	*) cmsg='';;
-      esac
-    }
-    if [ ! -n "$pass" ]; then
-      if [ "$user" = 'sync' ]; then
-#	[ "$shell" != '/bin/sync' ] && {
-#	  message ALERT acc009a '' "Login ID 'sync' does not have password, and shell is not /bin/sync."
-#	}
-        :
-      elif [ "$uid" = 0 ]; then
-	message ALERT acc010a$msgid "$cmsg" "Login ID $user is UID=0 and does not have a password."
-      else
-	message WARN acc011w$msgid "$cmsg" "Login ID $user does not have a password."
-      fi
-    elif [ "$uid" = 0 -a "$user" != "root" ]; then
-      message WARN acc012w$msgid "$cmsg" "Login ID $user has uid == 0."
-    elif [ "$comment" = 'yes' ]; then
-      message WARN acc013w "" 'Comments are not allowed in password file.'
-    fi
-    IFS=:
-  done < $passwd_set
-
-  IFS=$saveifs
-  
   $AWK -F: '{print $1, $6}' $passwd_set |
-  $BASEDIR/util/${GETFSHOST:=getfs-std} > $WORKDIR/home.hosts.$$
+  $BASEDIR/util/${GETFSHOST:=getfs-std} |
+  $TR ' ' : > $WORKDIR/home.hosts.$$
 
-  for duphome in `$AWK -F: '{print $6}' $passwd_set | $SORT | $UNIQ -c | $AWK '$1 > 1 { print $2 }'`
-    do
-      $GREP ":$duphome:" $passwd_set | $AWK -F: '{ print $1, $3 }' |
-      while read dupuser dupid 
-      do 
-        [ -z "$dupid" ] && dupid=$Tiger_Accounts_Trust
-	[ $Tiger_Accounts_Trust -lt $dupid ] && \
-          message WARN acc015w "" "Login ID $dupuser has a duplicate home directory ($duphome) with another user."
-      done
-  done
-
-  $GREP -v '^[^:]*:[a-zA-Z0-9\./,]*:' $passwd_set |
-  $AWK -F: '{if($2 != " ")printf("%s %s %s %s\n", $1, $6, $7, $3);}' |
-  $JOIN -o 1.1 1.2 2.3 1.3 1.4 - $WORKDIR/home.hosts.$$ |
-  check_disabled
-
-  $AWK -F: '{printf("%s %s %s %s\n", $1, $6, $7, $3);}' $passwd_set |
-  $JOIN -o 1.1 1.2 2.3 1.3 1.4 - $WORKDIR/home.hosts.$$ | 
+  $JOIN -t: -o 1.1 1.6 2.3 1.7 1.3 1.2 $passwd_set $WORKDIR/home.hosts.$$ |
   check_users
-
-  for user in `$AWK -F: 'length($2) > 1 { print $1 }' $passwd_set`
-    do
-      [ -n \"$Tiger_Admin_Accounts\" ] && {
-        eval "case $user in
-          $Tiger_Admin_Accounts)
-            message WARN acc018w \"\" \"Administrative Login ID $user should have an impossible password.\"
-            ;;
-        esac"
-      }
-      [ -n "$CHAGE" ] && [ -r /etc/shadow ] && {
-        if $CHAGE -l $user | grep "Password Expires:" | grep Never >/dev/null 2>&1
-          then
-            message WARN acc016w "" "Login ID $user does not have password aging enabled."
-        fi
-      }
-    done
-
-  [ "$Tiger_Check_PASSWD_SHADOW" != 'N' ] && {
-    if [ -r /etc/shadow ] 
-      then
-        PWFILES="/etc/passwd /etc/shadow"
-      else
-        PWFILES="/etc/passwd"
-    fi
-    for user in `$CAT $PWFILES | $AWK -F: '{print $1}'`
-      do
-        [ -r /etc/passwd ] && {
-          if  [ -z "`${GREP} \"^${user}:\" /etc/passwd 2>/dev/null`" ]
-            then
-              message WARN acc017w "" "Login ID $user missing corresponding entry from either /etc/passwd or /etc/shadow."
-          fi
-        }
-        [ -r /etc/shadow ] && {
-          if  [ -z "`${GREP} \"^${user}:\" /etc/shadow 2>/dev/null`" ]
-            then
-              message WARN acc017w "" "Login ID $user missing corresponding entry from either /etc/passwd or /etc/shadow."
-          fi
-        }
-      done
-  }
 
   [ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
   delete $WORKDIR/home.hosts.$$
-done < $WORKDIR/pass.list.$$ |
-$OUTPUTMETHOD
-}
+done < $WORKDIR/pass.list.$$
 
 delete $WORKDIR/pass.list.$$
-#
 exit 0
-
