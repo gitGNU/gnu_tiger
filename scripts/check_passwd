@@ -180,7 +180,8 @@ $OUTPUTMETHOD
   fi
 }
 
-[ -r "$LOGINDEF" ] && [ -n "$Tiger_Passwd_Constraints" ]  && {
+[ -r "$LOGINDEF" ] && [ -z "$PAMLOGINDEF" -o ! -f "$PAMLOGINDEF" ] && \
+[ -n "$Tiger_Passwd_Constraints" ]  && {
   for param in $Tiger_Passwd_Constraints
     do
     if [ ! `$GREP -v '#' $LOGINDEF | $GREP "$param"` ] >/dev/null 2>&1
@@ -189,6 +190,10 @@ $OUTPUTMETHOD
     fi
   done
 }
+# TODO: For Pam systemms the PAMLOGINDEF file needs to be checked instead
+# of login.defs
+#[ -f "$PAMLOGINDEF" ] && [ -n "$Tiger_Pam_Constraints" ]  && {
+#}
 
 [ ! -n "$Tiger_PasswdFiles" ] && {
   while read file
