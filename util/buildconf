@@ -16,6 +16,7 @@
 #
 # 07/26/2002 jfs Modified so it can work properly standalone
 # 04/15/2003 jfs Added necessary commands CUT WC EXPAND HEAD ID
+# 04/23/2003 jfs Bail out if no argument is given, sanity check on confile
 #
 # ------------------------------------------------------------------------
 
@@ -28,8 +29,26 @@
 [ -z "$AWK" ] && AWK=`which awk`
 [ -z "$LS" ] && LS=`which ls`
 [ -z "$CAT" ] && CAT=`which cat`
+[ -z "$SED" ] && CAT=`which sed`
 
-confile=$1
+confile=
+[ -n "$1" ] && {
+  case "$1" in
+    -*);;
+    *) confile="$1"; shift;;
+  esac
+}
+
+[ -z "$confile" ] && {
+	echo "You must specify the name of the file to store the configuration"
+	exit 1;
+}
+
+# If given as a relative file add a complete location
+# (otherwise sourcing it might have unexpected consequences since
+# it depends on PATH having '.')
+[ -z "`echo $confile |$EGREP ^[/\.]`" ] && confile="./$confile"
+
 
 findcmd()
 {
