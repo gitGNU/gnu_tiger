@@ -16,6 +16,7 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_known - 06/14/93
+# 01/15/2004 jfs Do not run the inetd code if inetd_sets is emtpy!
 # 11/19/2003 jfs Linux: accurate, per interface, promiscuous mode detection
 #                Contributed by unspawn with some changes to make it POSIX
 #                correct.
@@ -130,6 +131,8 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
   
   echo "# Testing for backdoors in inetd.conf"
   inetd_sets=`$GEN_INETD_SETS`
+  if [ -n "$inetd_sets" ] 
+  then
   # TODO inetd_sets should be appended with any non-option which 
   # has been fed to the current running inetd (use PS to locate it)
   shcase='/bin/sh|/bin/csh|/bin/bash|/bin/tcsh|/bin/ksh'
@@ -142,6 +145,7 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
      message ALERT kis014a "" "There is a shell defined in inetd.conf, the backdoor line is: '$backdoor'"
   fi
   delete $inetd_sets $inetd_sets.src
+  fi # Of if $inetd_sets
 
   file_list="/usr/spool/uucppublic/.hushlogin /usr/spool/secretmail/.l /tmp/a
 /usr/spool/secretmail/.log /usr/spool/secretmail/.tty
