@@ -1,0 +1,459 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_path  - 06/14/93
+#
+# 11/19/2003 rbrad Reimplementation to handle additional methods for 
+#      introducing directories into the PATH environment including
+#      $(<FILE) and /path/*/path. Common paths are only checked once.
+# 10/07/2003 jfs Redirected LS error to /dev/null since dangling symlinks
+#                will print errors. Properly cleaned temporary file.
+# 09/19/2003 jfs Use -L to check properly for symlinks (I've checked and
+#                its supported by all the LS implementations I've seen)
+#                (Fixes Debian Bug #161993)
+# 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
+# 08/13/2003 jfs Return if the files do not exist (a safeguard for the
+#                functions but these is redundant code anyway)
+# 08/08/2003 jfs Improved temporary file creation.
+# 10/22/2002 jfs Fixed check for PATH in config files (was not done properly
+#            due to the way it was being tested)
+# 07/25/2002 jfs Added a sanity check for password files
+# ARC check_path - 05/10/99  Fixed problem with parse_csh
+#
+#-----------------------------------------------------------------------------
+# TODO
+# Ryan Bradetich
+# - Check embedded paths?
+# - Check for '.' as the last component for a path
+# 
+# Javier Fernandez-Sanguino:
+# - Test this new implementation before moving it to the main scripts/
+#   directory.
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir="."
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT EGREP GEN_PASSWD_SETS JOIN LS OUTPUTMETHOD SED SORT TR || exit 1
+  haveallfiles BASEDIR BINDIR WORKDIR || exit 1
+  haveallvars HOSTNAME || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+echo
+echo "# Performing check of PATH components..."
+
+haveallcmds AWK CAT EGREP GEN_PASSWD_SETS JOIN LS OUTPUTMETHOD SED SORT TR || exit 1
+haveallfiles BASEDIR BINDIR WORKDIR || exit 1
+haveallvars HOSTNAME || exit 1
+
+check_permissions()
+{
+   dir=$1
+   okown=$2
+   okgroup=$3
+   user=$4
+   srcfile=$5
+
+   [ ! -d $dir ] && continue
+ 
+   # Check directory and file permissions.
+   $LS $LSLINK -d $dir/ $dir/* 2>/dev/null |
+   getpermit |
+   while read _execfile _owner _group ur uw ux gr gw gx or ow ox suid sgid stk
+   do
+      # Skip non-executable files.
+      [ "$ux$gx$ox" = '000' ] && continue
+
+      # Do an embedded check here.
+
+
+      # Pretend the gw bit is not set if group in okgroup
+      [ "$gw" = '1' ] && {
+         eval "case $_group in
+              $okgroup) gw='0'
+         esac"
+      }
+
+      # Check for group and world write permissions here.
+      case "$gw$ow" in
+          00) msg=''
+              mode=''
+              ;;
+          01) msg='world'
+              mode='o-w'
+              ;;
+          10) msg="group \`$_group'"
+              mode='g-w'
+              ;;
+          11) msg="group \`$_group' and world"
+              mode='go-w'
+              ;;
+      esac 
+
+      # Display the appropriate message if necessary.
+      [ -n "$msg" ] && {
+
+	 # Set the appropriate msgid for a directory or file.
+         if [ -d $_execfile ]; then 
+            _execfile=${_execfile%/}
+            msgid="path006w"
+         else
+            msgid="path001w"
+         fi
+
+	 # Set the appropriate message for global and user PATH problems.
+         if [ -z "$user" -a -z "$srcfile" ]; then
+            msg="$_execfile is $msg writable in the global system PATH."
+         else
+            msg="$_execfile in $user's PATH from $srcfile is $msg writable."
+         fi
+
+         message WARN $msgid "" "$msg"
+         changelog "WARN : chmod : $mode : $_execfile"
+      } 
+
+
+      # Check the file ownership.
+      eval "case $_owner in
+         $okown)
+            msg=''
+            ;;
+         *)
+            msg=\"(owner: $_owner)\"
+            ;;
+      esac"
+
+      [ -n "$msg" ] && {
+         # Check the SUID bit.
+         if [ "$suid" = '0' ]; then
+            lvl="WARN"
+            msgid="path002w"
+
+	    # Set the appropriate message for global and user PATH problems.
+            if [ -z "$user" -a -z "$srcfile" ]; then
+               msg="$_execfile does not have proper ownership in the global system PATH $msg."
+            else
+               msg="$_execfile in $user's PATH from $srcfile does not have proper ownership $msg."
+            fi
+
+            changelog "WARN : chown : root : $_execfile"
+         else
+            lvl="INFO"
+            msgid="path008i"
+
+            if [ -z "$user" -a -z "$srcfile" ]; then
+               msg="Setuid program $_execfile does not have proper ownership in the global system PATH $msg."
+            else
+               msg="Setuid program $_execfile in $user's PATH from $srcfile does not have proper ownership $msg."
+            fi
+         fi
+
+         message $lvl $msgid "" "$msg"
+      }
+   done
+}
+
+check_global_permissions()
+{
+   file=$1
+
+   while read dir
+   do
+      check_permissions $dir $Tiger_ROOT_PATH_OK_Owners $Tiger_ROOT_PATH_OK_Group_Write
+   done < $file
+}
+
+#
+# This function serves as an intelligent file grep command.
+#
+path_grep()
+{
+   file=$1
+   val=$2
+   
+   # Set the default tokens for sh and csh.
+   [ -z "$val" ] && val="^PATH=|^setenvPATH"
+
+   path=`$SED -e 's/#.*$//' \
+              -e 's/;//g' \
+              -e 's/&&//g' \
+              -e 's/||//g' \
+              -e 's/[ 	]//g' \
+         $file |
+         $EGREP "$val" |
+         $SED -e 's/^PATH=//' \
+              -e 's/^setenvPATH//' \
+              -e 's/^$val//' \
+              -e 's/["{}]//g'`
+
+   echo $path | $TR ' ' ':'
+}
+
+#
+# This function parses either Bourne and CSH style initializaiton
+# files and resolves the PATH into directories stored in the
+# outfile.
+#
+parse_file()
+{
+   infile=$1
+   outfile=$2
+   sys_path=$3
+
+   path=`path_grep $infile`
+
+   seen=":PATH:"
+
+   while [ -n "$path" ]
+   do
+      token=${path%%:*}
+      path=${path##${token}}
+      path=${path##:}
+
+      # Handle the $(...) and `...` tokens.
+      [[ "$token" = \$\\\(*\\\) ]] || [[ "$token" = \`*\` ]] && {
+         eval tmp_path=$token
+         path=`echo $tmp_path | $SED -e 's/["{}]//g'`:$path
+         continue
+      }
+
+      # Handle the wildcard tokens.
+      [[ "$token" = \* ]] && {
+         tmp_path=`$LS -d $token`
+         path=`echo $tmp_path | $SED -e 's/["{}]//g' -e 's/ /:/g'`:$path
+         continue
+      }
+
+      # Handle the $HOME environment variable
+      [[ "$token" = \$HOME* ]] && {
+         echo "~\$user/${token##\$HOME}" >> $outfile
+         continue
+      }
+
+      # Handle . in PATH
+      [[ "$token" = \. ]] && {
+         message WARN path005w "" "'.' is included in PATH (source: $infile)."
+         continue
+      }
+
+      # Handle the $ENV tokens.
+      [[ "$token" = \$* ]] && {
+         token=${token##$}
+
+         [[ "$seen" = *:$token:* ]] && continue
+	 seen=$seen:$token:
+
+         path=`path_grep $infile $token=`:$path
+         continue
+      }
+      
+      # Handle the directory tokens.
+      $BINDIR/realpath "$token" >> $outfile
+   done
+}
+
+#
+# This function checks the files in the global system paths for problems.
+#
+check_global_paths()
+{
+   [ -z "$Tiger_Global_PATH" ] && return
+
+   SYS_BSH_PATH=$WORKDIR/sys_bsh_path
+   SYS_CSH_PATH=$WORKDIR/sys_csh_path
+
+   for file in $Tiger_Global_PATH
+   do
+      [ ! -r $file ] && continue
+
+      case $file in
+         /etc/profile)
+            parse_file $file $SYS_BSH_PATH
+            ;;
+
+         /etc/csh.login)
+            parse_file $file $SYS_CSH_PATH
+            ;;
+
+         *)
+            message WARN path010w "" "Do not know how to parse global path file: $file. Skipping..."
+            ;;
+      esac
+   done
+
+   # Verify the PATH is initilized for the Bourne style shells.
+   if [ -s $SYS_BSH_PATH ]; then
+      $CAT $SYS_BSH_PATH >> $SYS_PATH.$$
+   else
+      message WARN path009w "" "The Bourne shell initizlization file(s) does not export an initial setting for PATH."
+   fi
+
+   # Verify the PATH is initilized for the C style shells.
+   if [  -s $SYS_CSH_PATH ]; then
+      $CAT $SYS_CSH_PATH >> $SYS_PATH.$$
+   else
+      message WARN path009w "" "The C shell initizlization file(s) does not export an initial setting for PATH."
+   fi
+
+   # Seperate out the System Default Path into the proper format in the $SYS_PATH file.
+   echo "$SYSDEFAULTPATH" | 
+   $TR ':' '\012' |
+   while read dir
+   do
+      $BINDIR/realpath $dir >> $SYS_PATH.$$
+   done
+
+   # Sort and uniq the generic $SYS_PATH file.
+   $SORT -u $SYS_PATH.$$ > $SYS_PATH
+
+   # Clean up the temporary files.
+   delete $SYS_PATH.$$ $SYS_BSH_PATH $SYS_CSH_PATH
+   delete $SYS_BSH_PATH $SYS_CSH_PATH
+}
+
+check_user()
+{
+   user="$1"
+   home="$2"
+   uid="$3"
+ 
+   # Initialized the USR_PATH file.
+   USR_PATH=$WORKDIR/usr_path
+   >$USR_PATH
+
+   # Check for ~ entries in the SYS_PATH (i.e. $HOME/bin)
+   $GREP '^~\$user' $SYS_PATH |
+   while read dir1
+   do
+      eval dir=`echo $dir1 | $SED -e 's/~\$user/$home/'`
+      $BINDIR/realpath $dir >> $USR_PATH
+   done
+
+   # Check for PATH settings in these 'dot' files.
+   for file in .profile .cshrc .login .tcshrc .bash_profile .bashrc .kshrc
+   do
+      [ -s $home/$file ] && parse_file $home/$file $USR_PATH
+   done
+
+   # Did we find a PATH for the user?
+   [ ! -s $USR_PATH ] && return
+
+   # Sort and uniq the $USR_PATH file.
+   $SORT -u $USR_PATH | 
+   $JOIN -j 1 -v 2 $SYS_PATH - |
+   while read dir
+   do 
+      if [ $uid = '0' ]; then
+         check_permissions $dir $Tiger_ROOT_PATH_OK_Owners $Tiger_ROOT_PATH_OK_Group_Write
+      else
+	 ownok="$Tiger_PATH_OK_Owners\|$user"
+	 groupok="$Tiger_PATH_OK_Group_Write\|$user"
+         check_permissions $dir $ownok $groupok $user
+      fi
+   done
+ 
+   # Cleanup
+   delete $USR_PATH
+}
+
+SYS_PATH=$WORKDIR/sys_path
+[ -z "$SYSDEFAULTPATH" ] && SYS="/bin:/usr/bin:/usr/sbin"
+
+check_global_paths
+check_global_permissions $SYS_PATH
+
+{
+  if [ "$Tiger_Check_PATHALL" = 'Y' ]; then
+    haveallcmds GEN_PASSWD_SETS &&
+    haveallvars HOSTNAME && {
+      {
+	if [ -n "$Tiger_PasswdFiles" ]; then
+	  [ -f $Tiger_PasswdFiles ] && $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+	else
+	  $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
+	fi
+      }
+
+      while read passwd_set
+      do
+	echo
+	echo "# Checking accounts from `$CAT $passwd_set.src`..."
+  
+	$AWK -F: '{print $1, $6}' $passwd_set |
+	$SORT -u |
+	$BASEDIR/util/${GETFSHOST:=getfs-std} > $WORKDIR/home.hosts.$$
+
+	$AWK -F: '{print $1, $6, $3}' $passwd_set |
+	$SORT -u |
+	$JOIN -o 1.1 1.2 2.3 1.3 - $WORKDIR/home.hosts.$$ |
+	while read user homedir host uid
+	do
+	  [ "$host" = "$HOSTNAME" ] && check_user $user $homedir $uid
+	done
+	[ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
+	delete $WORKDIR/home.hosts.$$
+      done < $WORKDIR/pass.list.$$
+      delete $WORKDIR/pass.list.$$
+    }
+  else
+    echo "# Only checking user 'root'"
+    check_user root ~root 0
+  fi
+} |
+$OUTPUTMETHOD
+
+delete $SYS_PATH
+  	 
+exit 0
