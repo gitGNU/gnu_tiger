@@ -33,8 +33,9 @@ tiger (3.2.1-1) unstable; urgency=low
     tiger-otheros
   * Added patch for new po-debconf format (Closes: #186800)
   * (but changed it so that the 'root' user is not translatable)
+  * Updated to latest Debian advisories.
 
- -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri, 19 Sep 2003 02:33:00 +0200
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri, 10 Oct 2003 19:19:36 +0200
 
 tiger (3.2-4) unstable; urgency=low
 
