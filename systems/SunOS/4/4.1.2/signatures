@@ -1,0 +1,206 @@
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/4.1.2/signatures - 04/22/93
+#
+#-----------------------------------------------------------------------------
+#@DEST=SunOS/4/4.1.2
+#@CONFIG=SunOS/4
+#
+# SunOS 4.1.2 signature file
+#
+#--------------------
+#
+# Latest patch 10063[013]-01
+#
+#Y .       /usr/bin/login 9bf0d57b b22ed30a 488cdb71 b79d0b3c 34718fb7 c5404441 92b9f84c 5438db5e Sun Patch ID 100630-01
+Y .       /usr/bin/login b6d013403c54949c0e476afd966ef261 Sun Patch ID 100630-01
+Y .       /usr/bin/login 0d52a2d5 ec4bee3b cbbbea64 8b96c8fd 77022448 c5142a46 f254cf09 474489e1 Sun Patch ID 100631-01
+O sig006w /usr/bin/login 9ec4f81b 39a28e3c 26b929ac f89f79e3 3fe9d56c f8192195 98b80da3 7220d937 Sun Patch ID 100633-01 (obsoleted by 100632)
+O sig006w /usr/bin/login 0569605f 54f71319 91f2b515 3d125296 06b4cbfa 7b117e17 b8379924 6d9fd3a7 SunOS 4.1.2 (security patch is 100630)
+# I have no idea where I got this signature from....
+#O         /usr/bin/login 6aea2e26 4067ce34 c4d2140b 1991db70 ecdf9fae 6f345ae4 42057f93 75bfa215 unknown source (security patch is 100630)
+N sig007a /usr/bin/login 1aa8fe34 6a0ef1f7 6fc46ccb 1404cdeb 3a00872e 006dffc2 9e5b070c 31bac62b contains a backdoor (0892).
+N sig007a /usr/bin/login 59b3d2647a90f070159393bff6a67dba contains a backdoor(1293).
+#
+# Latest patch 10063[03]-02
+#
+Y .       /usr/5bin/su fcde9cae281869964f794bafcc83a5dc Sun Patch ID 100630-02
+O sig019w /usr/5bin/su 65ca43d7 3130938c d59811b5 33a2a088 64760dcb 5bfc45e1 f4625979 cf06759a Sun Patch ID 100630-01 (current is 100630-02)
+O sig006w /usr/5bin/su a0951761 e8c2afc1 09ec172a 44a13bab 5ee4d1a3 58e8eca3 bbd45e49 890cc94d Sun Patch ID 100633-01 (obsoleted by 100632)
+O .	  /usr/5bin/su f9d1fa18 b5b6f990 cac9ce69 bf1e61a7 ef09b193 5c9a615c 57aeaf2e 3cab9718 Sun Patch ID 101074-01
+O sig006w /usr/5bin/su 9401e73b 32f70912 af417c91 77edfb62 c16ed4c9 45f0ce51 e9a5422d 336cbf17 SunOS 4.1.2 (security patch is 100630)
+#
+# Latest patch 10063[03]-01
+#
+#Y .       /usr/bin/su 9634015c a4f05802 e205110e 5550f322 5321be3a 85b12ea9 16b6eb27 0f6c3bd4 Sun Patch ID 100630-01
+Y .       /usr/bin/su 01a06e1cf3b7272cfe28aa548037f578 Sun Patch ID 100630-01
+O sig006w /usr/bin/su f7be0a3d c533db79 57c1273f 8959b1fc 59a814d8 b5c441c4 47774863 1c5e4340 Sun Patch ID 100633-01 (obsoleted by 100632)
+O sig006w /usr/bin/su 0ec1cc82 0186205c 1ab54c9b cf60c29e f5549220 84f66932 0b9b1fff 906d83d4 SunOS 4.1.2 (security patch is 100630)
+#
+# No security patches for these?
+#
+Y .       /usr/etc/in.fingerd bdbf62e0 e4ac826a f098357d 8544dd91 8e0ca694 538da463 baff8410 2206ff9e SunOS 4.1.2
+Y .       /usr/etc/in.ftpd 691ce981 5e47dcef 73011c0b 902015d9 ce6b0768 76eb98fa ecbb0b3f 8a7fcb19 SunOS 4.1.2
+Y .       /usr/etc/in.rexecd a20e0004 78564556 49560a8f d64b95f4 5522bb2d afefba85 864202c1 0f431f68 SunOS 4.1.2
+Y .       /usr/etc/in.rlogind b25208a0 6ce6b4f1 01263c32 f4d72c6a ecdd5ee1 3a45e946 12d82b2a c4cd0d1e SunOS 4.1.2
+Y .       /usr/etc/in.rshd fa5f3b69 acd446bb 63052a29 d034dd1d ac268f3d 9011359a e7ba5cd7 6fcaa736 SunOS 4.1.2
+Y .       /usr/etc/in.telnetd 20fa88d0 420f8144 581b03ff 6e38d24f eab66cce bc34ce29 7a1b6546 693af3bd SunOS 4.1.2
+Y .       /usr/etc/in.tftpd 31207f07 388c0068 1d23730e a42f91ea e5784e42 2ee97a0d 104bc0b0 30f17cee SunOS 4.1.2
+Y .       /usr/etc/in.uucpd e7b37590 5ccf8c4d 49d2ddb4 91de0386 9072ba97 33923bdc d4ef6082 a1d7f39a SunOS 4.1.2
+Y .       /usr/etc/rpc.yppasswdd 25c43eba 9af0b839 6a7e43f0 e67eeac7 49307b99 3a981df2 90228721 7b4cb608 SunOS 4.1.2
+#
+# Latest patch 100482-04
+#
+Y .       /usr/etc/portmap 2b070bc2 787357cf 3e8a066a 5803fa07 ba94dc25 a38ac11a 6c95ef1b fab9da4d Sun Patch ID 100482-04
+O sig008w /usr/etc/portmap d4970849 769874cc 4a45be0f f1639826 00abb3c8 6acc3c52 59698663 630b08bc SunOS 4.1.2 (security patch is 100482)
+#O /usr/etc/portmap 2b070bc2 787357cf 3e8a066a 5803fa07 ba94dc25 a38ac11a 6c95ef1b fab9da4d Sun Patch ID 100482-02
+# No change from 3 to 4
+#O sig008w /usr/etc/portmap 2b070bc2 787357cf 3e8a066a 5803fa07 ba94dc25 a38ac11a 6c95ef1b fab9da4d Sun Patch ID 100482-03 (current is 100482-04)
+#
+# Latest patch 100482-04
+#
+Y .       /usr/etc/ypserv 8d2a364a 383aa4cd 79b5d877 3a0d839a d8af565b 04a8932c f8256a46 3dc625c6 Sun Patch ID 100482-04
+O sig008w /usr/etc/ypserv 3815e2cf 587552c4 ca76020e 6c1ba9cd 523f338a 177a720f 1dca789f c639eaf0 SunOS 4.1.2 (security patch is 100482)
+O sig008w /usr/etc/ypserv f436bdcd 6a5dacad 5df94fc6 6ee51ed7 be6a6e4e 9832f776 74017948 18eceed8 Sun Patch ID 100482-02 (current is 100482-03)
+O sig008w /usr/etc/ypserv 5ae249cd d4bca4e9 a61d71ea 198177bd 5a0ac523 52416fc7 a936e6d5 4b91a92f Sun Patch ID 100482-03 (current is 100482-04)
+#
+# Latest patch 100482-04
+#
+Y .       /usr/etc/ypxfrd 58542fdf e819e473 cf22c25e 1557a700 40edfde9 493555d5 f7c188d2 761aa910 Sun Patch ID 100482-04
+O sig008w /usr/etc/ypxfrd b5344e8f 05828073 84bff8c8 fe439f46 12c9d199 88bf9097 5e1ec667 823aef24 SunOS 4.1.2 (security patch is 100482)
+O sig008w /usr/etc/ypxfrd 1880bd0f 41554f47 15a453f0 2a5313f8 db2cf23b eb9428cd fc8dd9d6 55674c5a Sun Patch ID 100482-02 (current is 100482-03)
+O sig008w /usr/etc/ypxfrd 86681806 4bdf5ecb 6e1baf1e 627b497a 780f6e0b 3e758805 3c7a0f4e 4c995445 Sun Patch ID 100482-03 (current is 100482-04)
+#
+# Latest patch 100377-08
+#
+Y .       /usr/lib/sendmail 1c0c427ccb67b99bec9d43e2d27de435 Sun Patch ID 100377-08
+Y .       /usr/lib/sendmail 4562daccc1f222cc9813d771ee9f9ba0 Sun Patch ID 100377-08
+Y .       /usr/lib/sendmail.mx 4562daccc1f222cc9813d771ee9f9ba0 Sun Patch ID 100377-08
+#
+O sig016w /usr/lib/sendmail 4f98b4090fa4e057b1fee5827f10add6 Sun Patch ID 100377-07 (current is 100377-08)
+O sig016w /usr/lib/sendmail.mx 50f1203d0e7d96807b14549b66f65dbc Sun Patch ID 100377-07 (current is 100377-08)
+O sig016w /usr/lib/sendmail 50f1203d0e7d96807b14549b66f65dbc Sun Patch ID 100377-07 (current is 100377-08)
+O sig016w /usr/lib/sendmail f4af1acc a8778351 2dbc19ac 22870f58 4af1df42 7fe664dc 63c17b51 0fcf323d Sun Patch ID 100377-05 (current is 100377-08)
+O sig016w /usr/lib/sendmail.mx 1c65629d 8f6408a1 2fdd515f bb36dcc5 3d657544 1f4bdc54 3b04ee7f 9c3d057e Sun Patch ID 100377-05 (current is 100377-08)
+O sig016w /usr/lib/sendmail 1c65629d 8f6408a1 2fdd515f bb36dcc5 3d657544 1f4bdc54 3b04ee7f 9c3d057e Sun Patch ID 100377-05 (current is 100377-08)
+O sig009w /usr/lib/sendmail 169cf9f7 764b034d e0a7b9c6 2f2252e3 e3ad4958 9b0d797a 5299ff93 473e6742 SunOS 4.1.2 (security patch is 100377)
+O sig009w /usr/lib/sendmail.mx 22bb8801 d714b972 1436fdf8 b5b4b998 ac54d7f5 8f162089 f86b2390 fed13bae SunOS 4.1.2 (security patch is 100377)
+# This is sendmail.mx...
+O sig009w /usr/lib/sendmail 22bb8801 d714b972 1436fdf8 b5b4b998 ac54d7f5 8f162089 f86b2390 fed13bae SunOS 4.1.2 (security patch is 100377)
+O sig009w /usr/lib/sendmail a992c230 aead192f 3c413509 bcd22a13 94c81901 db304a83 7521f640 71f275ae Sun Patch ID 100377-04 (current is 100377-08)
+O sig009w /usr/lib/sendmail.mx 571ee183 54da7e23 abffdb8f 8bf28180 6b5daf1c 49d935cf 3ae92928 20e26504 Sun Patch ID 100377-04 (current is 100377-08)
+#
+# In case anyone moved sendmail.mx to sendmail (not feasible to
+# try to find the old sendmail binary though)
+#
+O sig009w /usr/lib/sendmail 571ee183 54da7e23 abffdb8f 8bf28180 6b5daf1c 49d935cf 3ae92928 20e26504 Sun Patch ID 100377-04 (current is 100377-08)
+#
+# Ouch
+#
+Y .       /usr/ucb/rdist 9044001a 6fd26174 c2dd7674 ffbd4290 8af17619 ee9c8bc1 73f90eba 2b2f3329 Sun Patch ID 100383-06
+O sig010w /usr/ucb/rdist a0999b90 453db216 cdafcde8 e41886ed b8f92876 64e79dac 86db5191 011a2ebd SunOS 4.1.2 (security patch is 100383)
+# These two are really 4.1.1 patches... but just in case...
+O sig010w /usr/ucb/rdist 8b15daf1 d3193a80 2f21cd5b b5fe8cca 27ebbe0d 041b814b a469ad9f 01d6c58e Sun Patch ID 100383-02 (current is 100383-06)
+O sig010w /usr/ucb/rdist 0995a6ec 53bc67fa eb6d423f 11b1c9eb e5b519b6 c0d0649b ba7bb806 c3fcbbd9 Sun Patch ID 100383-03 (current is 100383-06)
+# -04 && -05 no change
+O sig010w /usr/ucb/rdist e10ba372 06a1f448 c3b4891c 565ee700 e45d1ecd 88a664eb 877c430a 29a522bd Sun Patch ID 100383-05 (current is 100383-06)
+#
+# No security patches for these?
+#
+Y .       /usr/bin/passwd b561a088 2e4061a2 b0edc994 b5b5640c 52d8839c 90c8688e a1e0213c 2e2f940f SunOS 4.1.2
+Y .       /usr/ucb/rlogin 33e58ae0 006ab7f0 cc3a9e1f bf871974 786414f7 4e49ab8d 11173262 dbc48c68 SunOS 4.1.2
+Y .       /usr/ucb/rsh 726464ef 4a2800a7 18613170 16386011 4154e2ab 6599c68d b5d48198 59c19a91 SunOS 4.1.2
+Y .       /usr/ucb/rsh b4932f9d 5963eb67 ea161f73 39605241 7e0ea5c9 0a6786fc eb8070f2 0b2e1f62 Sun Patch ID 100527-01 (optional)
+Y .       /usr/ucb/telnet bd4f73bd 04c4e345 f431a4c1 9fa9b2ca 362039f6 0ceea99e 9b03a0ba 6e52300b SunOS 4.1.2
+#
+# Latest patch 100305-13
+#
+Y .       /usr/bin/cancel ae734f80b9ebd5f1d0612339a498652a Sun Patch ID 100305-13
+Y .       /usr/etc/lpc 30012ee9a97497c514fc4f9bde318fc9 Sun Patch ID 100305-13
+Y .       /usr/lib/lpd fe175642092817a414f6af2b1a41f4cb Sun Patch ID 100305-13
+Y .       /usr/ucb/lpq f4a880652004d4f67c007553e0dd7797 Sun Patch ID 100305-13
+Y .       /usr/ucb/lpr 2b5611daed825ac38db51d720e2f9867 Sun Patch ID 100305-13
+Y .       /usr/ucb/lprm 24e040a265c608cd5df8868a4b97ffa2 Sun Patch ID 100305-13
+Y .       /usr/bin/lpstat 1781c5ca7173efc98be34571f19dee98 Sun Patch ID 100305-13
+Y .       /usr/etc/pac 40f3c9239ce7e466592a46ad0fe5db8f Sun Patch ID 100305-13
+#
+O sig011w /usr/etc/lpc 2a9c4323 367d2b18 fa5d707d 5151ce38 58dbbd3a 6e2f4d56 328d702d c66fd5d7 Sun Patch ID 100305-11 (current is 100305-13)
+O sig011w /usr/lib/lpd 07991c5d 9893cec5 ef97cd63 108abd5b dc964419 56050862 5f4e3cf7 33ccba33 Sun Patch ID 100305-11 (current is 100305-13)
+O sig011w /usr/ucb/lpr 14005051 c271286b 99ae6fb7 bc3e288a c4c082f6 f322a75d f6ce72af 0289582e Sun Patch ID 100305-11 (current is 100305-13)
+O sig011w /usr/ucb/lprm 7b39c917 aee18f80 db841eaa d83f12df 689d053a 9599c16e a4beaca9 5e8b23d7 Sun Patch ID 100305-11 (current is 100305-13)
+O sig011w /usr/bin/lpstat 327233e1 90d1fa8e 2fb6fe23 25a144ab 48db00bd b99e301d 9494cd9c 5068c8ab Sun Patch ID 100305-11 (current is 100305-13)
+O sig011w /usr/bin/lpstat b9b2c20f 88e2bb22 9310f668 0ec78cb2 3cbf0841 643bf300 772efaa3 2082af90 SunOS 4.1.2 (security patch is 100305)
+O sig011w /usr/etc/lpc 865acb09 0b2cde4f 40b41eed 1288e999 9c69fecb 4a1309c6 c2d1bf31 3f410ad2 SunOS 4.1.2 (security patch is 100305)
+O sig011w /usr/etc/pac ff69b150a20d9b855737fbecef26247f SunOS 4.1.2 (security patch is 100305)
+O sig011w /usr/bin/cancel 0aa3fabcab33e6741fc1b87181842ae8 SunOS 4.1.2 (security patch is 100305)
+O sig011w /usr/ucb/lpq bb3f34fe359ccbe65953f490ef208058 SunOS 4.1.2 (security patch is 100305)
+O sig011w /usr/lib/lpd bf35cc21 fdc5d94e 64976e5f c3367b60 6ebb2a03 2ba8f162 debba99e f6763f6b SunOS 4.1.2 (security patch is 100305)
+O sig011w /usr/ucb/lpr 15037b2f 25003510 5aa8068b 1ad29515 057d54b9 e2dcc217 1ca10ade 17fc3548 SunOS 4.1.2 (security patch is 100305)
+O sig011w /usr/ucb/lprm e8f69f81 5aa0e4f5 d65bcdea c10aa2b0 05d46f30 d06e14b7 c1d234e4 d3957efd SunOS 4.1.2 (security patch is 100305)
+#
+O sig011w /usr/lib/lpd 2ae10db0 c5dbc9ef 093234b4 b7cf9cfa d041e6da b2732420 ce4cd459 d053e575 Sun Patch ID 100305-06 (current is 100305-13)
+O sig011w /usr/etc/lpc 73990de8 0b7c8861 6100cfd7 47cff465 6e542c05 2eaa2461 a0dce759 73748ac2 Sun Patch ID 100305-06 (current is 100305-13)
+O sig011w /usr/ucb/lpr 4ef627c5 8389c520 8c72ca5f 410c9006 b1cf0587 76cca697 28ea21bd 968f45bb Sun Patch ID 100305-06 (current is 100305-13)
+# No change from 10 to 11
+#O sig011w /usr/etc/lpc 2a9c4323 367d2b18 fa5d707d 5151ce38 58dbbd3a 6e2f4d56 328d702d c66fd5d7 Sun Patch ID 100305-10 (current is 100305-13)
+# No change from 10 to 11
+#O sig011w /usr/lib/lpd 07991c5d 9893cec5 ef97cd63 108abd5b dc964419 56050862 5f4e3cf7 33ccba33 Sun Patch ID 100305-10 (current is 100305-13)
+O sig011w /usr/ucb/lpr 3c98c23e e060fa3b 69d7cbbd a9f97eed 438cffea 6f854d93 5ef3812c bad8e310 Sun Patch ID 100305-10 (current is 100305-13)
+# No change from 10 to 11
+#O /usr/bin/lpstat 327233e1 90d1fa8e 2fb6fe23 25a144ab 48db00bd b99e301d 9494cd9c 5068c8ab Sun Patch ID 100305-10 (current is 100305-13)
+#
+#
+#
+Y .       /usr/etc/rpc.mountd 8b691d28 357238d7 da59cc59 cac7a886 814d67c9 3c8c02b6 cf6cdb66 910fa930 Sun Patch ID 100296-04
+O sig012w /usr/etc/rpc.mountd da05c7c9 48825d42 bb016106 60e4442c 5ddcc813 7962c4c9 b358460f fe52b0f3 SunOS 4.1.2 (security patch is 100296)
+#
+Y .       /usr/lib/expreserve 416cf865 f308e029 62994394 85b7b54c cca36972 9b559d0c 82b0c2f1 cca6f7a0 Sun Patch ID 101080-01
+O sig014w /usr/lib/expreserve 99105d0f b93d2da3 640c9f86 03b83611 d7ca70d1 ffbd53ef da160ccd 5adc271c SunOS 4.1.2 (security patch is 101080)
+#
+#------------------------------------------------------------------------
+#
+Y .       /usr/bin/mail d8a54f3e1e3c4cf75d715f8a1eb75224 Sun Patch ID 100224-06
+Y .       /usr/bin/rmail 741d2bf81e6f940fe6ed4b69842a8bd8 Sun Patch ID 100224-06
+O sig015w /usr/bin/rmail 41b49824f2b647d5f6dfeb855506f5bd SunOS 4.1.2 (security patch is 100224)
+O sig015w /usr/bin/mail a641482c73b99f369807aefa5084b73d SunOS 4.1.2 (security patch is 100224)
+O sig015w /usr/bin/mail 8b99f60ea55bd909033b383a71da46fb Sun Patch ID 100224-03 (current is 100224-06)
+O sig015w /usr/bin/rmail 741d2bf81e6f940fe6ed4b69842a8bd8 Sun Patch ID 100224-03 (current is 100224-06)
+O sig015w /usr/bin/mail 8212031f6d4b4b0b8798865ef265d9a2 Sun Patch ID 100224-05 (current is 100224-06)
+O sig015w /usr/bin/rmail 741d2bf81e6f940fe6ed4b69842a8bd8 Sun Patch ID 100224-05 (current is 100224-06)
+#
+#
+#
+Y .       /usr/bin/sh 2773aae7944159fe358ddb8670e32e94 SunOS 4.1.2
+Y .       /usr/bin/csh 95298b9ebe9d25d54645ace1d32e40ed SunOS 4.1.2
+Y .       /usr/bin/sync d8aeacfe87c77937758605ac4c671b0e SunOS 4.1.2
+#
+#
+#
+Y .       /usr/kvm/modload 1120180f18b39020f1f2b5af91eb7931 Sun Patch ID 101200-02
+Y .       /usr/kvm/modload f589cf8e213993f7df14fde98b7944b7 Sun Patch ID 101200-02 (4.1.3 version)
+O sig018w /usr/kvm/modload c010c7948a680b9c0e882bf91939222b SunOS 4.1.2 (security patch is 101200-02)
+#
+#
+#
+Y .       /usr/openwin/bin/loadmodule 0a9216dfe1a8826c4d5e426869370d0a Sun Patch ID 100448-02
+O ca9122f /usr/openwin/bin/loadmodule 0a309572264fc3da2e81c9b2ef4ccbbf Sun Patch ID 100448-01 (current is 100448-02)
+O ca9122f /usr/openwin/bin/loadmodule 5e62adcc ac948154 e45237db 33b9153d 0e0ccad8 2de71646 84486f31 1b32eda8 OpenWindows 3.0 (security patch is 100448)
+#
+Y . /usr/etc/in.comsat 8fc5bcf30e4386faf6f6c1d58ce771ad Sun Patch ID 100272-07
+O sig022w /usr/etc/in.comsat 7a99d91fc27e5c0b11014f10dbcadc67 SunOS 4.1.2 (security patch is 100272-07)
+Y . /usr/etc/dump 7ef7e80e43bbe4d56334eefbd1af3897 Sun Patch ID 100593-03 [sun4/m]
+Y . /usr/etc/dump eabfd5355fcecaf1fd81a4d0a5d3b2c9 Sun Patch ID 100593-03 [sun4c]
+O sig022w /usr/etc/dump 68be76a88818ccff484d3fd42b0831e7 SunOS 4.1.2 (security patch is 100593-03)
+Y . /usr/etc/syslogd 96f12c70ebb6968bb84834fd2f5a681e Sun Patch ID 100909-02 [sun4]
+Y . /usr/etc/syslogd 8b61c8293d99423a998d22ee1ca9070c Sun Patch ID 100909-02 [sun4c/m]
+O sig022w /usr/etc/syslogd bacb1a095ecf647bb938362da7f151a9 SunOS 4.1.2 (security patch is 100909-02)
+Y . /usr/etc/in.talkd afd3f56cd8ad9765fed95b9c8e03080b Sun Patch ID 101480-01
+O sig022w /usr/etc/in.talkd 82b5e713c026610053412542a8a5dce3 SunOS 4.1.2 (security patch is 101480-01)
+Y . /usr/etc/shutdown 73451bda24f737baeb6abfb944e59b2a Sun Patch ID 101481-01
+O sig022w /usr/etc/shutdown 28804e3aaac402ac63123f3ee2e994fe SunOS 4.1.2 (security patch is 101481-01)
+Y . /usr/bin/write 5df0008a0212bd6af043861e2ceee129 Sun Patch ID 101482-01
+O sig022w /usr/bin/write cc042cd7581e33c86d2ad635c7f83c5e SunOS 4.1.2 (security patch is 101482-01)

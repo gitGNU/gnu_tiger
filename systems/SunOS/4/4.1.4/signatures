@@ -1,0 +1,157 @@
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993-1995 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/4/4.1.4/signatures - 02/21/1995
+#
+#-----------------------------------------------------------------------------
+#
+#
+#@DEST=SunOS/4/4.1.4
+#@CONFIG=SunOS/4
+#
+# Generated 1995/02/21 dls
+#
+Y .       /usr/5lib/libc.a 59564a4e13bbb5e85b4294348b4e89f1 SunOS 4.1.4
+Y .       /usr/5lib/libc.sa.2.9 596defb212cc8c26aa4b5f905a09c62b SunOS 4.1.4
+Y .       /usr/5lib/libc.so.2.9 cc3ea26809fd9f0a9f3bc89163468dfa SunOS 4.1.4
+Y .       /usr/5lib/libc_p.a 7dbe06991d84c921f7676e27c03d4028 SunOS 4.1.4
+Y .       /usr/bin/at fd04aff22e46da9408e7b0f8d3e9062a SunOS 4.1.4
+Y .       /usr/bin/atq df09c6e0ae45425e716a7a65d02ac3c2 SunOS 4.1.4
+Y .       /usr/bin/atrm d5a9b5e69e45e35c792bd2b0a56fdb70 SunOS 4.1.4
+Y .       /usr/bin/cancel 45fc8d4230cb400f8853df0ae4076efa SunOS 4.1.4
+Y .       /usr/bin/csh f8c1a91c2fb063b756e14b8734e06f65 SunOS 4.1.4
+Y .       /usr/bin/login 4e437a85e05f886ff5082ac58108d882 SunOS 4.1.4
+Y .       /usr/bin/lorder 771c6154148387b27e373509a9895c97 SunOS 4.1.4
+Y .       /usr/bin/lp 4545f16f6f6c97f2bb8c470344339d36 SunOS 4.1.4
+Y .       /usr/bin/lpstat b5e617320a3256134732d0adc47eaa33 SunOS 4.1.4
+Y .       /usr/bin/mail 7b8756a37046ffaac4796bd1c1c65307 SunOS 4.1.4
+Y .       /usr/bin/passwd 4993b83597e7b78f6dadaca38bf64a7a SunOS 4.1.4
+Y .       /usr/bin/sh 451056f590c0d9b050dd92c9f3dd953c SunOS 4.1.4
+Y .       /usr/bin/stty 40f9bde92be9d45bf844511067e46aea SunOS 4.1.4
+Y .       /usr/bin/su 7ef5c44b186798a32eb1dd8645e1d4a8 SunOS 4.1.4
+Y .       /usr/bin/sync 4c8a421150f254ec87cb737c114973b6 SunOS 4.1.4
+Y .       /usr/bin/time fe37fefcf892fc274776989948cfa47f SunOS 4.1.4
+Y .       /usr/bin/ypcat 837e627455433615e9a1bbb6e15349e5 SunOS 4.1.4
+Y .       /usr/bin/ypchfn 4993b83597e7b78f6dadaca38bf64a7a SunOS 4.1.4
+Y .       /usr/bin/ypchsh 4993b83597e7b78f6dadaca38bf64a7a SunOS 4.1.4
+Y .       /usr/bin/ypmatch c88389000039ef435747e647d3542b55 SunOS 4.1.4
+Y .       /usr/bin/yppasswd 4993b83597e7b78f6dadaca38bf64a7a SunOS 4.1.4
+Y .       /usr/bin/ypwhich 91e86eb99306b3fa34a1dab769c59461 SunOS 4.1.4
+Y .       /usr/etc/arp 2fa9c719529668515f82f3f877ca715a SunOS 4.1.4
+Y .       /usr/etc/cron ff541dbc881c6484324b84dce0b1bbca SunOS 4.1.4
+Y .       /usr/etc/ifconfig 71ac42458871da30affed3d145454c04 SunOS 4.1.4
+Y .       /usr/etc/in.comsat 5831f81874fa405eeefc1ec69ee1f116 SunOS 4.1.4
+Y .       /usr/etc/in.fingerd b9f3343aff8553ce7e19632b751d8dc9 SunOS 4.1.4
+Y .       /usr/etc/in.ftpd ced2e8cfe199607b07123ba25d5eadfc SunOS 4.1.4
+Y .       /usr/etc/in.named 8b6afe26fe80e8246f2bdad9b7cee256 SunOS 4.1.4
+Y .       /usr/etc/in.named-xfer 2cb89b6c2bce1528b7df4bfdc3bab5e5 SunOS 4.1.4
+Y .       /usr/etc/in.rexecd 0ca40ee9967204d372ca29dd4ba9d6da SunOS 4.1.4
+Y .       /usr/etc/in.rlogind 508ce964864811a0253a41a49895152b SunOS 4.1.4
+Y .       /usr/etc/in.routed e530b7629f63e2b620881b4da99c62b3 SunOS 4.1.4
+Y .       /usr/etc/in.rshd e5ca89c51427d917690fbcc1395507b4 SunOS 4.1.4
+Y .       /usr/etc/in.rwhod 2104577a216bb1ee087ff879e81d9d42 SunOS 4.1.4
+Y .       /usr/etc/in.talkd fdaca27c9144059aa98f135a0acb0cc3 SunOS 4.1.4
+Y .       /usr/etc/in.telnetd 831c59628b1197c612f19289a786eaeb SunOS 4.1.4
+Y .       /usr/etc/in.tftpd d21b378151ed5912115e6aeb95a5e5c2 SunOS 4.1.4
+Y .       /usr/etc/in.tnamed 146623065e48a866555319c25a30ad05 SunOS 4.1.4
+Y .       /usr/etc/in.uucpd 8404d0922a2fb8cc85ce4284ea734802 SunOS 4.1.4
+Y .       /usr/etc/inetd 90ef68b37e72506151750a780a694251 SunOS 4.1.4
+Y .       /usr/etc/init 0c9c5e6106e577a342a64e6a17c0cc3c SunOS 4.1.4
+Y .       /usr/etc/lpc d58fd60b06d09730fcb31d20d019438b SunOS 4.1.4
+Y .       /usr/etc/pac 5ed1b82ad79eef70c5a10d1b217a0e98 SunOS 4.1.4
+Y .       /usr/etc/portmap a93ad8329178b74bed8fa5805141f2ee SunOS 4.1.4
+Y .       /usr/etc/rarpd 3dbcfc063fcf2963a6c31f3f1a8d5383 SunOS 4.1.4
+Y .       /usr/etc/rpc.bootparamd 90d7233199c13b332508b4222ed610d8 SunOS 4.1.4
+Y .       /usr/etc/rpc.cmsd edd5e59a9ba607fe50a7088afde6bc3f SunOS 4.1.4
+Y .       /usr/etc/rpc.etherd 572b891b99c84ea06ac1705e6bf73c02 SunOS 4.1.4
+Y .       /usr/etc/rpc.lockd a41516c10c00351f152c6d0857b6a9f5 SunOS 4.1.4
+Y .       /usr/etc/rpc.mountd 703c9d73bc27df4ef6c4a47bd9744669 SunOS 4.1.4
+Y .       /usr/etc/rpc.pwdauthd 8afdfc2cc894ebdf43f22193a256800c SunOS 4.1.4
+Y .       /usr/etc/rpc.rexd df76d0c8f23c6b98791a8f5d05264870 SunOS 4.1.4
+Y .       /usr/etc/rpc.rquotad a90935937a3abe7b1c6242fabba64fe0 SunOS 4.1.4
+Y .       /usr/etc/rpc.rstatd deafa0c8d72e4f1e4969de106a0e22f7 SunOS 4.1.4
+Y .       /usr/etc/rpc.rusersd d1f44672fc933008001f65a387ac56de SunOS 4.1.4
+Y .       /usr/etc/rpc.rwalld 1db7ed476eb88dd302d9818e96afe73f SunOS 4.1.4
+Y .       /usr/etc/rpc.showfhd c02b12322da4c555d2b2c5e66839c45a SunOS 4.1.4
+Y .       /usr/etc/rpc.sprayd d05b4f5ce92da953dc76881182d96a15 SunOS 4.1.4
+Y .       /usr/etc/rpc.statd 3ad65cb47cd00bbe1e58b7cdfd5fafe0 SunOS 4.1.4
+Y .       /usr/etc/rpc.ttdbserverd fc8b169ee9f539f247fd0b2b03513905 SunOS 4.1.4
+Y .       /usr/etc/rpc.yppasswdd 4090612f06a549cd32df035925def5b5 SunOS 4.1.4
+Y .       /usr/etc/rpc.ypupdated 4a4549ced1cea7bc74a0bc0dc9dffd50 SunOS 4.1.4
+Y .       /usr/etc/showmount ab0395eae9e62cc800ea9c7aed858124 SunOS 4.1.4
+Y .       /usr/etc/shutdown 4530170f27270624d7c7d1c26de368df SunOS 4.1.4
+Y .       /usr/etc/syslogd e4f990216c6e999ebeb5981956ca250e SunOS 4.1.4
+Y .       /usr/etc/ypbind b45619670d1136e16ba1e13aa7c10c5d SunOS 4.1.4
+Y .       /usr/etc/ypserv a73f06b09fc2e0ce768ec9102ac4eebe SunOS 4.1.4
+Y .       /usr/etc/ypxfrd 5cde8b44417f1128ca81bd3a05a72e46 SunOS 4.1.4
+Y .       /usr/lib/crt0.o d8094538d81002aa96b29671f0d79f9f SunOS 4.1.4
+Y .       /usr/lib/expreserve d332f2a208cb96fbace758d814e1a2f2 SunOS 4.1.4
+Y .       /usr/lib/exrecover 30f6b9ed231c2c8704e1286b6743409a SunOS 4.1.4
+Y .       /usr/lib/gcrt0.o ca7931e86be870926e29ccdc70e37aae SunOS 4.1.4
+Y .       /usr/lib/libc.a b05e3a35f627f6b43a60851a6fb487a8 SunOS 4.1.4
+Y .       /usr/lib/libc.sa.1.9 2a35e5b7eaa9666b9a5773d92ac71b2f SunOS 4.1.4
+Y .       /usr/lib/libc.so.1.9 8edfeb4cfb2c22a435a5fe29d14c4e99 SunOS 4.1.4
+Y .       /usr/lib/lpd 24a6a91e8051a9adf42aeb6a933a2cd8 SunOS 4.1.4
+Y .       /usr/lib/newsyslog 7232b3b6da29c3c799dbfaee0ac01661 SunOS 4.1.4
+Y .       /usr/lib/rsh 451056f590c0d9b050dd92c9f3dd953c SunOS 4.1.4
+Y .       /usr/lib/sendmail 25284f7969805edba9f0aabfe0508712 Sun Patch ID 102356-01
+Y .       /usr/lib/sendmail 7cc0561a362fbd17d8d1d4d8695ca536 Sun Patch ID 102356-01
+Y .       /usr/lib/sendmail.mx 7cc0561a362fbd17d8d1d4d8695ca536 Sun Patch ID 102356-01
+O .       /usr/lib/sendmail 96bc463764a66c2cc5fb4582c7e82d39 SunOS 4.1.4 (security patch is 102356)
+O .       /usr/lib/sendmail 7dfb19d38e6a7b7776d6a78f04b76bea SunOS 4.1.4 (security patch is 102356)
+O .       /usr/lib/sendmail.mx 7dfb19d38e6a7b7776d6a78f04b76bea SunOS 4.1.4 (security patch is 102356)
+Y .       /usr/ucb/ftp 7ef8cd94928509dfb9867b07ae039e08 SunOS 4.1.4
+Y .       /usr/ucb/lastcomm ccb6add2b967c1026833677d36af8131 SunOS 4.1.4
+Y .       /usr/ucb/lpq 5e6d326adb20f2f52d66bfd640d0e9b3 SunOS 4.1.4
+Y .       /usr/ucb/lpr 4545f16f6f6c97f2bb8c470344339d36 SunOS 4.1.4
+Y .       /usr/ucb/lprm e8a9b18c4a85d0675765817173e16e94 SunOS 4.1.4
+Y .       /usr/ucb/lptest 0d68fb1efbcc1fd94a67a434c2c19d5d SunOS 4.1.4
+Y .       /usr/ucb/mail 9003cc07d4c54448fadf0948bf7a6d70 SunOS 4.1.4
+Y .       /usr/ucb/netstat 15bfd27474585b48bcd9d5def568ecf3 SunOS 4.1.4
+Y .       /usr/ucb/rcp 2720e68ba8c48f8cd80f91587c34605a SunOS 4.1.4
+Y .       /usr/ucb/rdist 61bb4e10dc6f4fcc63036f733ad07f88 SunOS 4.1.4
+Y .       /usr/ucb/rlogin 1b6eac9de2be4f9e08b6a845e8ecae42 SunOS 4.1.4
+Y .       /usr/ucb/rsh 09954062ab76eeecfe22a3c7742fca03 SunOS 4.1.4
+Y .       /usr/ucb/telnet fddd56dc93822b7c57d24233b34f0e85 SunOS 4.1.4
+#
+# Sun4 specific signatures
+#
+Y .       /usr/boot/ifconfig 71ac42458871da30affed3d145454c04 SunOS 4.1.4 sun4
+Y .       /usr/stand/sh 451056f590c0d9b050dd92c9f3dd953c SunOS 4.1.4 sun4
+Y .       /usr/bin/arch 386fc04c78fa25f101760b0e8733bf6e SunOS 4.1.4 sun4
+Y .       /usr/kvm/arch 386fc04c78fa25f101760b0e8733bf6e SunOS 4.1.4 sun4
+Y .       /usr/kvm/ps a68a59549da6f6976046a2f543a5a9e8 SunOS 4.1.4 sun4
+Y .       /usr/ucb/ps a68a59549da6f6976046a2f543a5a9e8 SunOS 4.1.4 sun4
+Y .       /usr/kvm/modload 2bc5c23021221c7324606210b69cdaab SunOS 4.1.4 sun4
+Y .       /usr/etc/modload 2bc5c23021221c7324606210b69cdaab SunOS 4.1.4 sun4
+Y .       /usr/kvm/fuser 2fc72b4f7cc0a2c18a65254966548b7f SunOS 4.1.4 sun4
+Y .       /usr/etc/fuser 2fc72b4f7cc0a2c18a65254966548b7f SunOS 4.1.4 sun4
+#
+# Sun4c specific signatures
+#
+Y .       /usr/boot/ifconfig 71ac42458871da30affed3d145454c04 SunOS 4.1.4 sun4c
+Y .       /usr/stand/sh 451056f590c0d9b050dd92c9f3dd953c SunOS 4.1.4 sun4c
+Y .       /usr/bin/arch 386fc04c78fa25f101760b0e8733bf6e SunOS 4.1.4 sun4c
+Y .       /usr/kvm/arch 386fc04c78fa25f101760b0e8733bf6e SunOS 4.1.4 sun4c
+Y .       /usr/bin/ps 898ee9e4a0f2800eb17c64316527f34a SunOS 4.1.4 sun4c
+Y .       /usr/kvm/ps 898ee9e4a0f2800eb17c64316527f34a SunOS 4.1.4 sun4c
+Y .       /usr/etc/modload 7bf4f04dbddc17793473baab92adbbb7 SunOS 4.1.4 sun4c
+Y .       /usr/kvm/modload 7bf4f04dbddc17793473baab92adbbb7 SunOS 4.1.4 sun4c
+Y .       /usr/etc/fuser 2fc72b4f7cc0a2c18a65254966548b7f SunOS 4.1.4 sun4c
+Y .       /usr/kvm/fuser 2fc72b4f7cc0a2c18a65254966548b7f SunOS 4.1.4 sun4c
+#
+# Sun4m specific signatures
+#
+Y .       /usr/boot/ifconfig 71ac42458871da30affed3d145454c04 SunOS 4.1.4 sun4m
+Y .       /usr/stand/sh 451056f590c0d9b050dd92c9f3dd953c SunOS 4.1.4 sun4m
+Y .       /usr/bin/arch 386fc04c78fa25f101760b0e8733bf6e SunOS 4.1.4 sun4m
+Y .       /usr/kvm/arch 386fc04c78fa25f101760b0e8733bf6e SunOS 4.1.4 sun4m
+Y .       /usr/ucb/ps c571a27630c29c03d64446104f32805b SunOS 4.1.4 sun4m
+Y .       /usr/kvm/ps c571a27630c29c03d64446104f32805b SunOS 4.1.4 sun4m
+Y .       /usr/kvm/modload dedc25bd08f5caf596458891f3568fbd SunOS 4.1.4 sun4m
+Y .       /usr/etc/modload dedc25bd08f5caf596458891f3568fbd SunOS 4.1.4 sun4m
+Y .       /usr/kvm/fuser f69e944cf6296b7a8d4ea0d970cafbc6 SunOS 4.1.4 sun4m
+Y .       /usr/etc/fuser f69e944cf6296b7a8d4ea0d970cafbc6 SunOS 4.1.4 sun4m
