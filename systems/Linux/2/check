@@ -106,3 +106,8 @@ SYSTEMDIR=$BASEDIR/systems/Linux/2
   $SYSTEMDIR/check_rcumask
 }
 
+[ "$Tiger_Check_NEVERLOG" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for users which have not logged in..."
+  $SYSTEMDIR/check_neverlogin
+}
+
