@@ -24,6 +24,7 @@
 # 06/26/2003 - jfs - Exported command to check for trusted mode and 
 #                    also some variables which were defined but not exported.
 #                    Added GRPCK.
+# 11/18/2003 - jfs - Add EXPAND (patch from  Ryan Bradetich)
 #
 #-----------------------------------------------------------------------------
 #
@@ -70,6 +71,7 @@ WC=/bin/wc
 TEE=/bin/tee
 MESG=/usr/bin/mesg
 ID=/usr/bin/id
+EXPAND=/usr/bin/expand
 CUT=/usr/bin/cut
 # Setup PWCK depending on the status of the system
 # (is it in trusted mode?)
@@ -104,7 +106,8 @@ SENDMAILCF="/usr/lib/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL HEAD MV TR JOIN GROUPSS FILECMD UNIQ PASTE
-export BASENAME CHOWN CHMOD LN DIFF MAILER WC TEE ID CUT MESG PWCK GRPCK GETPRDEF
+export BASENAME CHOWN CHMOD LN DIFF MAILER WC TEE ID EXPAN CUT MESG
+export PWCK GRPCK GETPRDEF
 export SSHD_CONFIG SENDMAILS SENDMAILCF
 #
 UNAME=/bin/uname

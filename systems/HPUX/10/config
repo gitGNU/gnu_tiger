@@ -15,7 +15,8 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# HPUX/config - 06/14/93
+# HPUX/10/config - 06/14/93
+# 11/18/2003 - jfs - Add EXPAND (patch from  Ryan Bradetich)
 #
 #-----------------------------------------------------------------------------
 #
@@ -60,6 +61,7 @@ CHMOD=/bin/chmod
 LN=/bin/ln
 WC=/bin/wc
 TEE=/bin/tee
+EXPAND=/usr/bin/expand
 #
 # Disable diff because it doesn't support -D... so we can not
 # use diff... this will cause reports to be mailed as is... future
@@ -71,8 +73,8 @@ SENDMAILS="/usr/lib/sendmail"
 SENDMAILCF="/usr/lib/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
-export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ PASTE
-export BASENAME CHOWN CHMOD LN DIFF MAILER WC TEE
+export SORT COMM TAIL HEAD MV TR JOIN GROUPSS FILECMD UNIQ PASTE
+export BASENAME CHOWN CHMOD LN DIFF MAILER WC TEE EXPAND
 #
 UNAME=/bin/uname
 GETHOSTNAME=/bin/hostname
