@@ -16,6 +16,11 @@
 #
 # initdefs - 06/14/93
 #
+# initdefs - 10/10/2003 - jfs - Improved check so that it will not 
+#                     remove files created by a different user and
+#                     warn if files to be deleted do not exist 
+#                     (currently disabled since some checks remove things
+#                     twice)
 # initdefs - 09/20/2003 - jfs - Fixed have_allvars since it was not working
 # initdefs - 09/19/2003 - jfs - Different error messages in have_allvars.
 #            Applied patch from Ryan Bradetich to fix UID -> UUID
@@ -103,16 +108,35 @@ haveallvars()
 #
 delete()
 {
+  goahead=1
   if [ -z "$RM" ] ; then
   	echo "--ERROR-- [init001e] The variable RM is not defined. Aborting."
 	exit 1
   fi
   for __file
   do
+    if [ -n "$LS" ]
+    then 
+#    	if [ -z "`$LS $__file 2>/dev/null`" ] 
+#	then
+#       		echo "--ERROR-- [post001e] File \`$__file' will not be removed since it does not exist"
+#		goahead=0
+#	fi
+    	if [ $goahead -eq 1 -a  -n "$AWK" -a -n "$UUID" ]
+	then
+	    	if [ "$UUID" != "`$LS -nl $__file | $AWK '{print $3}'`" ] 
+		then
+       			echo "--ERROR-- [post001e] File \`$__file' will not be removed since it has not been created by the current user (symlink attack?)."
+			goahead=0
+		fi
+	fi
+    fi
+    [ $goahead -eq 1 ]  &&  {
     eval "case \"\$__file\" in
-      $WORKDIR/*) $RM -f \"\$__file\";;
+      $WORKDIR*) $RM -f \"\$__file\";;
       *) echo \"--ERROR-- [post001e] File \\\`\$__file' not removed.\";;
     esac"
+    }
   done 2>/dev/null
 }
 #
