@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 #     tiger - A UN*X security checking system
-#     Copyright (C) 2002 Javier Fernandez-Sanguino Peña
+#     Copyright (C) 2002, 2003 Javier Fernandez-Sanguino Peña
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,11 +15,13 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# check_procs jfs 12/06/2002
+# check_runprocs jfs 12/06/2002
 #        This module will check if the processes configured in tigerrc
 #        are running currently in the system. If any of the processes
 #        is not running  a FAIL: will be issued. 
 #        This is a lightweight software watchdog, I know :)
+#
+# 08/12/2003 - jfs - Fixed dependancies.
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -59,11 +61,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds CUT GREP || exit 1
-# Just ps is needed here
-  haveallcmds PS || exit 1
-  haveallfiles BASEDIR WORKDIR || exit 1
-  haveallvars TESTLINK HOSTNAME
+  haveallcmds PS GREP || exit 1
   
   message CONFIG init003c "" "$0: Configuration ok..."
   exit 0
@@ -73,8 +71,7 @@ done
 echo
 echo "# Checking running processes "
 
-haveallcmds GREP CUT AWK SORT UNIQ || exit 1
-haveallcmds PS || exit 1
+haveallcmds PS GREP || exit 1
 
 processes=$Tiger_Running_Procs
 [ -z "$processes" ] && {
@@ -95,7 +92,7 @@ do
 		do
 		   [ "$proc" = "$fname" -a "$state" != "T" -a "$state" != "Z" ] && found="yes"
 		done
-		[ "$found" = "no" ] && message FAIL misc020f "" "The process '$proc' has not been found in the processes table."
+		[ "$found" = "no" ] && message FAIL misc020f "" "The process '$proc' has not been found running in the processes table."
 	}
 done
 
