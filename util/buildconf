@@ -126,7 +126,6 @@ FMT fmt cat
 GETFS mount
 GETHOSTNAME hostname
 GREP grep
-GROUPC groups
 GROUPSS groups
 HEAD head
 ID id

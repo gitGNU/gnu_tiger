@@ -46,6 +46,7 @@
 #	        and removed paths from findcmd() (patch from Ryan Bradetich)
 # Linux/2/config - 01/11/2004 - rbrad - Add OMNIBACK_CELLSERVER and NTPCONF
 # Linux/2/config - 01/15/2004 - jfs - Add XINETDCONF and INETDCONF
+# Linux/2/config - 03/31/2005 - jfs - Changed GROUPC to GROUPSS
 #
 #-----------------------------------------------------------------------------
  
@@ -131,7 +132,7 @@ HEAD=`findcmd head`
 MV=`findcmd mv`
 TR=`findcmd tr`
 JOIN=`findcmd join`
-GROUPC=`findcmd groups`
+GROUPSS=`findcmd groups`
 FILECMD=`findcmd file`
 UNIQ=`findcmd uniq`
 BASENAME=`findcmd basename`
@@ -190,7 +191,7 @@ LSGROUP="-l"
 LSLINK="-L"
 
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
-export SORT COMM TAIL MV TR JOIN GROUPC FILECMD UNIQ BASENAME HEAD
+export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME HEAD
 export CHMOD CHOWN LN PASTE DPKG LSOF NETSTAT MD5SUM CUT 
 export SNEFRU MD5 REALPATH PWCK GRPCK CHAGE MESG DIFF WC
 export PWD AUTORPM APT ID EXPAND LASTLOG TEST TEE COLUMN
