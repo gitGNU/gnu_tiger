@@ -61,7 +61,7 @@ TIGERCONFIG=@tigerconfig@
 #------------------------------------------------------------------------
 #
 
-PLATFORM_SCRIPTS=$(shell find ./systems/ -type f)
+PLATFORM_SCRIPTS:=$(shell find ./systems/ -type f)
 
 BINARIES=./tiger \
 	 ./tigexp  \
@@ -73,7 +73,7 @@ SCRIPTS=./scripts/check_accounts \
 	./scripts/check_aliases \
 	./scripts/check_anonftp \
 	./scripts/check_apache \
-	./scripts/check_cron \
+	./scripts/check_crontabs \
 	./scripts/check_devices \
 	./scripts/check_embedded \
 	./scripts/check_exports \
@@ -104,8 +104,12 @@ SCRIPTS=./scripts/check_accounts \
 	./scripts/check_system \
 	./scripts/check_tcpd \
 	./scripts/check_umask \
+	./scripts/check_rootkit \
+	./scripts/check_xinetd \
 	./scripts/crack_run \
 	./scripts/tripwire_run \
+	./scripts/aide_run \
+	./scripts/integrit_run \
 	./scripts/find_files \
 	./util/buildbins \
 	$(PLATFORM_SCRIPTS)
