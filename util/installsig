@@ -144,8 +144,8 @@ do
 
   # Some sanity checks to prevent attacks outside the
   # current dir
-  DEST=`echo $DEST | $SED -e 's/^\\\//' | $SED -e 's/\.//g'`
-  CONFIG=`echo $CONFIG | $SED -e 's/^\\\//' | $SED -e 's/\.//g'`
+  DEST=`echo $DEST | $SED -e 's/^\\\//' | $SED -e 's/\.\.//g'`
+  CONFIG=`echo $CONFIG | $SED -e 's/^\\\//' | $SED -e 's/\.\.//g'`
 
   echo "Target directory: $DEST"
   echo "Configuration: $CONFIG"
