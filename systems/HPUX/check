@@ -19,7 +19,9 @@
 # 
 # Checks for HPUX systems.
 # 
-# 06.25.2003 - rbradetich@uswest.net
+# 06/25/2003 - rbradetich@uswest.net - Initial version
+# 06/26/2003 - jfs - Moved the definition of the configuration variable to
+#              tigerrc and capitalise it.
 #
 #-----------------------------------------------------------------------------
 #
@@ -79,6 +81,6 @@ SYSTEMDIR=$BASEDIR/systems/HPUX
 # Define system specific configuration variables.
 
 # Verify the system is running in trusted mode.
-[ "$Tiger_Check_Trusted" = 'Y' ] && {
+[ "$Tiger_Check_TRUSTED" = 'Y' ] && {
   $SYSTEMDIR/check_trusted
 }
