@@ -21,23 +21,26 @@
 # all the checks configured for your system in the tigerrc configuration 
 # file.
 #
-# 04/29/93 dls Added support for 'tigerrc' file.
-#
-# 04/27/93 dls check_passwd is now check_accounts
-#
-# 05/26/2002 jfs Added check_tcpd test
-#
-# 04/15/2003 jfs Added new year
-#
-# 05/01/2003 jfs Added missing checks
-#
+# 08/15/2003 jfs Integrated ARSC log to syslog mechanism but modified
+#                the check for it (better to use the same mechanism as
+#                used by the sendtologger function in order to avoid
+#                some issues and prepended it to the use of -E since
+#                otherwise a wrong LOGDIR would be used (with \@) for
+#                the logfile and expfile)
+# 08/14/2003 jfs Commands now run through run_script (except for check_cron
+#                since many systems hold a check_cron script)
 # 05/09/2003 jfs Fixed missing bracket (syntax error)
+# 05/01/2003 jfs Added missing checks
+# 04/27/93 dls check_passwd is now check_accounts
+# 04/15/2003 jfs Added new year
+# 05/26/2002 jfs Added check_tcpd test
+# 04/29/93 dls Added support for 'tigerrc' file.
 #
 #-----------------------------------------------------------------------------
 #
 echo "Tiger UN*X security checking system"
 echo "   Developed by Texas A&M University, 1994"
-echo "   Updated by the Advanced Research Corporation, 1999"
+echo "   Updated by the Advanced Research Corporation, 1999-2002"
 echo "   Further updated by Javier Fernandez-Sanguino, 2001-2003"
 echo "   Covered by the GNU General Public License (GPL)"
 echo
@@ -70,6 +73,31 @@ done
 . $basedir/config
 
 . $BASEDIR/initdefs
+
+sendtologger()
+{
+  file=$1
+  if [ -r "$file" ]; then
+  	echo "Cannot read report in $file to send to syslog"
+	exit 1
+  fi
+  logger_port="5353"
+  logger_name=`echo $LOGDIR | $AWK -F\@ '{print $2}'`
+  safe_temp $WORKDIR/logger.$$
+  $TigerCleanup="$TigerCleanup $WORKDIR/logger.$$"
+  echo "sleep 5; cat $logfile; sleep 5" >$WORKDIR/logger.$$
+  sh $WORKDIR/logger.$$ | telnet $logger_name $logger_port
+  if [ "$?" -ne 0 ]; then
+   echo "TIGER logger server [$logger_name] is not available"
+   delete $WORKDIR/logger.$$
+   exit 1
+  fi
+  delete $WORKDIR/logger.$$
+  # Do not proceed since the LOGDIR value would be useless for us
+  # TODO: Consider use a -s switch to define logging to syslog
+  # so that logs are always kept locally too
+  exit 0
+}
 
 tigercleanup()
 {
@@ -164,7 +192,7 @@ export TigerCheckEmbedded
 [ "$Tiger_Check_FILESYSTEM" != 'N' ] && {
   if [ "$Tiger_TESTMODE" = 'Y' ]; then
     echo "`$TIMECMD`> Performing file systems scans..."
-    $SCRIPTDIR/find_files >> $logtmp
+    run_script find_files >> $logtmp
   else
     echo "`$TIMECMD`> Starting file systems scans in background..."
     $SCRIPTDIR/find_files > $WORKDIR/fsscan.log$$ &
@@ -176,7 +204,7 @@ crackpid=
 [ "$Tiger_Run_CRACK" != 'N' ] && {
   if [ "$Tiger_TESTMODE" = 'Y' ]; then
     echo "`$TIMECMD`> Running Crack (password cracker)..."
-    $SCRIPTDIR/crack_run
+    run_script crack_run
   else
     crackout=$WORKDIR/crack.out.$$
     echo "`$TIMECMD`> Running Crack (password cracker) in background..."
@@ -189,7 +217,7 @@ trippid=
 [ "$Tiger_Run_TRIPW" != 'N' ] && {
   if [ "$Tiger_TESTMODE" = 'Y' ]; then
     echo "`$TIMECMD`> Running Tripwire..."
-    $SCRIPTDIR/tripwire_run
+    run_script tripwire_run
   else
     tripout=$WORKDIR/tripwire.out.$$
     echo "`$TIMECMD`> Running Tripwire in background..."
@@ -198,144 +226,145 @@ trippid=
   fi
 }
 
+aidepid=
+[ "$Tiger_Run_AIDE" != 'N' ] && {
+  if [ "$Tiger_TESTMODE" = 'Y' ]; then
+    echo "`$TIMECMD`> Running Aide..."
+    run_script aide_run
+  else
+    export aideout=$WORKDIR/aide.out.$$
+    echo "`$TIMECMD`> Running Aide in background..."
+    nice -6 $SCRIPTDIR/aide_run > $aideout &
+    aidepid=$!
+  fi
+}
+
+
 [ "$Tiger_Check_PASSWD" != 'N' ] && {
   echo "`$TIMECMD`> Checking password files..."
-  $SCRIPTDIR/check_passwd >> $logtmp
+  run_script check_passwd >> $logtmp
   echo "`$TIMECMD`> Checking password format..."
-  $SCRIPTDIR/check_passwdformat >> $logtmp
+  run_script check_passwdformat >> $logtmp
 }
 
 [ "$Tiger_Check_PASSWD_NIS" != 'N' ] && {
   echo "`$TIMECMD`> Checking NIS settings..."
-  $SCRIPTDIR/check_nisplus >> $logtmp
+  run_script check_nisplus >> $logtmp
 }
 
 [ "$Tiger_Check_GROUP" != 'N' ] && {
   echo "`$TIMECMD`> Checking group files..."
-  $SCRIPTDIR/check_group >> $logtmp
+  run_script check_group >> $logtmp
 }
 
 [ "$Tiger_Check_ACCOUNTS" != 'N' ] && {
   echo "`$TIMECMD`> Checking user accounts..."
-  $SCRIPTDIR/check_accounts >> $logtmp
+  run_script check_accounts >> $logtmp
 }
 
 [ "$Tiger_Check_RHOSTS" != 'N' ] && {
   echo "`$TIMECMD`> Checking .rhosts files..."
-  $SCRIPTDIR/check_rhosts >> $logtmp
+  run_script check_rhosts >> $logtmp
 }
 
 [ "$Tiger_Check_NETRC" != 'N' ] && {
   echo "`$TIMECMD`> Checking .netrc files..."
-  $SCRIPTDIR/check_netrc >> $logtmp
+  run_script check_netrc >> $logtmp
 }
+
+# Note: TARA calls this script with Tiger_Check_ROOT so we keep it
+# there for compatibility purposes
+[ "$Tiger_Check_ROOT" != 'N' -o "$Tiger_Check_ROOT_ACCESS" != 'N' ] && {
+  echo "`$TIMECMD`> Checking ttytab, securetty, and login configuration files..."
+  run_script check_root >> $logtmp
+}
+
 
 [ "$Tiger_Check_PATH" != 'N' ] && {
   echo "`$TIMECMD`> Checking PATH settings..."
-  $SCRIPTDIR/check_path >> $logtmp
+  run_script check_path >> $logtmp
 }
 
 [ "$Tiger_Check_ANONFTP" != 'N' ] && {
   echo "`$TIMECMD`> Checking anonymous ftp setup..."
-  $SCRIPTDIR/check_anonftp >> $logtmp
+  run_script check_anonftp >> $logtmp
 }
 
 [ "$Tiger_Check_ALIASES" != 'N' ] && {
   echo "`$TIMECMD`> Checking mail aliases..."
-  $SCRIPTDIR/check_aliases >> $logtmp
+  run_script check_aliases >> $logtmp
 }
 
 [ "$Tiger_Check_CRON" != 'N' ] && {
   echo "`$TIMECMD`> Checking cron entries..."
+  # Note: The check_cron scripts in the systems directory are not at all
+  # useful so we do not use run_script here
   $SCRIPTDIR/check_cron >> $logtmp
 }
 
 [ "$Tiger_Check_INETD" != 'N' ] && {
   echo "`$TIMECMD`> Checking 'inetd' configuration..."
-  $SCRIPTDIR/check_inetd >> $logtmp
+  run_script check_inetd >> $logtmp
   echo "`$TIMECMD`> Checking 'tcpd' configuration..."
-  $SCRIPTDIR/check_tcpd >> $logtmp
+  run_script check_tcpd >> $logtmp
 }
 
 [ "$Tiger_Check_SERVICES" != 'Y' ] && {
   echo "`$TIMECMD`> Checking 'services' configuration..."
-  $SCRIPTDIR/check_services >> $logtmp
+  run_script check_services >> $logtmp
 }
 
 [ "$Tiger_Check_EXPORTS" != 'N' ] && {
   echo "`$TIMECMD`> Checking NFS export entries..."
-  $SCRIPTDIR/check_exports >> $logtmp
+  run_script check_exports >> $logtmp
 }
 
 [ "$Tiger_Check_PERMS" != 'N' ] && {
   echo "`$TIMECMD`> Checking permissions and ownership of system files..."
-  $SCRIPTDIR/check_perms >> $logtmp
+  run_script check_perms >> $logtmp
 }
 
 [ "$Tiger_Check_SIGNATURES" != 'N' ] && {
   echo "`$TIMECMD`> Checking for altered or out of date binaries..."
-  $SCRIPTDIR/check_signatures >> $logtmp
+  run_script check_signatures >> $logtmp
 }
 
 [ "$Tiger_Check_KNOWN" != 'N' ] && {
   echo "`$TIMECMD`> Checking for indications of break-in..."
-  $SCRIPTDIR/check_known >> $logtmp
+  run_script check_known >> $logtmp
 }
 
 [ "$Tiger_Check_SYSTEM" != 'N' ] && {
   echo "`$TIMECMD`> Performing system specific checks..."
-  $SCRIPTDIR/check_system >> $logtmp
+  run_script check_system >> $logtmp
 }
 
-[ "$Tiger_Check_ROOT_ACCESS" != 'N' ] && {
-  echo "`$TIMECMD`> Performing root access checks..."
-  $SCRIPTDIR/check_root >> $logtmp
-}
 
 [ "$Tiger_Check_ROOTDIR" != 'N' ] && {
   echo "`$TIMECMD`> Performing root directory checks..."
-  $SCRIPTDIR/check_rootdir >> $logtmp
+  run_script check_rootdir >> $logtmp
 }
 
 [ "$Tiger_Check_ETCISSUE" != 'N' ] && {
   echo "`$TIMECMD`> Performing /etc/issue login banner checks..."
-  $SCRIPTDIR/check_issue >> $logtmp
+  run_script check_issue >> $logtmp
 }
 
-# Move to systems/Linux/2/check.tbl
-#[ "$Tiger_Check_OS" != 'N' ] && {
-#  echo "`$TIMECMD`> Checking for correct OS version..."
-#  $SCRIPTDIR/check_release >> $logtmp
-#}
-#
-#[ "$Tiger_Check_PATCH" != 'N' ] && {
-#  echo "`$TIMECMD`> Checking for up-to-date patches..."
-#  $SCRIPTDIR/check_patches >> $logtmp
-#}
-#
-#[ "$Tiger_Check_SINGLE" != 'N' ] && {
-#  echo "`$TIMECMD`> Checking for single user mode password..."
-#  $SCRIPTDIR/check_single >> $logtmp
-#}
-#[ "$Tiger_Check_BOOT" != 'N' ] && {
-#  echo "`$TIMECMD`> Checking boot loader file permissions..."
-#  $SCRIPTDIR/check_lilo >> $logtmp
-#}
 
 [ "$Tiger_Check_BACKUPS" != 'N' ] && {
   echo "`$TIMECMD`> Checking for secure backup devices..."
-  $SCRIPTDIR/check_devices >> $logtmp
+  run_script check_devices >> $logtmp
 }
 
 
 [ "$Tiger_Check_LOGFILES" != 'N' ] && {
   echo "`$TIMECMD`> Checking for the presence of log files..."
-  $SCRIPTDIR/check_logfiles >> $logtmp
+  run_script check_logfiles >> $logtmp
 }
 
 [ "$Tiger_Check_USERUMASK" != 'N' ] && {
   echo "`$TIMECMD`> Checking for the setting of user's umask..."
-  $SCRIPTDIR/check_umask >> $logtmp
+  run_script check_umask >> $logtmp
 }
 
 #
@@ -344,50 +373,50 @@ trippid=
 #
 [ "$Tiger_Check_LISTENING" != 'N' ] && {
   echo "`$TIMECMD`> Checking for listening processes..."
-  $SCRIPTDIR/check_listeningprocs >> $logtmp
+  run_script check_listeningprocs >> $logtmp
 }
 
 # A general watchdog for system processes
 [ "$Tiger_Check_RUNPROC" != 'N' ] && {
   echo "`$TIMECMD`> Checking for running processes..."
-  $SCRIPTDIR/check_runprocs >> $logtmp
+  run_script check_runprocs >> $logtmp
 }
 
 [ "$Tiger_Check_DELETED" != 'N' ] && {
   echo "`$TIMECMD`> Checking for processes using deleted files..."
-  $SCRIPTDIR/check_finddeleted >> $logtmp
+  run_script check_finddeleted >> $logtmp
 }
 
 [ "$Tiger_Check_APACHE" != 'N' ] && {
   echo "`$TIMECMD`> Checking Apache's configuration..."
-  $SCRIPTDIR/check_apache >> $logtmp
+  run_script check_apache >> $logtmp
 }
 
 [ "$Tiger_Check_SENDMAIL" != 'N' ] && {
   echo "`$TIMECMD`> Checking Sendmail's configuration..."
-  $SCRIPTDIR/check_sendmail >> $logtmp
+  run_script check_sendmail >> $logtmp
 }
 
 [ "$Tiger_Check_PRINTCAP" != 'N' ] && {
   echo "`$TIMECMD`> Checking the printers control file..."
-  $SCRIPTDIR/check_printcap >> $logtmp
+  run_script check_printcap >> $logtmp
 }
 
 [ "$Tiger_Check_EXRC" != 'N' ] && {
   echo "`$TIMECMD`> Checking for exrc files..."
-  $SCRIPTDIR/check_exrc >> $logtmp
+  run_script check_exrc >> $logtmp
 }
 
 # This test should be changed from Perl to shell script, also there
 # is repeated functionality from check_listeningprocs (jfs)
 #[ "$Tiger_Check_STRICTNW" != 'N' ] && {
 #  echo "`$TIMECMD`> Checking for network configuration..."
-#  $SCRIPTDIR/check_network >> $logtmp
+#  run_script check_network >> $logtmp
 #}
 
 [ "$Tiger_Check_FTPUSERS" != 'N' ] && {
   echo "`$TIMECMD`> Checking ftpusers configuration..."
-  $SCRIPTDIR/check_ftpusers >> $logtmp
+  run_script check_ftpusers >> $logtmp
 }
 
 #
@@ -396,7 +425,7 @@ trippid=
 #
 [ "$Tiger_Check_EMBEDDED" != 'N' -a "x$Tiger_Embed_Check_SUID" != 'xY' ] && {
   echo "`$TIMECMD`> Performing check of embedded pathnames..."
-  $SCRIPTDIR/check_embedded >> $logtmp
+  run_script check_embedded >> $logtmp
 }
 
 [ "$Tiger_Check_FILESYSTEM" != 'N' -a "$Tiger_TESTMODE" != 'Y' ] && {
@@ -414,7 +443,7 @@ trippid=
 #
 [ "$Tiger_Check_EMBEDDED" != 'N' -a "x$Tiger_Embed_Check_SUID" = 'xY' ] && {
   echo "`$TIMECMD`> Performing check of embedded pathnames..."
-  $SCRIPTDIR/check_embedded >> $logtmp
+  run_script check_embedded >> $logtmp
 }
 
 [ -n "$crackpid" ] && {
@@ -440,11 +469,23 @@ trippid=
     delete $tripout
 } 2>/dev/null
 
+[ -n "$aidepid" ] && {
+    echo "`$TIMECMD`> Waiting for Aide to finish..."
+    wait $aidepid
+    $CAT $tripout >> $logtmp
+    delete $tripout
+} 2>/dev/null
+
 #echo "`$TIMECMD`> Security report completed for ${HOSTNAME}."
 
 [ "$Tiger_TESTMODE" != 'Y' ] && {
   echo "`$TIMECMD`> Security report completed for ${HOSTNAME}."
   echo "`$TIMECMD`> Security report completed for ${HOSTNAME}." >>$logtmp
+
+  if [ -n "`echo $LOGDIR | $AWK -F\@ '{print $2}'`" ]; then
+    sendtologger $logtmp
+  fi
+
   if [ "$EXPLAINREPORT" = "Y" ]; then
     $BASEDIR/tigexp -f $logtmp > $expreport
     $MV $logtmp $logfile
@@ -454,6 +495,7 @@ trippid=
   else
     $MV $logtmp $logfile
   fi
+
 
   [ "$HTML" = "Y" ] && {
     htmlfile="$logfile.html"
