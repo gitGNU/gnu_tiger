@@ -59,4 +59,18 @@ HOSTNAMESLIST="$HOSTNAME"
 #CRACKDIR=/usr/local/src/crack
 #CRACK=/usr/local/src/crack/Crack
 #REPORTER=/usr/local/src/crack/Reporter
-
+#------------------------------------------------------------------------
+#
+# Define where Tripwire is installed (if you use it)
+#
+#TRIPWIRE=/usr/local/bin/tripwire
+#------------------------------------------------------------------------
+#
+# Define where Aide is installed (if you use it)
+#
+#AIDE=/usr/local/bin/aide
+#------------------------------------------------------------------------
+#
+# Define where Integrit is installed (if you use it)
+#
+#INTEGRIT=/usr/local/bin/aide
