@@ -1,0 +1,181 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2002 Javier Fernandez-Sanguino
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_apache - 11/25/2002 - jfs - first release
+#
+# The checks in this script are derived from the following references:
+# Bastille's Apache module
+# http://httpd.apache.org/docs-2.0/misc/security_tips.html
+# http://www.intersectalliance.com/projects/ApacheConfig/index.html 
+#
+# TODO (generic)
+# - include checks for problematic modules
+# - analyse authenticating methods
+# - analyse SSL configuration (is the certificate protected?)
+# - include some more analysis of the configuration file
+# - provide cross-checks for configuration (i.e. not only determine if 
+#   a given directive is configured but if the current setup might 
+#   be vulnerable: eg. user with a symbolic link back to the root filesystem
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds GREP AWK CAT SED CUT || exit 1
+  haveallfiles APACHECONFDIR BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+echo
+echo "# Checking apache configuration files..."
+
+haveallcmds GREP AWK CAT SED CUT || exit 1
+haveallfiles APACHECONFDIR BASEDIR WORKDIR || exit 1
+
+
+# First check if Apache is bound to use only an IP address
+[ -f $APACHECONFDIR/httpd.conf ] && {
+	$GREP ^Listen $APACHECONFDIR/httpd.conf |
+	while read listen ipaddr
+	do
+		port=`echo $ipaddr | $CUT -f : -d 2`
+		ipaddr=`echo $ipaddr | SED -e 's/:.*$//'`
+	done
+	# TODO: this check should warn only if this is a multihomed host
+	# (we probably need to check this in other places so a utils function
+	# 'amImultihome' might be useful)
+	if [ -z "$port" -o -z "$ipaddr" ]; then
+		message WARN apa001w "The Apache server is not configured to be bound to an specific IP address."
+	else 
+		message INFO apa001w "The Apache server is configured to listen only on address $ipaddr port $port."
+	fi
+}
+# Now check options
+# we need to do this for all possible configuration files
+# Options that might be a securityrisk are FollowSymlinks, Indexes,
+# FollowSymlinksIfOwnerMatch
+
+for file in $APACHECONFDIR/*.conf 
+do
+# We have to read the file line by line in order to know which Directory
+# we are talking about
+	directory="Any (default)"; export directory;
+	denyfirst=0; export denyfirst
+	alldenied=0; export alldenied
+	options=""; export options
+	$CAT $file |  $GREP -v ^# |
+	while read line
+	do
+		if [ ! -z "`echo $line | $GREP -i \"<Directory\"`" ] ; then
+			directory=`echo $line | $AWK '/^\s*<Directory (.*)$/ {print $2} ' | $SED -e 's/>$//'`
+			denyfirst=0
+		fi
+
+		if [ ! -z "`echo $line | $GREP -i \"</Directory\"`" ] ; then
+		# Before reseting check the '/' configuration
+			if  [ "$directory" = "/" ] ; then
+				[ $denyfirst -ne 1 -o $alldenied -ne 0 ] &&  \
+				message WARN apa002w "There is no limitation to access filesystem locations (configuration for '/')"
+				[ "$options" != "None" -a "$options" != "none" ] && \
+				message WARN apa002w "Options flag  for the filesystem should be 'None' (configuration for '/')"
+			fi
+			directory="Any (default)"
+			denyfirst=0
+			alldenied=0
+			options=""
+		fi
+
+		if [ ! -z "`echo $line | $GREP -i Options`" ]; then
+
+			options=`echo $line | $SED -e 's/options\b//i'`
+
+			if [ ! -z "`echo $options | $GREP -i followsymlinks`" ]; then
+# TODO: We could try to check if there are symlinks that are going to be
+# followed back to the root dir
+# Sample: ln -s /etc/passwd
+			if [ ! -z "`echo $options | $GREP -i ifownermatch`" ]; then
+			message INFO apa003i "$directory directory configuration permits symlink following only if owner of the symlink matches."
+			else 
+			message WARN apa004w "$directory directory configuration permits symlink following."
+			fi
+			fi # of followsymlinks
+
+# TODO: we could list executable files in the directory
+			if [ ! -z "`echo $options | $GREP -i execcgi`" ]; then
+			message INFO apa005w "$directory directory can hold executable CGI."
+			fi
+
+#  TODO we could check which directories do not have an index.html file
+			if [ ! -z "`echo $options | $GREP -i indexes`" ]; then
+			message WARN apa006w "$directory directory will provide content listing if there are no index.html files."
+			fi
+
+		fi # of the options
+
+# Some more parsing for configuration  (to be checked when the Directory
+# is finished)
+		if [ ! -z "`echo $line | $GREP -i \"Order\"`" ] ; then
+			denyfirst=0
+			[ ! -z "`echo $line | $GREP -i \"Deny,Allow\"`" ] && denyfirst=1
+		fi
+
+		[ ! -z "`echo $line | $GREP -i \"Deny from all\"`" ] && alldenied=1
+		[ ! -z "`echo $line | $GREP -i \"Allow from all\"`" ] && alldenied=0
+
+	done
+
+
+done
+

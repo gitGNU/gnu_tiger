@@ -25,6 +25,8 @@
 # Linux/2/config - 10/09/99
 #  Added the new check_neverlogin script
 # Linux/2/config - 08/07/2002 - jfs change in LSGROUPS
+# Linux/2/config - 25/11/2002 - jfs added PROCDIR and APACHECONFDIR
+#                               also added code to determine Linux distribution
 
 
 [ "$UUID" = "" ] && UNAME=`whoami`
@@ -56,6 +58,17 @@ findcmd()
     }
   done
 }
+
+# First of all, determine our distribution (might affect tests
+# below)
+LXDISTRIBUTION="unknown"
+[ -f /etc/redhat-release ] && LXDISTRIBUTION="redhat"
+[ -f /etc/debian_version ] && LXDISTRIBUTION="debian"
+[ -f /etc/SuSE-release ] && LXDISTRIBUTION="redhat"
+[ -f /etc/immunix-release ] && LXDISTRIBUTION="inmunix"
+[ -f /etc/mandrake-release ] && LXDISTRIBUTION="mandrake"
+[ -f /etc/turbolinux-release ] && LXDISTRIBUTION="turbolinux"
+export LXDISTRIBUTION
 
 TESTEXEC=-x
 export TESTEXEC
@@ -163,6 +176,7 @@ export FMT GETFS CC PS DATE DATECMD TIMECMD
 
 WAIT=wait
 
+# Configuration files
 SENDMAILS="/usr/sbin/sendmail"
 SENDMAILCF="/etc/sendmail.cf"
 export SENDMAILS SENDMAILCF
@@ -171,6 +185,12 @@ LOGINDEF="/etc/login.defs"
 PAMLOGINDEF="/etc/pam.d/login"
 export LOGINDEF PAMLOGINDEF
 
+# For Apache server configuration
+APACHECONFDIR="/etc/httpd/conf/"
+[ "$LXDISTRIBUTION" = "debian" ] && APACHECONFDIR="/etc/apache/"
+[ "$LXDISTRIBUTION" = "suse" ] && APACHECONFDIR="/etc/httpd/"
+
+# For Yellow Pages services
 YPCAT=`findcmd ypcat`
 
 YP=
