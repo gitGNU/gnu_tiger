@@ -20,6 +20,8 @@
 # Analyses the system's /etc/ftpusers and determines if the administrative
 # users are in that file.
 #
+# 10/01/2003 jfs Removed passwd files if not used any longer.
+#
 # 07/25/2002 jfs Added a sanity check for password files.
 #                Changed TigerInstallDir to .
 #
@@ -112,6 +114,7 @@ do
 	[ -n "$user" -a "$user" != "root" ] && [ -z "`$GREP \"^$user\" /etc/ftpusers`" ]  && 
 		message FAIL netw018f "" "Administrative user $user allowed access in /etc/ftpusers"
 	done 
+        [ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
 done
 
 else
@@ -119,5 +122,6 @@ else
 
 fi
 
+delete $WORKDIR/pass.list.$$ 
 
 exit 0
