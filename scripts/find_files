@@ -17,6 +17,9 @@
 #
 # find_files - 06/14/93
 #
+# 04/03/2004 rbrad Added GETDISKS to haveallcmds.  
+#	     Added exit 1 if haveallvars failes
+#
 # 08/08/2003 jfs Improved creation of temporary files and removal.
 #
 # 04/29/93 dls Added support for 'tigerrc' file variable FS_FILES
@@ -67,7 +70,7 @@ done
 [ "$Tiger_TESTMODE" = 'Y' ] && {
   haveallcmds AWK CAT EXPR FIND GETDISKS GREP RM SORT || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
-  haveallvars WAIT
+  haveallvars WAIT || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
@@ -75,9 +78,9 @@ done
 
 #------------------------------------------------------------------------
 
-haveallcmds AWK CAT EXPR FIND GREP RM SORT || exit 1
+haveallcmds AWK CAT EXPR FIND GETDISKS GREP RM SORT || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
-haveallvars WAIT
+haveallvars WAIT || exit 1
 
 simple_wait()
 {
