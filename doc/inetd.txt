@@ -9,10 +9,10 @@ either a misconfiguration in the services database, or a possible
 sign of an intrusion.  This should be checked and corrected.  If it
 is not apparent why it is like this, the system should be checked
 for other signs of intrusion.
-%inet003f
-The indicated port number is assigned to the wrong service.  This
+%inet003w
+The indicated port number is assigned to another service.  This
 indicates either a misconfiguration in the services database, or a
-possible sign of an intrusion.  This should be checked and corrected.
+possible sign of an intrusion. This should be checked and corrected.
 If it is not apparent why it is like this, the system should be
 checked for other signs of intrusion.
 %inet004i

@@ -11,7 +11,11 @@ session on the server.  This file is accessed by the command "lastlog".
 The log file "utmp" should exist so that a list of current users on the
 server can be listed.  This is accessed by the command "who".
 %logf005w
-There are no umask entries in the configuration file
+The log file does not have proper permissions set. It is recommended that
+you change the permissions to those suggested.
+%logf005w
+There are no umask entries in the configuration file. It is recommended
+that there are umask entries set in the configuration file.
 %logf006f
 The umask setting in the configuration file is insecure.  Umask must be 
 set as to prevent public write (ie. either 002 or 022).

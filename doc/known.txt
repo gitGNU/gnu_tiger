@@ -42,3 +42,35 @@ for another user (allowing someone else to read that persons mail),
 or that the mail spool is being used to store files.  These files should
 be checked, and if unusual, the system should be examined for other signs
 of intrusion.
+%kis009w
+There is an .exrc file outside of any user's home directory. This file can
+be loaded inadvertenly by a user if executing an editor in that directory
+and could introduce unexpected commands through it.
+%kis010w
+The indicated file in the system mail spool does not belong to any user
+in the system. This might indicate that a user has been removed but not his
+mailbox or that this mailbox has been created wrongly. These files should
+be checked and, if belonging to former users, removed.
+(Note: this warning will be given too if, for some reason, the user running
+Tiger cannot access the user database)
+%kis011f
+A server in the system (that is, a process with a listening socket towards
+the Internet) or its parent process has an open file which has been removed
+from the system. This might be a usual behaviour in the process or it might
+be an indication of an intruder that has executed a backdoor in the system
+(which opens a connection to accept requests from the Internet) and has
+later removed the program from the system so that it cannot be traced back
+to him.
+This also can happen if a local service is using shared libraries which have
+been upgraded but the service itself has not been restarted in order to
+use the new libraries. Notice that if there was a vulnerability in the
+library and the server is not restarted the system is still vulnerable.
+%kis012w
+An application in the system is using a deleted file. This might be an 
+indication of an intruder executing rogue processes and removing the files
+from disk so that they cannot be traced or detected by the local administrator.
+This has been observerd both in intruders running password cracking programs
+or worms propagating through remote attacks.
+This also can happen if a local application is using shared libraries which have
+been upgraded but the service itself has not been restarted in order to
+use the new libraries.

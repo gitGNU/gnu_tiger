@@ -12,12 +12,15 @@ Processes that have not been run by root are listening on
 interfaces open to the outside. This processes might have been
 run by root and changed uids or might be rogue processes.
 Confirm if their presence is necessary.
+Notice that sometimes services open sporadic UDP listeners to 
+receive DNS requests, if you receive reports on open UDP services
+that later on are closed this might be a false positive.
 %lin004i
 Netstat can be used instead of lsof in order to provide information
 on listening processes, however it will provide less info since it
 cannot determine the process (or PID) associated with the open socket
 or the user that runs it.
-%lin005e
+%lin005f
 In Debian systems, checksums are stored in /var/lib/dpkg/info/
 if the md5sum of a file differs from the checksum of installed packages
 it might be due to changes made by the system administrator (for
@@ -35,7 +38,7 @@ In the default configuration of many GNU/Linux distributions users can
 reboot the machine pressing Ctrl+Alt+Delete while in console mode. This can
 be considered a security risk if an attacker can easily taken down the
 server from console.
-%lin008f
+%lin008e
 The /proc pseudo-filesystem is needed to check the network configuration
 settings in the kernel and determine insecure setups. /proc is available
 when the kernel is compiled with the CONFIG_PROC_FS=Y option (if you want
@@ -48,12 +51,12 @@ interface. You might want to configure it to not answer to this requests
 and thus make it more "invisible". Do it with:
 # sysctl -w net.ipv4.icmp_echo_ignore_all=1 
 Note, however, that this violates RFCs.
-%lin010e
+%lin010f
 The system will answer to ICMP broadcast echo messages. This is considered
 a problem since ICMP broadcasts can cause network denial of service as
 the same time as giving away the location of the hosts. To remove this do:
  # sysctl -w net.ipv4.icmp_echo_ignore_broadcasts = 1
-%lin011e
+%lin011f
 The system is configured to answer to bad formatted ICMP messages. This
 behavior is not recommended, please unconfigure it with:
 # sysctl -w net.ipv4.icmp_ignore_bogus_error_responses = 1
@@ -67,12 +70,12 @@ messages to try to route the outgoing network packets to other systems
 denial of service attacks:
  # sysctl -w net.ipv4.conf.all.accept_redirects = 0
  # sysctl -w net.ipv4.conf.default.accept_redirects = 0
-%lin013e
+%lin013f
 It is common to protect systems against Denial of Service attacks using
 SYN packets (commonly known as "SYN flooding") by activating support
 of TCP syncookies. Note, however, that activating this violates some RFCS:
   # sysctl -w net.ipv4.tcp_syncookies = 1
-%lin014e
+%lin014f
 It is possible to send IP spoofed packets from this machine. Spoofed
 packets are commonly used by trojans that make use of compromised hosts
 to deliver denial of service, man in the middle or conection hijacking.
@@ -84,7 +87,7 @@ IP forwarding is the option that permits the system to act as a router
 and thus resend packets from one network interface to another. If your
 system is not acting as such this option should be disabled:
  # sysctl -w net.ipv4.ip_forward = 0
-%lin016e
+%lin016f
 Source routing might permit an attacker to send packets through your
 host (if routing is enabled) to other hosts without following your 
 network topology setup. It should be enabled only under very special

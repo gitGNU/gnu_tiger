@@ -55,3 +55,14 @@ The sendmail configuration file (sendmail.cf) has the default
 sendmail banner. This means that when the mail server is active
 it publishes the version you are currently running. Attackers can use this 
 information to determine if you are running a vulnerable version.
+%netw020f
+There is no ftpusers configuration file. In some systems this might
+enable all administrative users (low UID) to access the local FTP 
+server if it is enabled (some other systems might deprecate its use). 
+It is recommended that administrative users are added into /etc/ftpusers.
+%netw021w
+There is a restricted user (uses a restricted shell) which can access the
+local FTP server. If the local FTP server is enabled and a restricted user
+can access it remotely this might lead to a security compromise of the
+system. It is recommended for restricted users to be added into
+/etc/ftpusers.
