@@ -83,7 +83,6 @@ JOIN=/usr/bin/join
 GROUPSS=/usr/ucb/groups
 FILECMD=/usr/bin/file
 IFCONFIG=/sbin/ifconfig 
-# Is this the proper location for ifconfig?
 UNIQ=/usr/bin/uniq
 BASENAME=/usr/bin/basename
 CHMOD=/usr/bin/chmod
@@ -156,11 +155,11 @@ fi
 CRONSPOOL=/var/spool/cron/crontabs
 #
 ETCSHELLS=/etc/shells
+export MAILSPOOL CRONSPOOL ETCSHELLS
+#
 # egrep regex that defines a local filesystem
 LOCFS="(ufs|tmpfs)"
 export LOCFS
-#
-export MAILSPOOL CRONSPOOL ETCSHELLS
 #
 # System dev directories...
 #

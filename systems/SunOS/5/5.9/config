@@ -19,22 +19,39 @@
 #
 #-----------------------------------------------------------------------------
 #
-UUID=`/usr/bin/id | /usr/bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
-[ "$UUID" = "0" -o "$UID" -eq 0  ] &&
-  ME="root"
+UUID="`/usr/bin/id | /usr/bin/sed -e 's/^uid=\([0-9][0-9]*\)[^0-9].*$/\1/'`"
 
-[ "$ME" != "root" ] && {
-  echo " " 1>&2
-  echo "This script should be run from a super-user account." 1>&2
-  echo " " 1>&2
-#  exit 1
-}
-[ -z "$ME" ] && {
-  echo " " 1>&2
-  echo "Unable to determine who is running Tiger, make sure you are root" 1>&2
-  echo " " 1>&2
+[ "$UUID" != '0' -a "$Tiger_TESTMODE" != 'Y' ] && {
+  echo 1>&2
+  echo 'This script should be run from a super-user account.' 1>&2
+  echo 1>&2
+  exit 1
 }
 
+findcmd()
+{
+  CMD=$1
+
+  SRCH=/sbin:/usr/local/bin:/bin:/usr/bin:/etc:/usr/ucb:/usr/sbin:/usr/lib
+
+  SAVEIFS=$IFS
+  IFS=:
+  set $SRCH
+  IFS=$SAVEIFS
+  for dir
+  do
+    [ $TESTEXEC $dir/$CMD ] && {
+      echo $dir/$CMD
+      return
+    }
+  done
+ }
+   
+TESTEXEC=-x
+[ $TESTEXEC /bin/sh ] && TESTEXEC=-f
+TESTLINK=-h
+export TESTEXEC TESTLINK
+WHOAMI=`findcmd whoami`
 CAT=/usr/bin/cat
 CUT=/usr/bin/cut
 HEAD=/usr/bin/head
@@ -58,6 +75,7 @@ TR=/usr/bin/tr
 JOIN=/usr/bin/join
 GROUPSS=/usr/ucb/groups
 FILECMD=/usr/bin/file
+IFCONFIG=/sbin/ifconfig
 UNIQ=/usr/bin/uniq
 BASENAME=/usr/bin/basename
 CHMOD=/usr/bin/chmod
@@ -68,6 +86,7 @@ DIFF=/usr/bin/diff
 MAILER=/usr/bin/mail
 ID=/usr/bin/id
 WC=/usr/bin/wc
+NDD=/usr/bin/ndd
 EXPAND=/usr/bin/expand
 SHOWREV=/usr/bin/showrev
 NETSTAT=/usr/bin/netstat
@@ -77,7 +96,7 @@ SENDMAILCF="/etc/mail/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED CUT HEAD
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME
-export CHMOD CHOWN LN PASTE DIFF MAILER ID WC
+export CHMOD CHOWN LN PASTE DIFF MAILER ID WC NDD IFCONFIG
 export SHOWREV NETSTAT PFILES
 export SENDMAILS SENDMAILCF EXPAND
 #
@@ -90,6 +109,11 @@ FINDXDEV=-xdev
 FMT=/usr/ucb/fmt
 GETFS=/usr/etc/mount
 CC=/usr/bin/cc
+CC=`findcmd gcc`
+if [ -z "$CC" ]; then
+  CC=`findcmd cc`
+fi
+CFLAGS="-DNEEDGETWD"
 PS=/usr/bin/ps
 DATE=/usr/bin/date
 DATECMD="$DATE +%y%m%d"
@@ -108,6 +132,7 @@ WAIT=wait
 #
 # Using NIS (YP)?
 YPCAT=/usr/bin/ypcat
+NISCAT=`findcmd niscat`
 #
 YP=
 ($PS -ef | $GREP ypbind | $SGREP -v $GREP) && YP=Y
@@ -116,20 +141,25 @@ export YP
 #
 YPSERVER="NO"
 ($PS -ef | $GREP ypserv | $SGREP -v $GREP) && YPSERVER="YES"
-export WAIT YPCAT YPSERVER
+export WAIT YPCAT YPSERVER NISCAT
+# Tcp wrappers
+TCPD=`findcmd tcpd`
+export TCPD
 #
-MAILSPOOL=/var/spool/mail
+MAILSPOOL=/var/mail
 #
 CRONSPOOL=/var/spool/cron/crontabs
 #
 ETCSHELLS=/etc/shells
-#
 export MAILSPOOL CRONSPOOL ETCSHELLS
+# egrep regex that defines a local filesystem
+LOCFS="(ufs|tmpfs)"
+export LOCFS
 #
 FS_WDIRSYS="/tmp/ /var/tmp/ /var/spool/mail/"
 export FS_WDIRSYS
 #
-SYSDEFAULTPATH="/usr/bin:/usr/ucb"
+SYSDEFAULTPATH="/usr/sbin:/usr/bin:/usr/ucb"
 export SYSDEFAULTPATH
 #
 CDIR="$BASEDIR/systems"
@@ -156,6 +186,7 @@ eval `
     fi
     echo "export $var;"
   done << EOL
+GETFS getfs
 GEN_PASSWD_SETS gen_passwd_sets
 GEN_GROUP_SETS gen_group_sets
 GEN_ALIAS_SETS gen_alias_sets
@@ -176,5 +207,7 @@ GEN_INETD_SETS gen_inetd
 GETDISKS getdisks
 EMBEDDEDLIST embedlist
 GETUSERHOME getuserhome
+NDD_PARMS ndd_parms
+NDD_PARMS_LOCAL ndd_parms_local
 EOL
 `

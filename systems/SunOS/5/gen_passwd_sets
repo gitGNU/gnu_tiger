@@ -26,6 +26,7 @@
 [ -z "$SORT" ] && SORT=`which sort`
 [ -z "$GREP" ] && GREP=`which grep`
 [ -z "$AWK" ] && AWK=`which awk`
+[ -z "$RM" ] && RM=`which rm`
 [ -z "$JOIN" ] && JOIN=`which join`
 [ -z "$CAT" ] && CAT=`which cat`
 [ -z "$YPCAT" ] && YPCAT=`which ypcat`
