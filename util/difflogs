@@ -26,6 +26,13 @@
 #  can be compared against a "template" (policy-compliant?) runs. 
 #  This can reduce false positives even if they cannot be reduced 
 #  in a given module.
+#
+#-----------------------------------------------------------------------------
+# TODO:
+# - Consider including always ERR messages regardless of wether they were not
+#   present since otherwise scripts that do not run (due to ERRs) might be
+#   only reported once in cron. Maybe this could be an option? 
+#   (Always_Report_ERR?)
 #-----------------------------------------------------------------------------
 #
 [ -z "$DIFF" ] && DIFF=`which diff`
