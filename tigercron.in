@@ -27,6 +27,9 @@
 # 10/28/2002 jfs Added check of non-comments in output (only available if
 #                egrep is installed)
 #
+# 04/23/2003 jfs Sanity check for the existance of ctrfile, use TigerConfigDir
+#               instead of CONFIGDIR
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir="@tigerhome@"
@@ -58,7 +61,7 @@ done
 # Verify that a config file exists there, and if it does
 # source it.
 #
-[ ! -r $basedir/config ] && {
+[ ! -r "$basedir/config" ] && {
   echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
   exit 1
 }
@@ -90,9 +93,11 @@ umask 077
   Tiger_Output_Width="$Tiger_CRON_Output_Width"
 }
 
-[ ! -n "$ctrlfile" ] && ctrlfile=$CONFIGDIR/cronrc
-
-saveifs=$IFS
+[ ! -n "$ctrlfile" ] && ctrlfile=$TigerConfigDir/cronrc
+[ ! -r "$ctrlfile" ]  &&  {
+	    message ERROR tigxxxx "" "Cannot read \`$ctrlfile', tigercron cannot proceed."
+	    exit 1
+}
 
 set X `$DATE`
 dow=$2
