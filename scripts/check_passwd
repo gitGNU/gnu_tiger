@@ -22,7 +22,7 @@
 # 10/28/2002 jfs Improved check with patch from Bob Hall
 # 05/01/2003 jfs Fixed PWCK behavior
 # 06/21/2003 jfs Modified with patch from Ryan Bradetich to generalise
-#                PWCK support.
+#                PWCK support and to add an additional check (emtpy password)
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -111,6 +111,12 @@ do
     [ $times -gt 1 ] && {
     message WARN pass001w "" "Username \`$username' exists multiple times ($times) in $src1."
     }
+  done
+
+  $AWK -F: '$2 == "" {print $1}' $WORKDIR/p1uid.$$  |
+  while read username
+  do
+    message FAIL pass011f "" "Username \`$username' has an empty password field."
   done
 
 #  $AWK -F: '{print $3}' $WORKDIR/p1uid.$$ |

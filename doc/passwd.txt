@@ -34,3 +34,6 @@ authentication has some inconsistency that might be a security vulnerability.
 %pass010w
 The listed groupname occurs more than once in the same file.  This
 indicates a configuration problem and should be corrected.
+%pass011f
+The listed username has an empty password string.  This will allow any user
+to gain access to the account without being prompted for a password.

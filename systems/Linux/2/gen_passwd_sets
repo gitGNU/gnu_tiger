@@ -21,6 +21,9 @@
 #      added SunOS gen_passwd_sets so that it works with nsswitch.conf if available
 # Linux/2/gen_passwd_sets - 04/12/2003 - jfs
 #      small change to that outfile gets created when the script is called
+# Linux/2/gen_passwd_sets - 06/21/2003 - jfs
+#      applied patch from Ryan Bradetich to identify which cryptographic
+#      is used in the passwd format and simplify MD5 hashes check
 #
 #-----------------------------------------------------------------------------
 #
@@ -61,11 +64,12 @@ zappasswd()
     case $passwd in
 # Normal UNIX passwds (13 chars)
       [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./])
-	     passwd="xxxxxxxxxxxxx"
+	     passwd="crypt3"
 	   ;;
-# For MD5 passwds (35 chars)
-      [a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/])
-	     passwd="xxxxxxxxxxxxx"
+	     passwd="md5"
+# For MD5 passwds (35 chars) starting with $1$ (Linux)
+      \$1\$[a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/])
+	     passwd="md5"
 	   ;;
       " ") passwd=""
 	   ;;
