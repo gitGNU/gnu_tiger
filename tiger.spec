@@ -25,6 +25,10 @@ Source: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}
 Provides: %{name}
 %if %{want_reloc}
+Prefix: /usr/lib
+Prefix: /var
+Prefix: /etc
+%else
 Prefix: /usr/local
 Prefix: /var
 Prefix: /etc
@@ -52,27 +56,57 @@ This is TIGER release %{version}.%{release}
 %build
 ./configure \
 	--prefix=${RPM_BUILD_ROOT} \
-	--with-tigerhome=/usr/local/tiger \
-	--with-tigerbin=/usr/local/tiger/bin \
 %if %{want_reloc}
+	--with-tigerhome=/usr/lib/tiger \
+	--with-tigerbin=/usr/sbin \
 	--with-tigerconfig=/etc/tiger \
 	--with-tigerwork=/var/run/tiger \
 	--with-tigerlog=/var/log
 %else
+	--with-tigerhome=/usr/local/tiger \
+	--with-tigerbin=/usr/local/tiger/bin \
 	--with-tigerconfig=/usr/local/tiger/etc \
 	--with-tigerwork=/usr/local/tiger/run \
 	--with-tigerlog=/usr/local/tiger/log
 %endif
 
-grep /proc/version -qe " SMP "; case "$?" in 0) opt='-j 3';; esac
+if grep /proc/version -qe " SMP "; then opt='-j 3'; fi
 make ${opt}
 
 
 %install
 export DESTDIR=${RPM_BUILD_ROOT}
+# Generic call 
 make install
+# OS Specific 
+# 1.- Cron job installation
+mkdir -p ${DESTDIR}/etc/cron.d/
+chmod 766 ${DESTDIR}/etc/cron.d/
+%if  %{want_reloc}
+install -m644 debian/cron.d ${DESTDIR}/etc/cron.d/tiger
+%else
+sed -es 's/usr\/sbin/usr\/local\/tiger\/bin/g' < debian/cron.d >${DESTDIR}/etc/cron.d/tiger
+chmod 644 ${DESTDIR}/etc/cron.d/tiger
+%endif
+# 2.- Tiger.ignore (needs to be revised for RedHat)
+%if %{want_reloc}
+install -m600 debian/debian.ignore ${DESTDIR}/etc/tiger/tiger.ignore
+%else
+install -m600 debian/debian.ignore ${DESTDIR}/usr/local/etc/tiger.ignore
+%endif
+# 3.- This should be done by the Makefile, grumble...
+%if %{want_reloc}
+install -m 644 version.h ${DESTDIR}/usr/lib/tiger/
+%else
+install -m 644 version.h ${DESTDIR}/usr/local/tiger/
+%endif
+# Removed unnecesary stuff 
 %if ! %{want_distr}
+%if %{want_reloc}
 find ${RPM_BUILD_ROOT}/usr/local/tiger/systems -maxdepth 1 -type d -a -name \*IX -o -name \*UX -o -name \*SX -o -name \*XT -o -name \*OS -o -name \*64 -o -name UNI\* | xargs -iX rm -rf "X"
+%else 
+find ${RPM_BUILD_ROOT}/usr/lib/tiger/systems -maxdepth 1 -type d -a -name \*IX -o -name \*UX -o -name \*SX -o -name \*XT -o -name \*OS -o -name \*64 -o -name UNI\* | xargs -iX rm -rf "X"
+%endif
 find ${RPM_BUILD_ROOT} -type d -name CVS | xargs -iX rm -rf "X"
 %endif
 
@@ -96,7 +130,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %files
 %defattr(-,root,root)
 %if %{want_reloc}
-/usr/local/%{name}
+/usr/lib/%{name}
 /var/run/%{name}
 /etc/%{name}
 %else
@@ -104,6 +138,13 @@ rm -rf ${RPM_BUILD_ROOT}
 %endif
 
 %changelog
+* Sat Dec 27 2003 Javier Fernandez-Sanguino <jfs@debian.org>
+- Spec file when relocatable now uses /usr/lib instead of /usr/local/tiger
+- Fixed grep of /proc/version so that build does not stop in RH 7.3
+  (it builds fine in Debian sid though :-)
+- Cron file is now installed in /etc/cron.d/tiger
+- Version.h file is now installed (should be done by the Makefile)
+- Install ignore file (but needs to be revised)
 * Wed Sep 24 2003 unSpawn <unSpawn@rootshell.be> XIII
 - Made spec file build relocatable and reflect tru parameterisation
 - Strip CVS dirs on build
