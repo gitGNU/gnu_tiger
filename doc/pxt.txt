@@ -48,7 +48,7 @@ The operating system version appears to be less than RedHat 6.2
 Due to security enhancements and fixes available in recent releases,
 running an older version of RedHat is strongly discouraged.
 %osv002
-The operating system version appears to be less than Debian 2.1
+The operating system version appears to be less than Debian 3.0
 Due to security enhancements and fixes available in recent releases,
 running an older version of Debian is strongly discouraged.
 %osv003

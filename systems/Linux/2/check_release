@@ -19,6 +19,7 @@
 # 10.26.2001
 # Paul Telford <paul_telford@hp.com>
 # 07/25/2002 jfs       Changed TigerInstallDir to .
+# 10/01/2003 jfs       Fixed message calls
 #
 #-----------------------------------------------------------------------------
 #
@@ -100,15 +101,15 @@ then
             then
                 typeset -i MAJOR=`echo $DEBIAN_VERSION | $CUT -d \. -f 1`
                 typeset -i MINOR=`echo $DEBIAN_VERSION | $CUT -d \. -f 2`
-                if [ "$MAJOR" -lt 2 ]
+                if [ "$MAJOR" -lt 3 ]
                 then
-                        message osv002 "" "Out of date Debian GNU/Linux version \`$DEBIAN_VERSION'"
-                elif [ "$MAJOR" -eq 2 -a "$MINOR" -lt 1 ]
+                        message FAIL osv002 "" "Out of date Debian GNU/Linux version \`$DEBIAN_VERSION'"
+                elif [ "$MAJOR" -eq 3 -a "$MINOR" -lt 0 ]
                 then
-                        message osv002 "" "Out of date Debian GNU/Linux version \`$DEBIAN_VERSION'"
+                        message FAIL osv002 "" "Out of date Debian GNU/Linux version \`$DEBIAN_VERSION'"
                 fi
             else
-                        message osv004 "" "Unreleased Debian GNU/Linux version \`$DEBIAN_VERSION'"
+                        message WARN osv004 "" "Unreleased Debian GNU/Linux version \`$DEBIAN_VERSION'"
 	     fi
 	    
         fi
