@@ -17,6 +17,7 @@
 #
 # check_root - 05/30/99
 #
+# 03/31/2005 jfs  - Fixed call to grep
 # 04/03/2004 rbrad - Fixed a bug with the PermitRootLogin ssh check where the
 #            check failed if PermitRootLogin was both present and commented out.
 # 11/16/2003 jfs Applied patch from Nicolas François to work non-interactively
@@ -158,7 +159,7 @@ fi
 }
 
 [ -f "$SSHD_CONFIG" ] && {
-rootssh=`$GREP PermitRootLogin $SSHD_CONFIG | $GREP -v ^#`
+rootssh=`$GREP PermitRootLogin $SSHD_CONFIG | $GREP -v '^#'`
 if [ -n "$rootssh" ]; then
     if [ "`echo $rootssh | $GREP -i yes`" ]; then
       message WARN root001w "" "Remote root login allowed in $SSHD_CONFIG"
