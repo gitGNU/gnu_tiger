@@ -47,6 +47,8 @@ For generic information on OS behavior:
 	http://www.redhat.com/docs/manuals/linux/RHL-9-Manual/security-guide/
 	and many other documentation at The Linux Documentation Project
 	(http://www.tldp.org/)
+	Comp.os.linux security FAQ:
+		http://www.linuxsecurity.com/docs/colsfaq.html
 
 - For Solaris
   Reference information for the Solaris Operating Environment, 
@@ -80,6 +82,8 @@ For generic information on OS behavior:
   	http://docs.hp.com/hpux/onlinedocs/B2355-90121/B2355-90121.html
 	(security update for HP-UX 10.20
 	http://docs.hp.com/hpux/onlinedocs/internet/SecUpdate1202.html)
+  HP-UX FAQ: http://www.faqs.org/faqs/hp/hpux-faq/preamble.html
+  (specially the 'Auditing and Security' section 5.1)
   
 - For OpenBSD (for future porting)
   OpenBSD manpages: http://www.openbsd.org/cgi-bin/man.cgi
