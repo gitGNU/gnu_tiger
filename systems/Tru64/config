@@ -1,0 +1,183 @@
+# -*- sh -*-
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2003 Javier Fernandez-Sanguino
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# Tru64/config - 04/15/2003
+# 
+# Preliminary version based on information provided by Florian Felgenhauer
+# notice that all the gen_ scripts might need to be modified, specially
+# gen_passwd_sets (since Tru64 seems to have a protected database instead
+# of /etc/shadow)
+#
+# Also, the following files need to be generated:
+# - services, using util/read_services
+# - this config file can be regenerated with util/buildconf
+# - mksig needs to be used to create SIGNATURE_FILE
+#
+#-----------------------------------------------------------------------------
+#
+UUID=`/usr/bin/id | /usr/bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
+[ "$UUID" = "0" -o "$UID" -eq 0  ] &&
+  ME="root"
+
+[ "$ME" != "root" ] && {
+  echo " " 1>&2
+  echo "This script should be run from a super-user account." 1>&2
+  echo " " 1>&2
+#  exit 1
+}
+[ -z "$ME" ] && {
+  echo " " 1>&2
+  echo "Unable to determine who is running Tiger, make sure you are root" 1>&2
+  echo " " 1>&2
+}
+
+CAT=/usr/bin/cat
+CUT=/usr/bin/cut
+HEAD=/usr/bin/head
+LS=/usr/bin/ls
+# -g to show group ownership
+LSGROUP="-lg"
+# -L to show file instead of symlink
+LSLINK="-L"
+RM=/usr/bin/rm
+AWK=/usr/bin/awk
+GREP=/usr/bin/grep
+EGREP=/usr/bin/egrep
+# Silent grep
+SGREP="$EGREP -s"
+SED=/usr/bin/sed
+SORT=/usr/bin/sort
+COMM=/usr/bin/comm
+TAIL=/usr/ucb/tail
+MV=/usr/bin/mv
+TR=/usr/bin/tr
+JOIN=/usr/bin/join
+GROUPSS=/usr/ucb/groups
+FILECMD=/usr/bin/file
+UNIQ=/usr/bin/uniq
+BASENAME=/usr/bin/basename
+CHMOD=/usr/bin/chmod
+CHOWN=/etc/chown
+LN=/usr/bin/ln
+PASTE=/usr/bin/paste
+DIFF=/sbin/diff
+MAILER=/usr/bin/mail
+ID=/usr/bin/id
+WC=/usr/bin/wc
+EXPAND=/usr/bin/expand
+NETSTAT=/usr/bin/netstat
+LSOF=/usr/sbin/LSOF
+SENDMAILS="/usr/lib/sendmail /usr/lib/sendmail.mx"
+SENDMAILCF="/etc/sendmail.cf"
+#
+export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED CUT HEAD
+export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME
+export CHMOD CHOWN LN PASTE DIFF MAILER ID WC
+export NETSTAT SENDMAILS SENDMAILCF EXPAND  LSOF
+#
+UNAME=/usr/bin/uname
+GETHOSTNAME=/usr/bin/hostname
+EXPR=/usr/bin/expr
+STRINGS=/usr/bin/strings
+FIND=/usr/bin/find
+FINDXDEV=-xdev
+FMT=/usr/ucb/fmt
+GETFS=/usr/etc/mount
+CC=/usr/bin/cc
+PS=/usr/bin/ps
+DATE=/usr/bin/date
+DATECMD="$DATE +%y%m%d"
+TIMECMD="$DATE +%H:%M"
+TESTLINK=-h
+TESTEXEC=-x
+#
+#
+export UNAME GETHOSTNAME EXPR STRINGS FIND FINDXDEV
+export FMT GETFS CC PS DATE DATECMD TIMECMD TESTLINK TESTEXEC
+#
+# Using NIS (YP)?
+YPCAT=/usr/bin/ypcat
+#
+YP=
+($PS -ef | $GREP ypbind | $SGREP -v $GREP) && YP=Y
+export YP
+#
+#
+YPSERVER="NO"
+($PS -ef | $GREP ypserv | $SGREP -v $GREP) && YPSERVER="YES"
+export YPCAT YPSERVER
+#
+MAILSPOOL=/var/spool/mail
+#
+CRONSPOOL=/var/spool/cron/crontabs
+#
+ETCSHELLS=/etc/shells
+#
+export MAILSPOOL CRONSPOOL ETCSHELLS
+#
+FS_WDIRSYS="/tmp/ /var/tmp/ /var/spool/mail/"
+export FS_WDIRSYS
+#
+SYSDEFAULTPATH="/usr/bin:/usr/ucb"
+export SYSDEFAULTPATH
+#
+CDIR="$BASEDIR/systems"
+eval `
+  while read var file
+  do
+    if [ -f "$CONFIG_DIR/$file" ]; then
+      loc="$CONFIG_DIR"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$ARCH/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV/$ARCH"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV"
+    elif [ -f "$CDIR/$OS/$REL/$file" ]; then
+      loc="$CDIR/$OS/$REL"
+    elif [ -f "$CDIR/$OS/$file" ]; then
+      loc="$CDIR/$OS"
+    else
+      loc=""
+    fi
+    if [ "$loc" != "" ]; then
+      echo $var="$loc/$file;"
+    else
+      echo "$var=;"
+    fi
+    echo "export $var;"
+  done << EOL
+GEN_PASSWD_SETS gen_passwd_sets
+GEN_GROUP_SETS gen_group_sets
+GEN_ALIAS_SETS gen_alias_sets
+CHECK_CRON check_cron
+GEN_BOOTPARAM_SETS gen_bootparam_sets
+GEN_EXPORT_SETS gen_export_sets
+GEN_SERVICES_SETS gen_services
+GET_MOUNTS gen_mounts
+SIGNATURE_FILE signatures
+SERVICESFILE services
+INETDFILE inetd
+FILE_ACL file_access_list
+SUID_LIST suid_list
+REL_FILE_EXCP rel_file_exp_list
+GEN_CRON_FILES gen_cron
+GETCLIENTDIRS gendlclients
+GEN_INETD_SETS gen_inetd
+GETDISKS getdisks
+EMBEDDEDLIST embedlist
+GETUSERHOME getuserhome
+EOL
+`
