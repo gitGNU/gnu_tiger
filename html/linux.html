@@ -47,6 +47,9 @@ Processes that have not been run by root are listening on
 interfaces open to the outside. This processes might have been
 run by root and changed uids or might be rogue processes.
 Confirm if their presence is necessary.
+Notice that sometimes services open sporadic UDP listeners to
+receive DNS requests, if you receive reports on open UDP services
+that later on are closed this might be a false positive.
 <PRE>
 
 
@@ -76,7 +79,7 @@ or the user that runs it.
 
 
 </PRE><HR>
-<A NAME="lin005e"><P><B>Code [lin005e]</B><P>
+<A NAME="lin005f"><P><B>Code [lin005f]</B><P>
 In Debian systems, checksums are stored in /var/lib/dpkg/info/
 if the md5sum of a file differs from the checksum of installed packages
 it might be due to changes made by the system administrator (for
@@ -118,3 +121,206 @@ In the default configuration of many GNU/Linux distributions users can
 reboot the machine pressing Ctrl+Alt+Delete while in console mode. This can
 be considered a security risk if an attacker can easily taken down the
 server from console.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin008e"><P><B>Code [lin008e]</B><P>
+The /proc pseudo-filesystem is needed to check the network configuration
+settings in the kernel and determine insecure setups. /proc is available
+when the kernel is compiled with the CONFIG_PROC_FS=Y option (if you want
+to modify them you also need to add the CONFIG_SYSCTL=Y option). You also
+need to have it mounted, if it's not try: 'mount -t proc proc /proc'.
+This is usually done in most distributions per default.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin009i"><P><B>Code [lin009i]</B><P>
+The kernel will answer (per configuration) to ICMP echo requests in any
+interface. You might want to configure it to not answer to this requests
+and thus make it more "invisible". Do it with:
+# sysctl -w net.ipv4.icmp_echo_ignore_all=1
+Note, however, that this violates RFCs.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin010f"><P><B>Code [lin010f]</B><P>
+The system will answer to ICMP broadcast echo messages. This is considered
+a problem since ICMP broadcasts can cause network denial of service as
+the same time as giving away the location of the hosts. To remove this do:
+# sysctl -w net.ipv4.icmp_echo_ignore_broadcasts = 1
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin011f"><P><B>Code [lin011f]</B><P>
+The system is configured to answer to bad formatted ICMP messages. This
+behavior is not recommended, please unconfigure it with:
+# sysctl -w net.ipv4.icmp_ignore_bogus_error_responses = 1
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin012w"><P><B>Code [lin012w]</B><P>
+The system is configured to accept ICMP redirects, this might or might
+not be necessary in your network topology. If you have multiple routers
+to which connect through to outside locations it might be necessary,
+otherwise remote it since an attacker could send bogus ICMP redirection
+messages to try to route the outgoing network packets to other systems
+(including his own) and thus allowing for man in the middle or
+denial of service attacks:
+# sysctl -w net.ipv4.conf.all.accept_redirects = 0
+# sysctl -w net.ipv4.conf.default.accept_redirects = 0
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin013f"><P><B>Code [lin013f]</B><P>
+It is common to protect systems against Denial of Service attacks using
+SYN packets (commonly known as "SYN flooding") by activating support
+of TCP syncookies. Note, however, that activating this violates some RFCS:
+# sysctl -w net.ipv4.tcp_syncookies = 1
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin014f"><P><B>Code [lin014f]</B><P>
+It is possible to send IP spoofed packets from this machine. Spoofed
+packets are commonly used by trojans that make use of compromised hosts
+to deliver denial of service, man in the middle or conection hijacking.
+You should consider configuring your kernel to not permit this:
+# sysctl -w net.ipv4.conf.all.rp_filter = 2
+# sysctl -w net.ipv4.conf.default.rp_filter = 2
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin015w"><P><B>Code [lin015w]</B><P>
+IP forwarding is the option that permits the system to act as a router
+and thus resend packets from one network interface to another. If your
+system is not acting as such this option should be disabled:
+# sysctl -w net.ipv4.ip_forward = 0
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin016f"><P><B>Code [lin016f]</B><P>
+Source routing might permit an attacker to send packets through your
+host (if routing is enabled) to other hosts without following your
+network topology setup. It should be enabled only under very special
+circumstances or otherwise an attacker could try to bypass the traffic
+filtering that is done on the network:
+# sysctl -w net.ipv4.conf.all.accept_source_route = 0
+# sysctl -w net.ipv4.conf.default.accept_source_route = 0
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin017w"><P><B>Code [lin017w]</B><P>
+Suspicious packets recieved by the kernel should be logged to detect
+incoming attacks. To activate this logging capability:
+# sysctl -w net.ipv4.conf.all.log_martians = 1
+# sysctl -w net.ipv4.conf.default.log_martians = 1
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin018w"><P><B>Code [lin018w]</B><P>
+The "weak end host" description in the RFC1122 permits multihomed systems
+to receive packets for a network interface from another network interface.
+This, as a matter of fact, removes the benefit of configuring services
+and binding them to a single IP address (not to all IP addresses).
+For 2.2 kernels remove this option with:
+# echo 1 > /proc/sys/net/ipv4/conf/eth1/hidden
+For 2.4 and later kernels you might need to patch the kernel or configure
+your firewalling rules properly.
