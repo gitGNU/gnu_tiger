@@ -399,7 +399,7 @@ aidepid=
 
 [ "$Tiger_Check_SSH" != 'N' ] && {
   echo "`$TIMECMD`> Checking SSHD's configuration..."
-  $SCRIPTDIR/check_ssh >> $logtmp
+  run_script check_ssh >> $logtmp
 }
 
 [ "$Tiger_Check_SENDMAIL" != 'N' ] && {
