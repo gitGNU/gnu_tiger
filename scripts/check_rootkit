@@ -26,6 +26,7 @@
 # uses those defined in the path
 #
 # DATE (MM/DD/YYYY) 	NAME 	DESCRIPTION_OF_CHANGES
+# 09/19/2003            jfs     Removed unused temporary file creation
 # 08/14/2003            jfs     Implemented usage of CHKROOTKIT if available
 # 08/13/2003            jfs     Integrated into the Tiger tool
 # 05/15/2002            ARSC	Initial version
@@ -85,14 +86,6 @@ echo "# Performing check for rookits..."
 haveallcmds RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
-# IF you use temporary files define them here to generate them
-# properly and avoid race conditions.
-tempfiles=$WORKDIR/rootkit.chk.$$
-safe_temp $tempfiles
-trap 'delete $tempfiles ; exit 1' 1 2 3 15
-# TODO: a number of files get created to test the rootkits, they
-# should be removed too
-
 FINDFLAG="OK"
 LSFLAG="OK"
 BADFIND=""
@@ -114,7 +107,7 @@ while [ -n "$1" ]; do
       LSFLAG="BAD"
       BADLS="$BADLS,$TMP"
     fi
-    FINDTMP=`find $TMPDIR -name "$TMP" -print`
+    FINDTMP=`find $WORKDIR -name "$TMP" -print`
     if [ -z "$FINDTMP" ]; then
       FINDFLAG="BAD"
       BADFIND="$BADFIND,$TMP"
