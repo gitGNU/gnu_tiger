@@ -62,7 +62,7 @@ TIGERCONFIG=${prefix}/etc/tiger
 #------------------------------------------------------------------------
 #
 
-PLATFORM_SCRIPTS=$(shell find ./systems/ -type f)
+PLATFORM_SCRIPTS=$$(find ./systems/ -type f)
 
 BINARIES=./tiger \
 	 ./tigexp  \
@@ -117,7 +117,7 @@ SCRIPTS=./scripts/check_accounts \
 	$(PLATFORM_SCRIPTS)
 
 CONFIGFILES=./tigerrc \
-	./cronrc \
+	./cronrc 
 
 MISCFILES=./initdefs \
 	./check.tbl \

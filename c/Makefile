@@ -30,7 +30,7 @@ install:  all
 
 
 % : %.c
-	gcc ${COPTS} -o $@ $<
+	$(CC) $(CFLAGS) ${COPTS} -o $@ $<
 
 clean:
 	-rm -f ${BINLIST}
