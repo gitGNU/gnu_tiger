@@ -16,7 +16,8 @@
 #
 # initdefs - 06/14/93
 #
-# initdefs - 09/19/2003 - jfs - Different error messages in have_allvars
+# initdefs - 09/19/2003 - jfs - Different error messages in have_allvars.
+#            Applied patch from Ryan Bradetich to fix UID -> UUID
 # initdefs - 08/13/2003 - jfs - Run_script now returns error number
 # initdefs - 08/09/2003 - jfs - Delete now checks if RM exists
 # initdefs - 08/08/2003 - jfs - Added safe_temp and run_script functions
@@ -471,10 +472,10 @@ run_script()
 	if [ "$__script_run" != "" ] ; then
             __script_owner=`$LS -nl $__script_run | $AWK '{ print $3; }'`
             if [ $TESTEXEC $__script_run ]; then
-	            if [ $__script_owner -eq $UID ]; then
+	            if [ $__script_owner -eq $UUID ]; then
 			$__script_run
 		    else
-			echo "--ERROR-- [misc024w] The $__script_run script will not be run since it is owned by a user ($__script_owner) different than the one running Tiger ($UID)"
+			echo "--ERROR-- [misc024w] The $__script_run script will not be run since it is owned by a user ($__script_owner) different than the one running Tiger ($UUID)"
   			__error=1
 		    fi
 	    else
