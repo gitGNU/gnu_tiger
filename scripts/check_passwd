@@ -23,6 +23,23 @@
 # 05/01/2003 jfs Fixed PWCK behavior
 # 06/21/2003 jfs Modified with patch from Ryan Bradetich to generalise
 #                PWCK support and to add an additional check (emtpy password)
+#                Also added an acceptable cryptographic hash check, as well
+#                as a check for duplicate home directories.
+# 08/08/2003 jfs Improved temporary file creation.
+#		 Applied Ryan Braderitch's patch:
+#   * Reformat and optimize some checks (replace several awk statements with
+#    a single pass through the password file).
+#   * Changed the Administrative Login ID with impossible password to a failure
+#     instead of a warning.
+#   * Added the following checks from check_account:
+#    - Login ID is disabled, but still has a valid shell (acc001w)
+#    - Login does not have a valid shell (acc020w)
+#    - UID has / for home directory (acc014f)
+#    - Login ID is UID-0 (acc012w)
+#    - Administrative Login ID should have impossible password (acc018w)
+#   * Merged these duplicate checks from check_account:
+#    - empty password check (acc010a, acc011w)
+#    - duplicate home directory check (acc015w)
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -60,7 +77,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT GEN_PASSWD_SETS GREP RM SORT JOIN UNIQ MV || exit 1
+  haveallcmds AWK CAT GEN_PASSWD_SETS GREP JOIN SORT UNIQ RM || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -72,149 +89,208 @@ done
 echo
 echo "# Performing check of passwd files..."
 
-haveallcmds AWK CAT GEN_PASSWD_SETS GREP RM SORT JOIN UNIQ MV || exit 1
+haveallcmds AWK CAT GEN_PASSWD_SETS GREP JOIN SED SORT UNIQ RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
+safe_temp "$WORKDIR/pass.list.$$" "$WORKDIR/p1name.$$" "$WORKDIR/p2name.$$" "$WORKDIR/p1uid.$$" "$WORKDIR/p2uid.$$"
+
+trap 'delete "$WORKDIR/pass.list.$$" "$WORKDIR/p1name.$$" \
+"$WORKDIR/p2name.$$" "$WORKDIR/p1uid.$$" "$WORKDIR/p2uid.$$" ; exit 1' 1 2 3 15
+
+check_passwd_entries()
 {
-  if [ -n "$Tiger_PasswdFiles" ]; then
-     [ -f $Tiger_PasswdFiles ] && $CAT $Tiger_PasswdFiles > $WORKDIR/pass.list.$$
-  else
-    $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
-  fi
+  saveifs=$IFS
+  IFS=:
+
+  while read login hash uid gid gcos home shell
+  do
+
+    # Check the password hash.
+    eval "case \"$hash\" in
+      \"\")
+        message FAIL pass011f \"\" \"Username \\\`$login' has an empty password field.\"
+        ;;
+      $Tiger_Passwd_Hashes|\*)
+        ;;
+      *)
+        message WARN pass013w \"\" \"Username \\\`$login' is not using an acceptable password hash ($passwd).\"
+        ;;
+    esac"
+
+    # Report additional UID-0 accounts.
+    [ "$uid" = 0 -a "$login" != root ] && {
+      message WARN pass017w "" "Login ID $login has uid == 0."
+    }
+
+    # Perform administrative checks (Maybe this should be a function...)
+    eval "case \"$login\" in
+      $Tiger_Admin_Accounts)
+         [ \"$hash\" != '*' ] && {
+           message WARN pass018f \"\" \"Administrative user $login does not have an impossible password.\"
+         }
+         continue
+         ;;
+    esac"
+
+    # Report users with / as their homedir
+    [ "$home" = / ] && {
+      message WARN pass016w "" "User $login has $home as home directory"
+    }
+
+    # Assume a default shell, if shell is not specified.
+    [ x$shell = x ] && shell=/bin/sh
+
+    # Check for valid shells.
+    eval "case \"$shell\" in
+      /bin/false)
+         ;;
+      $shcase)
+         [ \"$hash\" = \* ] && {
+	   message WARN pass014w \"\" \"Login ($login) is disabled, but has a valid shell.\"
+         } 
+         ;;
+      *)
+         message WARN pass015w \"\" \"Login ID $login does not have a valid shell ($shell).\"
+         ;;
+    esac"
+  done
+
+  IFS=$saveifs
 }
 
-saveifs=$IFS
+#
+# This function checks for UID and username conflicts between multiple password sources.
+#
+conflict_check()
+{
+  passwd1=$1
+  passwd2=$2
 
-# Just make this check just in case
-if [ ! -r $WORKDIR/pass.list.$$ ] 
-then
-    message FAIL pass008e "" "File $WORKDIR/pass.list.$$ is not readable" 
-    exit 1
+
+  $SORT $passwd2 > $WORKDIR/p2name.$$
+  $SORT -t: +2 -3 $passwd2 > $WORKDIR/p2uid.$$
+  $JOIN -t: -o 1.1 1.3 2.3 $WORKDIR/p1name.$$ $WORKDIR/p2name.$$ |
+  {
+    IFS=:
+    while read username uid1 uid2
+    do
+      IFS=$saveifs
+      [ "$uid1" != "$uid2" ] && {
+        message WARN pass004w "" "UID conflict for login ID \`$username' between $src1 (uid = $uid1) and $src2 (uid = $uid2)."
+      }
+      IFS=:
+    done
+  }
+                                                                                                                                                                                                           
+  $JOIN -t: -j1 3 -j2 3 -o 1.3 1.1 2.1 $WORKDIR/p1uid.$$ $WORKDIR/p2uid.$$ |
+  $AWK -F: '$1 != 0 {print}' |
+  {
+    IFS=:
+    while read uid name1 name2
+    do
+      IFS=$saveifs
+      [ "$name1" != "$name2" ] && {
+        message WARN pass005w "" "Username conflict for uid $uid between $src1 (login ID $name1) and $src2 (login ID $name2)."
+      }
+      IFS=:
+    done
+  }
+  delete $WORKDIR/p2uid.$$ $WORKDIR/p2name.$$
+}
+
+# Define shcase to be a list of valid shells, so we can check for
+# shell initilization files.
+shcase='/bin/sh|/bin/csh'
+[ -n "$ETCSHELLS" -a -s "$ETCSHELLS" ] && {
+  shells=`$GREP -v '^#' $ETCSHELLS`
+  shcase=`echo $shells | $TR ' ' '|'`
+}
+
+if [ -n "$Tiger_PasswdFiles" ]; then
+  [ -f $Tiger_PasswdFiles ] && $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+else
+  $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
 fi
 
-$CAT $WORKDIR/pass.list.$$ > $WORKDIR/pass2.$$
-newfile=$WORKDIR/pass2new.$$
-
-while read passwd1
+while read passwd_set
 do
-  src1=`$CAT $passwd1.src`
-  $SORT $passwd1 > $WORKDIR/p1name.$$
-  $SORT -t: +2 -3 $passwd1 > $WORKDIR/p1uid.$$
+  source=`$CAT $passwd_set.src`
+  echo "# Checking entries from $source."
 
+  $CAT $passwd_set |
+  check_passwd_entries
+
+  $SORT $passwd_set > $WORKDIR/p1name.$$
+  $SORT -t: +2 -3 $passwd_set > $WORKDIR/p1uid.$$
+
+  # Check for duplicate usernames.
   $AWK -F: '{print $1}' $WORKDIR/p1name.$$ |
   $SORT |
   $UNIQ -c |
   while read times username
   do
-# Previous fix for Debian bug #117117, ARSC's fix is much better (jfs)
-#    times=`$GREP "$username:" $WORKDIR/p1name.$$ | $AWK 'END { print NR }'`
+    # Previous fix for Debian bug #117117, ARSC's fix is much better (jfs)
+    #    times=`$GREP "$username:" $WORKDIR/p1name.$$ | $AWK 'END { print NR }'`
     [ $times -gt 1 ] && {
-    message WARN pass001w "" "Username \`$username' exists multiple times ($times) in $src1."
+      message WARN pass001w "" "Username \`$username' exists multiple times ($times) in $source."
     }
   done
 
-  $AWK -F: '{print $1,$2}' $WORKDIR/p1uid.$$ |
-  while read username passwd
-  do
-    eval "case \"$passwd\" in
-      \"\")
-	message FAIL pass011f \"\" \"Username \\\`$username' has an empty password field.\"
-	;;
-      $Tiger_Passwd_Hashes|\*)
-	;;
-      *)
-	message WARN pass013w \"\" \"Username \\\`$username' is not using an acceptable password hash ($passwd).\"
-	;;
-      esac"
-  done
-
-#  $AWK -F: '{print $3}' $WORKDIR/p1uid.$$ |
-# Check for multiple non-NIS entries with the same UID
+  # Check for multiple non-NIS entries with the same UID
   $AWK -F:  '/^[^+-]/ {print $3}' $WORKDIR/p1uid.$$ |
   $SORT |
   $UNIQ -c |
   while read times uid
   do
-# Previous fix for Debian bug #117117, ARSC's fix is much better (jfs)
-#    times=`$GREP ":$uid:" $WORKDIR/p1uid.$$ | $AWK 'END { print NR }'`
+    # Previous fix for Debian bug #117117, ARSC's fix is much better (jfs)
+    #    times=`$GREP ":$uid:" $WORKDIR/p1uid.$$ | $AWK 'END { print NR }'`
     [ $times -gt 1 ] && {
-    message WARN pass002w "" "UID $uid exists multiple times ($times) in $src1."
+      message WARN pass002w "" "UID $uid exists multiple times ($times) in $source."
     }
   done
 
-  $AWK -F: "\$3 > $Tiger_Accounts_Trust {print \$6}" $WORKDIR/p1uid.$$ |
+  # Check for multiple entries with duplicate home directories.
+  admin_account_list=`echo $Tiger_Admin_Accounts | $SED -e 's/|/:|^/g'`
+  $GREP -Ev ^$admin_account_list: $WORKDIR/p1uid.$$ |
+  $AWK -F: '{print $6}' |
   $SORT |
   $UNIQ -c |
   while read times homedir
   do
     [ $times -gt 1 ] && {
-      message WARN pass012w "" "Home directory $homedir exists multiple times ($times) in $src1."
+      message WARN pass012w "" "Home directory $homedir exists multiple times ($times) in $source."
     }
   done
 
-  if [ ! -n "$PWCK" ]; then
-    $AWK -F: 'NF != 7 {print}' $WORKDIR/p1uid.$$ |
-    while read entry
-    do
-      message WARN pass003w "$entry" "Malformed entry in $src1:"
-    done
-  fi
+  [ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
+done < $WORKDIR/pass.list.$$
 
-  $GREP -v "^$passwd1\$" $WORKDIR/pass2.$$ |
-  while read passwd2
+# Check for conflicts.
+while read src1
+do
+  while read src2
   do
-    src2=`$CAT $passwd2.src`
+    conflict_check $src1 $src2
+  done 
+done < $WORKDIR/pass.list.$$
 
-    $SORT $passwd2 > $WORKDIR/p2name.$$
-    $SORT -t: +2 -3 $passwd2 > $WORKDIR/p2uid.$$
-    $JOIN -t: -o 1.1 1.3 2.3 $WORKDIR/p1name.$$ $WORKDIR/p2name.$$ |
-    {
-      IFS=:
-      while read username uid1 uid2
-      do
-	IFS=$saveifs
-	[ "$uid1" != "$uid2" ] && {
-	  message WARN pass004w "" "UID conflict for login ID \`$username' between $src1 (uid = $uid1) and $src2 (uid = $uid2)."
-	}
-	IFS=:
-      done
-    }
-    
-    $JOIN -t: -j1 3 -j2 3 -o 1.3 1.1 2.1 $WORKDIR/p1uid.$$ $WORKDIR/p2uid.$$ |
-    $AWK -F: '$1 != 0 {print}' |
-    {
-      IFS=:
-      while read uid name1 name2
-      do
-	IFS=$saveifs
-	[ "$name1" != "$name2" ] && {
-	  message WARN pass005w "" "Username conflict for uid $uid between $src1 (login ID $name1) and $src2 (login ID $name2)."
-	}
-	IFS=:
-      done
-    }
-    echo "$passwd2" >> $newfile
-    delete $WORKDIR/p2uid.$$ $WORKDIR/p2name.$$
-  done
-  delete $WORKDIR/p1uid.$$ $WORKDIR/p1name.$$ $WORKDIR/pass2.$$
-  [ -s $newfile ] && $MV $newfile $WORKDIR/pass2.$$
-done < $WORKDIR/pass.list.$$ |
-$OUTPUTMETHOD
-
+# See if the system is configured for shadow passwords.
 [ "$Tiger_Check_PASSWD_SHADOW" != 'N' ] && {
   [ -s /etc/passwd ] && [ -s /etc/shadow ] || {
     message WARN pass007w "" "System is not properly configured for shadow passwords."
   }
 }
 
+# Verify the password file format.
 [ -n "$PWCK" ] && {
   # TODO: Add the results to the report
-  pwckerr=`$PWCK /etc/passwd /etc/shadow 2>&1`
+  pwckerr=`$PWCK 2>&1`
   if [ -n "$pwckerr" ] ; then
     message WARN pass006w "" "Integrity of password files questionable ($PWCK)."
   fi
 }
 
+# Check the password constraints.
 [ -r "$LOGINDEF" ] && [ -z "$PAMLOGINDEF" -o ! -f "$PAMLOGINDEF" ] && \
 [ -n "$Tiger_Passwd_Constraints" ]  && {
   for param in $Tiger_Passwd_Constraints
@@ -225,17 +301,20 @@ $OUTPUTMETHOD
     fi
   done
 }
+
 # TODO: For Pam systemms the PAMLOGINDEF file needs to be checked instead
 # of login.defs
 #[ -f "$PAMLOGINDEF" ] && [ -n "$Tiger_Pam_Constraints" ]  && {
 #}
-
+                                                                                                                                                                                                           
+# Cleanup the temporary files.
 [ ! -n "$Tiger_PasswdFiles" ] && {
   while read file
   do
     delete $file $file.src
   done < $WORKDIR/pass.list.$$
 }
+delete $WORKDIR/pass.list.$$
 
-delete $WORKDIR/pass.list.$$ $WORKDIR/pass2new.$$
+exit 0
 
