@@ -29,20 +29,18 @@ while read service socket protocol wait user path args
 do
 	echo "$service:$socket:$protocol:$wait:$user $path $args"
 done |
-$SORT -u > foo.conf
-
-echo "/etc/inetd.conf" > $WORKDIR/etc_inetd.$$.src
+$SORT -u > $WORKDIR/etc_inetd.conf.$$
 
 $GREP -v '^#' /etc/inetd.conf.local |
 while read service socket protocol wait user path args
 do
 	echo "$service:$socket:$protocol:$wait:$user $path $args"
 done |
-$SORT -u > foo.conf.local
+$SORT -u > $WORKDIR/etc_inetd.conf.local.$$
 
-echo "/etc/inetd.conf.local" >> $WORKDIR/etc_inetd.$$.src
+echo "/etc/inetd.conf /etc/inetd.conf.local" > $WORKDIR/etc_inetd.$$.src
 
-$JOIN -j 1 -v 1 -v 2 foo.conf foo.conf.local |
+$JOIN -j 1 -v 1 -v 2 $WORKDIR/etc_inetd.conf.$$ $WORKDIR/etc_inetd.conf.local.$$ |
 while read key path args
 do
 	key=`echo $key | $TR ':' ' '`
@@ -50,7 +48,7 @@ do
 done > $WORKDIR/etc_inetd.$$
 
 
-$JOIN -j 1 -v 2 $WORKDIR/etc_inetd.$$ foo.conf.local |
+$JOIN -j 1 -v 2 $WORKDIR/etc_inetd.$$ $WORKDIR/etc_inetd.conf.local.$$ |
 while read key path args
 do
 	[ "$path" = "disable" ] && continue
@@ -59,4 +57,5 @@ do
 	echo "$key $path $args"
 done >> $WORKDIR/etc_inetd.$$
 
+rm $WORKDIR/etc_inetd.conf.$$ $WORKDIR/etc_inetd.conf.local.$$
 echo $WORKDIR/etc_inetd.$$
