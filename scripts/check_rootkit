@@ -1,29 +1,98 @@
 #!/bin/sh
-# Script to look for trojaned ls and find command
-# Part of TARA Suite
-# Uses ls and find that are in path
 #
-# Use -v flag for verbose output
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2003 Advanced Research Corporation
 #
-VERBOSE=""
-TARA=""
-MESSAGE="echo"
-if [ "$1" = '-v' ]; then
-  VERBOSE=TRUE
-    echo "Pathname  LS  FIND"
-    echo "--------  ---  ---"
-fi
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
 #
-#  See if running in TARA environment
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_rootkit -  05/15/2002
+# 
+# Script to find systems which have been rootkited. It looks for
+# trojaned ls and find commands.
+# It also includes a wrapper to run CHKROOTKIT and format 
+# the results in Tiger's message format.
+#
+# Note: This script does not use the configured LS and FIND but, instead
+# uses those defined in the path
+#
+# DATE (MM/DD/YYYY) 	NAME 	DESCRIPTION_OF_CHANGES
+# 08/14/2003            jfs     Implemented usage of CHKROOTKIT if available
+# 08/13/2003            jfs     Integrated into the Tiger tool
+# 05/15/2002            ARSC	Initial version
+#
+#-----------------------------------------------------------------------------
+# TODO
+# - Chkrootkit messages could be parsed more thoroughly
+#-----------------------------------------------------------------------------
+#
+# This is the directory Tiger is installed on
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
 basedir=${TIGERHOMEDIR:=$TigerInstallDir}
-[  -r $basedir/config ] && {
-. $basedir/config
-. $basedir/initdefs
-  TARA="YES"
-  MESSAGE="message"
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
 }
 
-TMPDIR="/tmp/check_rootkit"
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds RM || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing check for rookits..."
+
+haveallcmds RM || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+# IF you use temporary files define them here to generate them
+# properly and avoid race conditions.
+tempfiles=$WORKDIR/rootkit.chk.$$
+safe_temp $tempfiles
+trap 'delete $tempfiles ; exit 1' 1 2 3 15
+# TODO: a number of files get created to test the rootkits, they
+# should be removed too
+
 FINDFLAG="OK"
 LSFLAG="OK"
 BADFIND=""
@@ -33,24 +102,16 @@ STRINGS="$STRINGS lsniff shadow illusion cl mirkforce buca smurf psybnc"
 STRINGS="$STRINGS lib.a hideme occult tcp.log bnc eggdrop"
 set *=$STRINGS
 shift
-if [ ! -d $TMPDIR ]; then
-  mkdir -p $TMPDIR
-  if [ $? -ne 0 ]; then
-   echo "Can not create test directory, aborting ..."
-   exit
-  fi
-  rm -f "$TMPDIR/*"
-fi
+
 while [ -n "$1" ]; do
   LSFLAG="OK"
   FINDFLAG="OK"
   TMP=`echo $1 |sed -e "s/BK/ /g"`
-  touch "$TMPDIR/$TMP"
+  touch "$WORKDIR/$TMP"
   if [ $? -eq 0 ]; then
-    LSTMP=`ls "$TMPDIR/$TMP" 2>/dev/null`
+    LSTMP=`ls "$WORKDIR/$TMP" 2>/dev/null`
     if [ -z "$LSTMP" ]; then
       LSFLAG="BAD"
-
       BADLS="$BADLS,$TMP"
     fi
     FINDTMP=`find $TMPDIR -name "$TMP" -print`
@@ -63,13 +124,55 @@ while [ -n "$1" ]; do
     echo "$TMP $LSFLAG $FINDFLAG"
   fi
   shift
+  delete "$WORKDIR/$TMP"
 done
-rm -rf $TMPDIR
+
 if [ -n "$BADLS" ]; then
-  $MESSAGE FAIL rootkit001f "" "ls appears to be a trojan version"
-  
+  message FAIL rootkit001f "" "ls appears to be a trojan version"
+  message ALERT rootkit006a "" "A rootkit seems to be installed in the system"
 fi
 if [ -n "$BADFIND" ]; then
-  $MESSAGE FAIL rootkit002f "" "find appears to be a trojan version"
+  message FAIL rootkit002f "" "find appears to be a trojan version"
+  message ALERT rootkit006a "" "A rootkit seems to be installed in the system"
 fi
 
+# Chkrookit binary location|override + default check
+if [ -z "${Tiger_CHKROOTKIT_LOC_OVERRIDE}" ]
+then
+        CHKROOTKIT=`which chkrootkit`
+else
+        CHKROOTKIT=${Tiger_CHKROOTKIT_LOC_OVERRIDE}
+fi
+
+haveallcmds CHKROOTKIT && {
+	echo "# Running chkrootkit ($CHKROOTKIT) to perform further checks..."
+# TODO: This code does not show some of chkrootkit's messages (such as
+# suspicious files)
+	$CHKROOTKIT -q |
+# Note: we use the quiet mode to avoid parsing all the lines of 
+# "Searching for..." things
+	while read line
+	do
+		case "$line" in 
+		Suspect' 'directory*)
+  		message WARN rootkit003w "" "Chkrootkit has detected a suspicious directory"
+		echo $line ;;
+		Possible*)
+  		message WARN rootkit004f "" "Chkrootkit has detected a possible rootkit installation"
+		echo $line ;;
+		Warning:' 'Possible*)
+  		message WARN rootkit004f "" "Chkrootkit has detected a possible rootkit installation"
+		echo $line ;;
+		Warning:' '*installed)
+  		message ALERT rootkit005a "" "Chkrootkit has detected a rootkit installation"
+                message ALERT rootkit006a "" "A rootkit seems to be installed in the system"
+		echo $line ;;
+		INFECTED*)
+  		message ALERT rootkit005a "" "Chkrootkit has found a file which seems to be infected because of a rootkit"
+                message ALERT rootkit009a "" "A rootkit seems to be installed in the system"
+		;;
+		esac
+
+	done
+}
+exit 0
