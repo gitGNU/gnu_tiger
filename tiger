@@ -351,6 +351,16 @@ trippid=
   $SCRIPTDIR/check_finddeleted >> $logtmp
 }
 
+[ "$Tiger_Check_APACHE" != 'N' ] && {
+  echo "`$TIMECMD`> Checking the Apache configuration..."
+  $SCRIPTDIR/check_apache >> $logtmp
+}
+
+[ "$Tiger_Check_EXRC" != 'N' ] && {
+  echo "`$TIMECMD`> Checking for exrc files..."
+  $SCRIPTDIR/check_exrc >> $logtmp
+}
+
 # This test should be changed from Perl to shell script, also there
 # is repeated functionality from check_listeningprocs (jfs)
 #[ "$Tiger_Check_STRICTNW" != 'N' ] && {
