@@ -48,6 +48,8 @@
 #	* 2466 - update list of shells to ignore.
 # 01/21/2004 jfs Moved comment from check_accounts to here and expanded
 #       shcase definition to be equivalent to the one there.
+# 03/03/2004 jfs Check if users do not have a shell defined
+#
 #-----------------------------------------------------------------------------
 # TODO:
 # - Some 'valid' shells such as nologin or noshell might be listed under
@@ -153,8 +155,8 @@ check_passwd_entries()
       message WARN pass016w "" "User $login has $home as home directory"
     }
 
-    # Assume a default shell, if shell is not specified.
-    [ x$shell = x ] && shell=/bin/sh
+    # Mark as an emptyshell, if shell is not specified.
+    [ "x$shell" = "x" -o "x$shell" = "x " ] && shell=emptyshell
 
     # Check for valid shells.
     # TODO: The hardcoded list of shells could be user defined 
@@ -166,6 +168,9 @@ check_passwd_entries()
          [ \"$hash\" = \* ] && {
 	   message WARN pass014w \"\" \"Login ($login) is disabled, but has a valid shell.\"
          } 
+         ;;
+      emptyshell)
+         message WARN pass015w \"\" \"Login ID $login has an empty shell.\"
          ;;
       *)
          message WARN pass015w \"\" \"Login ID $login does not have a valid shell ($shell).\"
