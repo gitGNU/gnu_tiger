@@ -1,25 +1,37 @@
 %logf001f
 The log file "wtmp" should exist to show an audit trail of which user has
 logged into the server.  This file is accessed by the command "last".
+It might not exist due to a system configuration error or an 
+intruder that has tried to cover this tracks by removing it.
 %logf002f
 The log file "btmp" should exist to log a list of bad logins.
 This file is accessed using the command "lastb".
+It might not exist due to a system configuration error or an 
+intruder that has tried to cover this tracks by removing it.
 %logf003f
 The log file "lastlog" should exist to show a user's most recent login
 session on the server.  This file is accessed by the command "lastlog".
+It might not exist due to a system configuration error or an 
+intruder that has tried to cover this tracks by removing it.
 %logf004f
 The log file "utmp" should exist so that a list of current users on the
 server can be listed.  This is accessed by the command "who".
+It might not exist due to a system configuration error or an 
+intruder that has tried to cover this tracks by removing it.
 %logf005w
 The log file does not have proper permissions set. It is recommended that
-you change the permissions to those suggested.
+you change the permissions to those suggested for these file.
 %logf005w
 There are no umask entries in the configuration file. It is recommended
 that there are umask entries set in the configuration file.
 %logf006f
-The umask setting in the configuration file is insecure.  Umask must be 
-set as to prevent public write (ie. either 002 or 022).
-%logf007w
-There are more than two umask entries in the configuration file.  Please 
-check if the umask settings are secure (to prevent public write, suggested 
-values are either 002 or 022).
+The log file "loginlog" should exist to show a user login attempts
+on the server.  
+It might not exist due to a system configuration error or an 
+intruder that has tried to cover this tracks by removing it.
+%logf006f
+The log file "messages" should exist to show a trace of the system logs
+(including reboots and kernel messages).  It might not exist if you have
+configured your system to use a different file for logging or if an
+intruder has tried to cover this tracks by removing it since the messages
+file might contain bad login attempts from local users and remote hosts.

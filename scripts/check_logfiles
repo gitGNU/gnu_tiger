@@ -28,6 +28,13 @@
 #                  Solaris recommendations. 
 #                  Logfile location is no longer hardcoded but can be changed
 #                  depending on $OS
+# check_logfiles - 06/20/2003 - jfs - based on patch from Ryan Bradetich fixed
+#                  logic errors in check_fileperm(). Updated the error codes to 
+#                  match the appropriate descriptions.
+#                  Also fixed a typo in MESSAGEs and modified the script to not
+#                  warn if LOGINLOG does not exist (as is the Linux case)
+#                  Also, file permissions in systems in which WTMP and UTMP
+#                  are group 'utmp' should be 664
 #
 #-----------------------------------------------------------------------------
 #
@@ -67,7 +74,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-#  haveallcmds LS || exit 1
+  haveallcmds AWK || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -80,18 +87,14 @@ done
 echo
 echo "# Checking for existence of log files..."
 
-#haveallcmds LS || exit 1
+haveallcmds AWK || exit 1
 
 check_fileperm () {
   file=$1
   permission=$2
-  value=-1
-  getpermit $1 |
-  while read file owner group ur uw ux gr gw gx or ow ox suid sgid sticky
-  do
-    [ "${ur}${uw}${ux}${gr}${gw}${gx}${or}${ow}${ox}" = '$permission' ] &&
-	value=1
-  done
+  value=1
+  realpermission=`getpermit $1 | $AWK '{ print $4$5$6$7$8$9$10$11$12 }' `
+  [ "$realpermission" = "$permission" ]  && value=0
   return $value
 }
 
@@ -112,46 +115,64 @@ if [ "$OS" = "SunOS" ] ; then
 # Check: Note BTMP does not seem to exist
 # And maybe also sulog and messages should be checked.
 fi
+if [ "$OS" = "Linux" ] ; then
+# Loginlog and btmp do not exist
+	LOGINLOG=""
+	BTMP=""
+fi
 
-if [ ! -r $WTMP ] ; then
+if [ ! -r "$WTMP" ] ; then
     #echo "...Warning: $WTMP does not exist"
     message FAIL logf001f "" "Log file $WTMP does not exist"
 else
-    check_fileperm $WTMP 110100100 || 
-    	message FAIL logf004f "" "Log file $WTMP permission should be 644"
+    group=`getpermit $WTMP | $AWK '{ print $3 }'`
+    if [  "$group" = "utmp" ] ; then
+        check_fileperm $WTMP 110110100 || 
+       	message FAIL logf005f "" "Log file $WTMP permission should be 664"
+    else
+	check_fileperm $WTMP 110100100 || 
+ 	message FAIL logf005f "" "Log file $WTMP permission should be 644"
+    fi
 fi
 
-[ ! -r $BTMP ] &&
+[ -n "$BTMP" -a ! -r "$BTMP" ] &&
     #echo "...Warning: $BTMP does not exist"
     message FAIL logf002f "" "Log file $BTMP does not exist"
 
-[ ! -r $LASTLOG ] && 
+[ ! -r "$LASTLOG" ] && 
     #echo "...Warning: $LASTLOG does not exist"
     message FAIL logf003f "" "Log file $LASTLOG does not exist"
 
-if [ ! -r $UTMP ] ; then
+if [ ! -r "$UTMP" ] ; then
     #echo "...Warning: $UTMP does not exist"
     message FAIL logf004f "" "Log file $UTMP does not exist"
 else
-    check_fileperm $UTMP 110100100 || 
-   	message FAIL logf004f "" "Log file $UTMP permission should be 644"
+    group=`getpermit $UTMP | $AWK '{ print $3 }'`
+    if [  "$group" = "utmp" ] ; then
+	check_fileperm $UTMP 110110100 || 
+   	message FAIL logf005f "" "Log file $UTMP permission should be 664"
+    else
+	check_fileperm $UTMP 110100100 || 
+	message FAIL logf005f "" "Log file $UTMP permission should be 644"
+    fi
 fi
- 
 
-if [ ! -r $LOGINLOG ] ; then
+[ -n "$LOGINLOG" ] && {
+if [ ! -r "$LOGINLOG" ] ; then
     #echo "...Warning: $LOGINGLOG does not exist"
-    message FAIL logf004f "" "Log file $LOGINLOG does not exist"
+    message FAIL logf006f "" "Log file $LOGINLOG does not exist"
 else
     check_fileperm $LOGINLOG 110000000 || 
-    	message FAIL logf004f "" "Log file $LOGINLOG permission should be 600"
+    	message FAIL logf005f "" "Log file $LOGINLOG permission should be 600"
 fi
+}
  
-if [ ! -r $MESSAGES  ] ; then
+if [ ! -r "$MESSAGES"  ] ; then
     #echo "...Warning: $MESSAGES does not exist"
-    message FAIL logf004f "" "Log file $MESSAGEs does not exist"
+    message FAIL logf007f "" "Log file $MESSAGES does not exist"
 else 
     check_fileperm $MESSAGES 110100000 || 
-    	message FAIL logf004f "" "Log file $MESSAGES permission should be 640"
+    	message FAIL logf005f "" "Log file $MESSAGES permission should be 640"
 fi
  
 exit 0
