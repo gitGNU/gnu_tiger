@@ -122,6 +122,16 @@ OpenBSD's or SuSE's)
 
 (DONE)- Implement logging to syslog (TARA 3.0.3 does it through logger) 
 
+BUGS
+----
+
+- Gen_passwd_sets (all systems) sorts the passwd/shadow before joining, 
+  if there are "similar" userfields with non-word characters (*, !) sorting
+  might not work as expected and the join will not show some of the users.
+  This needs to be fixed by sorting the userfield first and then using that
+  sort to sort the passwd fileS
+
+
 --- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
 Tue, 12 Aug 2003 21:33:51 +0200
 

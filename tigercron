@@ -256,6 +256,7 @@ do
 done >> $WORKDIR/tigcron.diff.$$
 
 [ ! -n "$Tiger_Mail_RCPT" ] && Tiger_Mail_RCPT="root"
+[ ! -n "$Tiger_Mail_FROM" ] && Tiger_Mail_FROM="root@$HOSTNAME"
   
 length=1
 if [ ! -n "$EGREP" ] ; then
@@ -271,7 +272,7 @@ fi
   }
   haveallcmds MAILER && [ "$send" = "Y" ] &&  {
 	# Mail header (so it does not just say it's root
-	echo "From: Tiger automatic auditor at $HOSTNAME <root@$HOSTNAME>" 
+	echo "From: \"Tiger automatic auditor at $HOSTNAME\" <$Tiger_Mail_FROM>"
 	echo "To: $Tiger_Mail_RCPT"
 	echo "Subject: Tiger Auditing Report for $HOSTNAME"
 	echo 

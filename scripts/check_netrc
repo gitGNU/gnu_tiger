@@ -21,6 +21,7 @@
 # complaining if users hold netrc files or if they are a a symbolic link
 # or directory.
 #
+# 11/21/2004 jfs Quoted homedir usage
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
 # 08/08/2003 jfs Improved temporary file creation.
 # 07/25/2002 jfs Added a sanity check for password files
@@ -146,19 +147,19 @@ process_passwd()
   while read user homedir host
   do
     [ "$host" = "$HOSTNAME" -a -r "$homedir/.netrc" ] && {
-      if [ $TESTLINK $homedir/.netrc ]; then
+      if [ $TESTLINK "$homedir/.netrc" ]; then
 	message WARN nrc003w "" "User $user's .netrc file is a symbolic link:"
-	$LS -l $homedir/.netrc
-	$LS $LSGROUP $LSLINK $homedir/.netrc
+	$LS -l "$homedir/.netrc"
+	$LS $LSGROUP $LSLINK "$homedir/.netrc"
 	[ -s $homedir/.netrc ] && 
-	  check_file $user $homedir/.netrc
-      elif [ -d $homedir/.netrc ]; then
+	  check_file $user "$homedir/.netrc"
+      elif [ -d "$homedir/.netrc" ]; then
 	message ALERT nrc004a "" "User $user's .netrc file is a directory:"
-	$LS $LSGROUP -Rla $homedir/.netrc
+	$LS $LSGROUP -Rla "$homedir/.netrc"
 	echo
       else
 	message WARN nrc005w "" "User $user has a .netrc file"
-	check_file $user $homedir/.netrc
+	check_file $user "$homedir/.netrc"
       fi
     }
   done

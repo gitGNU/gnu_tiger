@@ -50,6 +50,7 @@
 #       shcase definition to be equivalent to the one there.
 # 03/03/2004 jfs Check if users do not have a shell defined
 # 05/03/2004 jfs Define Tiger_Passwd_Hashes if not defined (Debian bug #246885)
+# 12/27/2004 jfs Delete temporary passwd files only on exit (Debian bug #284899)
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -286,7 +287,6 @@ do
     }
   done
 
-  [ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
 done < $WORKDIR/pass.list.$$
 
 # Check for conflicts.

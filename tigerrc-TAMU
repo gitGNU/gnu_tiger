@@ -15,6 +15,7 @@
 # you don't want performed.
 #
 Tiger_Check_PASSWD=Y		# Fast
+Tiger_Check_PASSWD_FORMAT=N     # Fast - not needed if on systems with pwck
 Tiger_Check_GROUP=Y		# Fast
 Tiger_Check_ACCOUNTS=Y		# Time varies on # of users
 Tiger_Check_RHOSTS=Y		# Time varies on # of users
@@ -140,6 +141,11 @@ Tiger_Collect_CRACK=N
 # sources will also be used.
 #
 Tiger_Crack_Local=N
+#
+# Who sends output from 'tigercron'?
+# Default is "root@$HOSTNAME" (gets expanded by tigercron)
+#
+# Tiger_Mail_FROM="root@`uname -n`"
 #
 # Who gets output from 'tigercron'?
 #

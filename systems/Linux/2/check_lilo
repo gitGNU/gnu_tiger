@@ -27,6 +27,7 @@
 # 10/19/2003 jfs - Applied patch from Ryan Bradetich to work in SuSE systems.
 # 11/18/2003 jfs - Fixed typo (Debian bug #221470)
 # 01/15/2004 jfs - Fixed dependancies
+# 12/27/2004 jfs - Fixed grub.conf naming (Debian bug #286641)
 #
 #-----------------------------------------------------------------------------
 #
@@ -128,11 +129,11 @@ then
 
 	if [ $rgr -eq 1 -o $rgw -eq 1 -o $rgx -eq 1 ]
 	then
-                message WARN boot02 "" "The configuration file grub.conf has group permissions.  Should be 0600"
+                message WARN boot02 "" "The configuration file $file has group permissions.  Should be 0600"
 	fi
 	if [ $ror -eq 1 -o $row -eq 1 -o $rox -eq 1 ]
 	then
-                message FAIL boot02 "" "The configuration file grub.conf has world permissions.  Should be 0600"
+                message FAIL boot02 "" "The configuration file $file has world permissions.  Should be 0600"
         fi
 
 	done
@@ -143,7 +144,7 @@ then
 fi
 
 [ "$found" != 'Y' ] && {
-	message WARN boot03 "" "Could not access lilo.conf or grub.conf"
+	message WARN boot03 "" "Could not access LILO's or Grub's configuration file"
 }
 
 exit 0

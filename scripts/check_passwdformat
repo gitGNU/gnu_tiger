@@ -36,6 +36,7 @@
 #                    the sets 'g-Z' 'A-Z' and '.'
 # 06/28/2004 - jfs - Modified to avoid duplicate error messages for the same
 #                    stuff in passwd and shadow files
+# 12/27/2004 - jfs - Maximum user and group length set to 32 (Debian bug #283446)
 #
 #-----------------------------------------------------------------------------
 #
@@ -121,8 +122,8 @@ $AWK -F: '{
                 printf("Login %s has non-alphanumeric characters.\n", $1);
 # Consider removing this since many recent OS will not have any problems
 # with this
-        if (length($1) > 8)
-                printf("Login %s has more than 8 characters.\n", $1);
+        if (length($1) > 32)
+                printf("Login %s has more than 32 characters.\n", $1);
         if ($2 == "")
                 printf("Login %s has no password.\n", $1);
 #if ($2 != "" && length($2) != 13 && ($10 ~ /.*sh$/ || $10 == "") &&
@@ -183,8 +184,8 @@ $AWK -F: '{
                 printf("Line %d has an empty login field.\n", NR);
         else if ($1 !~ /^[A-Za-z0-9][A-Za-z0-9_-]*$/)
                 printf("Login %s has non-alphanumeric characters.\n", $1);
-        if (length($1) > 8)
-                printf("Login %s has more than 8 characters.\n", $1);
+        if (length($1) > 32)
+                printf("Login %s has more than 32 characters.\n", $1);
         if ($2 == "")
                 printf("Login %s has no password.\n", $1);
 	if ($2 != "" && length($2) != 13 && length($2) != 34 &&
@@ -218,8 +219,8 @@ $AWK -F: '{
                 printf("Line %d has the wrong number of fields.\n", NR);
         if ($1 !~ /^[A-za-z0-9][A-za-z0-9_-]*$/)
                 printf("Group %s has non-alphanumeric characters.\n", $1);
-        if (length($1) > 8)
-                printf("Group %s has more than 8 characters.\n", $1);
+        if (length($1) > 32)
+                printf("Group %s has more than 32 characters.\n", $1);
         if ($3 !~ /[0-9]*/)
                 printf("Login %s has a negative group id.\n", $1);
         if (length($4) > 0 && $3 < 3)

@@ -194,26 +194,26 @@ process_passwd()
 #   [ "$homedir" = '/' -a "$user" != 'root' ] && continue
 
     [ "$host" = "$HOSTNAME" ] && {
-      if [ $TESTLINK $homedir/.rhosts ]; then
+      if [ $TESTLINK "$homedir/.rhosts" ]; then
 	message WARN rcmd007w "" "User $user's .rhosts file is a symbolic link:"
-	$LS -l $homedir/.rhosts
-	$LS $LSGROUP $LSLINK $homedir/.rhosts
-	[ -s $homedir/.rhosts ] && {
-	  check_file $user $homedir/.rhosts
-	  if [ -r $homedir/.rhosts ]; then
-	    scan_file $user $homedir/.rhosts
+	$LS -l "$homedir/.rhosts"
+	$LS $LSGROUP $LSLINK "$homedir/.rhosts"
+	[ -s "$homedir/.rhosts" ] && {
+	  check_file $user "$homedir/.rhosts"
+	  if [ -r "$homedir/.rhosts" ]; then
+	    scan_file $user "$homedir/.rhosts"
 	  else
 	    message INFO read001i "" "Can not open $user's .rhosts file."
 	  fi
 	}
-      elif [ -d $homedir/.rhosts ]; then
+      elif [ -d "$homedir/.rhosts" ]; then
 	message ALERT rcmd008a "" "User $user's .rhosts file is a directory:"
-	$LS $LSGROUP -Rla $homedir/.rhosts
+	$LS $LSGROUP -Rla "$homedir/.rhosts"
 	echo " "
-      elif [ -s $homedir/.rhosts ]; then
-	check_file $user $homedir/.rhosts
-	if [ -r $homedir/.rhosts ]; then
-	  scan_file $user $homedir/.rhosts
+      elif [ -s "$homedir/.rhosts" ]; then
+	check_file $user "$homedir/.rhosts"
+	if [ -r "$homedir/.rhosts" ]; then
+	  scan_file $user "$homedir/.rhosts"
 	else
 	  message INFO read001i "" "Can not open $user's .rhosts file."
 	fi
@@ -226,14 +226,14 @@ file_rhosts ()
 {
   while read user userid homedir
   do
-    if [ -f $homedir/.rhosts ]
+    if [ -f "$homedir/.rhosts" ]
     then
             if [ "root" != "$user" ] ; then
                message WARN rcmd016w "" "User $user has a .rhosts file"
 	    else
                message ALERT rcmd017a "" "Root has a .rhosts file"
 	    fi
-    	    fileid=`$LS -anl $homedir/.rhosts  | $AWK '{print $3}'`
+    	    fileid=`$LS -anl "$homedir/.rhosts"  | $AWK '{print $3}'`
 # BUG: If no fileid is returned then there must be an error above
 # (notice we use userids instead of names here just like in the spool checks)
 	    [ -n "$fileid" ] && {

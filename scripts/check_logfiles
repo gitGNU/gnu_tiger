@@ -124,8 +124,10 @@ if [ "$OS" = "SunOS" ] ; then
 # Check: Note BTMP does not seem to exist
 # And maybe also sulog and messages should be checked.
 fi
+
 if [ "$OS" = "Linux" ] ; then
-# Loginlog and btmp do not exist
+# Loginlog does not exist
+# Btmp does exist (see lastb(1))
 	LOGINLOG=""
 fi
 
