@@ -32,6 +32,11 @@ TigerLogDir='@tigerlog@'
 TigerWorkDir='@tigerwork@'
 TigerBinDir='$BASEDIR/bin'
 
+# This is important to avoid problems with commands that are
+# dependant on the defined language environment
+LANG="C"
+LC_TIME="C"
+
 checkfile()
 {
   _rcfile=$1
