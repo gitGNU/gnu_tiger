@@ -22,6 +22,7 @@
 # 04/23/2003 - jfs - added missing MD5 definition and check
 #                    merged with original (2.2.3) mksig and removed games
 #                    added @DEST and @CONFIG definitions
+#                    added SunOS dirs
 #
 #-----------------------------------------------------------------------------
 #
@@ -70,7 +71,10 @@ haveallof variables BASEDIR TESTLINK WORKDIR
 }
 
 comment="$OS $REV"
-DIRLIST="/usr/bin /bin /usr/local/bin /usr/sbin /etc /usr/lib /sbin /lib /usr/libexec /usr/local/sbin /usr/X11/bin /usr/games /usr/lib/emacs/20.2/i386-redhat-linux /usr/lib/news/bin /var/lib/games"
+DIRLIST="/usr/bin /bin /usr/local/bin /usr/sbin /etc /usr/lib /sbin /lib /usr/libexec /usr/local/sbin /usr/X11/bin /usr/games /usr/lib/news/bin /var/lib/games"
+# For SunOS
+DIRLIST="$DIRLIST /usr/etc /usr/ucb /usr/mbin /usr/bsd /usr/5bin /usr/sysv"
+
 
 outfile="signatures.$OS-$REV-$ARCH"
 
