@@ -111,6 +111,7 @@ haveallfiles BASEDIR WORKDIR || exit 1
 # Aide binary location|override + default check
 # Which, find, user-supplied var or tigexp's findcmd?:
 if [ -z "$AIDE" ]
+then
 if [ -z "${Tiger_AIDE_LOC_OVERRIDE}" ]
 then 
 	AIDE=`which aide`
