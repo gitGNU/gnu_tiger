@@ -25,6 +25,8 @@
 #
 # 04/21/2003 - jfs - Removed useless echo, use safe delete instead of RM
 #                    Fixed typo in grep (USER instead of COMMAND)
+#                    Fixed error in temporary file usage (empty openprocs.$$$
+#                    parsed instead of procs.$$$)
 #
 # TODO:
 # - Use NETSTAT together with this program, might be useful to simplify
