@@ -19,11 +19,12 @@
 # 
 #  Checks which xinetd services are enabled or disabled.
 #
+#  08/19/2003 - jfs - Allow override of XINETDCONF and fix error
+#  08/12/2003 - jfs - Now write messages for disabled services too. Also
+#               fixed some errors.
 #  08/11/2003 - jfs - Fixed dependancies. Now uses XINETDFILE instead of 
 #               hardcoding the location. Added additional checks
 #               to avoid errors and use message instead of echo.
-#  08/12/2003 - jfs - Now write messages for disabled services too. Also
-#               fixed some errors.
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -33,8 +34,8 @@
 #   running as root when not needed.
 # - check if the xinetd configuration file is writable
 # - check if the xinetd files under the xinetd directory are writable 
-# - it could also check vs the system's provided XINETDFILE to determine
-#   changes in services just as check_inetd does
+# - it could also check vs the tiger's provided operating system's
+#   XINETDFILE to determine changes in services just as check_inetd does
 #
 #-----------------------------------------------------------------------------
 #
@@ -101,9 +102,9 @@ check_xinetconfig()
 	done
 }
 
-XINETDCONF="/etc/xinetd.conf"
+[ -z "$XINETDCONF" ] && XINETDCONF="/etc/xinetd.conf"
 
-if [ -r $XINETDCONF ] ;
+if [ -r "$XINETDCONF" ] ;
 then
 	$GREP 'includedir' $XINETDCONF | $AWK '{print $NF}' |
 	while read xinetd_directory
@@ -115,5 +116,5 @@ then
 	fi
 	done
 else
-	message FAIL xnet001f "It appears that xinetd is not installed, cannot find file $XINETDFILE."
+	message FAIL xnet001f "It appears that xinetd is not installed, cannot find file $XINETDCONF."
 fi
