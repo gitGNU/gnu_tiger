@@ -23,6 +23,7 @@
 #                    merged with original (2.2.3) mksig and removed games
 #                    added @DEST and @CONFIG definitions
 #                    added SunOS dirs
+#                    removed CC from needed commands (it is not)
 #
 #-----------------------------------------------------------------------------
 #
@@ -62,7 +63,7 @@ haveallof()
   return $retval
 }
 
-haveallof commands CAT CC MD5 || exit 1
+haveallof commands CAT MD5 || exit 1
 haveallof variables BASEDIR TESTLINK WORKDIR
 
 [ ! $TESTEXEC $MD5 ] && {
