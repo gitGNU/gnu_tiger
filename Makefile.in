@@ -221,6 +221,16 @@ install: installdirs installbinaries installconfig
 	      $$file > $(DESTDIR)$(TIGERHOME)/$$file;\
 	  chmod 755 $(DESTDIR)$(TIGERHOME)/$$file; \
 	done
+	@echo "Copying platform scripts..."
+	@for file in $(PLATFORM_SCRIPTS); do \
+	  if [ -x $$file ] ; then \
+	  sed -e 's%^TigerInstallDir=.*$$%TigerInstallDir="'$(TIGERHOME)'"%' \
+	      $$file > $(DESTDIR)$(TIGERHOME)/$$file;\
+	  chmod 755 $(DESTDIR)$(TIGERHOME)/$$file; \
+	  else \
+	  cp -p $$file $(DESTDIR)$(TIGERHOME)/$$file; \
+	  fi; \
+	done
 
 distribution:
 # TODO: it should  create the proper tiger-$VERSION.tgz file
