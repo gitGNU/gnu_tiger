@@ -3,8 +3,25 @@
 #  on a regular basis, or to compile the binaries (sources under c/)
 #  for your platform (these binaries might be needed by some checks)
 #
-#------------------------------------------------------------------------
+#  TODO:
+#  - This Makefile should follow better GNU's coding standards
+#  as described in http://www.gnu.org/prep/standards_50.html#SEC50
+#  (including using $(INSTALL) and mkinstalldirs)
 #
+#------------------------------------------------------------------------
+# These definitions follow GNU's coding standards:
+#
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+sbindir=@sbindir@
+datadir=@datadir@
+sysconfdir=@sysconfdir@
+localstatedir=@localstatedir@
+mandir=@mandir@
+# To avoid troubles with some systems..
+SHELL = /bin/sh
+
 # This directory will contain the 'tiger', 'tigercron', 'tigexp'
 # scripts, config files, the 'scripts' subdirectory which will
 # contain the checking scripts, the platform specific scripts, etc.
@@ -31,10 +48,11 @@ TIGERLOGS=@tigerlog@
 # sub-directory under $(TIGERHOME)/systems
 #
 TIGERBIN=@tigerbin@
-#
-# Which is the prefix of where the system is going to be installed.
 # 
-prefix=@prefix@
+# Where does the configuration go to? Tigerrc and cronrc get
+# installed there
+#
+TIGERCONFIG=@tigerconfig@
 #
 #------------------------------------------------------------------------
 #
@@ -47,47 +65,56 @@ PLATFORM_SCRIPTS:=$(shell find ./systems/ -type f)
 
 BINARIES=./tiger \
 	 ./tigexp  \
-	 ./tigercron \
+	 ./tigercron 
+# Maybe this should be modified to be a generic ./scripts/check_*
+# otherwise sometimes a check might be 'forgotten'
 SCRIPTS=./scripts/check_accounts \
 	./scripts/check_aliases \
 	./scripts/check_anonftp \
+	./scripts/check_apache \
 	./scripts/check_cron \
 	./scripts/check_devices \
 	./scripts/check_embedded \
 	./scripts/check_exports \
+	./scripts/check_exrc \
+	./scripts/check_finddeleted \
+	./scripts/check_ftpusers \
 	./scripts/check_group \
 	./scripts/check_inetd \
 	./scripts/check_issue \
 	./scripts/check_known \
+	./scripts/check_listeningprocs \
 	./scripts/check_logfiles \
 	./scripts/check_netrc \
 	./scripts/check_network \
 	./scripts/check_nisplus \
 	./scripts/check_passwd \
+	./scripts/check_passwdformat \
 	./scripts/check_path \
 	./scripts/check_perms \
 	./scripts/check_printcap \
 	./scripts/check_rhosts \
 	./scripts/check_root \
 	./scripts/check_rootdir \
+	./scripts/check_runprocs \
 	./scripts/check_sendmail \
+	./scripts/check_services \
 	./scripts/check_signatures \
 	./scripts/check_system \
-	./scripts/check_listeningprocs \
-	./scripts/check_ftpusers \
 	./scripts/check_tcpd \
+	./scripts/check_umask \
 	./scripts/crack_run \
 	./scripts/tripwire_run \
 	./scripts/find_files \
 	./util/buildbins \
 	$(PLATFORM_SCRIPTS)
 
+CONFIGFILES=./tigerrc \
+	./cronrc \
 
 MISCFILES=./initdefs \
 	./check.tbl \
 	./syslist \
-	./tigerrc \
-	./cronrc \
 	./util/difflogs \
 	./util/flogit \
 	./util/genmsgidx \
@@ -113,67 +140,71 @@ all:
 	cd util && sh doc2html
 	./util/genmsgidx
 
-install: 
-	cd c && $(MAKE) install
-	if [ ! -d $(prefix)/$(TIGERHOME) ]; then \
-	  mkdir -p $(prefix)/$(TIGERHOME); \
-	  chmod 755 $(prefix)/$(TIGERHOME); \
+installdirs:
+	if [ ! -d $(DESTDIR)$(TIGERHOME) ]; then \
+	  mkdir -p $(DESTDIR)$(TIGERHOME); \
+	  chmod 755 $(DESTDIR)$(TIGERHOME); \
         fi; \
-	if [ ! -d $(prefix)/$(TIGERWORK) ]; then \
-	  mkdir -p $(prefix)/$(TIGERWORK); \
-	  chmod 700 $(prefix)/$(TIGERWORK); \
+	if [ ! -d $(DESTDIR)$(TIGERWORK) ]; then \
+	  mkdir -p $(DESTDIR)$(TIGERWORK); \
+	  chmod 700 $(DESTDIR)$(TIGERWORK); \
 	fi; \
-	if [ ! -d $(prefix)/$(TIGERLOGS) ]; then \
-	  mkdir -p $(prefix)/$(TIGERLOGS); \
-	  chmod 700 $(prefix)/$(TIGERLOGS); \
+	if [ ! -d $(DESTDIR)$(TIGERLOGS) ]; then \
+	  mkdir -p $(DESTDIR)$(TIGERLOGS); \
+	  chmod 700 $(DESTDIR)$(TIGERLOGS); \
 	fi; \
-	if [ ! -d $(prefix)/$(TIGERHOME)/scripts ]; then \
-	  mkdir $(prefix)/$(TIGERHOME)/scripts; \
-	  chmod 755 $(prefix)/$(TIGERHOME)/scripts; \
+	if [ ! -d $(DESTDIR)$(TIGERHOME)/scripts ]; then \
+	  mkdir $(DESTDIR)$(TIGERHOME)/scripts; \
+	  chmod 755 $(DESTDIR)$(TIGERHOME)/scripts; \
 	fi; \
-	if [ ! -d $(prefix)/$(TIGERHOME)/util ]; then \
-	  mkdir $(prefix)/$(TIGERHOME)/util; \
-	  chmod 755 $(prefix)/$(TIGERHOME)/util; \
+	if [ ! -d $(DESTDIR)$(TIGERHOME)/util ]; then \
+	  mkdir $(DESTDIR)$(TIGERHOME)/util; \
+	  chmod 755 $(DESTDIR)$(TIGERHOME)/util; \
 	fi; \
-	if [ ! -d $(prefix)/$(TIGERBIN) ]; then \
-	  mkdir $(prefix)/$(TIGERBIN); \
-	  chmod 755 $(prefix)/$(TIGERBIN); \
+	if [ ! -d $(DESTDIR)$(TIGERBIN) ]; then \
+	  mkdir $(DESTDIR)$(TIGERBIN); \
+	  chmod 755 $(DESTDIR)$(TIGERBIN); \
 	fi; \
+	if [ ! -d $(DESTDIR)$(TIGERCONFIG) ]; then \
+	  mkdir $(DESTDIR)$(TIGERCONFIG); \
+	  chmod 700 $(DESTDIR)$(TIGERCONFIG); \
+	fi; \
+
+install: installdirs
+	cd c && $(MAKE) install
         for dir in $(MISCDIRS); do \
-	  tar cf - $$dir | (cd $(prefix)/$(TIGERHOME); tar xpf -); \
+	  tar cf - $$dir | (cd $(DESTDIR)$(TIGERHOME); tar xpf -); \
 	done; \
 	for file in $(MISCFILES); do \
-	  cp -p $$file $(prefix)/$(TIGERHOME)/$$file; \
+	  cp -p $$file $(DESTDIR)$(TIGERHOME)/$$file; \
+	done; \
+	for file in $(CONFIGFILES); do \
+	  cp -p $$file $(DESTDIR)$(TIGERCONFIG)/$$file; \
 	done; \
 	for file in $(BINARIES); do \
-	  cp -p $$file $(prefix)/$(TIGERBIN)/$$file; \
-	  chmod 755 $(prefix)/$(TIGERBIN)/$$file ; \
+	  cp -p $$file $(DESTDIR)$(TIGERBIN)/$$file; \
+	  chmod 755 $(DESTDIR)$(TIGERBIN)/$$file ; \
 	done; \
 	for file in $(SCRIPTS); do \
 	  sed -e 's%^TigerInstallDir=.*$$%TigerInstallDir="'$(TIGERHOME)'"%' \
-	      $$file > $(prefix)/$(TIGERHOME)/$$file;\
-	  chmod 755 $(prefix)/$(TIGERHOME)/$$file; \
+	      $$file > $(DESTDIR)$(TIGERHOME)/$$file;\
+	  chmod 755 $(DESTDIR)$(TIGERHOME)/$$file; \
 	done; \
-#	sed -e 's%^TigerLogDir=.*$$%TigerLogDir="'$(TIGERLOGS)'"%' \
-#	    -e 's%^TigerWorkDir=.*$$%TigerWorkDir="'$(TIGERWORK)'"%' \
-#	    -e 's%^TigerBinDir=.*$$%TigerBinDir="'$(TIGERBIN)'"%' \
-#	    ./config > $(prefix)/$(TIGERHOME)/config; \
-	chmod 644 $(prefix)/$(TIGERHOME)/config;
-	(cd $(prefix)/$(TIGERHOME); ./util/genmsgidx doc/*.txt)
+	cp config $(DESTDIR)$(TIGERHOME)/config
+	chmod 644 $(DESTDIR)$(TIGERHOME)/config;
 
 clean: 
 	cd c && $(MAKE) clean
 	-find bin/ -type f -exec rm -f {} \;
-	-rm -f man/index.bt config.{status,log,cache}
+	-rm -f man/index.bt 
 
 distclean: clean
 	cd c && $(MAKE) distclean 
 	-find log/ -type f -exec rm -f {} \;
 	-find run/ -type f -exec rm -f {} \;
-	-rm -f Makefile 
+	-rm -f Makefile tiger config tigercron tigexp config.{status,log,cache}
 
-maintainerclean: distclean
-	-rm -f configure tiger config tigercron
+maintainer-clean: distclean
 
 configure: configure.in
 	autoconf
