@@ -17,10 +17,24 @@ Information Sources:
 - CERT's Security Improvement Modules
   available at http://www.cert.org/security-improvement/
 
+- CERT's UNIX configuration guidelines
+  http://www.cert.org/tech_tips/unix_configuration_guidelines.html
+
+- CERT's UNIX Security Checklist v2.0
+  http://www.cert.org/tech_tips/usc20_full.html
+  http://www.auscert.org.au/render.html?it=1935&cid=1920
+
 - SANS's SCORE (Security Consensus Operational Readiness Evaluation)
   http://www.sans.org/score/
   and the Step by Step Guides
   available at http://store.sans.org/store_category.php?category=consguides
+  
+- SANS's Intrusion Detection FAQ: How to Examine a Unix Box for 
+  Possible Compromise. 
+  http://www.sans.org/resources/idfaq/unixbox.php
+
+- Security Patches FAQ (rather out of date, but some things still useful)
+  http://www.faqs.org/faqs/computer-security/security-patches/
 
 For generic information on OS behavior:
 ---------------------------------------
@@ -37,13 +51,35 @@ For generic information on OS behavior:
 - For Solaris
   Reference information for the Solaris Operating Environment, 
   available at http://soldc.sun.com/documentation/reference/index.html
-  including the Solaris manpages: http://docs.sun.com/db?p=subj/manpages_solaris
+  including the Solaris manpages: 
+  	http://docs.sun.com/db?p=subj/manpages_solaris
+  Sun Security Patches:
+  	http://sunsolve.sun.com/pub-cgi/show.pl?target=patches/patch-license&nav=pub-patches
 
 - For AIX 
   AIX manpages: http://publib.boulder.ibm.com/cgi-bin/ds_form?lang=en_US
+  AIX 4.3 documentation library:
+  	http://publib.boulder.ibm.com/cgi-bin/ds_form?lang=en_US
+  IBM Redbooks http://www.redbooks.ibm.com/
+     1) Elements of Security: AIX 4.1, GG24-4433-00.
+     2) AIX 4.3 Elements of Security Effective and Efficient 
+        Implementation, SG24-5962-00.
+     3) Additional AIX Security Tools on IBM pSeries, IBM RS/6000, and
+        SP/Cluster, SG24-5971-00.
+     4) TCP/IP Tutorial and Technical Overview, GG24-3376-06.
+     5) IBM Certification Study Guide AIX Installation and System Recovery. 
 
 - For HP-UX
   HP-UX manpages: http://docs.hp.com/hpux/os/man_pages.html
+  Network security Features of HP-UX 11i: 
+  	http://docs.hp.com/hpux/onlinedocs/2238/netsecur_final.pdf
+  Security Patch check:
+  	http://docs.hp.com/hpux/onlinedocs/internet/spc_faq.html
+	http://docs.hp.com/hpux/onlinedocs/internet/spc_readme.html
+  HP-UX trusted system:
+  	http://docs.hp.com/hpux/onlinedocs/B2355-90121/B2355-90121.html
+	(security update for HP-UX 10.20
+	http://docs.hp.com/hpux/onlinedocs/internet/SecUpdate1202.html)
   
 - For OpenBSD (for future porting)
   OpenBSD manpages: http://www.openbsd.org/cgi-bin/man.cgi
