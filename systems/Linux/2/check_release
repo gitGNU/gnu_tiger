@@ -20,6 +20,8 @@
 # Paul Telford <paul_telford@hp.com>
 # 07/25/2002 jfs       Changed TigerInstallDir to .
 # 10/01/2003 jfs       Fixed message calls
+# 11/09/2003 jfs       Removed typeset bashism and updated RedHat versions so
+#            only 7.1 or greater are consider current (Debian Bug 219764)
 #
 #-----------------------------------------------------------------------------
 #
@@ -72,18 +74,24 @@ haveallfiles BASEDIR WORKDIR || exit 1
 if [ -e /etc/redhat-release ]
 then
         REDHAT_VERSION=`$CUT -f5 -d' ' /etc/redhat-release`
-        typeset -i MAJOR=`echo $REDHAT_VERSION | $CUT -d. -f1`
-        typeset -i MINOR=`echo $REDHAT_VERSION | $CUT -d. -f2`
-        if [ $MAJOR -lt 6 ]
-        then
-                message FAIL osv001 "" "Out of date Redhat Linux version $REDHAT_VERSION"
-        
-        elif [ $MAJOR -eq 6 -a $MINOR -lt 2 ]
-        then
-                message FAIL osv001 "" "Out of date Redhat Linux version $REDHAT_VERSION"
-                return
-        fi
+        $GREP -E "[A-Za-z]" $REDHAT_VERSION 1> /dev/null
+	if [ $? -eq 1 ]
+	then
+		MAJOR=`echo $REDHAT_VERSION | $CUT -d. -f1`
+		MINOR=`echo $REDHAT_VERSION | $CUT -d. -f2`
+		if [ $MAJOR -lt 7 ]
+		then
+			message FAIL osv001 "" "Out of date Redhat Linux version $REDHAT_VERSION"
 
+		elif [ $MAJOR -eq 7 -a $MINOR -lt 1 ]
+	        then
+	       	         message FAIL osv001 "" "Out of date Redhat Linux version $REDHAT_VERSION"
+       		         return
+       		 fi
+	else
+                 message WARN osv004 "" "Unreleased RedHat Linux version \`$REDHAT_VERSION'"
+	fi
+	
 # Debian seems to put either a number or a codename in their
 # version file so we have to check for both.
 elif [ -e /etc/debian_version ]
@@ -99,8 +107,8 @@ then
             $CUT -f1 -d' ' /etc/debian_version | $GREP -E "[A-Za-z]" 1> /dev/null
             if [ $? -eq 1 ]
             then
-                typeset -i MAJOR=`echo $DEBIAN_VERSION | $CUT -d \. -f 1`
-                typeset -i MINOR=`echo $DEBIAN_VERSION | $CUT -d \. -f 2`
+                MAJOR=`echo $DEBIAN_VERSION | $CUT -d \. -f 1`
+                MINOR=`echo $DEBIAN_VERSION | $CUT -d \. -f 2`
                 if [ "$MAJOR" -lt 3 ]
                 then
                         message FAIL osv002 "" "Out of date Debian GNU/Linux version \`$DEBIAN_VERSION'"
