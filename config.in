@@ -183,12 +183,12 @@ checkfile()
   }
   export OUTPUTMETHOD
   
-  if [ "$Tiger_Output_FQDN" = 'N' ]
+  HOSTNAME=`$GETHOSTNAME`
+  if [ "$Tiger_Output_FQDN" = 'Y' -a "$OS" = "Linux" ]
   then
-	  HOSTNAME=`$GETHOSTNAME`
-  else
-  # Let's hope all UNIX hostnames have the -f option for FQDN... (jfs)
-	  HOSTNAME=`$GETHOSTNAME -f`
+  # Linux hostname has the -f option for FQDN... (jfs)
+  # (others?)
+          HOSTNAME=`$GETHOSTNAME -f`
   fi
 
   for file in './site-$HOSTNAME' '$BASEDIR/site-$HOSTNAME' './site' '$BASEDIR/site'
