@@ -19,9 +19,10 @@
 #
 # Checks the printer control file.
 #
-# 05/01/2003 - jfs - Fixed dependancies
+# 01/21/2004 - rbrad - Make the check of the config file through haveallcmds
 # 01/11/2004 - rbrad - Check for /etc/printcap before parseing.
 #		Bug reported by: Michael Schleif.
+# 05/01/2003 - jfs - Fixed dependancies
 #
 #-----------------------------------------------------------------------------
 #
@@ -56,13 +57,18 @@ done
 
 . $BASEDIR/initdefs
 
+# This generic definition should probably be moved to
+# a configuration variable (PRINTCAP?)
+src=/etc/printcap
+infile=/etc/printcap
+
 #
 # If run in test mode (-t) this will verify that all required
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
   haveallcmds AWK CAT SED LS || exit 1
-  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallfiles BASEDIR WORKDIR src infile || exit 1
   haveallvars TESTLINK HOSTNAME
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -75,7 +81,7 @@ echo
 echo "# Checking printer configuration files..."
 
 haveallcmds AWK CAT LS SED || exit 1
-haveallfiles BASEDIR WORKDIR || exit 1
+haveallfiles BASEDIR WORKDIR src infile || exit 1
 
 saveifs=$IFS
 realpath="$REALPATH -d"
@@ -130,11 +136,6 @@ check_filter()
     pass=2
   done
 }
-
-src=/etc/printcap
-infile=/etc/printcap
-
-[ ! -r $infile ] && exit
 
 $SED -e 's/^#.*$//' -e '/^$/d' $infile |
 $AWK '
