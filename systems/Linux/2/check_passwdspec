@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh 
 #
 #     tiger - A UN*X security checking system
 #     Copyright (C) 2003 Javier Fernandez-Sanguino
@@ -17,7 +17,9 @@
 #
 # check_passwdspec: Perform system specific password checks here like
 #               password aging checks, etc.
-#
+# 
+# 01/10/2004 cslater - Added logic to skip password aging check if the
+#                  account is disabled (! or * in password)
 # 11/19/2003 jfs - Patch from Ryan Bradetich changing acc016w to pass19w
 # 08/29/2003 jfs - CHAGE errors redirected to /dev/null and grep is now $GREP
 # 08/09/2003 jfs - Renamed to check_passwdspec and added CHAGE to dependancies.
@@ -78,15 +80,24 @@ IFS=:
 [ -r /etc/passwd ] && {
   $CUT -d: -f1,2 /etc/passwd |
   while read user pwd
-  do 
-    if $CHAGE -l $user 2>/dev/null | $GREP "Password Expires:" | $GREP Never >/dev/null 2>&1
-    then
-      message WARN pass19w "" "Login ID $user does not have password aging enabled."
-    fi
-
+  do
+ 
     [ "$Tiger_Check_PASSWD_SHADOW" = 'Y' -a -s /etc/passwd -a "$pwd" != "x" ] && {
       message WARN pass20w "" "Login ID $user is not configured to use shadow passwords."
     }
+
+   # For expiration, pull the password string from /etc/shadow if it exists
+   [ -r /etc/shadow ] && { 
+        pwd=`$GREP $user /etc/shadow | $CUT -d: -f2`
+   }
+    # Skip this check if the user account is locked
+     [ "x${pwd%${pwd#?}}" != 'x!' -a "x${pwd%${pwd#?}}" != 'x*' ] && {
+    	if $CHAGE -l $user 2>/dev/null | $GREP "Password Expires:" | $GREP Never >/dev/null 2>&1
+    	then
+          message WARN pass19w "" "Login ID $user does not have password aging enabled."
+    	fi
+      }
+
   done
 }
 IFS=$saveifs
