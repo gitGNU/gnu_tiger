@@ -1,9 +1,19 @@
+tiger (3.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Made debian/rules update automatically the advisories file (which
+  is now named debian_advisories so the previous chmod -x is not needed)
+
+ -- Javier Fernandez-Sanguino <jfernandez@localhost.localdomain>  Thu, 25 Jul 2002 19:37:41 +0200
+
 tiger (3.0-1) unstable; urgency=low
 
   * New upstream release (based on savannah sources)
   * Fix in order for deb_checkmd5sums to work with all sources (it was
     limited due to a stupid bug)
   * Included latest DSA advisories
+  * The new package provides a *very* short diff since changes regarding
+  Debian are added to the upstream sources too.
 
  -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Tue, 18 Jun 2002 13:28:18 +0200
 

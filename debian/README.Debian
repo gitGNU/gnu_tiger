@@ -9,7 +9,7 @@ somethings being reported as a security issue when they really
 aren't (known in the security field as 'false positives')
 In some cases this might be Tiger's problem (of it being an old UNIX
 auditing program) or it might be Debian's. If you feel a security report
-is not appropiate to your system discuss it in the
+is not appropriate to your system discuss it in the
 debian-security@lists.debian.org mailing list.
 
 If you really think it's a BUG of Tiger, then send a bug-report

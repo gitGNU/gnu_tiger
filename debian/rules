@@ -12,11 +12,12 @@ build: build-stamp
 build-stamp:
 	dh_testdir
 
-	
-	# Add here commands to compile the package.
-	cd c && $(MAKE) install
-	cd util && sh doc2html
-	./util/genmsgidx
+	autoconf
+	./configure --with-tigerhome=/usr/lib/tiger --with-tigerwork=/var/run/tiger/work --with-tigerlog=/var/log/tiger --with-tigerbin=/usr/sbin --with-tigerconfig=/etc/tiger
+	$(MAKE) all
+
+	# For DSAs
+	cd systems/Linux/2 && sh update_advisories.sh
 
 	touch build-stamp
 
@@ -25,11 +26,7 @@ clean:
 	dh_testroot
 	rm -f build-stamp
 
-	# Add here commands to clean up after the build process.
-	cd c && $(MAKE) clean
-	-rm -f bin/*
-	-rm -f man/index.bt
-	
+	[ -f Makefile ] && $(MAKE) dist-clean || $(MAKE) -f Makefile.in dist-clean
 
 	dh_clean
 
@@ -42,15 +39,14 @@ install: build
 	# Add here commands to install the package into debian/tmp.
 	$(MAKE) install prefix=debian/tmp/
 	chmod a+x debian/tmp/usr/lib/tiger/systems/Linux/2/{deb,gen,check}_*
-	chmod a-x debian/tmp/usr/lib/tiger/systems/Linux/2/deb_advisories
 	# Remove the systems that do not apply. 
 	# Currently only Linux and default
 	# AIX/  default/  HPUX/  IRIX/  Linux/  NeXT/  SunOS/  UNICOS/ UNICOSMK
 	# TODO: make this for all dirs save for Linux and default (i.e.
 	# make this 'mv' more generic)
-	mv debian/tmp/usr/lib/tiger/systems/{AIX,HPUX,IRIX,NeXT,SunOS,UNICOS,UNICOSMK} debian/tiger-otheros/usr/lib/tiger/systems/
-	install -m 755 debian/tiger debian/tmp/usr/sbin/
-	install -m 755 debian/tigexp debian/tmp/usr/sbin/
+	#	mv debian/tmp/usr/lib/tiger/systems/{AIX,HPUX,IRIX,NeXT,SunOS,UNICOS,UNICOSMK} debian/tiger-otheros/usr/lib/tiger/systems/
+	#install -m 755 debian/tiger debian/tmp/usr/sbin/
+	#install -m 755 debian/tigexp debian/tmp/usr/sbin/
 	install -m 755 tigercron debian/tmp/usr/lib/tiger/
 	install -m 600 cronrc debian/tmp/etc/tiger/
 	install -m 600 tigerrc debian/tmp/etc/tiger/
