@@ -52,14 +52,21 @@ shows these items. The default behaviour is to
 .I not
 show them.
 .TP 
-.I ERR
+.I ERROR
 These messages are errors in the execution of
 .I Tiger
 (or any of its scripts), this is probably due to a misconfiguration 
 in the program, because of a problem in the installation or because 
 a file needed for the test is missing. The script who outputs this error 
 should be investigated further.
-
+.I CONFIG
+Messages with this level inform of stages in the configuration process
+of 
+.I Tiger
+they are not errors (otherwise 
+.I ERROR 
+would be used) but notices for the user running the program explaining, for
+example, which configuration might be used.
 .SS OPTIONS
 .TP
 .I "\-f"
