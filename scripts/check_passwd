@@ -40,6 +40,7 @@
 #   * Merged these duplicate checks from check_account:
 #    - empty password check (acc010a, acc011w)
 #    - duplicate home directory check (acc015w)
+# 10/07/2003 jfs Delete temporary files
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -315,6 +316,8 @@ done < $WORKDIR/pass.list.$$
   done < $WORKDIR/pass.list.$$
 }
 delete $WORKDIR/pass.list.$$
+delete "$WORKDIR/pass.list.$$" "$WORKDIR/p1name.$$" "$WORKDIR/p2name.$$" 
+delete "$WORKDIR/p1uid.$$" "$WORKDIR/p2uid.$$"
 
 exit 0
 
