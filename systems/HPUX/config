@@ -25,6 +25,7 @@
 #                    also some variables which were defined but not exported.
 #                    Added GRPCK.
 # 11/18/2003 - jfs - Add EXPAND (patch from  Ryan Bradetich)
+# 11/19/2003 - jfs - Add REALPATH and SNEFRU (patch from  Ryan Bradetich)
 #
 #-----------------------------------------------------------------------------
 #
@@ -110,7 +111,7 @@ export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL HEAD MV TR JOIN GROUPSS FILECMD UNIQ PASTE
 export BASENAME CHOWN CHMOD LN DIFF MAILER WC TEE ID EXPAN CUT MESG
 export PWCK GRPCK GETPRDEF
-export SSHD_CONFIG SENDMAILS SENDMAILCF
+export REALPATH SNEFRU SSHD_CONFIG SENDMAILS SENDMAILCF
 #
 UNAME=/bin/uname
 GETHOSTNAME=/bin/hostname
