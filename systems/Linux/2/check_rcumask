@@ -17,6 +17,8 @@
 #
 # check_rcumask - Sat May 18 17:50:00 CEST 2002
 #
+# Check_rcumask - 10/15/2004 - jfs - Proper warning if no umask settings
+#       are defined (Debian bug #234661)
 # Check_rcumask - 10/15/2003 - jfs - Removed bashishm (Debian bug #215896)
 # check_rcumask - 07/25/2002 - jfs
 #       Changed TigerInstallDir to .
@@ -128,6 +130,8 @@ do
 
  	[ $UMASK1 != 002 -a $UMASK1 != 022 -o $UMASK2 != 002 -a $UMASK2 != 022 ] &&
 		message FAIL misc017f '' "The umask setting in $file for the init scripts is insecure"
+        elif [ "$Occurance" = 0 ]; then
+	        message WARN misc021w "" "There are no umask entries in $file"
 	else
 		message WARN misc018w '' "There are more than 2 umask entries in $file"
 
@@ -137,6 +141,6 @@ fi
 
 done
 
-if [ $Foundumask -eq 0 ]; then
+if [ "$Foundumask" -eq 0 ]; then
 	message WARN misc019w "" "There are no umask settings for init.d scripts"
 fi
