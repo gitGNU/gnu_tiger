@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -17,16 +17,21 @@
 #
 # check_inetd - 06/14/93
 #
+# Checks the configuration of the inetd configuration file and determines
+# possible problems in them.
+#
 # check_inetd - 04/20/99
 #     Portions corrected y Advanced Research Corporation (R)
 # check_inetd - 12/13/01 - jfs
 #     Fixes to avoid false positives 
 # check_inetd - 05/27/2002 - jfs
 #     Changed TigerInstallDir to .
+# check_inetd - 04/15/2003 - jfs
+#     Separated the services check into a separate script.
 #     
 # TODO
-# - This script need to be fixed so that it will not report issues when
-#   two services are assigned to the same port (Debian Bug#132278)
+# - This script needs to be improved to warn for some of the 'chatty' issues
+#   closed by Titan (currently only does this for some services)
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -71,81 +76,17 @@ done
 
 #------------------------------------------------------------------------
 echo
-echo "# Performing check of 'services' and 'inetd'..."
+echo "# Performing check of 'inetd'..."
 
 haveallcmds SED CAT AWK LS SORT GREP COMM JOIN || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 saveifs=$IFS
 
-tmpservices=$WORKDIR/sec.$$ts
-delete $tmpservices
 tmpinetd=$WORKDIR/sec.$$in
 delete $tmpinetd
 
-trap 'delete $tmpservices $tmpinetd; exit 1' 1 2 3 15
-checkservices ()
-{
-  services="$1"
-
-  # Check that these services have the correct port assigned.
-  while read currservice currport
-  do
-    [ ! -z "$currport" ] && {
-    matches="`$AWK '{ print $2 \" \" $1}' $services | $GREP \"^$currport \" | $AWK '{ print $1 }'`"
-    IFS=/
-    set $currport
-    IFS=$saveifs
-    currportnum=$1
-    serviceok="N"
-# Note: The message is not sent and the serviceok variable is used
-# so that problems with repeated entries do not lead to false positives
-# (jfs, debian bug #123730)
-    for port in $matches
-    do
-      IFS=/
-      set $port
-      IFS=$saveifs
-      if [ $1 = $currportnum ]; then
-	      serviceok="Y"
-      fi
-    done
-    if [ "$serviceok" = "N" ]; then
-	message FAIL inet002f "" "Service $currservice is assigned to port $port which should be $currport."
-    fi
-    }
-  done < $SERVICESFILE
-
-  # Check that these services are not set for any other services.
-  while read currservice currport
-  do 
-    matches=`$GREP " $currport$" $services | $AWK '{ print $1 }'`
-    for service in $matches
-    do
-      if [ $service != $currservice ]; then
-	message FAIL inet003f "" "The port for service $currservice is assigned to service $service."
-      fi
-    done
-  done < $SERVICESFILE
-
-  # Print out any other entries that have been added
-  $AWK '{ print $1 " " $2 }' $services |
-  $GREP -v '^#' | $GREP -v '^ $' | $SORT |
-  while read currservice currport
-  do
-	matchescount=""
-	matches=`$AWK '{ print $1 " " $2 }' $SERVICESFILE | $GREP " $currport$" | $AWK '{ print $1 }'`
-	for service in $matches
-	do
-	if [ $service = $currservice ]; then
-		matchescount="$matchescount."
-	fi
-  done
-  if [ "x$matchescount" = "x" ]; then
-    message INFO inet004i "" "$currservice is $currport (local addition)."
-  fi
-  done
-}
+trap 'delete $tmpinetd; exit 1' 1 2 3 15
 
 checkinetd ()
 {
@@ -283,23 +224,6 @@ realpath="$REALPATH -d"
 [ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath="echo"
 
 {
-  haveallcmds GEN_SERVICES_SETS &&
-  haveallfiles SERVICESFILE && {
-    $GEN_SERVICES_SETS |
-    while read services_set
-    do
-      echo "# Checking services from `$CAT $services_set.src`."
-
-      $AWK '!/^#/ { print $1, $2 }' $services_set |
-      $SED -e '/^$/d' |
-      $SORT -u > $tmpservices
-
-      checkservices $tmpservices
-
-      delete $services_set $services_set.src $tmpservices
-    done
-  }
-
 
   haveallcmds GEN_INETD_SETS UNIQ TAIL &&
   haveallfiles INETDFILE && {
@@ -317,8 +241,4 @@ realpath="$REALPATH -d"
 } |
 $OUTPUTMETHOD
 
-exit 0
-#
-exit 0
-#
 exit 0

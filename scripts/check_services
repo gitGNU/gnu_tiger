@@ -1,0 +1,182 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_services - 04/16/2003
+#
+#    Check which services are configured in the system (usually in 
+# /etc/services) versus the ones that should be configured (in the 
+# provided services file)
+#
+# check_inetd - 04/20/99
+#     Portions corrected y Advanced Research Corporation (R)
+# check_inetd - 12/13/01 - jfs
+#     Fixes to avoid false positives 
+# check_inetd - 05/27/2002 - jfs
+#     Changed TigerInstallDir to .
+# check_services - 04/16/2003 - jfs
+#     Separated check_services from check_inetd
+#     Modified script so that it does not FAIL on services which are 
+#     already duplicated in the OS service file.
+#     
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds SED AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
+  haveallfiles BASEDIR WORKDIR INETDFILE SERVICESFILE || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing check of 'services' ..."
+
+haveallcmds SED CAT AWK LS SORT GREP COMM JOIN || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+saveifs=$IFS
+
+tmpservices=$WORKDIR/sec.$$ts
+delete $tmpservices
+
+trap 'delete $tmpservices ; exit 1' 1 2 3 15
+checkservices ()
+{
+  services="$1"
+
+  # Check that these services have the correct port assigned.
+  while read currservice currport
+  do
+    [ ! -z "$currport" ] && {
+    matches="`$AWK '{ print $2 \" \" $1}' $services | $GREP \"^$currport \" | $AWK '{ print $1 }'`"
+    IFS=/
+    set $currport
+    IFS=$saveifs
+    currportnum=$1
+    serviceok="N"
+# Note: The message is not sent and the serviceok variable is used
+# so that problems with repeated entries do not lead to false positives
+# (jfs, debian bug #123730)
+    for port in $matches
+    do
+      IFS=/
+      set $port
+      IFS=$saveifs
+      if [ $1 = $currportnum ]; then
+	      serviceok="Y"
+      fi
+    done
+    if [ "$serviceok" = "N" ]; then
+	message FAIL inet002f "" "Service $currservice is assigned to port $port which should be $currport."
+    fi
+    }
+  done < $SERVICESFILE
+
+  # Check that these services are not set for any other services.
+  while read currservice currport
+  do 
+    matches=`$GREP " $currport$" $services | $AWK '{ print $1 }'`
+    for service in $matches
+    do
+      if [ $service != $currservice ]; then
+        origmatch=`$GREP " $currport$" $SERVICESFILE | $AWK '{ print $1 }' | $GREP $service`
+	[ -z "$origmatch" ] && 
+		message WARN inet003w "" "The port for service $currservice is also assigned to service $service."
+      fi
+    done
+  done < $SERVICESFILE
+
+  # Print out any other entries that have been added
+  $AWK '{ print $1 " " $2 }' $services |
+  $GREP -v '^#' | $GREP -v '^ $' | $SORT |
+  while read currservice currport
+  do
+	matchescount=""
+	matches=`$AWK '{ print $1 " " $2 }' $SERVICESFILE | $GREP " $currport$" | $AWK '{ print $1 }'`
+	for service in $matches
+	do
+	if [ $service = $currservice ]; then
+		matchescount="$matchescount."
+	fi
+  done
+  if [ "x$matchescount" = "x" ]; then
+    message INFO inet004i "" "$currservice is $currport (local addition)."
+  fi
+  done
+}
+
+
+realpath="$REALPATH -d"
+
+[ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath="echo"
+
+{
+  haveallcmds GEN_SERVICES_SETS &&
+  haveallfiles SERVICESFILE && {
+    $GEN_SERVICES_SETS |
+    while read services_set
+    do
+      echo "# Checking services from `$CAT $services_set.src`."
+
+      $AWK '!/^#/ { print $1, $2 }' $services_set |
+      $SED -e '/^$/d' |
+      $SORT -u > $tmpservices
+
+      checkservices $tmpservices
+
+      delete $services_set $services_set.src $tmpservices
+    done
+  }
+
+
+} |
+$OUTPUTMETHOD
+
+exit 0
