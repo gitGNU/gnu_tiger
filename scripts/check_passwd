@@ -41,6 +41,8 @@
 #    - empty password check (acc010a, acc011w)
 #    - duplicate home directory check (acc015w)
 # 10/07/2003 jfs Delete temporary files
+# 10/19/2003 jfs Patch from Nicolas François which uses EGREP instead of GREP
+#    in order to avoid Solaris problems.
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -78,7 +80,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT GEN_PASSWD_SETS GREP JOIN SORT UNIQ RM || exit 1
+  haveallcmds AWK CAT GEN_PASSWD_SETS GREP EGREP JOIN SED SORT UNIQ RM || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -90,7 +92,7 @@ done
 echo
 echo "# Performing check of passwd files..."
 
-haveallcmds AWK CAT GEN_PASSWD_SETS GREP JOIN SED SORT UNIQ RM || exit 1
+haveallcmds AWK CAT GEN_PASSWD_SETS GREP EGREP JOIN SED SORT UNIQ RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 safe_temp "$WORKDIR/pass.list.$$" "$WORKDIR/p1name.$$" "$WORKDIR/p2name.$$" "$WORKDIR/p1uid.$$" "$WORKDIR/p2uid.$$"
@@ -251,8 +253,7 @@ do
   done
 
   # Check for multiple entries with duplicate home directories.
-  admin_account_list=`echo $Tiger_Admin_Accounts | $SED -e 's/|/:|^/g'`
-  $GREP -Ev ^$admin_account_list: $WORKDIR/p1uid.$$ |
+  $EGREP -v "^($Tiger_Admin_Accounts):" $WORKDIR/p1uid.$$ |
   $AWK -F: '{print $6}' |
   $SORT |
   $UNIQ -c |
