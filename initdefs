@@ -79,13 +79,16 @@ haveallvars()
 
   for __var
   do
-    eval [ \"\${$__var+set}\" == \"\" ] || {
+    eval __val=\$$__var
+    echo ${__var:?error} 2>&1 >/dev/null
+    [ $? -ne 0 ] || {
       echo "--ERROR-- [init007e] Don't have required variable $__var."
       __retval=1
     }
-    if [ ! -n "$__val" ]
+    if [ __retval -eq 0 -a ! -n "$__val" ]
     then
       echo "--ERROR-- [init007e] Required variable $__var is empty."
+      __retval=1
     fi
   done
 
