@@ -1,6 +1,6 @@
-Login ID nobody is disabled, but still has a valid shell (/bin/sh). 
-Login ID mail's home directory (/var/mail) has group 'mail' write access.
-Login ID \w+'s home directory (/home) has group 'staff' write access.
+Login ID nobody is disabled, but still has a valid shell \(/bin/sh\)
+Login ID mail's home directory \(/var/mail\) has group `mail' write access.
+Login ID \w+'s parent directory \(/home\) has group `staff' write access.
 Log file /var/log/wtmp permission should be 644 
 Log file /var/log/btmp does not exist 
 Log file /var/run/utmp permission should be 644 
