@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 #     tiger - A UN*X security checking system
-#     Copyright (C) 2000, 2001 Javier Fernandez-Sanguino Peña
+#     Copyright (C) 2000, 2001, 2002 Javier Fernandez-Sanguino Peña
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # Linux/deb_nopackfiles - 23/08/2001
+# 
+# 11/05/2002 - jfs - Changed from a 'for' statement to a 'find'
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -55,7 +57,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds DPKG GREP || exit 1
+  haveallcmds FIND DPKG GREP || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -67,10 +69,12 @@ done
 echo
 echo "# Checking installed files against packages..."
 
-haveallcmds DPKG GREP || exit 1
+haveallcmds FIND DPKG GREP || exit 1
 
 
-for file in /bin/* /usr/bin/* /sbin/* /usr/sbin/* /lib/* /usr/X11R6/bin/*
+$FIND /bin/ /usr/bin/ /sbin/ /usr/sbin/ /lib/ /usr/X11R6/bin/ -type f |
+# We are not using -maxdepth here, but we could...
+while read file
 do
 	[ -f $file ] && [ ! -L $file  ] && {
 	# We have two options here, use dpkg (non-optimal but on the safe side)
