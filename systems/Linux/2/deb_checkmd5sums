@@ -17,6 +17,7 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# 09/13/2004 - jfs - Exclude usr/share/doc better (Debian bug 264111)
 # 05/01/2004 - jfs - Fixed previous patch.
 # 02/26/2004 - jfs - Included patch from Chung-chieh Shan which avoids failure
 #       on packages whose names contain "."
@@ -114,7 +115,7 @@ do
 [ -f $md5file ] && [ ! -L $md5file  ] && {
 # Note: We  do not check things in  /usr/share/doc
 # to speed things up
-	$GREP -v "/share/doc" "$md5file" |
+	$GREP -v " usr/share/doc/" "$md5file" |
 # Also don't check purged locales
         $SED -e "$SED_REMOVE_LOCALES_PURGED" |
 	$SED -e "s/^\(.*\)  \(.*\)/\1  \/\2/" |
