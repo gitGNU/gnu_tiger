@@ -1,4 +1,4 @@
-.I #!/bin/sh
+#!/bin/sh
 #
 #     tiger - A UN*X security checking system
 #     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
