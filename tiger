@@ -31,6 +31,8 @@
 #
 # 05/01/2003 jfs Added missing checks
 #
+# 05/09/2003 jfs Fixed missing bracket (syntax error)
+#
 #-----------------------------------------------------------------------------
 #
 echo "Tiger UN*X security checking system"
@@ -206,6 +208,7 @@ trippid=
 [ "$Tiger_Check_PASSWD_NIS" != 'N' ] && {
   echo "`$TIMECMD`> Checking NIS settings..."
   $SCRIPTDIR/check_nisplus >> $logtmp
+}
 
 [ "$Tiger_Check_GROUP" != 'N' ] && {
   echo "`$TIMECMD`> Checking group files..."
