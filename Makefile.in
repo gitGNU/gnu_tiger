@@ -97,14 +97,15 @@ SCRIPTS=./scripts/check_accounts \
 	./scripts/check_rhosts \
 	./scripts/check_root \
 	./scripts/check_rootdir \
+	./scripts/check_rootkit \
 	./scripts/check_runprocs \
 	./scripts/check_sendmail \
 	./scripts/check_services \
 	./scripts/check_signatures \
+	./scripts/check_ssh \
 	./scripts/check_system \
 	./scripts/check_tcpd \
 	./scripts/check_umask \
-	./scripts/check_rootkit \
 	./scripts/check_xinetd \
 	./scripts/crack_run \
 	./scripts/tripwire_run \

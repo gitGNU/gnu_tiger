@@ -21,6 +21,7 @@
 # all the checks configured for your system in the tigerrc configuration 
 # file.
 #
+# 09/03/2003 jfs Included check_ssh to the checks
 # 08/19/2003 jfs check_cron is now check_crontabs
 # 08/15/2003 jfs Integrated ARSC log to syslog mechanism but modified
 #                the check for it (better to use the same mechanism as
@@ -394,6 +395,11 @@ aidepid=
 [ "$Tiger_Check_APACHE" != 'N' ] && {
   echo "`$TIMECMD`> Checking Apache's configuration..."
   run_script check_apache >> $logtmp
+}
+
+[ "$Tiger_Check_SSH" != 'N' ] && {
+  echo "`$TIMECMD`> Checking SSHD's configuration..."
+  $SCRIPTDIR/check_ssh >> $logtmp
 }
 
 [ "$Tiger_Check_SENDMAIL" != 'N' ] && {

@@ -1,0 +1,186 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2003 Ryan Bradetich
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_ssh - 06/30/2003 - rbradetich@uswest.net - first release
+#
+# TODO:
+#   - Add additional directives that can be checked.
+#   - Figure out a clever method for integrating the default checks with the
+#     normal checks.
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallfiles BASEDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+echo
+echo "# Checking sshd_config configuration files..."
+
+haveallfiles BASEDIR || exit 1
+
+#
+# Parse the Protocol line and verify only allowed protocols are specified.
+# Return 0 if the protocol is not in the approved protocol list, otherwise
+# return 1.
+#
+parse_Protocol()
+{
+	line=$1
+
+	[ -z "$Tiger_SSH_Protocol" ] && return 1
+	while [ -n "$line" ]
+	do
+		proto=${line%%,*}
+		line=${line##${proto}}
+		line=${line##,}
+
+		eval "case \"$proto\" in
+			$Tiger_SSH_Protocol)
+				;;
+			*)
+				return 0
+				;;
+		esac"
+	done
+	return 1
+}
+
+#
+# Generic parsing routine for SSH Daemon directivies. 
+# Return 0 if the value is not in the approved list, otherwise
+# return 1.
+#
+parse_directive()
+{
+	value=$1
+	list=$2
+
+	[ -z "$list" ] && return 1
+	eval "case $value in
+		$list)
+			return 1
+			;;
+		*)
+			return 0
+			;;
+	esac"
+}
+
+#
+# Parse the specified sshd_config file.
+#
+parse_sshd_config_file()
+{
+	# Declare some variables to see if specified attributes are specified
+	# or if we need to check the defaults.
+	found_Protocol=0
+	found_PermitRootLogin=0
+	found_RhostsAuthentication=0
+	found_PasswordAuthentication=0
+
+	while read line
+	do
+		line=${line%%\#*}
+		[[ "$line" = Protocol* ]] && {
+			found_Protocol=1
+			parse_Protocol ${line##Protocol } $1 && {
+				message WARN ssh001w "" "Protocol $proto is enabled in $file"
+			}	
+		}
+
+		[[ "$line" = PermitRootLogin* ]] && {
+			found_PermitRootLogin=1
+			parse_directive ${line##PermitRootLogin } $Tiger_SSH_PermitRootLogin && {
+				message WARN ssh002w "" "The PermitRootLogin directive in $1 is set to the unapproved value: ${line##PermitRootLogin }."
+			}
+		}
+
+		[[ "$line" = RhostsAuthentication* ]] && {
+			found_RhostsAuthentication=1
+			parse_directive ${line##RhostsAuthentication } $Tiger_SSH_RhostsAuthentication && {
+				message WARN ssh003w "" "The RhostsAuthentication directive in $1 is set to the unapproved value: ${line##RhostsAuthentication }."
+			}
+		}
+
+		[[ "$line" = PasswordAuthentication* ]] && {
+			found_PasswordAuthentication=1
+			parse_directive ${line##PasswordAuthentication } $Tiger_SSH_PasswordAuthentication && {
+				message WARN ssh004w "" "The PasswordAuthentication directive in $1 is set to the unapproved value: ${line##PasswordAuthentication }."
+			}
+		}
+	done < $1
+
+	# Check the default values if the entry was not specified.
+	[ $found_Protocol = 0 ] && parse_Protocol "2,1" && {
+		message WARN ssh001w "" "Protocol $proto is enabled in $file"
+	}
+	[ $found_PermitRootLogin = 0 ] && parse_directive "yes" $Tiger_SSH_PermitRootLogin && {
+		message WARN ssh002w "" "The PermitRootLogin directive in $1 is set to the unapproved default value: yes."
+	}
+	[ $found_RhostsAuthentication = 0 ] && parse_directive "no" $Tiger_SSH_RhostsAuthentication && {
+		message WARN ssh003w "" "The RhostsAuthentication directive in $1 is set to the unapproved default value: no."
+	}
+	[ $found_PasswordAuthentication = 0 ] && parse_directive "yes" $Tiger_SSH_PasswordAuthentication && {
+		message WARN ssh004w "" "The PasswordAuthentication directive in $1 is set to the unapproved defult value: yes."
+	}
+}
+
+# Main loop, check all the specified sshd_config files.
+for file in $SSHD_CONFIG
+do
+	[ -r $file ] && parse_sshd_config_file $file
+done

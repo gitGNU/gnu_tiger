@@ -1,0 +1,16 @@
+%ssh001w
+The Protocol directive in the sshd_config file is not in the
+allowed protocol list.
+%ssh002w
+The PermitRootLogin directive is not in the allowed methods
+list.  This directive controls how root is allowed to use SSH.
+Valid options are: yes, without-password, forced-commands-only,
+and no.
+%ssh003w
+The RhostsAuthentication directive determines if .rhosts or 
+/etc/hosts.equiv is sufficent authentication.  This option
+only applies to protocol version 1 and is generally believed
+to be insecure.
+%ssh004w
+The PasswordAuthentication directive determines if passwords
+are a sufficent authentication.

@@ -40,6 +40,7 @@ Tiger_Check_RUNPROC=N		# Fast, needs to be customized per system
 Tiger_Check_DELETED=Y		# Depends on the number of processes on the
 				# system
 Tiger_Check_APACHE=N		# Fast
+Tiger_Check_SSH=Y		# Fast
 Tiger_Check_SENDMAIL=N		# Fast
 Tiger_Check_PRINTCAP=Y		# Fast
 Tiger_Check_EXRC=N		# Depends on the size of the filesystem
@@ -312,6 +313,16 @@ USERDOTFILES=".alias .kshrc .cshrc .profile .login .mailrc .exrc .emacs .forward
 # Solaris: default should be 99, users are generated over 100
 # HP-UX (?): default should be 499, users are generated over 500
 Tiger_Accounts_Trust=999
+#
+# These SSH directive variables are used to specify "allowed" values
+# for the SSH Daemon.
+# Multiple options are seperated by '|', and directive variable can
+# be left blank to ignore the check.
+Tiger_SSH_Protocol='1|2'
+Tiger_SSH_PermitRootLogin='no'
+Tiger_SSH_RhostsAuthentication='no'
+Tiger_SSH_PasswordAuthentication='no'
+#
 # Should we give warnings on services that listen on all interfaces?
 # (i.e. those that have not been configured to listen only on one)
 # This is useful in servers which might add new interfaces (and thus
