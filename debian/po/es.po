@@ -1,0 +1,99 @@
+#
+#    Translators, if you are not familiar with the PO format, gettext
+#    documentation is worth reading, especially sections dedicated to
+#    this format, e.g. by running:
+#         info -n '(gettext)PO Files'
+#         info -n '(gettext)Header Entry'
+#
+#    Some information specific to po-debconf are available at
+#            /usr/share/doc/po-debconf/README-trans
+#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
+#
+#    Developers do not need to manually edit POT or PO files.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2003-03-29 23:25-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Default
+#: ../templates:3
+msgid "root"
+msgstr ""
+
+#. Description
+#: ../templates:4
+msgid "Who should receive the daily mails?"
+msgstr "¿Quién debería recibir los correos diarios?"
+
+#. Description
+#: ../templates:4
+msgid ""
+"The user you enter below will receive all the emails that 'tiger' sends "
+"during the day when running the cron jobs. This does not mean that when "
+"executing the 'tiger' program standalone this user will receive the reports. "
+"Also note that any administrator will be able to access the reports since "
+"they are available in the /var/log/tiger/ directory."
+msgstr ""
+"El usuario que introduzca abajo recibirá todos los correos que 'tiger' envíe "
+"a lo largo del día durante la ejecución de las tareas programadas en el "
+"cron. Esto no significa que cuando se ejecute 'tiger' de forma independiente "
+"vaya a recibir los informes. También tome nota de que cualquier "
+"administrador podrá acceder a los informes dado que están disponibles en el "
+"directorio /var/log/tiger/."
+
+#. Description
+#: ../templates:13
+msgid "Take a minute to customize 'tiger'"
+msgstr "Tomese un momento para configurar 'tiger'"
+
+#. Description
+#: ../templates:13
+msgid ""
+"You should customize the files at /etc/tiger/ to adapt to your local "
+"security policy. Firstly, customizing the kind of checks that will be made "
+"in this system, as well as the information needed for tests in order to "
+"reduce false positives (in /etc/tiger/tigerrc). Secondly, customizing at "
+"what times these tests will be executed (in /etc/tiger/cronrc). And thirdly, "
+"since some modules warnings might not be problems regarding your current "
+"security policy, define a given template file at /etc/tiger/templates/ using "
+"runs from each of the modules. Once defined, all the runs will be checked "
+"against each one of the templates available (one per module) and only new "
+"warnings will be issued."
+msgstr ""
+"Debería configurar los ficheros en /etc/tiger/ para adaptarlos a su política "
+"de seguridad local. En primer lugar, adapte el tipo de pruebas que se "
+"realizarán en su sistema, así como la información que éstos necesitan para "
+"reducir falsos positivos (en /etc/tiger/tigerrc). En segundo lugar, ajuste "
+"los momentos en los que se realizarán los tests (en /etc/tiger/cronrc). Y en "
+"último lugar, dado que los errores que tiger considera pueden no serlos en "
+"función de su política de seguridad actual, defina una plantilla en /etc/"
+"tiger/templates/ utilizando ejecuciones previas para los módulos. Una vez la "
+"defina, todas las ejecuciones subsiguientes se comprobarán contra las "
+"plantillas disponibles (una por módulo) y sólo se indicarán los nuevos "
+"errores."
+
+#. Description
+#: ../templates:28
+msgid "Remove templates in buggy 'tiger' versions"
+msgstr ""
+
+#. Description
+#: ../templates:28
+msgid ""
+"Initially Debian's 3.1 tiger versions were distributed with a bug that would "
+"cause templates to be created under /var/log/ instead of /var/log/tiger/. "
+"Normal operation assumes templates are under /var/log/tiger/ and these "
+"templates will not be useful in newer Tiger versions. You might want to "
+"preserve a copy of them (to use as templates) and move them manually under "
+"their proper location. The package will not do this automatically in order "
+"to avoid removing previous templates. Should we remove these files if any "
+"are found?"
+msgstr ""
