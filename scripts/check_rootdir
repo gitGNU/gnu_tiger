@@ -27,6 +27,9 @@
 #        * Remove the mode variable (no longer used).
 #        * Comment updates.
 #        * Remove the check to make sure / is a directory.
+# check_rootdir - 03/21/2005 - jfs
+#        Do not warn on the inode if the root filesystem is not ext2|3
+#        (Debian Bug #298305)
 #       
 #
 #-----------------------------------------------------------------------------
@@ -67,7 +70,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds CAT SORT AWK LS RM || exit 1
+  haveallcmds CAT SORT AWK LS RM GETFS GREP AWK || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME || exit 1
   
@@ -80,13 +83,14 @@ done
 echo
 echo "# Performing check of root directory..."
 
-haveallcmds CAT SORT AWK LS RM || exit 1
+haveallcmds CAT SORT AWK LS RM GETFS GREP AWK || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 haveallvars TESTLINK HOSTNAME || exit 1
 
 # Checking to see if the root directory is on the correct INODE number
 inode=`$LS -di / | $AWK '{print $1}'`
-[ $inode != 2 ] && 
+fstype=`$GETFS | $GREP " / " | $AWK -F " " '{ print $5;}'`
+[ $inode != 2 ] && [ "$fstype" = "ext2" -o "$fstype" = "ext3" ] &&
    message FAIL rootdir001f "" "Root directory on incorrect inode"
 
 
