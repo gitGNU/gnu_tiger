@@ -1,3 +1,21 @@
+tiger (3.2rc3-3) experimental; urgency=low
+
+  * Added -q option to be used when running tigercron
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sat, 26 Apr 2003 13:41:35 +0200
+
+tiger (3.2rc3-2) experimental; urgency=low
+
+  * Fixed cron to tigercon in the cron.d file
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 23 Apr 2003 22:02:07 +0200
+
+tiger (3.2rc3-1) experimental; urgency=low
+
+  * New release candidate. 
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 23 Apr 2003 13:30:32 +0200
+
 tiger (3.2rc2-1) experimental; urgency=low
 
   * Experimental version, fixes bugs but might introduce new ones.
