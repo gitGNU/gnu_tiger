@@ -11,15 +11,14 @@
 #
 #    Developers do not need to manually edit POT or PO files.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tiger 3.2.1-7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-10-10 19:26+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2004-02-42 21:52+0200\n"
+"Last-Translator: Javier Fernandez-Sanguino <jfs@computer.org>\n"
+"Language-Team: Debian-Spanish <debian-l10n-spanish@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -79,7 +78,7 @@ msgstr ""
 #. Description
 #: ../templates:28
 msgid "Remove templates in buggy 'tiger' versions"
-msgstr ""
+msgstr "Eliminar plantillas de versiones rotas de 'tiger'"
 
 #. Description
 #: ../templates:28
@@ -93,3 +92,11 @@ msgid ""
 "to avoid removing previous templates. Should we remove these files if any "
 "are found?"
 msgstr ""
+"Se distribuyó una versión de Debian Tiger 3.1 que tenía una errata que hacía "
+"que se crearan plantillas bajo «/var/log» en lugar de bajo «/var/log/tiger». "
+"Para funcionar correctamente, las plantillas deben estar bajo «/var/log/tiger»"
+" y por tanto las plantillas antiguas no son útiles para versiones más "
+"modernas de Tiger. Puede que quiera guardar una copia de éstas o moverlas "
+"de forma manual a su nueva ubación. Este paquete no realizará esta operación "
+"de forma automática para evitar la eliminación de las plantillas ya existentes."
+"¿Debería borrar estos ficheros si los encuentro?"
