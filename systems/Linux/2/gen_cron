@@ -44,9 +44,9 @@ outfile=$1
 # First check the System's cron files (all in /etc)
 # these are output with just the cron owner and the file 
 for dir in /etc/cron.hourly /etc/cron.daily /etc/cron.weekly /etc/cron.monthly
+# TODO: consider using cron.* as suggested by unspawn instead of
+# an explicit for
 do
-# TODO (fix): this code will return sometimes errors if the directory
-# is empty (that's why it's redirected). Maybe find should be used instead
     if [ -d "$dir" -a -r "$dir" ]; then 
     	$FIND "$dir" -type f -printf "%p %u\n" |
 	while read  file owner
@@ -88,3 +88,4 @@ do
     esac
 done
 fi
+
