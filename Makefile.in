@@ -42,7 +42,8 @@ PLATFORM_SCRIPTS:=$(shell find ./systems/ -type f)
 
 BINARIES=./tiger \
 	./tigexp 
-SCRIPTS= ./tigercron \
+SCRIPTS= ./tigexp \
+	./tigercron \
 	./scripts/check_accounts \
 	./scripts/check_aliases \
 	./scripts/check_anonftp \

@@ -18,19 +18,20 @@
 #  config (top level) - 06/14/93
 #
 # 04/29/93 dls  Added support for 'tigerrc' file.
+# 04/15/2003 jfs  Modified to support -B to work in the local dir 
 #
 #-----------------------------------------------------------------------------
 #
 # space, tab, newline
 
-# Running on the dir created by the tarball
-TigerLogDir='./log'
-TigerWorkDir='./run'
-#TigerBinDir='$BASEDIR/bin'
-# Running on the same dir
-#TigerLogDir='/usr/local/tiger/log'
-#TigerWorkDir='/usr/local/tiger/run'
+# Running on the dir defined by the tarball
+TigerLogDir='/usr/local/tiger/log'
+TigerWorkDir='/usr/local/tiger/run'
 TigerBinDir='$BASEDIR/bin'
+# Running on the same dir
+#TigerLogDir='./log'
+#TigerWorkDir='./run'
+#TigerBinDir='$BASEDIR/bin'
 
 # This is important to avoid problems with commands that are
 # dependant on the defined language environment
