@@ -19,6 +19,7 @@
 # 
 # Checks for Solaris systems
 #
+# SunOS/5/check - 02/24/2004 - Fixed syntax error
 # SunOS/5/check - 08/26/2003 - Added ARSC's check implemented in TARA
 # 
 #-----------------------------------------------------------------------------
@@ -131,14 +132,11 @@ fi
          [ "$owner" != root ] && {
            message WARN misc017w "" "$file is defined with owner \`$owner' in /var/sadm/install/contents; should be \`root'."
          }
-         }
        }
         ;;
       esac
     }
   done
 }
-
-
 
 
