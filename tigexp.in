@@ -22,7 +22,7 @@
 # (INFO, WARN or ERR) given out by Tiger means.
 #
 #-----------------------------------------------------------------------------
-TigerInstallDir="."
+TigerInstallDir="@tigerhome@"
 
 #
 # Set default base directory.
