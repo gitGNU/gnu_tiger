@@ -27,6 +27,8 @@
 #     vulnerable.
 #
 # DATE 	NAME 	DESCRIPTION_OF_CHANGES
+# 02/24/2004 - jfs - Do not operate over 'CHR' file types to avoid false
+#              positives (Closes Debian bug #232704)
 # 09/13/2003 - jfs - Applied patch from Nicholas François to fix an error
 #              which might allow some rogue processes to slip by
 # 08/08/2003 - jfs - Avoided race conditions.
@@ -105,10 +107,12 @@ do
         # Other is composed of 'size node name', except if DEL is used
         # (in this case size is 0) we use it to print details of the
 	# file
+	# Note: Remove CHR file types also since this leads to false positives
+	# (i.e. /dev/null)
         do
 		# It can be deleted if name includes (deleted) or
 		# TYPE = DEL, but SYSV 'files' are not considered
-                if [ -n "`echo $other | $GREP \"(deleted)\"`" ] || [ -z "`echo $other | $GREP SYSV`" -a "$type" = "DEL" ] ; then
+                if [ -n "`echo $other | $GREP \"(deleted)\"`" -a "$type" != "CHR" ] || [ -z "`echo $other | $GREP SYSV`" -a "$type" = "DEL" ] ; then
 			# There can be servers either in the same process or
 			# its children
 			$PS -A -o pid,ppid,cmd | $GREP $npid  |
