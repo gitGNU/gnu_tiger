@@ -138,21 +138,21 @@ parse_service_block()
 	
 	while read line 
 	do
-		[[ $line = flags* ]] && {
-			[[ $line = *DISABLE* ]] && enabled='N'
+		[[ "$line" = flags* ]] && {
+			[[ "$line" = "*DISABLE*" ]] && enabled='N'
 			continue
 		}
 		
-		[[ $line = disable* ]] && {
-			[ ${line#* } = 'yes' ] && enabled='N'
+		[[ "$line" = disable* ]] && {
+			[ "${line#* }" = 'yes' ] && enabled='N'
 			continue
 		}
 
-		[[ $line = protocol* ]] && {
+		[[ "$line" = protocol* ]] && {
 			proto=`echo ${line#*=}`
 		}
 
-		[[ $line = *} ]] && break
+		[[ "$line" = *} ]] && break
 	done
 
 	if [ "$service" = 'rexd' -a $enabled = 'Y' ]; then
