@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -15,12 +15,14 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# check_listeningprocs - 23/08/2001
+# check_listeningprocs - 08/23/2001
 #
-# check_listeningprocs - 23/08/2001 - jfs 
+# check_listeningprocs - 08/23/2001 - jfs 
 #             Removed netstat (the Linux file has it) since the different
 #             UNIX implementations do not shared command line parameters
 #             (lsof does)
+# check_listeningprocs - 04/17/2003 - jfs 
+#             Use safe delete() instead of RM
 #
 # TODO: 
 # - provide a way (based on the Linux version) to work with Netstat's
@@ -30,9 +32,25 @@
 # (this bug was reported for Debian GNU/Linux) in order for multiple
 # ValidUsers/ValidProcs to work ok. Check systems/Linux/2/check_listeningprocs
 # (once it has been tested it will be included here too)
+#
+# NOTES:
+#
 # - there are know problems related to services open TCP/UDP ports spuriously
 # to contact the outside world. Tiger cannot distinguish these from 
-# normal servers.
+# normal servers. These usually happens with servers (DNS, Samba, Squid, 
+# Qmail) that open UDP listeners to receive DNS requests (this is Debian
+# bug #136991)
+#
+# To avoid these false positives you can either:
+#   1.- add these processes to the list of valid processes in the tigerrc
+#       configuration file (Tiger_Listening_ValidProcs)
+#
+#   2.- use the ignore mechanism (new in 3.2), for example, if you get reports
+#        like  this one:
+# WARN The process `X' is listening on socket 35477 (UDP) on every interface.
+#        with the number of the socket varying everytime add an ignore 
+#        entry in the tiger.ignore configuration file with:
+# 'The process `X' is listening on socket [0-9]+ (UDP) on every interface.'
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -72,7 +90,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds CAT CUT GREP AWK SORT UNIQ LSOF RM || exit 1
+  haveallcmds CAT CUT GREP AWK SORT UNIQ LSOF || exit 1
 # Lsof is needed for this program since netstat does not work
 # the same across all Unix platforms
   haveallfiles BASEDIR WORKDIR || exit 1
@@ -86,7 +104,7 @@ done
 echo
 echo "# Checking listening processes "
 
-haveallcmds CAT LSOF GREP CUT AWK SORT UNIQ RM|| exit 1
+haveallcmds CAT LSOF GREP CUT AWK SORT UNIQ || exit 1
 
 okprocessusers=$Tiger_Listening_ValidUsers
 okprocess=$Tiger_Listening_ValidProcs
@@ -143,5 +161,5 @@ do
 
 done 
 
-$RM $WORKDIR/procs.$$ $WORKDIR/openprocs.$$
+delete $WORKDIR/procs.$$ $WORKDIR/openprocs.$$
 exit 0 
