@@ -23,6 +23,7 @@
 #                as a non-root user.
 #                Changed TigerInstallDir to .
 # 04/15/2003 jfs Added some TODOS
+# 01/15/2004 jfs Fixed dependancies
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -65,7 +66,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
+  haveallcmds GREP JOIN RM  || exit 1
   havelallcmds APT || haveallcmds AUTORPM || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
@@ -76,8 +77,7 @@ done
 echo
 echo "# Checking for up-to-date patches..."
 
-haveallcmds AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN || exit 1
-haveallcmds LS RM SORT TAIL UNIQ  || exit 1
+haveallcmds GREP JOIN RM || exit 1
 # TODO: How can we check fo one command *or* other ?? (jfs)
 #havelallcmds APT || haveallcmds AUTORPM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
