@@ -29,9 +29,9 @@
 #
 #-----------------------------------------------------------------------------
 #
-UUID=`/usr/bin/id | /usr/bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
-[ "$UUID" = "0" -o "$UID" -eq 0  ] &&
-  ME="root"
+UUID=`/usr/bin/id -u`
+export UUID
+[ "$UUID" = "0" -o "$UID" -eq 0  ] && ME="root"
 
 [ "$ME" != "root" ] && {
   echo " " 1>&2
@@ -39,6 +39,7 @@ UUID=`/usr/bin/id | /usr/bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
   echo " " 1>&2
 #  exit 1
 }
+
 [ -z "$ME" ] && {
   echo " " 1>&2
   echo "Unable to determine who is running Tiger, make sure you are root" 1>&2
