@@ -18,20 +18,37 @@
 #
 # check_tcpd - 26/05/2002
 #
-# check_tcpd - 07/25/2002 - jfs
-#       Changed TigerInstallDir to .
-# check_tcpd - 04/23/2003 - jfs
-#	Fixed requirements
+# Tests for the existance of tcp-wrappers and changes in their configuration 
+# it also determines which services are running wrapped in tcp-wrappers.
+# (based on check_inetd)
+#
+# check_tcpd - 08/11/2003 - jfs
+#     Check for the availability of TCPD and only run the checks on inetd
+#     if TCPD is available. Preliminary code for XINETD. Also check for
+#     the hosts.allow and hosts.deny file permissions.
+# check_tcpd - 08/08/2003 - jfs
+#     Improved temporary file creation.
 # check_tcpd - 06/26/2003 - jfs
 #     Fixed calls to test ([]) it worked in Linux but not in other OS due
 #     to -n not being implicit.
+# check_tcpd - 04/23/2003 - jfs
+#     Fixed requirements
+# check_tcpd - 08/09/2002 - jfs
+#     Added RM to dependancies.
+# check_tcpd - 07/25/2002 - jfs
+#     Changed TigerInstallDir to .
 #
-# Script made based on checkd_inetd in order to only test for existance
-# of tcp-wrappers and changes in their configuration.
+#-----------------------------------------------------------------------------
+# TODO: 
 #
-# TODO: it is not currently able to determine services which are compiled
+# - This check should include checks on the _content_ of hosts.allow,
+#   and hosts.deny (notice that hosts.equiv is checked for in check_rhosts)
+# - it is not currently able to determine services which are compiled
 # against libwrap (many in Debian GNU/Linux) and tell the user that they
 # are protected this way.
+# - it only uses inetd (through GEN_INETD_SETS) but could be improved to 
+#   use GEN_XINETD_SETS if available.
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -67,7 +84,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT  UNIQ || exit 1
+  haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT UNIQ RM || exit 1
   haveallfiles BASEDIR WORKDIR INETDFILE || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -78,15 +95,14 @@ done
 echo
 echo "# Performing check of services with tcp wrappers..."
 
-haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT  UNIQ || exit 1
+haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT UNIQ RM || exit 1
 haveallfiles BASEDIR WORKDIR INETDFILE || exit 1
 
 saveifs=$IFS
 
 tmpservices=$WORKDIR/sec.$$ts
-delete $tmpservices
 tmpinetd=$WORKDIR/sec.$$in
-delete $tmpinetd
+safe_temp $tmpservices $tmpinetd
 
 trap 'delete $tmpservices $tmpinetd; exit 1' 1 2 3 15
 checkinetd ()
@@ -108,6 +124,7 @@ checkinetd ()
   count="$2"
   size="$3"
 #  tcpdpath="$4"
+# Tcp-wrappers patch is configured in the systems configuration files
   tcpdpath=$TCPD
 
 #  [ "$count" -lt 2 ] && tcpdpath=
@@ -142,12 +159,46 @@ checkinetd ()
   delete $WORKDIR/cinetd.$$
 }
 
+check_hfileperm()
+{
+ for __file
+ do
+    getpermit $__file |
+    while read _namefile _owner _group ur uw ux gr gw gx or ow ox suid sgid stk
+    do
+     [ "$gw" != '0' ] && \
+         message WARN inet023w "" "The file $__file can be written by any user of the group $_group."
+     [ "$ow" != '0' ] && \
+         message FAIL inet024f "" "The file $__file can be written by any user."
+     [ "$_owner" != 'root' ] && \
+         message FAIL inet025f "" "The file $__file is not owned by root (owned by $owner)."
+    done
+ done
+}
+
 realpath="$REALPATH -d"
 
 [ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath="echo"
 
+[ -z "$TCPD" -o ! -e "$TCPD" ] && \
+	message FAIL inet021f "" "Tcp wrappers does not seem to be installed in this system."
 
-haveallcmds GEN_INETD_SETS UNIQ  &&
+if [ -z "$HOSTALLOW" -o ! -e "$HOSTALLOW" ] ; then
+	message FAIL inet022f "" "The hosts.allow file used by Tcp wrappers does not seem to be present in this system"
+else
+	check_hfileperm $HOSTALLOW
+fi
+
+if [ -z "$HOSTDENY" -o ! -e "$HOSTDENY" ] ; then
+	message FAIL inet022f "" "The hosts.deny file used by Tcp wrappers does not seem to be present in this system"
+else
+	check_hfileperm $HOSTDENY
+fi
+
+# This piece of code compares the current inetd configuration with the
+# configuration under $OS/$REL/$ARCH/inetd file (which is also generated
+# with gen_inetd_sets)
+haveallcmds GEN_INETD_SETS UNIQ &&
 haveallfiles INETDFILE && {
     $GEN_INETD_SETS |
     while read inetd_set
@@ -160,5 +211,20 @@ haveallfiles INETDFILE && {
       delete $inetd_set $inetd_set.src
     done
   }
+
+# Enable when GEN_XINETD_SETS is available
+#
+#haveallcmds GEN_XINETD_SETS UNIQ TCPD &&
+#haveallfiles XINETDFILE && {
+#    $GEN_XINETD_SETS |
+#    while read xinetd_set
+#   do
+#     inetdsrc=`$CAT $xinetd_set.src`
+#      echo "# Analysing xinetd entries from $xinetdsrc"
+#
+#      checkinetd $xinetd_set
+#      delete $xinetd_set $xinetd_set.src
+#    done
+#  }
 
 exit 0
