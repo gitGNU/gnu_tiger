@@ -16,6 +16,8 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # HPUX/config - 06/14/93
+# 06/21/2003 - jfs - Applied a patch provided by Ryan Bradetich to support
+#                    PWCK properly
 #
 #-----------------------------------------------------------------------------
 #
@@ -58,6 +60,14 @@ CHOWN=/bin/chown
 CHMOD=/bin/chmod
 LN=/bin/ln
 WC=/bin/wc
+# Setup PWCK depending on the status of the system
+# (is it in trusted mode?)
+/usr/lbin/getprdef -r >/dev/null 2>/dev/null
+if [ $? -ne 4 ] ; then
+       PWCK="/usr/sbin/pwck -s"
+else
+       PWCK=/usr/sbin/pwck
+fi
 #
 # Disable diff because it doesn't support -D... so we can not
 # use diff... this will cause reports to be mailed as is... future

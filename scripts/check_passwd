@@ -21,6 +21,8 @@
 # 08/09/2002 jfs Fixed some ! tests 
 # 10/28/2002 jfs Improved check with patch from Bob Hall
 # 05/01/2003 jfs Fixed PWCK behavior
+# 06/21/2003 jfs Modified with patch from Ryan Bradetich to generalise
+#                PWCK support.
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -180,9 +182,9 @@ $OUTPUTMETHOD
 
 [ -n "$PWCK" ] && {
   # TODO: Add the results to the report
-  pwckerr=`$PWCK -r /etc/passwd /etc/shadow >/dev/null 2>&1`
+  pwckerr=`$PWCK /etc/passwd /etc/shadow >/dev/null 2>&1`
   if [ $? -ne 0 ] ; then
-    message WARN pass006w "" "Integrity of password files questionable (pwck -r)."
+    message WARN pass006w "" "Integrity of password files questionable ($PWCK)."
   fi
 }
 
