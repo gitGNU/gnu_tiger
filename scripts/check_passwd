@@ -178,7 +178,9 @@ $OUTPUTMETHOD
 }
 
 [ -n "$PWCK" ] && {
-  if [ ! `$PWCK /etc/passwd /etc/shadow >/dev/null 2>&1` ] ; then
+  # TODO: Add the results to the report
+  pwckerr=`$PWCK -r /etc/passwd /etc/shadow >/dev/null 2>&1`
+  if [ $? -ne 0 ] ; then
     message WARN pass006w "" "Integrity of password files questionable (pwck -r)."
   fi
 }
