@@ -1,3 +1,39 @@
+tiger (1:3.2.1-4) unstable; urgency=low
+
+  * Updated from CVS sources to fix reported bugs
+    * Updated check_root so mesg check is not done when running
+      in cron (Closes: #218056, #220924)
+    * Updated check_lilo now locates grub file properly (Closes: #218771)
+    * Updated check_passwd fixes syntax error (Closes: #219086)
+    * deb_checkmd5sums detect local diversions and avoid problems with
+      duplicate conffiles (Closes: #219727, #220325)
+    * check_release fixed typeset bashism (Closes: #219764)
+    * deb_checkmd5sums now uses -F to avoid warning on /usr/bin/[
+      (Closes: #220946)
+    * config add sendmail_cf location
+    * Updated advisories list.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun, 16 Nov 2003 13:10:08 +0100
+
+tiger (1:3.2.1-3) unstable; urgency=low
+
+  * Updated from CVS sources to latest Tiger changes including:
+     - Check_rootkit no longer complains if chkrootkit is not installed
+     (Closes: #215885)
+     - Fixes check_network_config return values (Closes: #215891)
+     - Fixes inittab's false positives (Closes: #215872)
+     - Fixes bashisms ini scripts (Closes: #215896)
+     - Fixes initdefs delete() in order for check_chkrootkit removal to work
+     properly (Closes: #215882)
+  * Debian/rules now sets SHELL=/bin/bash (Closes: #198856)
+  * Updated to latest advisories
+  * Now depends also on coreutils (X | corerutils) (Closes: #215487)
+  * Added device baseline to debian.ignore (Closes: #194956)
+  * Removed check_sendmail from check.tbl so that it does not get run by
+  check_system (Closes: #2158739)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun, 19 Oct 2003 23:56:50 +0200
+
 tiger (1:3.2.1-2) unstable; urgency=low
 
   * The "Happy Birthday! (to me)" Release, now uploaded to unstable.
