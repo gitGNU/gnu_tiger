@@ -140,7 +140,7 @@ $SED -e 's/diversion of \(\/.*\) to \(\/.*\) by \(.*\)$/\1;\2;\3/' | {
     IFS=", " ; set X $2
     while [ "$2" != "" ]
     do
-      if [ "$2" == "$bypackage" ]
+      if [ "$2" = "$bypackage" ]
       then
         currentfile=$file
       else
