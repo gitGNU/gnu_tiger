@@ -16,7 +16,16 @@ operating systems (systems/).
 Note that this files might not be as up to date as it would be desired for
 some operating systems. 
 
+You can retrieve updated signatures at
+http://www.net.tamu.edu/ftp/security/TAMU/tiger-sigs/ (these are being
+integrated into the tiger source code)
+
+and
+
+http://www.knowngoods.org/download.html -(these will probably be in the near future too)
+
 
 --- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
-Sat, 18 May 2002 22:15:49 +0200
+Mon,  9 Dec 2002 19:19:30 +0100
+
 
