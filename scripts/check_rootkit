@@ -26,6 +26,7 @@
 # uses those defined in the path
 #
 # DATE (MM/DD/YYYY) 	NAME 	DESCRIPTION_OF_CHANGES
+# 10/15/2003            jfs     Make CHKROOTKIT check silent
 # 09/19/2003            jfs     Removed unused temporary file creation
 # 08/14/2003            jfs     Implemented usage of CHKROOTKIT if available
 # 08/13/2003            jfs     Integrated into the Tiger tool
@@ -137,7 +138,9 @@ else
         CHKROOTKIT=${Tiger_CHKROOTKIT_LOC_OVERRIDE}
 fi
 
-haveallcmds CHKROOTKIT && {
+# Redirect to /dev/null to make it silent 
+# (maybe a warning should be issued)
+haveallcmds CHKROOTKIT >/dev/null && {
 	echo "# Running chkrootkit ($CHKROOTKIT) to perform further checks..."
 # TODO: This code does not show some of chkrootkit's messages (such as
 # suspicious files)
