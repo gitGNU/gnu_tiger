@@ -21,6 +21,13 @@
 #       Changed TigerInstallDir to .
 # check_rootdir - 06/21/2003 - jfs
 #       Removed useless debug message (patch from Ryan Bradetich)
+# check_rootdir - 11/18/2003 - Patch from Ryan Bradetich:
+#        * Add an ownership check for the root directory.
+#        * Add documentation for the ownership check.
+#        * Remove the mode variable (no longer used).
+#        * Comment updates.
+#        * Remove the check to make sure / is a directory.
+#       
 #
 #-----------------------------------------------------------------------------
 #
@@ -83,24 +90,24 @@ inode=`$LS -di / | $AWK '{print $1}'`
    message FAIL rootdir001f "" "Root directory on incorrect inode"
 
 
-# Checking the permissions on the root directory is standard
+# Verify the permissions on the root directory is standard
 
-[ -d / ] && {
-  getpermit / |
-  while read file owner group ur uw ux gr gw gx or ow ox suid sgid sticky
-  do
-    [ "${gw}${ow}" != '00' ] && {
-	str="The root directory / has"
-	case "$gw$ow" in
-	   01) str="$str world write"
-	       mode='o-w';;
-	   10) str="$str group \`$group' write"
-	       mode='g-w';;
-	   11) str="$str group \`$group' and world write"
-	       mode='go-w';;
-	esac
-        #echo FAIL "" "${str} access."
-        message FAIL rootdir002f "" "${str} access."
-     }
-  done
-}
+getpermit / |
+while read file owner group ur uw ux gr gw gx or ow ox suid sgid sticky
+do
+  # Verify the permissions on the root directory is standard
+  [ "${gw}${ow}" != '00' ] && {
+    str="The root directory / has"
+      case "$gw$ow" in
+        01) str="$str world write";;
+        10) str="$str group \`$group' write";;
+        11) str="$str group \`$group' and world write";;
+      esac
+      #echo FAIL "" "${str} access."
+      message FAIL rootdir002f "" "${str} access."
+  }
+
+  # Verify the ownership on on the root directory is standard
+  [ "$owner" != 'root' ] &&
+    message FAIL rootdir003f "" "The root directory is owned by \`$owner', instead of root."
+done

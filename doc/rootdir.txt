@@ -1,6 +1,8 @@
 %rootdir001f
-The inode for the root directory is not on inode 2.  This is a security 
-breach.  To check the inode number, use "stat /" command.
+The root directory is not at the beginning of a filesystems.
+This usually indicates the output of the Tiger reports might
+be suspect. (i.e. Tiger was possibly run inside a chroot, etc).
 %rootdir002f
 The permissions for the root directory are not secure.
-
+%rootdir003f
+The ownership of the root directory is not secure.
