@@ -532,6 +532,8 @@ fi
 
 
 
+test "x$prefix" != "xNONE" || prefix=/usr/local/
+
 # Check whether --with-tigerhome or --without-tigerhome was given.
 if test "${with_tigerhome+set}" = set; then
   withval="$with_tigerhome"
@@ -541,7 +543,7 @@ else
 fi
 
 if test "$tigerhome" = "no" ; then
-        tigerhome=/usr/local/tiger
+        tigerhome=tiger
 fi
 
 # Check whether --with-tigerconfig or --without-tigerconfig was given.
@@ -553,7 +555,7 @@ else
 fi
 
 if test "$tigerconfig" = "no" ; then
-        tigerconfig=/usr/local/tiger
+        tigerconfig=tiger
 fi
 
 # Check whether --with-tigerwork or --without-tigerwork was given.
@@ -565,7 +567,7 @@ else
 fi
 
 if test "$tigerwork" = "no" ; then
-        tigerwork=/usr/local/tiger/run
+        tigerwork=tiger/run
 fi
 
 # Check whether --with-tigerlog or --without-tigerlog was given.
@@ -577,7 +579,7 @@ else
 fi
 
 if test "$tigerlog" = "no" ; then
-        tigerlog=/usr/local/tiger/log
+        tigerlog=tiger/log
 fi
 
 # Check whether --with-tigerbin or --without-tigerbin was given.
@@ -589,7 +591,7 @@ else
 fi
 
 if test "$tigerbin" = "no" ; then
-        tigerbin=/usr/local/bin
+        tigerbin=bin
 fi
 
 

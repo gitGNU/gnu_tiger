@@ -29,7 +29,7 @@
 #
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/local/tiger"
+TigerInstallDir="."
 
 [ "$1" != "" ] && {
   case "$1" in
@@ -46,7 +46,7 @@ TigerInstallDir="/usr/local/tiger"
 #      TigerInstallDir installed location
 #
 basedir=${TIGERHOMEDIR:=$TigerInstallDir}
-CONFIGDIR="/usr/local/tiger"
+CONFIGDIR="."
 TEMPLATEDIR="$CONFIGDIR/templates"
 
 for parm

@@ -27,14 +27,16 @@
 # space, tab, newline
 
 # Running on the dir defined by the tarball
-TigerLogDir='/var/log/tiger'
-TigerWorkDir='/var/run/tiger/work'
-TigerConfigDir='/etc/tiger'
+# Comment this if you want to use Tiger defaults
+TigerLogDir='log/'
+TigerWorkDir='run/'
+TigerConfigDir='.'
 
 # This is important to avoid problems with commands that are
 # dependant on the defined language environment
 LANG="C"
 LC_TIME="C"
+export LANG LC_TIME
 
 checkfile()
 {

@@ -37,7 +37,7 @@ echo "   Updated by the Advanced Research Corporation, 1999"
 echo "   Further updated by Javier Fernandez-Sanguino, 2001-2003"
 echo "   Covered by the GNU General Public License (GPL)"
 echo
-TigerInstallDir="/usr/local/tiger"
+TigerInstallDir="."
 #
 # Set default base directory.
 # Order or preference:
