@@ -207,9 +207,9 @@ installdirs:
 
 installmanpages:
 	@echo "Copying manpages..."
-	$INSTALL -m 0444 man/tiger.8 $(DESTDIR)$(TIGERMANDIR)/man8
-	$INSTALL -m 0444 man/tigexp.8 $(DESTDIR)$(TIGERMANDIR)/man8
-	$INSTALL -m 0444 man/tigercron.8 $(DESTDIR)$(TIGERMANDIR)/man8
+	$(INSTALL) -m 0444 man/tiger.8 $(DESTDIR)$(TIGERMANDIR)/man8
+	$(INSTALL) -m 0444 man/tigexp.8 $(DESTDIR)$(TIGERMANDIR)/man8
+	$(INSTALL) -m 0444 man/tigercron.8 $(DESTDIR)$(TIGERMANDIR)/man8
 
 installbinaries:
 	@echo "Copying binaries..."
@@ -226,7 +226,7 @@ installbinaries:
 installconfig:
 	@echo "Copying configuration files..."
 	@for file in $(CONFIGFILES); do \
-	  $INSTALL -m 0640 $$file $(DESTDIR)$(TIGERCONFIG)/$$file; \
+	  $(INSTALL) -m 0640 $$file $(DESTDIR)$(TIGERCONFIG)/$$file; \
 	done
 	@echo "Copying general configuration..."
 	@sed -e 's%^TigerLogDir=.*$$%TigerLogDir="'$(TIGERLOGS)'"%' \
