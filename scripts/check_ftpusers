@@ -20,6 +20,8 @@
 # Analyses the system's /etc/ftpusers and determines if the administrative
 # users are in that file.
 #
+# 03/31/2005 jfs Allow FTPUSERS to be customised (some OS have it
+#                in alternate locations)
 # 10/01/2003 jfs Removed passwd files if not used any longer.
 #
 # 07/25/2002 jfs Added a sanity check for password files.
@@ -90,9 +92,13 @@ trap 'delete $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
 	Tiger_Accounts_Trust = 999
 	export Tiger_Accounts_Trust
 }
+FTPUSERS=/etc/ftpusers
+if [ "$OS" = "SunOS" -a ! -e "$FTPUSERS" ] ; then
+	FTPUSERS=/etc/ftpd/ftpusers
+fi
 
 # Do this only if ftpusers exists
-if [ -f /etc/ftpusers ]; then
+if [ -f "$FTPUSERS" ]; then
 
 if [ -n "$Tiger_PasswdFiles" ]; then
     [ -f $Tiger_PasswdFiles ] && $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
@@ -111,14 +117,14 @@ do
 #	user=`echo $line | $AWK -F: '($3 <= $Tiger_Accounts_Trust) { print $1 }'`
 
 	# Note: root is removed since it is checked for in check_root
-	[ -n "$user" -a "$user" != "root" ] && [ -z "`$GREP \"^$user\" /etc/ftpusers`" ]  && 
-		message FAIL netw018f "" "Administrative user $user allowed access in /etc/ftpusers"
+	[ -n "$user" -a "$user" != "root" ] && [ -z "`$GREP \"^$user\" $FTPUSERS`" ]  && 
+		message FAIL netw018f "" "Administrative user $user allowed access in $FTPUSERS"
 	done 
         [ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
 done
 
 else
-	message FAIL netw020f "" "There is no /etc/ftpusers file."
+	message FAIL netw020f "" "There is no $FTPUSERS file."
 
 fi
 
