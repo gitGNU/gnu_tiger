@@ -17,6 +17,8 @@
 #
 # find_files - 06/14/93
 #
+# 08/08/2003 jfs Improved creation of temporary files and removal.
+#
 # 04/29/93 dls Added support for 'tigerrc' file variable FS_FILES
 #
 # 04/28/93 dls Added search for device files...
@@ -103,10 +105,7 @@ cleanup()
   [ "$_TIGER_RUN" != 'Y' -a -n "$TigerCleanup" ] && {
     for file in $TigerCleanup
     do
-      eval "case \$file in
-	$WORKDIR/*) $RM -f \$file;;
-	*) echo \"--ERROR-- [post001e] File \\\`\$file' not removed during cleanup.\";;
-	esac"
+    	delete $file
     done
   }  
 }
@@ -235,7 +234,11 @@ pidlist=$WORKDIR/pid.list$$
 mountlist=$WORKDIR/mount.list$$
 outfile=$WORKDIR/find.out.$$
 
-> $pidlist
+safe_temp $pidlist $mountlist $outfile $WORKDIR/suid.msgs.$$  $WORKDIR/sgid.msgs.$$ $WORKDIR/other.msgs.$$ $WORKDIR/devs.msgs.$$ $WORKDIR/link.msgs.$$ $WORKDIR/wdir.msgs.$$ $WORKDIR/noowner.msgs.$$
+
+# Define this for the cleanup() function
+TigerCleanup="$TigerCleanup $WORKDIR/suid.msgs.$$ $WORKDIR/sgid.msgs.$$ $WORKDIR/other.msgs.$$ $WORKDIR/devs.msgs.$$ $WORKDIR/link.msgs.$$ $WORKDIR/wdir.msgs.$$ $WORKDIR/noowner.msgs.$$"
+
 counter=1
 
 rw=rw
@@ -365,8 +368,8 @@ done
 
 delete $pidlist ${outfile}*
 delete $WORKDIR/suid.msgs.$$ $WORKDIR/sgid.msgs.$$ \
-	$WORKDIR/other.msgs.$$ $WORKDIR/devs.msgs.$$ \
-       $WORKDIR/link.msgs.$$ $WORKDIR/wdir.msgs.$$ $WORKDIR/noowner.msgs.$$
+       $WORKDIR/other.msgs.$$ $WORKDIR/devs.msgs.$$ \
+      $WORKDIR/link.msgs.$$ $WORKDIR/wdir.msgs.$$ $WORKDIR/noowner.msgs.$$
 
 #
 exit 0
