@@ -19,6 +19,7 @@
 # 
 # Checks for Linux systems
 # 
+# Linux/2/check - 10/15/2003 - jfs - Removed bashishm (Debian bug #215896)
 # Linux/2/check - 04/23/2003 - jfs
 # 	Removed CC dependancy, added TODO
 #       Debian specific checks moved into an if and check.tbl cleared
@@ -133,7 +134,7 @@ SYSTEMDIR=$BASEDIR/systems/Linux/2
 # The following scripts have been added to provide new checks 
 # specific to the Debian system, written by Javier Fernandez-Sanguino
 #
-if [ "$LXDISTRIBUTION" == "debian" ]; then
+if [ "$LXDISTRIBUTION" = "debian" ]; then
 
 # The following checks, for the moment, work only for Debian but
 # they could be generalised (there is a tigerrc variable for them)

@@ -17,6 +17,7 @@
 #
 # check_rcumask - Sat May 18 17:50:00 CEST 2002
 #
+# Check_rcumask - 10/15/2003 - jfs - Removed bashishm (Debian bug #215896)
 # check_rcumask - 07/25/2002 - jfs
 #       Changed TigerInstallDir to .
 # check_rcumask - 09/10/2002 - jfs
@@ -112,7 +113,7 @@ do
 		message FAIL misc017f '' "The umask setting in $file for the init scripts is insecure"
 
 
-    elif [ $Occurance == 2 ]; then
+    elif [ "$Occurance" = 2 ]; then
 	Foundumask=1
 	UMASK1=`$GREP umask $file  \
              | $EXPAND \
