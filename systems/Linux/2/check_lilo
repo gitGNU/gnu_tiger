@@ -24,6 +24,7 @@
 # 07/25/2002 jfs       
 # Changed TigerInstallDir to .
 # Changed -e to -r and 'find' to 'access' in the error msg.
+# 10/19/2003 jfs - Applied patch from Ryan Bradetich to work in SuSE systems.
 #
 #-----------------------------------------------------------------------------
 #
@@ -104,8 +105,15 @@ then
 
 fi
 
-file=/boot/grub/grub.conf
-if [ -r $file ]
+if [ -r /etc/grub.conf ] ; then
+   # SuSE uses /etc/grub.conf.
+   file=/etc/grub.conf
+else
+   # for other Linux systems
+   file=/boot/grub/grub.conf
+fi 
+
+if [ -r "$file" ]
 then
 
 	found="Y"
