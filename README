@@ -10,9 +10,7 @@ packet filter).  As such, they needed something that *anyone* could run
 if they could figure out how to get it down to their machine.
 
 If you just want to run it, without regards to time considerations,
-then just 'cd' into the tiger directory, edit the 'config' file 
-so that TigerWorkDir and TigerLogDir point to '.' and then run 
-'./tiger -B .' as 'root'.
+then just 'cd' into the tiger directory, and run './tiger' as 'root'.
 
 The 'tigerrc' file is set up for a generic host, and enables all checks.
 You can customize this file as needed.
