@@ -8,8 +8,8 @@ tiger (3.2rc1-1) experimental; urgency=low
   * New upstream version 
      - False positives in services fixed (Closes: #132278)
      - Check_exports produces proper output (Closes: #162453)
-     - Checks have been separated, no each check file prints it's
-       comment (CloseS: #165766)
+     - Checks have been separated, now each check file prints it's
+       comment (Closes: #165766)
      - Using the new ignore mechanism (better than the differential
        mechanism) this package now provides a baseline for Debian GNU/Linux, 
        hopefully this will make Matt test again this package :-) 
