@@ -20,6 +20,10 @@
 # Checks the accounts provided in the system, looking for disabled accounts
 # with cron, rhosts, .forward, and valid shells.
 #
+# 10/01/2003 jfs  For some reason this script stopped working in Linux
+#            massaged it to work again (changed while read in function
+#            to explicit parameter calling). Also added a check to
+#            avoid going through all the filesystem if $home is not defined.
 # 09/19/2003 jfs  Add root to Tiger_Admin_Accounts if already defined.
 #                 Also permit empty USERDOTFILES and fix dependancies.
 # 08/15/2003 jfs  ETCSHELLS is not indispensable to running this script.
@@ -139,15 +143,17 @@ fi
 #
 check_disabled()
 {
-  while read user home host shell
-  do
-    if [ "$OS" = "Linux" -a -z "$shell" ]
-    then
-        shell="/bin/sh"
-    fi
+  user=$1
+  home=$2
+  host=$3
+  shell=$4
+  if [ "$OS" = "Linux" -a -z "$shell" ]
+  then
+       shell="/bin/sh"
+  fi
 
-    [ $TESTEXEC "$shell" ] && {
-      eval "
+  [ $TESTEXEC "$shell" ] && {
+     eval "
 	case \"$shell\" in
 	  $shcase)
 	  message WARN acc001w \"\" \"Login ID $user is disabled, but still has a valid shell.\"
@@ -173,11 +179,10 @@ check_disabled()
 	    message WARN acc004w "" "Login ID $user is disabled, but has a .rhosts file"
 	  }
 	}
-      }
-    }
-    [ -n "$CHECK_CRON" -a "`$CHECK_CRON $user`" = 'YES' ] &&
+     }
+  }
+  [ -n "$CHECK_CRON" -a "`$CHECK_CRON $user`" = 'YES' ] &&
     message WARN acc005w "" "Login ID $user is disabled, but has a 'cron' file or cron entries."
-  done
 }
 
 check_users()
@@ -256,13 +261,13 @@ check_users()
      }
 
      # Dormant account check.
-     [ "$home" != / -a "$Tiger_Dormant_Limit" != 0 ] && {
+     [ "$home" != / -a -n "$home" -a "$Tiger_Dormant_Limit" != 0 ] && {
        eval "
          case $user in
            $Tiger_Admin_Accounts)
              ;;
            *)
-             [ `$FIND $home/ -mtime -$Tiger_Dormant_Limit | $WC -l` -eq 0 ] && {
+             [ `$FIND "$home/" -mtime -$Tiger_Dormant_Limit | $WC -l` -eq 0 ] && {
                message WARN acc021w \"\" \"Login ID $user appears to be a dormant account.\"
              }
              ;;
