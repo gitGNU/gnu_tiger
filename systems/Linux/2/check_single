@@ -22,6 +22,8 @@
 # 07/25/2002 jfs      Changed -e lilo.conf to -r lilo.conf
 #                     Changed TigerInstallDir to .
 # 01/15/2004 jfs      Fixed dependancies
+# 03/21/2005 jfs      Only run if running on the x86 architecture 
+#                     (Debian bug #288737)
 #
 #-----------------------------------------------------------------------------
 #
@@ -58,7 +60,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds GREP RM || exit 1
+  haveallcmds GREP RM UNAME EGREP || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -66,10 +68,15 @@ done
 }
 #------------------------------------------------------------------------
 
+haveallcmds GREP RM UNAME EGREP || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+machine=`$UNAME -m`
+# Only applies to the x86 architecture:
+[ -z "`echo $machine | $EGREP 'i.86$'`" ] && exit 0
+
 echo
 echo "# Checking for single user-mode password..."
-haveallcmds GREP RM || exit 1
-haveallfiles BASEDIR WORKDIR || exit 1
 
 # if we find a boot-loader password, great. 
 # If not, look for single-user mode password in inittab 
