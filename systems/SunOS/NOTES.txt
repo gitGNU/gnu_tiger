@@ -1,0 +1,30 @@
+
+Notes for SunOS / Solaris
+-------------------------
+
+Sun provides the following information that can be useful
+for local security testing:
+
+- The Solaris (tm) Fingerpint Database (sfpDB)
+  http://sunsolve.sun.com/pub-cgi/fileFingerprints.pl
+  which can be used to determine if system binaries have been
+  compromised.
+  Some tools have been released by Glenn Brunette and Brad Powell
+  (sfpDB Companion and sfpDB Sidekick) and are availabe at
+  http://www.sun.com/blueprint/tools
+  (there is currently a Web inteface, but probably the full content
+  will be published someday)
+
+- The Patchdiag Cross Reference tool. The file patchdiag.xref can be
+  downloaded from 
+  http://sunsolve.sun.com/pub-cgi/patchDownload.pl?target=patchdiag.xref&method=H
+
+The following scripts have not been tested fully yet and are 
+provided as sample:
+
+- check_listeningprocs: determine listening proccesses using
+	PFILES instead of NETSTAT or LSOF (in order to dermine
+	which processeses or users are runing the listeners)
+
+- check_patches: determine if the patches of the system needed
+	are properly installed.
