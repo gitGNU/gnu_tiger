@@ -10,7 +10,7 @@
 TigerNoBuild=Y			# C files are corrupted (ouch.)
 Tiger_Check_PASSWD=Y		# Fast
 Tiger_Check_PASSWD_SHADOW=Y	# Time varies on # of users
-Tiger_Check_PASSWD_NIS=Y	# Time varies on # of users
+Tiger_Check_PASSWD_NIS=N	# Time varies on # of users
 Tiger_Check_GROUP=Y		# Fast
 Tiger_Check_ACCOUNTS=Y		# Time varies on # of users
 Tiger_Check_RHOSTS=Y		# Time varies on # of users
@@ -33,25 +33,25 @@ Tiger_Check_OS=Y                # Fast
 Tiger_Check_SINGLE=Y            # Fast
 Tiger_Check_BACKUPS=Y           # Fast
 Tiger_Check_BOOT=Y              # Fast
-Tiger_Check_PATCH=Y             # Depends on your network connection
+Tiger_Check_PATCH=N             # Depends on your network connection
 				# (if no timeout is fixed it might stall)
 Tiger_Check_LOGFILES=Y          # Fast
 Tiger_Check_USERUMASK=Y         # Fast
-Tiger_Check_ETCISSUE=Y		# Fast, needs to be customised
+Tiger_Check_ETCISSUE=N		# Fast, needs to be customised
 Tiger_Check_STRICTNW=Y		# Fast - stringent N/W server checks
 Tiger_Check_LISTENING=Y		# Fast
 Tiger_Check_SYSTEM=Y		# Depends on the specific system checks
-Tiger_Check_RUNPROC=Y		# Fast, needs to be customized per system
+Tiger_Check_RUNPROC=N		# Fast, needs to be customized per system
 Tiger_Check_DELETED=Y		# Depends on the number of processes on the
 				# system
-Tiger_Check_APACHE=Y		# Fast
-Tiger_Check_SENDMAIL=Y		# Fast
+Tiger_Check_APACHE=N		# Fast
+Tiger_Check_SENDMAIL=N		# Fast
 Tiger_Check_PRINTCAP=Y		# Fast
-Tiger_Check_EXRC=Y		# Depends on the size of the filesystem
+Tiger_Check_EXRC=N		# Depends on the size of the filesystem
 # 
 # Should reports with no info be sent on cron?
 #
-Tiger_Cron_SendOKReports=Y
+Tiger_Cron_SendOKReports=N
 #
 # How many reports should be kept for each check when run from the
 # crontab?
@@ -61,7 +61,7 @@ TigerCron_Log_Keep_Max=10
 # Should reports be compared with a template? (if available)
 # (Note: takes precedence over previous run check)
 #
-Tiger_Cron_Template=Y
+Tiger_Cron_Template=N
 #
 # Should reports be compared with previous runs? (if available)
 #
@@ -69,14 +69,14 @@ Tiger_Cron_CheckPrev=Y
 #
 # Should messages tagged with INFO be shown?
 #
-Tiger_Show_INFO_Msgs=Y
+Tiger_Show_INFO_Msgs=N
 #
 # In order for this to be effective, you should define 'CRACK' in
 # a 'site' file.
 #
 # Note: Disabled for Debian since it (currently) does not work and 
 # the 'john' package can be configured to crack the passwords periodicly 
-Tiger_Run_CRACK=Y               # First time, ages; subsequent fairly quick
+Tiger_Run_CRACK=N               # First time, ages; subsequent fairly quick
 #
 # Should we use canonical fully qualified domain names
 # in the reports?
@@ -88,7 +88,7 @@ Tiger_Output_FQDN=Y
 # Disabled in Debian since this check is provided by itself when
 # installing either Tripwire or other integrity-checking packages
 # (aide, samhain...)
-Tiger_Run_TRIPW=Y		# Slow
+Tiger_Run_TRIPW=N		# Slow
 #
 # Line size (for formatting of output)... default is 79...
 # Specifying '0' means unlimited
@@ -171,7 +171,7 @@ Tiger_Embedded_OK_Group_Write='root|bin|uucp|sys|daemon'
 # take a look at check_path and decide for yourself whether the precautions
 # are sufficient before enabling this.
 #
-Tiger_Check_PATHALL=Y           # Check all user PATHs in startup files.
+Tiger_Check_PATHALL=N           # Check all user PATHs in startup files.
 #
 # Who can own executables in 'root's PATH?
 # List of usernames separated by '|'... no whitespace
@@ -230,7 +230,7 @@ Tiger_FSScan_Unowned=Y		# files with undefined owners/groups
 #
 # Should we scan read-only filesystems
 #
-Tiger_FSScan_ReadOnly=Y
+Tiger_FSScan_ReadOnly=N
 #
 # List of dot files commonly found in user home directories.  These
 # will be checked by check_accounts for proper access permissions.
