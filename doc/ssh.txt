@@ -14,3 +14,8 @@ to be insecure.
 %ssh004w
 The PasswordAuthentication directive determines if passwords
 are a sufficent authentication.
+%ssh005e
+The variable SSHD_CONFIG is not defined which means that you have
+not setup (or the system has been enable to find) your SSH configuration
+files. You should setup that variable in your site-`hostname`
+configuration file.

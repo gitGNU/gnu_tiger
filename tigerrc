@@ -319,7 +319,6 @@ Tiger_Accounts_Trust=999
 # Multiple options are seperated by '|', and directive variable can
 # be left blank to ignore the check.
 Tiger_SSH_Protocol='1|2'
-Tiger_SSH_PermitRootLogin='no'
 Tiger_SSH_RhostsAuthentication='no'
 Tiger_SSH_PasswordAuthentication='no'
 #

@@ -15,12 +15,19 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# check_ssh - 06/30/2003 - rbradetich@uswest.net - first release
+# check_ssh - Checks for configuration directives in the SSH configuration
+#             file.
+#
+# 09/03/2003 - jfs - Removed PermitRootLogin since that's checked by check_root
+#             (and belongs there, IMHO) also added failsafe checks for 
+#             SSHD_CONFIG which might not be configured in some systems
+# 06/30/2003 - rbradetich@uswest.net - first release
 #
 # TODO:
 #   - Add additional directives that can be checked.
 #   - Figure out a clever method for integrating the default checks with the
 #     normal checks.
+#   - Currently suited for OpenSSH needs to be tested with other SSH daemons
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -128,7 +135,6 @@ parse_sshd_config_file()
 	# Declare some variables to see if specified attributes are specified
 	# or if we need to check the defaults.
 	found_Protocol=0
-	found_PermitRootLogin=0
 	found_RhostsAuthentication=0
 	found_PasswordAuthentication=0
 
@@ -142,12 +148,6 @@ parse_sshd_config_file()
 			}	
 		}
 
-		[[ "$line" = PermitRootLogin* ]] && {
-			found_PermitRootLogin=1
-			parse_directive ${line##PermitRootLogin } $Tiger_SSH_PermitRootLogin && {
-				message WARN ssh002w "" "The PermitRootLogin directive in $1 is set to the unapproved value: ${line##PermitRootLogin }."
-			}
-		}
 
 		[[ "$line" = RhostsAuthentication* ]] && {
 			found_RhostsAuthentication=1
@@ -168,9 +168,6 @@ parse_sshd_config_file()
 	[ $found_Protocol = 0 ] && parse_Protocol "2,1" && {
 		message WARN ssh001w "" "Protocol $proto is enabled in $file"
 	}
-	[ $found_PermitRootLogin = 0 ] && parse_directive "yes" $Tiger_SSH_PermitRootLogin && {
-		message WARN ssh002w "" "The PermitRootLogin directive in $1 is set to the unapproved default value: yes."
-	}
 	[ $found_RhostsAuthentication = 0 ] && parse_directive "no" $Tiger_SSH_RhostsAuthentication && {
 		message WARN ssh003w "" "The RhostsAuthentication directive in $1 is set to the unapproved default value: no."
 	}
@@ -179,8 +176,28 @@ parse_sshd_config_file()
 	}
 }
 
+# If SSHD_CONFIG is not defined we use some sane values
+[ -z "$SSHD_CONFIG" ] && {
+if [ -f /usr/local/etc/sshd_config ]; then
+  SSHD_CONFIG=/usr/local/etc/sshd_config
+elif [ -f /etc/sshd_config ]; then
+  SSHD_CONFIG=/etc/sshd_config
+elif [ -f /etc/ssh2/sshd2_config ]; then
+  SSHD_CONFIG=/etc/ssh2/sshd2_config
+elif [ -f /etc/ssh/sshd_config ]; then
+  SSHD_CONFIG=/etc/ssh/sshd_config
+if
+}
+
 # Main loop, check all the specified sshd_config files.
-for file in $SSHD_CONFIG
-do
-	[ -r $file ] && parse_sshd_config_file $file
-done
+if [ -z "$SSHD_CONFIG" ] 
+then
+	for file in $SSHD_CONFIG
+	do
+		[ -r "$file" ] && parse_sshd_config_file $file
+	done
+else
+	message FAIL ssh005w "" "Cannot find a configuration file for SSH."
+fi
+
+exit 0
