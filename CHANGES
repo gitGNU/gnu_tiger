@@ -3,7 +3,10 @@ August 23rd 2001) see the changelog.Debian file
 
 Changes (v 3.2) 
 ----------------
-(?? May 2003 - rc4)
+- Added a roadmap to the TODO
+- Tiger will now output to the report the time of completion
+- Fixed Linux/2/check (Debian checks were not executed)
+- Removed stale files (*org-2.2.3)
 - Updated tigerrc files (-all and -dist). Removed stale file not being
   used anymore
 - Added some references in README.sources
@@ -46,7 +49,7 @@ Changes (v 3.2)
   dependancies, and added missing commands.
  
 (23 April 2003 - rc3)
-- Applied Steve Grubb's patch to avoid a buffer overflow in realpath
+- [security] Applied Steve Grubb's patch to avoid a buffer overflow in realpath
 - Changed the behaviour of autoconf to avoid messing
   with binaries in the source copy.
 - Improved the Makefile:
