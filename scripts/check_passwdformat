@@ -34,6 +34,8 @@
 #                    HPUX or Linux)
 # 01/15/2004 - jfs - Fixed password definitions (Debian bug #227596) adding
 #                    the sets 'g-Z' 'A-Z' and '.'
+# 06/28/2004 - jfs - Modified to avoid duplicate error messages for the same
+#                    stuff in passwd and shadow files
 #
 #-----------------------------------------------------------------------------
 #
@@ -93,10 +95,12 @@ haveallfiles BASEDIR WORKDIR || exit 1
 
 
 OUT=$WORKDIR/passwdcheck.$$
+USERCHECK=$WORKDIR/usercheck.$$
 TMPFILE=$WORKDIR/passwdcheck.tmp.$$
-safe_temp $OUT $TMPFILE ${TMPFILE}-1 ${TMPFILE}-2
-trap 'delete  $OUT $TMPFILE ${TMPFILE}-1 ${TMPFILE}-2 ; exit 1' 1 2 3 15
+safe_temp $OUT $USERCHECK $TMPFILE ${TMPFILE}-1 ${TMPFILE}-2
+trap 'delete  $OUT $USERCHECK $TMPFILE ${TMPFILE}-1 ${TMPFILE}-2 ; exit 1' 1 2 3 15
  
+>$USERCHECK
 #
 # /etc/passwd check
 #
@@ -141,14 +145,8 @@ $AWK -F: '{
 		printf("Login %s has a group id of 0 which should be reserved for root\n", $1);
 	if ($4 == 1 && $1 != "bin" && $1 != "daemon" )
 		printf("Login %s has a group id of 1 which should be reserved for bin or daemon.\n", $1);
-}' < $PW > $OUT
+}' < $PW >>$USERCHECK
 
-if [ -s "$OUT" ] ; then
-        $CAT "$OUT" |
-	while read message; do
-		message FAIL pass009e "" "$message"
-	done
-fi
 
 $AWK -F: '{ print $1 }' $PW | $SORT | $UNIQ -d > $OUT
 if [ -s "$OUT" ] ; then
@@ -194,16 +192,10 @@ $AWK -F: '{
 		printf("Login %s has an unusual password field length.\n", $1);
 	if ($2 != "" && $2 !~ /^\$[0-9a-f]+\$/ && $2 !~ /^[!*]/ )
 		printf("Login %s has an unusual password content.\n", $1);
-}' < $PW > "$OUT"
+}' < $PW >> "$USERCHECK"
 
 # NOTE: I've found some passwords with '/'. Is this common?
 
-if [ -s "$OUT" ] ; then
-        $CAT "$OUT" |
-	while read message; do
-		message FAIL pass009e "" "$message"
-	done
-fi
 $AWK -F: '{ print $1 }' $PW | $SORT | $UNIQ -d > $OUT
 if [ -s "$OUT" ] ; then
 	message FAIL pass001w "" "File $PW has duplicate user names:"
@@ -249,5 +241,14 @@ if [ -s "$OUT" ] ; then
 fi
 }
 
-delete $OUT $TMPFILE ${TMPFILE}-1 ${TMPFILE}-2
+# Now output the results of the usercheck
+# (removing duplicates)
+if [ -s "$USERCHECK" ] ; then
+        $CAT "$USERCHECK" | $SORT | $UNIQ |
+	while read message; do
+		message FAIL pass009e "" "$message"
+	done
+fi
+
+delete $OUT $USERCHECK $TMPFILE ${TMPFILE}-1 ${TMPFILE}-2
 exit 0
