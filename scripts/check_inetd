@@ -28,6 +28,8 @@
 #     Changed TigerInstallDir to .
 # check_inetd - 04/15/2003 - jfs
 #     Separated the services check into a separate script.
+# check_inetd - 04/23/2003 - jfs
+#     Fixed requirements
 #     
 # TODO
 # - This script needs to be improved to warn for some of the 'chatty' issues
@@ -67,8 +69,8 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds SED AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
-  haveallfiles BASEDIR WORKDIR INETDFILE SERVICESFILE || exit 1
+  haveallcmds SED AWK CAT COMM GEN_INETD_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
+  haveallfiles BASEDIR WORKDIR INETDFILE || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
@@ -78,8 +80,8 @@ done
 echo
 echo "# Performing check of 'inetd'..."
 
-haveallcmds SED CAT AWK LS SORT GREP COMM JOIN || exit 1
-haveallfiles BASEDIR WORKDIR || exit 1
+haveallcmds SED AWK CAT COMM GEN_INETD_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
+haveallfiles BASEDIR WORKDIR INETDFILE || exit 1
 
 saveifs=$IFS
 
