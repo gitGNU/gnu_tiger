@@ -337,9 +337,9 @@ Tiger_Listening_ValidProcs=''
 # Processes in this list (separated by whitespaces) which are not
 # seen in the process table will generate a FAIL:
 #
-# The process list below is just an example, change it to suit your
-# needs
-Tiger_Running_Procs='syslogd cron atd klogd'
+# The process list below is just an example (useful for Linux)
+# change it to suit your needs
+# Tiger_Running_Procs='syslogd cron atd klogd'
 #
 # Should we optimize DPKG checks? (by not using dpkg but looking on
 # the file database at /var/lib/dpkg?)
