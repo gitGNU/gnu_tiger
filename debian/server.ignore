@@ -1,0 +1,5 @@
+Program mysqld \(pid [[:digit:]]+, parent [[:digit:]]+\) is using a deleted file: .* /var/log/mysql/mysql\.err\.[[:digit:]]+ \(deleted\)
+Server /usr/sbin/apache \(pid .*\) is using deleted files
+Program apache \(pid [[:digit:]]+, parent [[:digit:]]+\) is using a deleted file: .* /tmp/session_mm_apache0.sem \(deleted\)
+The parent process of server /usr/sbin/apache \(pid [[:digit:]]+\) is using dele
+ted files

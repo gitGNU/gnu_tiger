@@ -16,7 +16,7 @@ build-stamp:
 	dh_testdir
 
 	autoconf
-	./configure --with-tigerhome=/usr/lib/tiger --with-tigerwork=/var/run/tiger/work --with-tigerlog=/var/log/tiger --with-tigerbin=/usr/sbin --with-tigerconfig=/etc/tiger --prefix=/usr 
+	./configure --with-tigerhome=/usr/lib/tiger --with-tigerwork=/var/run/tiger/work --with-tigerlog=/var/log/tiger --with-tigerbin=/usr/sbin --with-tigerconfig=/etc/tiger --prefix=/usr
 	$(MAKE) all
 
 
@@ -78,11 +78,11 @@ binary-arch: build install
 	dh_installinfo
 	dh_installchangelogs CHANGES
 	dh_link
-	dh_strip -XHPUX -XSunOS -XAIX -XHPUX -XIRIX -XNeXT -XMacOSX
+	dh_strip -XHPUX -XSunOS -XAIX -XIRIX -XNeXT -XMacOSX
 	dh_compress
 	dh_fixperms
 	dh_installdeb
-	dh_shlibdeps -XHPUX -XSunOS -XAIX -XHPUX -XIRIX -XNeXT -XMacOSX
+	dh_shlibdeps -XHPUX -XSunOS -XAIX -XIRIX -XNeXT -XMacOSX
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
