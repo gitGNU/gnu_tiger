@@ -17,6 +17,7 @@
 #
 # util/gethostinfo - 04/22/93
 #
+# 03/25/2004 rbrad Added support for Tru64.
 # 08/14/2003 jfs Applied code from TARA 3.0.3 to recognise MacOS
 # 08/09/2003 jfs Applied patch from Ryan Braderitch which fixes a bug so the
 #                directory structure works for HPUX.
@@ -114,7 +115,9 @@ UNAME=`findcmd uname`
 	   else if($1 == "Jaguar"){
 	        printf("MacOSX %s %s\n",$3, $11);
 	   }
-
+	   else if($1 == "OSF1"){
+	        printf("Tru64 %s %s\n",substr($3,2), $5);
+	   }
 	 }
   '
 # In some uname's we might need this ...
