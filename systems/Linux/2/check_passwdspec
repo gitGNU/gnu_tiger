@@ -18,8 +18,9 @@
 # check_passwdspec: Perform system specific password checks here like
 #               password aging checks, etc.
 #
-# 07/10/2003 rbradetich@uswest.net - Initial release
+# 08/29/2003 jfs - CHAGE errors redirected to /dev/null and grep is now $GREP
 # 08/09/2003 jfs - Renamed to check_passwdspec and added CHAGE to dependancies.
+# 07/10/2003 rbradetich@uswest.net - Initial release
 #
 #-----------------------------------------------------------------------------
 #
@@ -75,7 +76,7 @@ echo "# Verifying system specific password checks..."
   $CUT -d: -f1 /etc/passwd |
   while read user
   do 
-    if $CHAGE -l $user | grep "Password Expires:" | grep Never >/dev/null 2>&1
+    if $CHAGE -l $user 2>/dev/null | $GREP "Password Expires:" | $GREP Never >/dev/null 2>&1
     then
       message WARN acc016w "" "Login ID $user does not have password aging enabled."
     fi
