@@ -77,7 +77,7 @@ LOCALEPURGE=/etc/locale.nopurge
 
 if [ -d /var/lib/dpkg/info ] 
 then
-for file in /var/lib/dpkg/info/fileutils*md5sums
+for file in /var/lib/dpkg/info/*md5sums
 do
 [ -f $file ] && [ ! -L $file  ] && {
 # Note: We  do not check things in  /usr/share/doc
