@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# getdisks - 06/24/93
+#
+#-----------------------------------------------------------------------------
+#
+
+$AWK '$3 == "ufs" || $3 == "tmpfs" {print}' < /etc/mnttab |
+$SORT |
+$AWK '
+  BEGIN {lastdisk=""; fslist="";}
+  {
+    disk=substr($1, 1, length($1)-2);
+    if(disk == lastdisk){
+       fslist=fslist " " $2;
+    }
+    else {
+	if(lastdisk != ""){
+           printf("%s\n", fslist);
+        }
+        lastdisk=disk;
+        fslist = $2;
+    }
+  }
+  END { if(lastdisk != ""){
+          printf("%s\n", fslist);
+        } 
+  }'

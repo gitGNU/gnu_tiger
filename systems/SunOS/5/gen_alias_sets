@@ -3,46 +3,74 @@
 #     tiger - A UN*X security checking system
 #     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
-#    any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# SunOS/4/gen_alias_sets - 06/14/93
+# SunOS/5/gen_alias_sets - 06/14/93
 #
 #-----------------------------------------------------------------------------
 #
 
-$GREP -v '^#' /etc/aliases |
-$SORT > $WORKDIR/etc_aliases.$$
-echo "/etc/aliases" > $WORKDIR/etc_aliases.$$.src
-echo $WORKDIR/etc_aliases.$$
+INPUTS=`
+$GREP '^passwd' /etc/nsswitch.conf |
+$AWK '{
+       for(i=2;i<=NF;i++)
+          print $i
+      }'
+`
 
-[ -n "$YP" ] && {
-  $YPCAT -k aliases |
-  $SED -e 's/ /:/' | 
-  $SORT |
-  $COMM -23 - $WORKDIR/etc_aliases.$$ > $WORKDIR/nis_aliases.$$
-  echo "NIS" > $WORKDIR/nis_aliases.$$.src
-  echo $WORKDIR/nis_aliases.$$
-}
+for source in $INPUTS
+do
+  case $source in
+    files)
+        scf=$SENDMAILCF
+	[ ! -n "$scf" ] && scf=/etc/mail/sendmail.cf
+	aliasset="`$GREP '^OA' $scf | $SED -e 's/^OA//' -e 's/,/ /g'`"
+	[ ! -n "$aliasset" ] && aliasset=/etc/mail/aliases
+        c=0
+	for alifile in $aliasset
+	do
+	  $GREP -v '^#' $alifile |
+	  $SORT > $WORKDIR/etc_aliases.$c.$$
+	  echo "$alifile" > $WORKDIR/etc_aliases.$c.$$.src
+	  echo $WORKDIR/etc_aliases.$c.$$
+	  c="`$EXPR $c + 1`"
+	done
+        [ "$SERVERCHECK" = "Y" ] && {
+	  $GETCLIENTDIRS |
+	  while read client dir
+	  do
+	    [ -f "$dir/etc/mail/aliases" ] && {
+	      $GREP -v '^#' $dir/mail/etc/aliases |
+	      $SORT > $WORKDIR/aliases.$$.$client
+	      echo "$client:/etc/mail/aliases" > $WORKDIR/aliases.$$.$client.src
+	      echo $WORKDIR/aliases.$$.$client
+	    }
+	    [ -f "$dir/etc/aliases" -a ! -h $dir/etc/aliases ] && {
+	      $GREP -v '^#' $dir/etc/aliases |
+	      $SORT > $WORKDIR/aliases.$$.$client
+	      echo "$client:/etc/aliases" > $WORKDIR/aliases.$$.$client.src
+	      echo $WORKDIR/aliases.$$.$client
+	    }
+	  done
+	}
+	;;
+    nis)
+	[ -n "$YP" ] && {
+	  $YPCAT -k aliases |
+	  $SED -e 's/ /:/' | 
+	  $SORT |
+	  $COMM -23 - $WORKDIR/etc_aliases.$$ > $WORKDIR/nis_aliases.$$
+	  echo "NIS" > $WORKDIR/nis_aliases.$$.src
+	  echo $WORKDIR/nis_aliases.$$
+	}
+	 ;;
+    nisplus)
+        $NISCAT mail_aliases.org_dir > $WORKDIR/nisplus_aliases.$$
+	echo "NIS+" > $WORKDIR/nisplus_passwd.$$.src
+	echo "$WORKDIR/nisplus_passwd.$$"
+         ;;
+    *)
+         ;;
+  esac
+done
 
-[ "$SERVERCHECK" = "Y" ] && {
-  $GETCLIENTDIRS |
-  while read client dir
-  do
-    [ -f "$dir/etc/aliases" ] && {
-      $GREP -v '^#' $dir/etc/aliases |
-      $SORT > $WORKDIR/aliases.$$.$client
-      echo "$client:/etc/aliases" > $WORKDIR/aliases.$$.$client.src
-      echo $WORKDIR/aliases.$$.$client
-    }
-  done
-}

@@ -15,34 +15,57 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# SunOS/4/config - 06/14/93
+# SunOS/5/config - 06/14/93
+#
+# 08/26/2003 - jfs - Incorporated ARSC changes
 #
 #-----------------------------------------------------------------------------
 #
-UUID=`/usr/bin/id | /usr/bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
-[ "$UUID" = "0" -o "$UID" -eq 0  ] &&
-  ME="root"
+UUID="`/usr/bin/id | /usr/bin/sed -e 's/^uid=\([0-9][0-9]*\)[^0-9].*$/\1/'`"
 
-[ "$ME" != "root" ] && {
-  echo " " 1>&2
-  echo "This script should be run from a super-user account." 1>&2
-  echo " " 1>&2
-#  exit 1
-}
-[ -z "$ME" ] && {
-  echo " " 1>&2
-  echo "Unable to determine who is running Tiger, make sure you are root" 1>&2
-  echo " " 1>&2
+[ "$UUID" != '0' -a "$Tiger_TESTMODE" != 'Y' ] && {
+  echo 1>&2
+  echo 'This script should be run from a super-user account.' 1>&2
+  echo 1>&2
+  exit 1
 }
 
-CAT=/usr/bin/cat
-CUT=/usr/bin/cut
-HEAD=/usr/bin/head
-LS=/usr/bin/ls
+findcmd()
+{
+  CMD=$1
+
+  SRCH=/sbin:/usr/local/bin:/bin:/usr/bin:/etc:/usr/ucb:/usr/sbin:/usr/lib
+
+  SAVEIFS=$IFS
+  IFS=:
+  set $SRCH
+  IFS=$SAVEIFS
+  for dir
+  do
+    [ $TESTEXEC $dir/$CMD ] && {
+      echo $dir/$CMD
+      return
+    }
+  done
+ }
+   
+TESTEXEC=-x
+[ $TESTEXEC /bin/sh ] && TESTEXEC=-f
+TESTLINK=-h
+export TESTEXEC TESTLINK
+WHOAMI=`findcmd whoami`
+CAT=`findcmd cat`
+LS=`findcmd ls`
+# With /usr/bin/ls, just '-l' to get group owner
+# For /usr/ucb/ls, use "-lg"
+LSGROUP="-l"
 # -g to show group ownership
 LSGROUP="-lg"
 # -L to show file instead of symlink
 LSLINK="-L"
+
+CUT=/usr/bin/cut
+HEAD=/usr/bin/head
 RM=/usr/bin/rm
 AWK=/usr/bin/awk
 GREP=/usr/bin/grep
@@ -90,13 +113,15 @@ FIND=/usr/bin/find
 FINDXDEV=-xdev
 FMT=/usr/ucb/fmt
 GETFS=/usr/etc/mount
-CC=/usr/bin/cc
+CC=`findcmd gcc`
+if [ -z "$CC" ]; then
+  CC=`findcmd cc`
+fi
+CFLAGS="-DNEEDGETWD"
 PS=/usr/bin/ps
 DATE=/usr/bin/date
 DATECMD="$DATE +%y%m%d"
 TIMECMD="$DATE +%H:%M"
-TESTLINK=-h
-TESTEXEC=-x
 #
 #
 export UNAME GETHOSTNAME EXPR STRINGS FIND FINDXDEV
@@ -109,6 +134,8 @@ WAIT=wait
 #
 # Using NIS (YP)?
 YPCAT=/usr/bin/ypcat
+NISCAT=`findcmd niscat`
+TCPD=`findcmd tcpd`
 #
 YP=
 ($PS -ef | $GREP ypbind | $SGREP -v $GREP) && YP=Y
@@ -117,7 +144,7 @@ export YP
 #
 YPSERVER="NO"
 ($PS -ef | $GREP ypserv | $SGREP -v $GREP) && YPSERVER="YES"
-export WAIT YPCAT YPSERVER
+export WAIT YPCAT NISCAT YPSERVER TCPD
 #
 MAILSPOOL=/var/spool/mail
 # This is needed for SunOS 5.8 and later, I believe
@@ -128,13 +155,20 @@ fi
 CRONSPOOL=/var/spool/cron/crontabs
 #
 ETCSHELLS=/etc/shells
+# egrep regex that defines a local filesystem
+LOCFS="(ufs|tmpfs)"
+export LOCFS
 #
 export MAILSPOOL CRONSPOOL ETCSHELLS
 #
+# System dev directories...
+#
+DEVDIRSYS="/dev/ /devices"
+export DEVDIRSYS
 FS_WDIRSYS="/tmp/ /var/tmp/ /var/spool/mail/"
 export FS_WDIRSYS
 #
-SYSDEFAULTPATH="/usr/bin:/usr/ucb"
+SYSDEFAULTPATH="/usr/sbin:/usr/bin:/usr/ucb"
 export SYSDEFAULTPATH
 #
 CDIR="$BASEDIR/systems"
@@ -161,6 +195,7 @@ eval `
     fi
     echo "export $var;"
   done << EOL
+GETFS getfs
 GEN_PASSWD_SETS gen_passwd_sets
 GEN_GROUP_SETS gen_group_sets
 GEN_ALIAS_SETS gen_alias_sets

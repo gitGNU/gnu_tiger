@@ -1,0 +1,63 @@
+#
+#
+#@DEST=SunOS/5/5.3
+#@CONFIG=SunOS/5
+#
+Y .       /sbin/jsh 347a3af7a26d1b024cb625f4fcd6bb3e SunOS 5.3
+Y .       /sbin/sh 347a3af7a26d1b024cb625f4fcd6bb3e SunOS 5.3
+Y .       /usr/bin/csh 7278ce4ee2a2f6d73f3bee905d4a26cd SunOS 5.3
+Y .       /usr/bin/jsh fb96fde274122fbf432fe04b2ca9f189 SunOS 5.3
+Y .       /usr/bin/sh fb96fde274122fbf432fe04b2ca9f189 SunOS 5.3
+Y .       /usr/lib/rsh fb96fde274122fbf432fe04b2ca9f189 SunOS 5.3
+Y .       /usr/bin/ksh b810f2706c43ee834db7fc4c0ff8e58f SunOS 5.3
+#
+# These aren't security patches, but we want these in here...
+#
+Y .       /sbin/jsh 4a9e873451f4749fb5e258e2d4bbe4a4 Sun Patch ID 101297-01
+Y .       /sbin/sh 4a9e873451f4749fb5e258e2d4bbe4a4 Sun Patch ID 101297-01
+Y .       /usr/bin/jsh abe154d47813fada9d6648c2ac1427c8 Sun Patch ID 101297-01
+Y .       /usr/bin/sh abe154d47813fada9d6648c2ac1427c8 Sun Patch ID 101297-01
+Y .       /usr/lib/rsh abe154d47813fada9d6648c2ac1427c8 Sun Patch ID 101297-01
+#
+Y .       /usr/lib/sendmail 1844b3d7868e969531904337709559c5 Sun Patch ID 101371-03
+Y .       /usr/lib/sendmail 05b08c0573631e264420c8b4fe17da30 Sun Patch ID 101371-03
+Y .       /usr/lib/sendmail.mx 05b08c0573631e264420c8b4fe17da30 Sun Patch ID 101371-03
+#
+O sig016w /usr/lib/sendmail bdea8c7fb4571b78c0ccb64853896c06 SunOS 5.3 (security patch is 101371)
+O sig016w /usr/lib/sendmail.mx 5b6811b051b45398ab4b8610c1f0d55b SunOS 5.3 (security patch is 101371)
+O sig016w /usr/lib/sendmail 5b6811b051b45398ab4b8610c1f0d55b SunOS 5.3 (security patch is 101371)
+#
+Y .       /usr/bin/login 556a825e8b61fc3444f06f714846a107 SunOS 5.3
+Y .       /usr/bin/telnet b77528e85438f0f87fdf572a1e923380 SunOS 5.3
+Y .       /usr/sbin/in.telnetd 6d151854c7a9dc52b822f5b000d59b41 SunOS 5.3
+#
+Y .       /usr/bin/rlogin 1d5132a500c11dba8464d0cde43d37a0 SunOS 5.3
+Y .       /usr/sbin/in.rlogind df190c5d8417becf436a50b9318693bb SunOS 5.3
+Y .       /usr/lib/expreserve f63d99fdbdd6a2f1ebeda0bb7067ab78 SunOS 5.3
+Y .       /usr/bin/mail 2664c293decb035e514d424a34e10cb9 SunOS 5.3
+Y .       /usr/bin/mailx cc65bc3f764420e15c7e34390080adec SunOS 5.3
+Y .       /usr/bin/su f6eec80414759370a211d49b11ff3019 SunOS 5.3
+Y .       /usr/bin/rdist 59bf06e6b2b48490e2b04164b0bb15dd SunOS 5.3
+Y .       /usr/sbin/in.uucpd df766fb7f51fda5dca9804881612a4c0 SunOS 5.3
+Y .       /usr/sbin/in.comsat 1c3bd5232016b9d7a4c1c3724d2ac854 SunOS 5.3
+Y .       /usr/sbin/in.fingerd 4f0ff074ff4a0da6b2ca2b72b01a0e90 SunOS 5.3
+Y .       /usr/sbin/in.ftpd ff8a34d56da260a13ea199570cefb41e SunOS 5.3
+Y .       /usr/sbin/in.named f1f3325b68788d1de44448f0cdfd49b7 SunOS 5.3
+Y .       /usr/sbin/in.rarpd bcb1f827254b80b44f7fc462df6ce6b8 SunOS 5.3
+Y .       /usr/sbin/in.rdisc 8fdc31c49b940af15c04aa7623b11afa SunOS 5.3
+Y .       /usr/sbin/in.rexecd 967cdaf0378eb7ba4b10acfd9542d4e1 SunOS 5.3
+Y .       /usr/sbin/in.routed b81a4e7a114a60a33a3734857343f3e7 SunOS 5.3
+Y .       /usr/sbin/in.rshd c20629dacc4b6b12908428b7cfb72988 SunOS 5.3
+Y .       /usr/sbin/in.rwhod fc3eea3aa0598ac57b8d63bc45f75869 SunOS 5.3
+Y .       /usr/sbin/in.talkd 43de66446ec98082b15e18fb7638b229 SunOS 5.3
+Y .       /usr/sbin/in.tftpd c896ea8783c388f313849195d660f686 SunOS 5.3
+Y .       /usr/sbin/in.tnamed 9b64f37c7cc896eba8e1d5d74fcd2a8a SunOS 5.3
+Y .       /usr/sbin/inetd 27c320a5332789566962994574f5f866 SunOS 5.3
+Y .       /sbin/sync 085d04dcc64b643e84410614c9d2a477 SunOS 5.3
+Y .       /usr/sbin/sync cd432113c0e84bf45bf09bd2b08fa08f SunOS 5.3
+#
+Y .       /usr/sbin/tar bb08540b9fa9d293f119daba8bf9d13b Sun Patch ID 101327-01
+Y .       /usr/sbin/static/tar 6b8791e9bf5a26a15791d8b0a91eaea0 Sun Patch ID 101327-01
+O sig017w /usr/sbin/static/tar 0a108d1413518a8890de2ee232638085 SunOS 5.3 (security patch is 101327)
+O sig017w /usr/sbin/tar 54c854127b1d677730247a97db2b1926 SunOS 5.3 (security patch is 101327)
+#

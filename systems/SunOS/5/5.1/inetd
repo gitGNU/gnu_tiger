@@ -1,0 +1,32 @@
+100068/2-3	dgram	rpc/udp	wait root /usr/openwin/bin/rpc.cmsd	rpc.cmsd
+100083/1	stream  rpc/tcp wait root /usr/openwin/bin/rpc.ttdbserverd rpc.ttdbserverd
+100087/10	tli	rpc/udp	wait root /usr/sbin/admind	admind
+chargen	dgram	udp	wait	root	internal
+chargen	stream	tcp	nowait	root	internal
+comsat	dgram	udp	wait	root	/usr/sbin/in.comsat	in.comsat
+daytime	dgram	udp	wait	root	internal
+daytime	stream	tcp	nowait	root	internal
+discard	dgram	udp	wait	root	internal
+discard	stream	tcp	nowait	root	internal
+echo	dgram	udp	wait	root	internal
+echo	stream	tcp	nowait	root	internal
+exec	stream	tcp	nowait	root	/usr/sbin/in.rexecd	in.rexecd
+finger	stream	tcp	nowait	nobody	/usr/sbin/in.fingerd	in.fingerd
+ftp	stream	tcp	nowait	root	/usr/sbin/in.ftpd	in.ftpd
+login	stream	tcp	nowait	root	/usr/sbin/in.rlogind	in.rlogind
+name	dgram	udp	wait	root	/usr/sbin/in.tnamed	in.tnamed
+netstat	stream	tcp	nowait	root	/usr/bin/netstat 	netstat -f inet
+rexd/1          stream  rpc/tcp wait root /usr/sbin/rpc.rexd     rpc.rexd
+rquotad/1	tli	rpc/datagram_v	wait root /usr/lib/nfs/rquotad	rquotad
+rstatd/2-4	tli   rpc/datagram_v wait root /usr/lib/netsvc/rstat/rpc.rstatd rpc.rstatd
+rusersd/2-3	tli	rpc/datagram_v	wait root /usr/lib/netsvc/rusers/rpc.rusersd	rpc.rusersd
+shell	stream	tcp	nowait	root	/usr/sbin/in.rshd	in.rshd
+sprayd/1	tli	rpc/datagram_v	wait root /usr/lib/netsvc/spray/rpc.sprayd	rpc.sprayd
+systat	stream	tcp	nowait	root	/usr/bin/ps		ps -ef
+talk	dgram	udp	wait	root	/usr/sbin/in.talkd	in.talkd
+telnet	stream	tcp	nowait	root	/usr/sbin/in.telnetd	in.telnetd
+tftp	dgram	udp	wait	root	/usr/sbin/in.tftpd	in.tftpd -s /tftpboot
+time	dgram	udp	wait	root	internal
+time	stream	tcp	nowait	root	internal
+uucp	stream	tcp	nowait	root	/usr/sbin/in.uucpd	in.uucpd
+walld/1		tli	rpc/datagram_v	wait root /usr/lib/netsvc/rwall/rpc.rwalld	rpc.rwalld

@@ -1,4 +1,3 @@
-tcp
 echo		7/tcp
 echo		7/udp
 discard		9/tcp

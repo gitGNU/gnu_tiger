@@ -18,9 +18,11 @@
 #
 # SunOS/4/check_cron - 06/14/93
 #
+# 08/26/2003 - jfs - Implemented ARSC use of cronspool variable
+#
 #-----------------------------------------------------------------------------
 #
-if [ -f "/var/spool/cron/crontabs/$1" ]; then
+if [ -f "$CRONSPOOL/$1" ]; then
   echo "YES"
 else
   echo "NO"

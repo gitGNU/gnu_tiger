@@ -1,0 +1,50 @@
+#
+# Signature file for SunOS 5.9 sun4u, generated Mon Aug 12 15:14:46 EDT 2002
+#
+#@DEST=SunOS/5/5.9
+#@CONFIG=SunOS/5
+Y .       /usr/bin/sh fccecdca8a2543f7b8f7b306a9365f9a SunOS 5.9
+Y .       /sbin/sh fedad4a9c613cb7e4d4a2822c2340582 SunOS 5.9
+Y .       /usr/bin/csh 311eca11e7b1db0268627154021253f9 SunOS 5.9
+Y .       /usr/bin/ksh add15bc85df32635a6ea2b3cc42b1249 SunOS 5.9
+Y .       /usr/bin/login 45311dbc72e3a021eb25c21cf5cbb83d SunOS 5.9
+Y .       /usr/bin/su 2304d7ee650512ed3c61f74a2ceb76f1 SunOS 5.9
+Y .       /usr/bin/passwd bfb18b94bbfa88896bcf8c4be28b29c5 SunOS 5.9
+Y .       /usr/sbin/in.fingerd 0eae4a06393bd0b956526596d4692012 SunOS 5.9
+# fingerd not found.
+Y .       /usr/sbin/in.ftpd 7ae8a3453c54ae3f85057a5159b5d0bd SunOS 5.9
+# ftpd not found.
+Y .       /usr/sbin/in.rexecd 7743c37464d29985c046cd5395873ba7 SunOS 5.9
+# rexecd not found.
+Y .       /usr/sbin/in.rlogind f0be4aedf97a24ef98b2706d05bbea5c SunOS 5.9
+# rlogind not found.
+Y .       /usr/sbin/in.rshd 31b66df6940c6be7f0ac1ac5dc05fc55 SunOS 5.9
+# rshd not found.
+Y .       /usr/sbin/in.telnetd a89438a4f923eec82eeb91665c9130da SunOS 5.9
+# telnetd not found.
+Y .       /usr/sbin/in.tftpd 1ceaad61029ebe3239f5be361bd6d87a SunOS 5.9
+# tftpd not found.
+# in.uucpd not found.
+# uucpd not found.
+# rpc.yppasswdd not found.
+# rpc.passwd not found.
+# portmap not found.
+# ypserv not found.
+# ypxfrd not found.
+Y .       /usr/lib/netsvc/yp//ypbind 60d2f050ca1dc22e32aea4a7fec238ac SunOS 5.9
+Y .       /usr/lib/sendmail 45cce3e903a22dade31dac3702d9e848 SunOS 5.9
+# sendmail.mx not found.
+Y .       /usr/bin/rdist ddbfd9daf32d57b41887de06c5f02159 SunOS 5.9
+Y .       /usr/bin/rlogin f2e3c265d896b226165a007023535b38 SunOS 5.9
+Y .       /usr/bin/rsh eee4155f2b21587a8b6313eabcbcf00d SunOS 5.9
+Y .       /usr/lib/rsh fccecdca8a2543f7b8f7b306a9365f9a SunOS 5.9
+Y .       /usr/bin/telnet 5d35373d9e923dc34c2dfb790bae1cf6 SunOS 5.9
+Y .       /usr/bin/lpstat cdc33e39beb3dac90fe34e1d12a64667 SunOS 5.9
+Y .       /usr/ucb/lpc 6d2f7117d0bd3686072981edc0e47a7a SunOS 5.9
+# lpd not found.
+# lpr not found.
+# lprm not found.
+# lpd not found.
+# in.lpd not found.
+# rpc.mountd not found.
+Y .       /usr/lib/expreserve 5dff562ee8ecfd6d63848b34ecadb9bd SunOS 5.9

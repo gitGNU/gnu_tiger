@@ -1,0 +1,50 @@
+#
+# Signature file for SunOS 5.7 sun4m, generated Mon May 13 22:49:35 EDT 2002
+#
+#@DEST=SunOS/5/5.7
+#@CONFIG=SunOS/5
+Y .       /usr/bin/sh 12460f17a68ea9e5926f49f8da3d8bda SunOS 5.7
+Y .       /sbin/sh 17a67b04407e71d9b015a2da9473268e SunOS 5.7
+Y .       /usr/bin/csh a9b708be29f38caf0041c421a4cd2188 SunOS 5.7
+Y .       /usr/bin/ksh 9b447099ecb89d63341e149092fe0ef9 SunOS 5.7
+Y .       /usr/bin/login 488aaaa60450858a6d786a79bb03c1c9 SunOS 5.7
+Y .       /usr/bin/su 63d00731653125018b18906511bfaf89 SunOS 5.7
+Y .       /usr/bin/passwd 8ea265fea5248314d642512353aba8c4 SunOS 5.7
+Y .       /usr/sbin/in.fingerd db3ef2f2d9fbb4e34fb80042db72eca9 SunOS 5.7
+# fingerd not found.
+Y .       /usr/sbin/in.ftpd 61f21662c40b2f991d0d44957624a697 SunOS 5.7
+Y .       /usr/sbin/ftpd 806a380195259d150fbf2aff4bca56a8 SunOS 5.7
+Y .       /usr/sbin/in.rexecd dc3a9d82e5295ea88ccdce8f64a6fda4 SunOS 5.7
+# rexecd not found.
+Y .       /usr/sbin/in.rlogind 18927400893e7a7e5e1a1a47aeaf791e SunOS 5.7
+# rlogind not found.
+Y .       /usr/sbin/in.rshd d7db04ae4dccef470525cfc0f1c4f4eb SunOS 5.7
+# rshd not found.
+Y .       /usr/sbin/in.telnetd a23bbd6c47a950e8feefbf0ed91f66ff SunOS 5.7
+# telnetd not found.
+Y .       /usr/sbin/in.tftpd 738e02c12ac8c7d09cbc20b6613e5d43 SunOS 5.7
+# tftpd not found.
+Y .       /usr/sbin/in.uucpd ce189be1f3784c2e989da4627ffbb6f2 SunOS 5.7
+# uucpd not found.
+Y .       /usr/lib/netsvc/yp//rpc.yppasswdd b979581c52ec988298775aff40c0d13c SunOS 5.7
+# rpc.passwd not found.
+# portmap not found.
+Y .       /usr/lib/netsvc/yp//ypserv 32b8de080699c605319ed69a46ba39d0 SunOS 5.7
+Y .       /usr/lib/netsvc/yp//ypxfrd 19f867c57b1c3e4d55c7f6619d45ec9a SunOS 5.7
+Y .       /usr/lib/netsvc/yp//ypbind 022e0a9b62d43b2c158b90bf91a63e1e SunOS 5.7
+Y .       /usr/lib/sendmail 43d95e72be892c2a616143ec0d866718 SunOS 5.7
+# sendmail.mx not found.
+Y .       /usr/bin/rdist 505918d19869a94c691574d2d790dee8 SunOS 5.7
+Y .       /usr/bin/rlogin 1ea13555031b4dcf925e2b15f70117f9 SunOS 5.7
+Y .       /usr/bin/rsh a73317bf719aa6d6727ad1c5239ea3f8 SunOS 5.7
+Y .       /usr/lib/rsh 12460f17a68ea9e5926f49f8da3d8bda SunOS 5.7
+Y .       /usr/bin/telnet 06c564829979a2d6fe4b4f9fcba1497a SunOS 5.7
+Y .       /usr/bin/lpstat 0ea1c305c7cb2e494d78a998671e514c SunOS 5.7
+Y .       /usr/ucb/lpc 78a9cb1b93bbe1d776687b798ddb04b8 SunOS 5.7
+# lpd not found.
+# lpr not found.
+# lprm not found.
+# lpd not found.
+# in.lpd not found.
+# rpc.mountd not found.
+Y .       /usr/lib/expreserve 86730ba5f14cb8c8a1ad142c787f132e SunOS 5.7

@@ -3,32 +3,43 @@
 #     tiger - A UN*X security checking system
 #     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
-#    any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# SunOS/4/gen_export_sets - 06/14/93
-#
-# TODO:
-#
-# - This will not work for SunOS versions later than 5.5
-#   /etc/exports has been moved
-#   to /etc/dfs/dfstab (see share_nfs(1M) and nfssec(5)
-#  see  http://docs.sun.com/db/doc/802-1967/6i5vce4fu
+# SunOS/5/gen_export_sets - 06/14/93
 #
 #-----------------------------------------------------------------------------
 #
 
-[ -r /etc/exports ] && {
-  $GREP -v '^#' /etc/exports > $WORKDIR/etc_exports.$$
-  echo "/etc/exports" > $WORKDIR/etc_exports.$$.src
-  echo $WORKDIR/etc_exports.$$
+[ -r /etc/dfs/dfstab ] && {
+  $SED -e '/^#/d' -e '/^[ ]*$/d' -e 's/#.*$//' /etc/dfs/dfstab |
+  while read line
+  do
+    eval set $line
+    shift
+    while [ $# -gt 0 ]; do
+      case $1 in
+	-F) type=$2
+	    if [ $2 != "nfs" ]; then
+	      break
+	    fi
+	    shift 2
+	  ;;
+	-o) options=$2
+	    shift 2
+          ;;
+	-d) shift 2
+	  ;;
+	 *) path=$1
+	    break
+          ;;
+      esac
+    done
+    if [ $type = "nfs" ]; then
+      options="`echo \"$options\" | $SED -e 's/rw=/access=/'`"
+      echo "$path -$options"
+    fi
+  done > $WORKDIR/export.$$
+
+  echo "/etc/dfs/dfstab" > $WORKDIR/export.$$.src
+  echo $WORKDIR/export.$$
 }
