@@ -21,6 +21,7 @@
 # Paul Telford <paul_telford@hp.com>
 # 07/25/2002 jfs      Changed -e lilo.conf to -r lilo.conf
 #                     Changed TigerInstallDir to .
+# 01/15/2004 jfs      Fixed dependancies
 #
 #-----------------------------------------------------------------------------
 #
@@ -57,7 +58,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
+  haveallcmds GREP RM || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -67,7 +68,7 @@ done
 
 echo
 echo "# Checking for single user-mode password..."
-haveallcmds AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
+haveallcmds GREP RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 # if we find a boot-loader password, great. 
