@@ -30,6 +30,8 @@
 # 04/23/2003 jfs Sanity check for the existance of ctrfile, use TigerConfigDir
 #		instead of CONFIGDIR
 #
+# 04/26/2003 jfs Removed unnecessary option
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir="."
@@ -221,7 +223,6 @@ do
 	    next=`$EXPR $next - 1`
 	  done
 	  $MV $outprefix.tmp $outprefix.1
-	  echo $outprefix
 	fi
       done
     }

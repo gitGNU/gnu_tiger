@@ -21,6 +21,7 @@
 # 04/15/2003 jfs  Modified to support -B to work in the local dir 
 # 04/21/2003 jfs  Modified to only use hostname -f for Linux _and_
 #		  moved hostname check after RCFILE parsing!
+# 04/26/2003 jfs  Added a -q(uiet) option (to be used when using tigercron)
 #
 #-----------------------------------------------------------------------------
 #
@@ -106,6 +107,7 @@ checkfile()
      -R) REV=$2; shift;;
      -t) Tiger_TESTMODE=Y;;
      -H) HTML=Y;;
+     -q) QUIET=Y;;
       *) echo "--ERROR-- [con006e] Unknown option $1";;
     esac
     shift;
@@ -121,7 +123,7 @@ checkfile()
     exit 0
   }
 
-  echo "Configuring..."
+  [ "$QUIET" != "Y" ] && echo "Configuring..."
 
   set X `$BASEDIR/util/gethostinfo` unknown unknown unknown
   OS=${OS:=$2}
@@ -139,32 +141,40 @@ checkfile()
 
   SCRIPTDIR=$BASEDIR/scripts
   export SCRIPTDIR
-  
-  echo " "
-  echo "Will try to check using config for '$ARCH' running $OS $REV..."
+
+  [ "$QUIET" != "Y" ] &&  {
+    echo " "
+    echo "Will try to check using config for '$ARCH' running $OS $REV..."
+  }
 
   CONFIG_LOC=${TIGERCONF:="$BASEDIR/systems"}
 
   if [ -f "$CONFIG_LOC/$OS/$REL/$REV/$ARCH/config" ]; then
-    echo "--CONFIG-- [con004c] Using configuration files for $OS $REV $ARCH."
+    [ "$QUIET" != "Y" ] && echo "--CONFIG-- [con004c] Using configuration files for $OS $REV $ARCH."
     CONFIG_DIR="$CONFIG_LOC/$OS/$REL/$REV/$ARCH"
   elif [ -f "$CONFIG_LOC/$OS/$REL/$REV/config" ]; then
-    echo "--CONFIG-- [con004c] Using configuration files for $OS $REV."
+    [ "$QUIET" != "Y" ] && echo "--CONFIG-- [con004c] Using configuration files for $OS $REV."
     CONFIG_DIR="$CONFIG_LOC/$OS/$REL/$REV"
   elif [ -f "$CONFIG_LOC/$OS/$REL/config" ]; then
+    [ "$QUIET" != "Y" ] &&  {
     echo "--CONFIG-- [con005c] Using configuration files for $OS $REV. Using"
     echo "           configuration files for generic $OS $REL."
     echo "           Not all checks may be performed."
+    }
     CONFIG_DIR="$CONFIG_LOC/$OS/$REL"
   elif [ -f "$CONFIG_LOC/$OS/config" ]; then
+    [ "$QUIET" != "Y" ] &&  {
     echo "--CONFIG-- [con005c] No configuration files for $OS $REV.  Using"
     echo "           configuration files for generic $OS."
     echo "           Not all checks may be performed."
+    }
     CONFIG_DIR="$CONFIG_LOC/$OS"
   elif [ -f "$CONFIG_LOC/default/config" ]; then
+    [ "$QUIET" != "Y" ] &&  {
     echo "--CONFIG-- [con007c] No configuration files for $OS.  Using default"
     echo "           configuration files.  Not all checks may be performed."
     CONFIG_DIR="$CONFIG_LOC/default"
+    }
   else
     echo "--ERROR-- [con008e] No configuration files for $OS $REV and can't find the"
     echo "          default configuration files.  Terminating."
