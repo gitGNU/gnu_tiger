@@ -131,7 +131,7 @@ Tiger_Admin_Accounts='adm|bin|daemon|games|lp|mail|news|operator|sync|sys|uucp|m
 # On small memory systems, a large search depth can result in out
 # of memory situations for 'sort'... :-(...
 #
-Tiger_Embed_Max_Depth=3
+Tiger_Embed_Max_Depth=0
 #
 # Only search executables for embedded pathnames.  If this is
 # set to 'N', then all regular files will be searched.  Otherwise
@@ -164,7 +164,8 @@ Tiger_Embedded_OK_Owners='root|bin|uucp|sys|daemon'
 # List of group names separated by '|'... no whitespace.
 # No value means no groups should have write access.
 #
-Tiger_Embedded_OK_Group_Write='root|bin|uucp|sys|daemon'
+#Tiger_Embedded_OK_Group_Write='root|bin|uucp|sys|daemon'
+Tiger_Embedded_OK_Group_Write=
 #
 # Should all users' PATH variables be checked.  This has the potential
 # of being dangerous because of the way it is done.  You might want to
@@ -176,14 +177,15 @@ Tiger_Check_PATHALL=N           # Check all user PATHs in startup files.
 # Who can own executables in 'root's PATH?
 # List of usernames separated by '|'... no whitespace
 #
-Tiger_ROOT_PATH_OK_Owners='root|uucp|bin|news|sys|daemon'
-#Tiger_ROOT_PATH_OK_Owners='root'
+#Tiger_ROOT_PATH_OK_Owners='root|uucp|bin|news|sys|daemon'
+Tiger_ROOT_PATH_OK_Owners='root'
 #
 # What groups can have write access to executables in 'root's PATH?
 # List of group names separated by '|'... no whitespace.
 # No value means no groups should have write access.
 #
-Tiger_ROOT_PATH_OK_Group_Write='root|uucp|bin|sys|daemon'
+#Tiger_ROOT_PATH_OK_Group_Write='root|uucp|bin|sys|daemon'
+Tiger_ROOT_PATH_OK_Group_Write=
 #
 # Who can own things in other users PATH?
 # List of usernames separated by '|'... no whitespace
