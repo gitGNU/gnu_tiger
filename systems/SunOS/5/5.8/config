@@ -71,13 +71,15 @@ WC=/usr/bin/wc
 EXPAND=/usr/bin/expand
 SHOWREV=/usr/bin/showrev
 NETSTAT=/usr/bin/netstat
+PFILES=/usr/bin/pfiles
 SENDMAILS="/usr/lib/sendmail /usr/lib/sendmail.mx"
 SENDMAILCF="/etc/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED CUT HEAD
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME
 export CHMOD CHOWN LN PASTE DIFF MAILER ID WC
-export SHOWREV NETSTAT SENDMAILS SENDMAILCF EXPAND
+export SHOWREV NETSTAT PFILES
+export SENDMAILS SENDMAILCF EXPAND
 #
 UNAME=/usr/bin/uname
 GETHOSTNAME=/usr/bin/hostname
