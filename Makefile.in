@@ -253,7 +253,7 @@ distclean: clean
 	cd c && $(MAKE) distclean 
 	-find log/ -type f -exec rm -f {} \;
 	-find run/ -type f -exec rm -f {} \;
-	-rm -f Makefile config.{status,log,cache}
+	-rm -f Makefile config.{status,log,cache} man/tiger.8 man/tigercron.8
 
 maintainer-clean: distclean
 
