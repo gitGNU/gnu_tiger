@@ -28,7 +28,16 @@
 # ----------------------------------------------------------------------
 # Check for known intrusion signs every 8 hours
 #
-0,8,16 * *	check_known check_rootkit check_finddeleted check_logfiles check_runprocs check_rootdir check_root
+0,8,16 * *	check_known check_rootkit check_logfiles check_runprocs check_rootdir check_root
+# [experimental]
+# Check_finddeleted is very verbose and needs to be adjusted so we run
+# it less often, admins that want to run it more often are suggested
+# to look up how does the ignore mechanism works. In busy servers many
+# false positives might appear because of normal user access.
+# Some applications might generate false positives too due to the 
+# way they behave.  Also, this script requires LSOF, so only enable
+# it if you have it installed.
+#1 * * check_finddeleted 
 # ----------------------------------------------------------------------
 # Make system-specific checks every day at 1 am
 # Notice: System specific checks can be enabled in the 
