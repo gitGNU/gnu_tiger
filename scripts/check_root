@@ -17,6 +17,8 @@
 #
 # check_root - 05/30/99
 #
+# 04/03/2004 rbrad - Fixed a bug with the PermitRootLogin ssh check where the
+#            check failed if PermitRootLogin was both present and commented out.
 # 11/16/2003 jfs Applied patch from Nicolas François to work non-interactively
 #            even in SuSE (broken in previous patch) This problem has also
 #            been reported multiple times in Debian: #218056, #220924
@@ -156,16 +158,14 @@ fi
 }
 
 [ -f "$SSHD_CONFIG" ] && {
-rootssh=`$GREP PermitRootLogin $SSHD_CONFIG`
+rootssh=`$GREP PermitRootLogin $SSHD_CONFIG | $GREP -v ^#`
 if [ -n "$rootssh" ]; then
-  if [ ! "`echo $rootssh | $GREP \"^#\"`" ]; then
     if [ "`echo $rootssh | $GREP -i yes`" ]; then
       message WARN root001w "" "Remote root login allowed in $SSHD_CONFIG"
     fi
     if [ "`echo $rootssh | $GREP -i nopwd`" ]; then
        message WARN root001w "" "root login without pwd allowed in $SSHD_CONFIG"
     fi
-  fi
 fi
 }
 
