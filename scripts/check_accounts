@@ -20,7 +20,8 @@
 # Checks the accounts provided in the system, looking for disabled accounts
 # with cron, rhosts, .forward, and valid shells.
 #
-# 09/19/2003 jfs  Add root to Tiger_Admin_Accounts if already defined
+# 09/19/2003 jfs  Add root to Tiger_Admin_Accounts if already defined.
+#                 Also permit empty USERDOTFILES
 # 08/15/2003 jfs  ETCSHELLS is not indispensable to running this script.
 # 08/14/2003 jfs  Included ARSC changes including an update for Linux
 #                 in which no shell equals shell to address no
@@ -294,7 +295,7 @@ check_users()
      }
 
      # Check permissions on user dotfiles.
-     dotfiles=${USERDOTFILES:-".cshrc .bashrc .kshrc .profile .login .exrc .forward"}
+     dotfiles=${USERDOTFILES-".cshrc .bashrc .kshrc .profile .login .exrc .forward"}
      for file in $dotfiles
      do
        [ -f "$home/$file" ] && {
