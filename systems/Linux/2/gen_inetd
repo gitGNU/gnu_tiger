@@ -15,12 +15,31 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# SunOS/4/gen_inetd - 06/14/93
+# Linux/2/gen_inetd - 06/14/93
+# 
+# Generates sets for Linux systems, based on the SunOS version.
+#
+# 01/13/2004 - jfs - Do not use inetd.conf if it does not exist
 #
 #-----------------------------------------------------------------------------
 #
+# TODO: 
+# - This script has to generate also proper sets for xinetd, notice
+# that some checks (check_tcpd, check_rootkit) depend on this and they
+# use the inetd format:
+# <service_name> <sock_type> <proto> <flags> <user> <server_path> <args>
+# This scripts needs to read in all the inetd configuration files 
+# (usually under /etc/xinetd.d/) and generate a new file, one line
+# per service.
+#
+#-----------------------------------------------------------------------------
 
+[ -f /etc/inetd.conf ] && {
 $GREP -v '^#' /etc/inetd.conf |
 $SORT > $WORKDIR/etc_inetd.$$
 echo "/etc/inetd.conf" > $WORKDIR/etc_inetd.$$.src
 echo $WORKDIR/etc_inetd.$$
+}
+
+#[ -f /etc/xinetd.conf ] && {
+#}
