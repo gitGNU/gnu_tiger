@@ -224,7 +224,9 @@ install: installdirs installbinaries installconfig
 
 distribution:
 # TODO: it should  create the proper tiger-$VERSION.tgz file
-	cat tigerrc |sed -e 's/=N/=Y/' >tigerrc-all
+# TODO: The following should be done carefully, there are some
+# more changes in tigerrc-all than the 'yes' flag for checks
+#	cat tigerrc |sed -e 's/=N/=Y/' >tigerrc-all
 	cp tigerrc tigerrc-dist
 
 clean: 
