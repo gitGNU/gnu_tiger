@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -25,6 +25,9 @@
 #              mlk.
 # 18/05/02 jfs Changed cat to $CAT in some calls
 # 07/25/2002 jfs Added a sanity check for password files
+# 04/15/2003 jfs Removed the 'cd' to MAILSPOOL since the CAT of the passlist
+#		 will not work if BASEDIR is relative. Fixed the AWK call
+#		 (was being made to the wrong file!)
 #
 #-----------------------------------------------------------------------------
 #
@@ -175,8 +178,7 @@ haveallfiles BASEDIR WORKDIR || exit 1
      fi
 
 # Added -n for numeric uids, jfs
-    cd $MAILSPOOL
-    $LS -anl |
+    $LS -anl $MAILSPOOL/  |
     $TAIL +2 |
     $AWK '{print $3, $NF}' |
     while read uid file
@@ -193,15 +195,19 @@ haveallfiles BASEDIR WORKDIR || exit 1
      do
       [ -z "$owner" ] && 
 #	 owner=`$GREP :$uid: $passwd_set | $GREP -v "^+" | $CUT -f 1 -d : |$HEAD -1`
-	 owner=`$AWK -F: '$3 ~ /^'$uid'$/ { print $1 }' $passwd_source | $HEAD -1`
+	 owner=`$AWK -F: '$3 ~ /^'$uid'$/ { print $1 }' $passwd_set | $HEAD -1`
      done 
 
-     # Just in case the user is not found
-     [ -z "$owner" ] && owner=$uid
+     # If the user is not found in the password file
+     if [ -n "$owner" ] ; then
+	     [ "$file" != '.' -a "$file" != '..' -a "$file" != ':saved' -a "$owner" != "$file" ] &&
+	     message WARN kis008w "" "File \"$file\" in the mail spool, owned by \"$owner\"."
+     else
+	     [ "$file" != '.' -a "$file" != '..' ] &&
+	     message WARN kis010w "" "File \"$file\" in the mail spool does not belong to a valid user (belongs to uid \"$uid\")."
+     fi
 
-      [ "$file" != '.' -a "$file" != '..' -a "$file" != ':saved' -a "$owner" != "$file" ] &&
-      message WARN kis008w "" "File \"$file\" in the mail spool, owned by \`$owner'."
-    done
+    done # of the while read
 
     if [ -f $WORKDIR/pass.list.$$ ] ; then
      	for passwd_set in `$CAT $WORKDIR/pass.list.$$`; do
