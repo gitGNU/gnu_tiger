@@ -1,0 +1,454 @@
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993-1998 Douglas Lee Schales, David K. Hess, David R. Safford, Ellen L. Mitchell
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/5/5.5.1/sun4/signatures - 06/09/1997
+#
+#-----------------------------------------------------------------------------
+#
+#@DEST=SunOS/5/5.5.1/sun4
+#@CONFIG=SunOS/5
+#
+# Generated 1997/06/09 ellenm
+#
+Y .       /sbin/ifconfig 7f552bad9967346518db5b547a0504f4 SunOS 5.5.1 
+Y .       /sbin/init 7ed0ae8107cb0e3fbe5db5e0b522e866 SunOS 5.5.1 
+Y .       /sbin/jsh 6c13b4ce42293561828be850d9fb1dae SunOS 5.5.1 
+Y .       /sbin/sh 6c13b4ce42293561828be850d9fb1dae SunOS 5.5.1 
+Y .       /sbin/mount 9ace7fe510cc7dfd6cf6201e50023f32 SunOS 5.5.1 
+Y .       /sbin/su 6b10c1b691ba5aef0407ebb79fe4feb3 SunOS 5.5.1 
+Y .       /sbin/sulogin 6b6c2f7ce0b69000ca65ae16a2fd03d7 SunOS 5.5.1 
+Y .       /usr/bin/at 6e30a9f4c8e0d3ada7a4b2ad8e483dd7 SunOS 5.5.1 
+Y .       /usr/bin/atq 8c974812dac6427f842d57e616ab2a8d SunOS 5.5.1 
+Y .       /usr/bin/atrm 9cddcf99b6dfeddc4da141e42091ab4d SunOS 5.5.1 
+Y .       /usr/bin/batch c3247a561499e35e868fe7a12362a7d1 SunOS 5.5.1 
+Y .       /usr/bin/csh a688c7f6794f78b80c930f5f8ae6648c SunOS 5.5.1 
+Y .       /usr/bin/ftp e3879e10c6190929d0b44cab3bea720d SunOS 5.5.1 
+Y .       /usr/bin/jsh 7ed90534683e6a7dcf81c603c0f86cd3 SunOS 5.5.1 
+Y .       /usr/bin/sh 7ed90534683e6a7dcf81c603c0f86cd3 SunOS 5.5.1 
+Y .       /usr/bin/ksh b3ad787cad1b630a9956c12e324b9237 SunOS 5.5.1 
+Y .       /usr/bin/login 635130471cda6d64d5f2a6667dc8ecfd SunOS 5.5.1 
+Y .       /usr/bin/lp eab4fd0d43025bfc6fda808ec706f273 SunOS 5.5.1 
+Y .       /usr/bin/lpstat 1f79bbae63f8ad330ea7d4b63472e184 SunOS 5.5.1 
+Y .       /usr/bin/mail 690e37c5af72c8f42991fd1dfc291510 SunOS 5.5.1 
+Y .       /usr/bin/mailx 9bceda90d461bf56f2aca8e100509e64 SunOS 5.5.1 
+Y .       /usr/bin/netstat c6260236ef468a51a594eaa0166ed2aa SunOS 5.5.1 
+Y .       /usr/bin/priocntl b4a6042657dc2614c92c947e762cd811 SunOS 5.5.1 
+Y .       /usr/bin/ps eda319c35374cd26a3785304c0d05bee SunOS 5.5.1 
+Y .       /usr/bin/rdist ce600be248b75abbd11aff7649de5011 SunOS 5.5.1 
+Y .       /usr/bin/rlogin a3a6368383315943a2eb9d07e76c9bc0 SunOS 5.5.1 
+Y .       /usr/bin/rsh 30b63c3daea49f8e0be673e89d758bb6 SunOS 5.5.1 
+Y .       /usr/bin/su a7d9ffeb66775ee04862dad9af789afa SunOS 5.5.1 
+Y .       /usr/bin/telnet 1c32b0838ddffd33056ae707855f08fd SunOS 5.5.1 
+Y .       /usr/bin/tftp 437eafc723559537922283f99d149e4b SunOS 5.5.1 
+Y .       /usr/bin/time da808b2d8c6a07c9885436e44148e5ea SunOS 5.5.1 
+Y .       /usr/bin/timex a4661afeefb0f53db7310908068338b7 SunOS 5.5.1 
+Y .       /usr/bin/tip 0fe38013789fd4c45f10f96a39e81548 SunOS 5.5.1 
+Y .       /usr/lib/expreserve c16dde4a8945f574c70e424d4c00e8ca SunOS 5.5.1 
+Y .       /usr/lib/exrecover 11eeac64e6686ec0c093ebe3a8694cb7 SunOS 5.5.1 
+Y .       /usr/lib/ld.so c8aaf184726bcf2acf82538c496483ff SunOS 5.5.1 
+Y .       /usr/lib/ld.so.1 388bb61328cc37a2272eb034686ee6e1 SunOS 5.5.1 
+Y .       /usr/lib/lddstub fc95a64a67d461c609c263f0e816793f SunOS 5.5.1 
+Y .       /usr/lib/libC.so.5 00618ce41a069fae97e191aa39c8af0d SunOS 5.5.1 
+Y .       /usr/lib/libC.so.3 39c0e391f723c73463242709927552db SunOS 5.5.1 
+Y .       /usr/lib/libc.a f712568e97e0bb3ff5f59fbedc66ef36 SunOS 5.5.1 
+Y .       /usr/lib/libc.so.1 c6594d6db933859d6c13f4e99c7c69c4 SunOS 5.5.1 
+Y .       /usr/lib/libelf.a ee20e34353a8f0c0eaba9e9a52f6ad75 SunOS 5.5.1 
+Y .       /usr/lib/libelf.so.1 cf5dff9a718349104f4f3b094c1bd909 SunOS 5.5.1 
+Y .       /usr/lib/libm.a 8c0f8159c5b094c7d96116faa8cf8cab SunOS 5.5.1 
+Y .       /usr/lib/libm.so.1 86a1c63947d92ef89872e96273f0600c SunOS 5.5.1 
+Y .       /usr/lib/libnsl.a 1fbcb42c35e320b44f0050a9c20b1302 SunOS 5.5.1 
+Y .       /usr/lib/libnsl.so.1 08cba3442a592a11108b75b27e4ad8d3 SunOS 5.5.1 
+Y .       /usr/lib/libresolv.so.1 2b98e27835d32e8c6029965bc125f4da SunOS 5.5.1 
+Y .       /usr/lib/librpcsvc.a eed65d40a386bd2bdbe573263cbbf3ca SunOS 5.5.1 
+Y .       /usr/lib/librpcsvc.so.1 5de2438fecb3f2a3ceb5b0386f3d8f21 SunOS 5.5.1 
+Y .       /usr/lib/libsec.a 3ab19e16bcc74b3aa8593a58490bc427 SunOS 5.5.1 
+Y .       /usr/lib/libsec.so.1 5accff440a5437d2cf4cf4b402feadf0 SunOS 5.5.1 
+Y .       /usr/lib/libsocket.a 1743a45162537e2e2336d1c204e4a099 SunOS 5.5.1 
+Y .       /usr/lib/libsocket.so.1 c0a737c5ae566a5d2562446d1707136e SunOS 5.5.1 
+Y .       /usr/lib/mail.local c1e8e84dd1575ab4771eaef8f17fbd9d SunOS 5.5.1 
+Y .       /usr/lib/makewhatis f96892f80dc36ec2340345ace78837e2 SunOS 5.5.1 
+Y .       /usr/lib/netsvc/rstat/rpc.rstatd 76c1f6cc4a048652d4ffd50ca5e7bd38 SunOS 5.5.1 
+Y .       /usr/lib/netsvc/rusers/rpc.rusersd ab94b603489a3c106345b01e1cce1584 SunOS 5.5.1 
+Y .       /usr/lib/netsvc/rwall/rpc.rwalld 88f0c59df422bde159ad8bfb60732c59 SunOS 5.5.1 
+Y .       /usr/lib/netsvc/spray/rpc.sprayd 0bc84b839f3d4d7fbbaf9a1771ce1680 SunOS 5.5.1 
+Y .       /usr/lib/netsvc/yp/ypbind 39504fea9dbf67c4ea25edb716ecde29 SunOS 5.5.1 
+Y .       /usr/lib/newsyslog 7232b3b6da29c3c799dbfaee0ac01661 SunOS 5.5.1 
+Y .       /usr/lib/nfs/lockd 2675af52ed4229b6a66ade211b963999 SunOS 5.5.1 
+Y .       /usr/lib/nfs/mountd acb400e56c6ae3a8b64631fab2abd5bb SunOS 5.5.1 
+Y .       /usr/lib/nfs/nfsd 57260f1c2d1b17b36a39c7744ed1579d SunOS 5.5.1 
+Y .       /usr/lib/nfs/rquotad c48f1f21b2d63c6c2febcb283a9ecb0a SunOS 5.5.1 
+Y .       /usr/lib/nfs/statd 7aa071dcd3a38239e26b41c59a093792 SunOS 5.5.1 
+Y .       /usr/lib/sendmail ab4f6058b14677a3521eccd01bf30f75 SunOS 5.5.1 
+Y .       /usr/sbin/ifconfig 8f0afc9c45273aec215244a7604d0dee SunOS 5.5.1 
+Y .       /usr/sbin/in.comsat 556f57e94ad59ca27af1085334dfef18 SunOS 5.5.1 
+Y .       /usr/sbin/in.fingerd 963ffb7f0d8b0391a4d13fa1df4f7b4a SunOS 5.5.1 
+Y .       /usr/sbin/in.ftpd de526b334baa1ec1262ee2cd27c258e1 SunOS 5.5.1 
+Y .       /usr/sbin/in.named 610a59bd7d0bc313cf462366a3f4f6a1 SunOS 5.5.1 
+Y .       /usr/sbin/in.rarpd 155cfbf4a601ec8866cfb929bfa014ca SunOS 5.5.1 
+Y .       /usr/sbin/in.rdisc 223224e77fe552d1fc918e48a9a11f5a SunOS 5.5.1 
+Y .       /usr/sbin/in.rexecd 3739fa38c9afbf15b149699b7c0219ea SunOS 5.5.1 
+Y .       /usr/sbin/in.rlogind ceb28b68cd8d5529a628fba865960237 SunOS 5.5.1 
+Y .       /usr/sbin/in.routed a2f07f39202545761abb9f63b71f0155 SunOS 5.5.1 
+Y .       /usr/sbin/in.rshd cb52e41712a909648f0933e5cb33792d SunOS 5.5.1 
+Y .       /usr/sbin/in.rwhod 3d22ce3a6311312bf2e93363f068b153 SunOS 5.5.1 
+Y .       /usr/sbin/in.talkd 3b33ee555e31ce18d13b4b0376e94682 SunOS 5.5.1 
+Y .       /usr/sbin/in.telnetd 68cf3269cf85dc35aad2fa188e956286 SunOS 5.5.1 
+Y .       /usr/sbin/in.tftpd 91258bb0a822acd8fe4113465ffe1582 SunOS 5.5.1 
+Y .       /usr/sbin/in.tnamed e83f3e05f4c45acee1c3ec6187a7742b SunOS 5.5.1 
+Y .       /usr/sbin/in.uucpd 19bc1a1bbc8b521a8433e6ee5c583351 SunOS 5.5.1 
+Y .       /usr/sbin/inetd d24027b204e94704f26c1661f747af0f SunOS 5.5.1 
+Y .       /usr/sbin/init 464adb9ab5b552ecc916ad4b35dbb398 SunOS 5.5.1 
+Y .       /usr/sbin/kerbd 4d8c16984e880706841cd00ae4bafa62 SunOS 5.5.1 
+Y .       /usr/sbin/keyserv 42534c992e402364bec58400e64930f0 SunOS 5.5.1 
+Y .       /usr/sbin/rpc.bootparamd 6483a2e0d1b52113a5a2004afe36e6a7 SunOS 5.5.1 
+Y .       /usr/sbin/rpc.nisd 2044bb21e1f6ed4623170388985a0b73 SunOS 5.5.1 
+Y .       /usr/sbin/rpc.nisd_resolv 428ef20b3c6c96737afcece74af63f04 SunOS 5.5.1 
+Y .       /usr/sbin/rpc.nispasswdd cc9a23f249b20c50d5a010349216f162 SunOS 5.5.1 
+Y .       /usr/sbin/rpc.rexd 9e51f3cb4a091dc8313e7f69785076c2 SunOS 5.5.1 
+Y .       /usr/sbin/rpcbind 70a043e49b671396795e7de10f69662b SunOS 5.5.1 
+Y .       /usr/sbin/syslogd 80038c3e051fcd8fa7917f23a1a24e8c SunOS 5.5.1 
+Y .       /usr/ucb/ps d4a6a3ba8915fcdc5344362903f51d50 SunOS 5.5.1 
+# These are security patches
+Y .	  /usr/bin/admintool c7e483c29359a68d1c9e34db30b8cc74 Sun Patch ID 103558-11
+O sig003w /usr/bin/admintool 2e4b51932d919fe84ed27fcc35c34f3c SunOS 5.5.1 (security patch is 103558)
+Y .       /usr/bin/showrev bd216c462170702a25d65f884ac22e9b Sun Patch ID 103558-11
+O sig003w /usr/bin/showrev 898eda08ff5ad8687375346ca54c92c5 SunOS 5.5.1 (security patch is 103558)
+Y .       /usr/snadm/lib/libadmutil.so.2 b61bd5b9075a57c25108edb4d1ceae00 Sun Patch ID 103558-11
+O sig003w /usr/snadm/lib/libadmutil.so.2 1ddb0fd48b4d1bdfb67735078380453f SunOS 5.5.1 (security patch is 103558)
+Y .       /usr/bin/solstice 3f976dea2077e2e5a64c331e900bb9d0 Sun Patch ID 103558-11
+O sig003w /usr/bin/solstice 999a68141b40b2178036c2188e70ce5e SunOS 5.5.1 (security patch is 103558)
+Y .       /usr/openwin/bin/xterm e4d8beb3b3ce8642fecab57f71aceef2 Sun Patch ID 103566-25
+O sig003w /usr/openwin/bin/xterm c25000ef79cc7f0d6251f65cb8a69aef SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/bin/Xsun 66145500e2d13d83b51b2ee98fdf5897 Sun Patch ID 103566-25
+O sig003w /usr/openwin/bin/Xsun 834dfb7658f8473d62017ea15812d5cb SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/bin/xlock 4f348e5ac64ba5f69349bd32ac6e3c0e Sun Patch ID 103566-25 
+O sig003w /usr/openwin/bin/xlock b34e5ab732c9d0548a07ca928773702e SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/bin/xwd 68673ddbffe707fb69e369a04d73d1c4 Sun Patch ID 103566-25
+O sig003w /usr/openwin/bin/xwd 19d6a25d31308209dc67c73f8dde9aec SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/lib/libX11.so.4 0ce98214c74a463c7c8c82ecf1efbff9 Sun Patch ID 103566-25
+O sig003w /usr/openwin/lib/libX11.so.4 ee9669ddaeee07b3f11a60cd0c38e201 SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/lib/libdga.so.1 4aaa3cc9c06c5024b5fe17e4909c350f Sun Patch ID 103566-25
+O sig003w /usr/openwin/lib/libdga.so.1 cf7c9fdef6efd328174204f67ab30a03 SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/server/lib/libmhc.so.1 8fb882698f2b65e4b25b9e9040adb7fd Sun Patch ID 103566-25
+O sig003w /usr/openwin/server/lib/libmhc.so.1 1d5c891f4d4660e0523c4cfc169e3d9b SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/server/lib/libmi.so.1 2cf4f122a51e5bc52bed2d3e3a93314 Sun Patch ID 103566-25
+O sig003w /usr/openwin/server/lib/libmi.so.1 2143ae25f936332111913ab8db55a357 SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/server/lib/libmpg.so.1 49b5f952c5362382f43221a7b885801 Sun Patch ID 103566-25
+O sig003w /usr/openwin/server/lib/libmpg.so.1 5b6a58176d052a40e5fc2319cf026cd3 SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/server/lib/libserverX11.so.1 0fe4bc4dfe43a5bcbfd4ff1f4e2712a1 Sun Patch ID 103566-25
+O sig003w /usr/openwin/server/lib/libserverX11.so.1 7677b7f0d611a93a495b511e55e87166 SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/server/lib/libserverdps.so.1 1288b5ffad4b1b49501a941e4797ac37 Sun Patch ID 103566-25
+O sig003w /usr/openwin/server/lib/libserverdps.so.1 8f8a532a4a73c3f009c8d3c67005ad5f SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/server/modules/ddxSUNWcg6.so.1 521aca6554667221c01a2c91e47e8448 Sun Patch ID 103566-25
+O sig003w /usr/openwin/server/modules/ddxSUNWcg6.so.1 77bcf9ed7c421031ffc5df29f1424e25 SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/server/modules/ddxSUNWdials.so.1 e827855f370721db28148f62f1636ab5 Sun Patch ID 103566-25
+O sig003w /usr/openwin/server/modules/ddxSUNWdials.so.1 474c2be0cbbbdc3e764855fcacf92ff6 SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/lib/libX11.a 23d727416cb68672746c2855bd396b01 Sun Patch ID 103566-25
+O sig003w /usr/openwin/lib/libX11.a 27e274e0210c70ef479d090224d5c604 SunOS 5.5.1 (security patch is 103566)
+Y .       /usr/openwin/lib/libp/libX11.a 61edbf9b8286b8596934fcba8ee7ed63 Sun Patch ID 103566-25
+Y .       /usr/openwin/lib/libp/libX11.a 0ba33f1b8ab35784dd92602ed2526121 SunOS 5.5.1 (security patch is 103566)
+Y .       /kernel/drv/tcp db05d9419b28ef53a8a2841247b860cd Sun Patch ID 103582-15
+O sig003w /kernel/drv/tcp 0db3e48693d5e7b004ccc48921489f55 SunOS 5.5.1 (security patch is 103582)
+Y .       /usr/bin/netstat adc0eaf293ee028ea5e8b9081eeddf55 Sun Patch ID 103582-15
+O sig003w /usr/bin/netstat c6260236ef468a51a594eaa0166ed2aa SunOS 5.5.1 (security patch is 103582)
+Y .       /usr/bin/mailcompat 058ee501e20806bad9cb0c90e9181f9e Sun Patch ID 103594-13
+O sig003w /usr/bin/mailcompat 174b933843f3f0bd6135e0765c0e605f SunOS 5.5.1 (security patch is 103594)
+Y .       /usr/lib/mail.local 13cd97a84d17daa37cf7770f8f9b2140 Sun Patch ID 103594-13
+O sig003w /usr/lib/mail.local c1e8e84dd1575ab4771eaef8f17fbd9d SunOS 5.5.1 (security patch is 103594)
+Y .       /usr/lib/sendmail da2a4fb0d5371f2ae34dfda3cd5d5d0f Sun Patch ID 103594-13
+O sig003w /usr/lib/sendmail ab4f6058b14677a3521eccd01bf30f75 SunOS 5.5.1 (security patch is 103594)
+Y .       /usr/bin/ftp 3d8d93a3010ac79d4f9c92d793d2eee7 Sun Patch ID 103603-05
+O sig003w /usr/bin/ftp e3879e10c6190929d0b44cab3bea720d SunOS 5.5.1 (security patch is 103603)
+Y .       /usr/sbin/in.ftpd 9dbb79d59fa92aaf6ba6b038d8c1b77e Sun Patch ID 103603-05
+O sig003w /usr/sbin/in.ftpd de526b334baa1ec1262ee2cd27c258e1 SunOS 5.5.1 (security patch is 103603)
+Y .       /usr/sbin/in.rexecd 86eecfe08c2b61364824915333887ad3 Sun Patch ID 103603-05
+O sig003w /usr/sbin/in.rexecd 3739fa38c9afbf15b149699b7c0219ea SunOS 5.5.1 (security patch is 103603)
+Y .       /usr/sbin/in.rshd dbf67cead698f89fafa8669cc2f4e31b Sun Patch ID 103603-05
+O sig003w /usr/sbin/in.rshd cb52e41712a909648f0933e5cb33792d SunOS 5.5.1 (security patch is 103603)
+Y .       /usr/lib/libc.a 05b742bf29031d4853187b38b5ff9042 Sun Patch ID 103612-33
+O sig003w /usr/lib/libc.a f712568e97e0bb3ff5f59fbedc66ef36 SunOS 5.5.1 (security patch is 103612)
+Y .       /usr/lib/libnsl.a f8b4cc1a464e1060020ff22ee212eade Sun Patch ID 103612-33
+O sig003w /usr/lib/libnsl.a 1fbcb42c35e320b44f0050a9c20b1302 SunOS 5.5.1 (security patch is 103612)
+Y .       /usr/lib/libp/libc.a 1b33e9176605e230be2d5e12a48ffb50 Sun Patch ID 103612-33
+O sig003w /usr/lib/libp/libc.a 6433d1878a917f24ae65e51ae6821117 SunOS 5.5.1 (security patch is 103612)
+Y .       /usr/lib/pics/libc_pic.a 416ccfbc645bdb3b837a5778b0adbcb8 Sun Patch ID 103612-33
+O sig003w /usr/lib/pics/libc_pic.a d68950af9f7c04e3a0dd71c1c1fb8e22 SunOS 5.5.1 (security patch is 103612)
+Y .       /usr/lib/libc.so.1 8b11f584f680800aae5671135c775fc8 Sun Patch ID 103612-33
+O sig003w /usr/lib/libc.so.1 c6594d6db933859d6c13f4e99c7c69c4 SunOS 5.5.1 (security patch is 103612)
+Y .       /usr/lib/libnsl.so.1 adb204b8f55ec946c70035ef3147ca56 Sun Patch ID 103612-33
+O sig003w /usr/lib/libnsl.so.1 08cba3442a592a11108b75b27e4ad8d3 SunOS 5.5.1 (security patch is 103612)
+Y .       /usr/lib/fn/fn_ctx_onc_fn_nisplus_root.so.1 deda16fcc5c7063442014bb72b835880 so.1 Sun Patch ID 103612-33
+O sig003w /usr/lib/fn/fn_ctx_onc_fn_nisplus_root.so.1 4d3b1126ca69755c1ff932e3091b23f2 SunOS 5.5 (security patch is 103612)
+Y .       /usr/sbin/nis_cachemgr 44edfff4c3a0adfdcd9709e640b0974d Sun Patch ID 103612-33
+O sig003w /usr/sbin/nis_cachemgr fb56c70a0d5476f44991994b86e44b5f SunOS 5.5.1 (security patch is 103612)
+Y .       /usr/sbin/rpc.nisd c6c4de4a9a3b569b26346821fc5de2a3 Sun Patch ID 103612-33
+O sig003w /usr/sbin/rpc.nisd 2044bb21e1f6ed4623170388985a0b73 SunOS 5.5.1 (security patch is 103612)
+Y .       /usr/ucblib/libucb.so.1 0f361042c30732fc49d53683dfca3091 Sun Patch ID 103612-33
+O sig003w /usr/ucblib/libucb.so.1 9d0363afdbbffca33c03ee63eca1cce3 SunOS 5.5.1 (security patch is 103612)
+Y .       /usr/ucblib/libucb.a f3be30d9d779d5839d355f64ec307d53 Sun Patch ID 103612-33
+O sig003w /usr/ucblib/libucb.a 1c049e0c027d0efc7bd1cfd37f68a044 SunOS 5.5.1 (security patch is 103612)
+Y .       /usr/sbin/static/rcp 4e9251d699e17897c40b3ea2a4f13bff Sun Patch ID 103612-33
+O sig003w /usr/sbin/static/rcp 850051f378412a44959138c47e4d7f28 SunOS 5.5.1 (security patch is 103612)
+Y .       /kernel/drv/arp e44a2e5e751fd583b81819edc6cbdfcd Sun Patch ID 103630-09
+O sig003w /kernel/drv/arp 0c46890a40ee99eddfd065be9db4d97a SunOS 5.5.1 (security patch is 103630)
+Y .       /kernel/drv/icmp 7ba72638fc682268e03fca0d20b6d43d Sun Patch ID 103630-09
+O sig003w /kernel/drv/icmp 94bd4f58ebf815f3e0299722eb501e8d SunOS 5.5.1 (security patch is 103630)
+Y .       /kernel/drv/ip 1e4bcbcd24d98d25e0825d9f4a72e7c0 Sun Patch ID 103630-09
+O sig003w /kernel/drv/ip a66b655bddf43fc819441898b76020ba SunOS 5.5.1 (security patch is 103630)
+Y .       /kernel/drv/udp 98f24b08748182e3dd1d802a376ee586 Sun Patch ID 103630-09
+O sig003w /kernel/drv/udp 6e541859ab0134edb3a173d989a8eb46 SunOS 5.5.1 (security patch is 103630)
+Y .       /sbin/ifconfig 322f05a3a01de024b3f83bc463dcb355 Sun Patch ID 103630-09
+O sig003w /sbin/ifconfig 7f552bad9967346518db5b547a0504f4 SunOS 5.5.1 (security patch is 103630)
+Y .       /usr/sbin/ifconfig 734924582ce63de682b04d7c875229f6 Sun Patch ID 103630-09
+O sig003w /usr/sbin/ifconfig 8f0afc9c45273aec215244a7604d0dee SunOS 5.5.1 (security patch is 103630)
+Y .       /platform/sun4c/kernel/unix 7e26acd1286b7363bca83680ec16fd02 Sun Patch ID 103640-14
+O sig003w /platform/sun4c/kernel/unix 5146ba2de3fa44b093a4d8d827507aeb SunOS 5.5.1 sun4c (security patch is 103640)
+Y .       platform/sun4c/ufsboot 70066225fb2308520ca6772dd2ad6f5f Sun Patch ID 103640-14
+O sig003w /platform/sun4c/ufsboot 985e2d31f7fc7464da71accbd349dc26 SunOS 5.5.1 sun4c (security patch is 103640)
+Y .       /platform/sun4d/kernel/unix 7f1d8732efd10c57c099a691d7402afa Sun Patch ID 103640-14
+O sig003w /platform/sun4d/kernel/unix b52d739ecc6675a071662868a3e8c7c8 SunOS 5.5.1 sun4d (security patch is 103640)
+Y .       /platform/sun4d/ufsboot bfffc252f7016dea4f06b9ff04471307 Sun Patch ID 103640-14
+O sig003w /platform/sun4d/ufsboot c476cb70c70bab42dc4da826c0d2990e SunOS 5.5.1 sun4d (security patch is 103640)
+Y .       /platform/sun4m/kernel/unix 13683d63cab4849333a86dff2e92eff3 Sun Patch ID 103640-14
+O sig003w /platform/sun4m/kernel/unix ed8275458ef0ff9c2aa72edcc577f14d SunOS 5.5.1 sun4m (security patch is 103640)
+Y .       /platform/sun4m/ufsboot 7f2cc6239be66a7ed76e82332e90a0a4 Sun Patch ID 103640-14
+O sig003w /platform/sun4m/ufsboot 8ee1d66a2f187785c9f745ebb14b5ce7 SunOS 5.5.1 sun4m (security patch is 103640)
+Y .       /platform/sun4u/kadb 22fcc423520638ea195ab3d241c16fc2 Sun Patch ID 103640-14
+O sig003w /platform/sun4u/kadb 2d62a35e5faee3e7f7ab074ae27b7400 SunOS 5.5.1 sun4u (security patch is 103640)
+Y .       /platform/sun4u/kernel/genunix 072bea8348472ee2a5a5ede8c025b475 Sun Patch ID 103640-14
+O sig003w /platform/sun4u/kernel/genunix ecc26f4d520855382c61c69f9c860532 SunOS 5.5.1 sun4u (security patch is 103640)
+Y .       /platform/sun4u/kernel/unix 17784060c0942af47e3c7d17de8e523d Sun Patch ID 103640-14
+O sig003w /platform/sun4u/kernel/unix 371cab34f26f461781c0f5fa9de97e92 SunOS 5.5.1 sun4u (security patch is 103640)
+Y .       /platform/sun4u/ufsboot 6886b58f3f5ed84fa672a19d3f0e3263 Sun Patch ID 103640-14
+O sig003w /platform/sun4u/ufsboot 2f8c5d8d8f8f5e70b72f56c39a7dc9ed SunOS 5.5.1 sun4u (security patch is 103640)
+Y .       /platform/sun4u1/kadb 6c8ce61765dc18e7a4535ea749ba3031 Sun Patch ID 103640-14
+Y .       /platform/sun4u1/kernel/genunix 9361d24380ee82fd20aa612beab4d546 Sun Patch ID 103640-14
+Y .       /platform/sun4u1/kernel/unix e3fc9e0abf5b7663bc8e5321e585bbb1 Sun Patch ID 103640-14
+Y .       /platform/sun4u1/ufsboot 2e47e9f64b38380371274a72e366065d Sun Patch ID 103640-14
+Y .       /kernel/drv/mm 8d0362fe6af3e99dac1ac2ff3a801b3a Sun Patch ID 103640-14
+O sig003w /kernel/drv/mm f6566c32107c9115687402928b1d4b63 SunOS 5.5.1 (security patch is 103640)
+Y .       /kernel/fs/nfs b9964ebb882fa2ccd87e9543eac91875 Sun Patch ID 103640-14
+O sig003w /kernel/fs/nfs dcf30528a29758851cd86a9c535cf3aa SunOS 5.5.1 (security patch is 103640)
+Y .       /kernel/fs/ufs 47fd7efbae70266e9a6f4991c1ef81c0 Sun Patch ID 103640-14
+O sig003w /kernel/fs/ufs 8116b4737482d0e496eac26684d46caf SunOS 5.5.1 (security patch is 103640)
+Y .       /kernel/genunix f3503e95df2974ef31dd2ca7dcc395e2 Sun Patch ID 103640-14
+O sig003w /kernel/genunix 69038eae60052ebbe5fd79ef17eeb12c SunOS 5.5.1 (security patch is 103640)
+Y .       /kernel/misc/klmmod 9c68a1e3e05e32db3b4367b592448b39 Sun Patch ID 103640-14
+O sig003w /kernel/misc/klmmod e088e89b76b3c96650a82300ce7e7f38 SunOS 5.5.1 (security patch is 103640)
+Y .       /kernel/misc/klmops abc28ce01d798b2862b820d5d9290b9f Sun Patch ID 103640-14
+O sig003w /kernel/misc/klmops 558d41b53fe6c4f06f0c122a4afa9711 SunOS 5.5.1 (security patch is 103640)
+Y .       /kernel/misc/tlimod ea41b0304d0949f6f6ca7b89583ea9ba Sun Patch ID 103640-14
+O sig003w /kernel/misc/tlimod efb9f4edce0597c64e22a48b36e5ae86 SunOS 5.5.1 (security patch is 103640)
+Y .       /kernel/strmod/rpcmod a0e4b477e1ef8f2ef24789cfe50e75ee Sun Patch ID 103640-14
+O sig003w /kernel/strmod/rpcmod 823cfc1ae2011a861f8a88e7b8815559 SunOS 5.5.1 (security patch is 103640)
+Y .       /kernel/sys/doorfs 0a585124b871e1d0577bd14f1c491aa0 Sun Patch ID 103640-14
+O sig003w /kernel/sys/doorfs 4e1fcdbfa95349e3f99985c5519504db SunOS 5.5.1 (security patch is 103640)
+Y .       /usr/lib/adb/mntinfo e5238c518f719dc2f2a701b38e9c8161 Sun Patch ID 103640-14
+O sig003w /usr/lib/adb/mntinfo d7e2c38be8a6cb4ef04c62dbfc96ae68 SunOS 5.5.1 (security patch is 103640)
+Y .       /usr/lib/adb/rnode 56ea86f73d46874efea32718c642623b Sun Patch ID 103640-14
+O sig003w /usr/lib/adb/rnode 57eecabed4cb1111c605314b4977bec6 SunOS 5.5.1 (security patch is 103640)
+Y .       /usr/lib/fs/ufs/fsck b8b5f842789e592dae257de51febfe0e Sun Patch ID 103640-14
+O sig003w /usr/lib/fs/ufs/fsck 4ccb02d899a2f1acedc2fc3329303965 SunOS 5.5.1 (security patch is 103640)
+Y .       /usr/lib/libthread.so.1 df9fdc69491585adc7af07142f64fa0e Sun Patch ID 103640-14
+O sig003w /usr/lib/libthread.so.1 fe54bdcce9a87f982b495a388e93aab2 SunOS 5.5.1 (security patch is 103640)
+Y .       /usr/lib/libthread_db.so.0 221e62b28f8eaf399843c7d08e001203 Sun Patch ID 103640-14
+O sig003w /usr/lib/libthread_db.so.0 e84558ba17971f28ea472bca96acfb0d SunOS 5.5.1 (security patch is 103640)
+Y .       /usr/lib/libthread_db.so.1 61c45573e34c5a2ad750f6198ee53907 Sun Patch ID 103640-14
+O sig003w /usr/lib/libthread_db.so.1 61a873b6c8153d05ab1d92a63b3bf845 SunOS 5.5.1 (security patch is 103640)
+Y .       /usr/platform/sun4c/lib/fs/nfs/inetboot d1396847dabc01e8976e9a21c7524811 Sun Patch ID 103640-14
+O sig003w /usr/platform/sun4c/lib/fs/nfs/inetboot b7dc94d5fdcb53fbaafa2d94cc7de344 SunOS 5.5.1 sun4c (security patch is 103640)
+Y .       /usr/platform/sun4d/lib/fs/nfs/inetboot d1396847dabc01e8976e9a21c7524811 Sun Patch ID 103640-14
+O sig003w /usr/platform/sun4d/lib/fs/nfs/inetboot b7dc94d5fdcb53fbaafa2d94cc7de344 SunOS 5.5.1 sun4d (security patch is 103640)
+Y .       /usr/platform/sun4m/lib/fs/nfs/inetboot c9b10b545ee19234d7f40459486393e2 Sun Patch ID 103640-14
+O sig003w /usr/platform/sun4m/lib/fs/nfs/inetboot 3d6db5affa6d27311753c214764744af SunOS 5.5.1 sun4m (security patch is 103640)
+Y .       /usr/platform/sun4u/lib/fs/nfs/inetboot 70130b9ea08b1b87db5aa125eac6de8b Sun Patch ID 103640-14
+O sig003w /usr/platform/sun4u/lib/fs/nfs/inetboot b159329c06beb1de6f7520c7426c0761 SunOS 5.5.1 sun4u (security patch is 103640)
+Y .       /usr/platform/sun4u1/lib/fs/nfs/inetboot 1e0edac51fcd7799bd2cdcae5f9c7c6f Sun Patch ID 103640-14
+Y .       /usr/lib/libresolv.so.1 f84c93dafd7c16c345686cc8eadc4e13 Sun Patch ID 103663-09
+O sig003w /usr/lib/libresolv.so.1 2b98e27835d32e8c6029965bc125f4da SunOS 5.5.1 (security patch is 103663)
+Y .       /usr/lib/libresolv.so.2 a79c9850689450e84f1dc9563f1c0ea2 Sun Patch ID 103663-09
+Y .       /usr/lib/nslookup.help 3e1ddd9feebd35f6132ed01f5df700c2 Sun Patch ID 103663-09
+O sig003w /usr/lib/nslookup.help b5752b3c238f338bece827e7a2bd42f5 SunOS 5.5.1 (security patch is 103663)
+Y .       /usr/lib/nss_dns.so.1 cec6b1fb2d4d44fabc0907aa1d034668 Sun Patch ID 103663-09
+O sig003w /usr/lib/nss_dns.so.1 16fc05f25a0bf8d60f306117dfcf37ae SunOS 5.5.1 (security patch is 103663)
+Y .       /usr/sbin/in.named 30131c6018d750a53854c8244f7a3424 Sun Patch ID 103663-09
+O sig003w /usr/sbin/in.named 610a59bd7d0bc313cf462366a3f4f6a1 SunOS 5.5.1 (security patch is 103663)
+Y .       /usr/sbin/named-xfer 945cd86f6b1d88be45478366c6130eb9 Sun Patch ID 103663-09
+O sig003w /usr/sbin/named-xfer 39c3cd79efee1b6de0deaedb4670dc7f SunOS 5.5.1 (security patch is 103663)
+Y .       /usr/sbin/nslookup 72f798478b69fcb910656cdce8f34264 Sun Patch ID 103663-09
+O sig003w /usr/sbin/nslookup 0bb5f24cb3c616f1f9aae5cf8fb79ead SunOS 5.5.1 (security patch is 103663)
+Y .       /usr/sbin/nstest b7c5afe55a7ffc586f1079c149f49cd8 Sun Patch ID 103663-09
+O sig003w /usr/sbin/nstest 0bed54c015ecf152d28e0a9af1e2bd58 SunOS 5.5.1 (security patch is 103663)
+Y .       /usr/lib/nscd_nischeck 8d9c77954c3c6b16bbe3969aea1d7e06 Sun Patch ID 103680-01
+O sig003w /usr/lib/nscd_nischeck c9f00c4207bf4bc36bc2dbca9cc7b74a SunOS 5.5.1 (security patch is 103680)
+Y .       /usr/sbin/nscd 25ad31e950164785a2f27c3d16e85cfa Sun Patch ID 103680-01
+O sig003w /usr/sbin/nscd 8ecc33324531b825da4cafdd45207460 SunOS 5.5.1 (security patch is 103680)
+Y .       /usr/sbin/rpc.nisd_resolv e811ccfaf8f6c3e7e6941382a7bb449e Sun Patch ID 103686-02
+O sig003w /usr/sbin/rpc.nisd_resolv 428ef20b3c6c96737afcece74af63f04 SunOS 5.5.1 (security patch is 103686)
+Y .       /usr/bin/at 8c1e7a920c75f1ff38bc112151b9469c Sun Patch ID 103690-05
+O sig003w /usr/bin/at 6e30a9f4c8e0d3ada7a4b2ad8e483dd7 SunOS 5.5.1 (security patch is 103690)
+Y .       /usr/bin/atq 722a1bc7f51b7db23f377124578e957c Sun Patch ID 103690-05
+O sig003w /usr/bin/atq 8c974812dac6427f842d57e616ab2a8d SunOS 5.5.1 (security patch is 103690)
+Y .       /usr/bin/atrm 1b9e02f9755180bc49976c7d510f7d79 Sun Patch ID 103690-05
+O sig003w /usr/bin/atrm 9cddcf99b6dfeddc4da141e42091ab4d SunOS 5.5.1 (security patch is 103690)
+Y .       /usr/bin/crontab a539bbb13488d74597200c645e90da20 Sun Patch ID 103690-05
+O sig003w /usr/bin/crontab 5169246206e5d74e606f49751ac76e14 SunOS 5.5.1 (security patch is 103690)
+Y .       /usr/sbin/cron 085127b7d5662b058e62c67910702770 Sun Patch ID 103690-05
+O sig003w /usr/sbin/cron a9cb92651322baa1f990f22f89f20a31 SunOS 5.5.1 (security patch is 103690)
+Y .       /sbin/su 7ea26f082c9b7e4b41e4d931a65a4bcf Sun Patch ID 103696-03
+O sig003w /sbin/su 6b10c1b691ba5aef0407ebb79fe4feb3 SunOS 5.5.1 (security patch is 103696)
+Y .       /usr/bin/su ca1128ebbd43d3622704389f8c807d0e Sun Patch ID 103696-03
+O sig003w /usr/bin/su a7d9ffeb66775ee04862dad9af789afa SunOS 5.5.1 (security patch is 103696)
+Y .       /usr/sbin/syslogd 937ff49613da38082ab176ae2feb1d45 Sun Patch ID 103738-05
+O sig003w /usr/sbin/syslogd 80038c3e051fcd8fa7917f23a1a24e8c SunOS 5.5.1 (security patch is 103738)
+Y .       /usr/lib/fn/fn_ctx_inet_domain.so.1 ebdbd14413e2fbf732a90dc31d4ccbc1 Sun Patch ID 103743-01
+O sig003w /usr/lib/fn/fn_ctx_inet_domain.so.1 1726fc6af3ad08cb6477ba5f6b4d8f76 SunOS 5.5.1 (security patch is 103743)
+Y .       /usr/bin/rdist 89735351119896feb7469dca76788561 Sun Patch ID 103817-01
+O sig003w /usr/bin/rdist ce600be248b75abbd11aff7649de5011 SunOS 5.5.1 (security patch is 103817)
+Y .       /usr/4lib/libc.so.1.9 449dcbe86d45bf3a6c2a5aa2d39746f9 Sun Patch ID 103866-04
+O sig003w /usr/4lib/libc.so.1.9 355d3f623a566f9184dc5a7237f70ceb SunOS 5.5.1 (security patch is 103866)
+Y .       /usr/4lib/libc.so.2.9 b22a8e3fa1cfbcf3727c32efd92787ae Sun Patch ID 103866-04
+O sig003w /usr/4lib/libc.so.2.9 4c23a15fffd732eabdedee66c757d4db SunOS 5.5.1 (security patch is 103866)
+Y .       /usr/openwin/share/etc/devhandlers/kcsEKPfmticc30.so.1 472d20d17c0d7b839ca14bfe3951dab1 Sun Patch ID 103879-04
+O sig003w /usr/openwin/share/etc/devhandlers/kcsEKPfmticc30.so.1 a5e8827c55c97aacb04ad87f62d15906 SunOS 5.5.1 (security patch is 103879)
+Y .       /usr/openwin/share/etc/devhandlers/kcsSUNWIOxwin.so.1 0797afd8d16a1c96305d89c2c7d6e4f8 Sun Patch ID 103879-04
+O sig003w /usr/openwin/share/etc/devhandlers/kcsSUNWIOxwin.so.1 6573a94c89fdcb74e672f208a078a784 SunOS 5.5.1 (security patch is 103879)
+Y .       /usr/openwin/share/etc/gpiutils/libkcms_sys.so.1 877a7a88b236f97c82ee304d491705fb Sun Patch ID 103879-04
+O sig003w /usr/openwin/share/etc/gpiutils/libkcms_sys.so.1 3edea4ba234dc2111dc20bcb369faac1 SunOS 5.5.1 (security patch is 103879)
+Y .       /usr/openwin/share/etc/gpiutils/libstdprof.so.1 b486cc527b7a6ba91920ece8944b1bcb Sun Patch ID 103879-04
+O sig003w /usr/openwin/share/etc/gpiutils/libstdprof.so.1 d92cf359008b6e83ac6951105f76ef2f SunOS 5.5.1 (security patch is 103879)
+Y .       /usr/openwin/lib/libxview.so.3 db479fb518b524dea1187d9e03b1c4a5 Sun Patch ID 103901-08
+O sig003w /usr/openwin/lib/libxview.so.3 0f64d38ebff721c5cbdf7daaf540f54f SunOS 5.5.1 (security patch is 103901)
+Y .       /usr/openwin/lib/libp/libxview.a c3efcb15bfd3d540af90b28791dfcbc6 Sun Patch ID 103901-08
+O sig003w /usr/openwin/lib/libp/libxview.a 91e90d4f258117d3b49b636b5ff3fd64 SunOS 5.5.1 (security patch is 103901)
+Y .       /usr/openwin/lib/libxview.a cab3c68f05d0b82e3f8d221668bb8bba Sun Patch ID 103901-08
+O sig003w /usr/openwin/lib/libxview.a c7cf5afac5819ca48f85b71e811429ae SunOS 5.5.1 (security patch is 103901)
+Y .       /etc/lp/fd/postio.fd ad0a8e30a0b957b4b60764155f4f78ad Sun Patch ID 103959-05
+O sig003w /etc/lp/fd/postio.fd 219c14ab06e9bf21cfd7a869a9f2d14e SunOS 5.5.1 (security patch is 103959)
+Y .       /etc/lp/fd/postior.fd 8de80f572a3c3b2efd002db49febf3cf Sun Patch ID 103959-05
+O sig003w /etc/lp/fd/postior.fd f156398072a719ca7b10a2db4f552eeb SunOS 5.5.1 (security patch is 103959)
+Y .       /usr/lib/lp/bin/lp.tell dc46051a46f11b2005ca7469cdb63145 Sun Patch ID 103959-05
+O sig003w /usr/lib/lp/bin/lp.tell 93b922d3daab0d8b8f060faf1e8a540e SunOS 5.5.1 (security patch is 103959)
+Y .       /usr/lib/lp/model/standard 131c5681290945b14ab98c2fcbaa1a07 Sun Patch ID 103959-05
+O sig003w /usr/lib/lp/model/standard 631974363cb343997ab85dcd75171ef3 SunOS 5.5.1 (security patch is 103959)
+Y .       /usr/bin/lp 278288d691f5c2fe76161ac932d50ec5 Sun Patch ID 103959-05
+O sig003w /usr/bin/lp eab4fd0d43025bfc6fda808ec706f273 SunOS 5.5.1 (security patch is 103959)
+Y .       /usr/bin/lpstat fe92551d36530d79070f8b225a63ff56 Sun Patch ID 103959-05
+O sig003w /usr/bin/lpstat 1f79bbae63f8ad330ea7d4b63472e184 SunOS 5.5.1 (security patch is 103959)
+Y .       /usr/lib/lp/lpNet ea54e15cf08ccca9b5c142a7c379b620 Sun Patch ID 103959-05
+O sig003w /usr/lib/lp/lpNet 2e79d0bf489df60962f14b9b44a7b7e6 SunOS 5.5.1 (security patch is 103959)
+Y .       /usr/lib/lp/lpsched 2080751762f8219b6dad118982fc0065 Sun Patch ID 103959-05
+O sig003w /usr/lib/lp/lpsched 24d14d79c010881265ad5897d0989442 SunOS 5.5.1 (security patch is 103959)
+Y .       /usr/ucb/lpc e7998d55e88dcf016041c29593d60862 Sun Patch ID 103959-05
+O sig003w /usr/ucb/lpc c83ea192dc3eff776825dc6dd86b0f92 SunOS 5.5.1 (security patch is 103959)
+Y .       /usr/ucb/lpr 5e05d0409e15eda31e8b5981e138e9c1 Sun Patch ID 103959-05
+O sig003w /usr/ucb/lpr 6a8a37a8ae05758fcb75b9779678ab77 SunOS 5.5.1 (security patch is 103959)
+Y .       /usr/lib/rmmount/action_filemgr.so.1 47921a90737ecafb0069af8ecd03307f Sun Patch ID 104010-01
+O sig003w /usr/lib/rmmount/action_filemgr.so.1 3fbf1532ec64d982c07a9ecd8d0cbc90 SunOS 5.5.1 (security patch is 104010)
+Y .       /usr/lib/vold/dev_pcmem.so.1 9962721d056cf3bdcc3322719a2dd76a Sun Patch ID 104010-01
+O sig003w /usr/lib/vold/dev_pcmem.so.1 296baf46362ef2bb1b45bf3ece3eb17e SunOS 5.5.1 (security patch is 104010)
+Y .       /usr/lib/nfs/statd d857d3a544432710023528a06baaf82f Sun Patch ID 104166-02
+O sig003w /usr/lib/nfs/statd 7aa071dcd3a38239e26b41c59a093792 SunOS 5.5.1 (security patch is 104166)
+Y .       /kernel/drv/hme 8df4a23e6e71eca3c7601453bd9d4f27 Sun Patch ID 104212-09
+O sig003w /kernel/drv/hme 097a0ade5e7c1d7ade3342539ab33a1c SunOS 5.5.1 (security patch is 104212)
+Y .       /usr/sbin/inetd a2e30f4cee0a295c8e65e9bb330d98db Sun Patch ID 104266-01
+O sig003w /usr/sbin/inetd d24027b204e94704f26c1661f747af0f SunOS 5.5.1 (security patch is 104266)
+Y .       /usr/lib/nfs/nfsd c701437d6a0e38e194eb611e6153c755 Sun Patch ID 104317-01
+O sig003w /usr/lib/nfs/nfsd 57260f1c2d1b17b36a39c7744ed1579d SunOS 5.5.1 (security patch is 104317)
+Y .       /usr/sbin/rpcbind 3388d1f956f66e3096cb0f61d8d121b7 Sun Patch ID 104331-04
+O sig003w /usr/sbin/rpcbind 70a043e49b671396795e7de10f69662b SunOS 5.5.1 (security patch is 104331)
+Y .       /usr/lib/nfs/lockd c310943cbdfb3a768432b527c71e51b3 Sun Patch ID 104334-01
+O sig003w /usr/lib/nfs/lockd 2675af52ed4229b6a66ade211b963999 SunOS 5.5.1 (security patch is 104334)
+Y .       /usr/openwin/lib/libXt.so.4 783fa50b0e463d221a548c486b49a0dd Sun Patch ID 104338-02
+O sig003w /usr/openwin/lib/libXt.so.4 a175b5ec16b9bc4e55ebc9cdfea8c39d SunOS 5.5.1 (security patch is 104338)
+Y .       /usr/openwin/lib/libXt.a a5a8a438c459202d1548523a2f85342d Sun Patch ID 104338-02
+O sig003w /usr/openwin/lib/libXt.a 70a10bac97de39077a72a0c48b9c3387 SunOS 5.5.1 (security patch is 104338)
+Y .       /usr/openwin/lib/libp/libXt.a 48b2b2d8d26fcce98e173a44866a4d61 Sun Patch ID 104338-02
+O sig003w /usr/openwin/lib/libp/libXt.a 0219d325585cab7192c96e769fc22031 SunOS 5.5.1 (security patch is 104338)
+Y .       /etc/lib/pam_authen.so.1 d6c9ec06dd1571e485d6262b132f299c Sun Patch ID 104433-06
+O sig003w /etc/lib/pam_authen.so.1 fff261f2193a92253812e78f8debd382 SunOS 5.5.1 (security patch is 104433)
+Y .       /etc/lib/pam_entry.so.1 003388b723a2c6ff13bbee1d5c4faa49 Sun Patch ID 104433-06
+O sig003w /etc/lib/pam_entry.so.1 1fa0e01d2d943d482770226a929830d7 SunOS 5.5.1 (security patch is 104433)
+Y .       /etc/lib/pam_pwmgt.so.1 55943ac918acfd7d63f3a49f9c1db6d0 Sun Patch ID 104433-06
+O sig003w /etc/lib/pam_pwmgt.so.1 a01e1420f9ab233fac9e97bb3f17bd63 SunOS 5.5.1 (security patch is 104433)
+Y .       /usr/lib/security/pam_authen.so.1 d6c9ec06dd1571e485d6262b132f299c Sun Patch ID 104433-06
+O sig003w /usr/lib/security/pam_authen.so.1 fff261f2193a92253812e78f8debd382 SunOS 5.5.1 (security patch is 104433)
+Y .       /usr/lib/security/pam_entry.so.1 003388b723a2c6ff13bbee1d5c4faa49 Sun Patch ID 104433-06
+O sig003w /usr/lib/security/pam_entry.so.1 1fa0e01d2d943d482770226a929830d7 SunOS 5.5.1 (security patch is 104433)
+Y .       /usr/lib/security/pam_pwmgt.so.1 55943ac918acfd7d63f3a49f9c1db6d0 Sun Patch ID 104433-06
+O sig003w /usr/lib/security/pam_pwmgt.so.1 a01e1420f9ab233fac9e97bb3f17bd63 SunOS 5.5.1 (security patch is 104433)
+Y .       /usr/sbin/aspppd e7d32269971194a52e19722ec8e78d97 Sun Patch ID 104516-03
+O sig003w /usr/sbin/aspppd 10bf23b7c769d6b02582420db63d96e5 SunOS 5.5.1 (security patch is 104516)
+Y .       /usr/openwin/lib/libXol.so.3 72efb163cb3fcb5da0d5fb2c9b7bbe52 Sun Patch ID 104533-03
+O sig003w /usr/openwin/lib/libXol.so.3 9d86a688e120eedc5f2291e83a963cb2 SunOS 5.5.1 (security patch is 104533)
+Y .       /usr/openwin/lib/libXol.a cc9dc5a629abc0def327b2ecbe013041 Sun Patch ID 104533-03
+O sig003w /usr/openwin/lib/libXol.a f9b361c9c64608369a2d3dbfd9598ad9 SunOS 5.5.1 (security patch is 104533)
+Y .       /usr/openwin/lib/libp/libXol.a edd3fe0c517edda6933109539f027f6b Sun Patch ID 104533-03
+O sig003w /usr/openwin/lib/libp/libXol.a b9489a3bf7d7da36ab1a6087ae403b56 SunOS 5.5.1 (security patch is 104533)
+Y .       /usr/lib/newsyslog b028bc4ba779c96f38f4f4fa2d92464b Sun Patch ID 104613-01
+O sig003w /usr/lib/newsyslog 7232b3b6da29c3c799dbfaee0ac01661 SunOS 5.5.1 (security patch is 104613)
+Y .       /usr/bin/rlogin b19d351c5c9f07b1761d6a0d2a0d823f Sun Patch ID 104650-02
+O sig003w /usr/bin/rlogin a3a6368383315943a2eb9d07e76c9bc0 SunOS 5.5.1 (security patch is 104650)
+Y .       /usr/lib/autofs/automountd 056ef9824adbdd3921f11bcb775691b2 Sun Patch ID 104654-03
+O sig003w /usr/lib/autofs/automountd 13c46d5e225a5753b1da45d059862814 SunOS 5.5.1 (security patch is 104654)
+Y .       /usr/lib/fs/autofs/automount 7e3b156ac3b88633c215c9e6c2f6fa4d Sun Patch ID 104654-03
+O sig003w /usr/lib/fs/autofs/automount 6fe5be79c526e13cc6d1e201f5672369 SunOS 5.5.1 (security patch is 104654)
+Y .       /usr/sbin/in.talkd 077787c28e11eb56eb7ba80455376ab4 Sun Patch ID 104692-01
+O sig003w /usr/sbin/in.talkd 3b33ee555e31ce18d13b4b0376e94682 SunOS 5.5.1 (security patch is 104692)
+Y .       /usr/lib/libvolmgt.a 274e7dd89b07af397a33792e3611a511 Sun Patch ID 104776-02
+O sig003w /usr/lib/libvolmgt.a 023a22a21e32eb122a9078c8e4f7b15d SunOS 5.5.1 (security patch is 104776)
+Y .       /usr/lib/libvolmgt.so.1 d170b53eca20586a1f8e4dce0045260f Sun Patch ID 104776-02
+O sig003w /usr/lib/libvolmgt.so.1 bdcf61412079c61fd512150e63f52792 SunOS 5.5.1 (security patch is 104776)
+Y .       /usr/platform/sun4c/sbin/eeprom ed1355a1d985793c82dc7425e78a7125 Sun Patch ID 104795-02
+O sig003w /usr/platform/sun4c/sbin/eeprom 05d46b9ceb52749475813b831d01fc0c SunOS 5.5.1 sun4c (security patch is 104795)
+Y .       /usr/platform/sun4d/sbin/eeprom ed1355a1d985793c82dc7425e78a7125 Sun Patch ID 104795-02
+O sig003w /usr/platform/sun4d/sbin/eeprom 05d46b9ceb52749475813b831d01fc0c SunOS 5.5.1 sun4d (security patch is 104795)
+Y .       /usr/platform/sun4m/sbin/eeprom ed1355a1d985793c82dc7425e78a7125 Sun Patch ID 104795-02
+O sig003w /usr/platform/sun4m/sbin/eeprom 05d46b9ceb52749475813b831d01fc0c SunOS 5.5.1 sun4m (security patch is 104795)
+Y .       /usr/platform/sun4u/sbin/eeprom ed1355a1d985793c82dc7425e78a7125 Sun Patch ID 104795-02
+O sig003w /usr/platform/sun4u/sbin/eeprom 05d46b9ceb52749475813b831d01fc0c SunOS 5.5.1 sun4u (security patch is 104795)
+Y .       /usr/platform/sun4u1/sbin/eeprom ed1355a1d985793c82dc7425e78a7125 Sun Patch ID 104795-02
+Y .       /kernel/sys/c2audit 54b84e4f313287d511f292f2d11b3ca9 Sun Patch ID 104893-01
+O sig003w /kernel/sys/c2audit fc6e5ddd9f5e0cfeb4a96fcd61e64e63 SunOS 5.5.1 (security patch is 104893)
+Y .       /usr/sbin/in.rlogind ef09647448012a5758852127e7438e59 Sun Patch ID 104935-01
+O sig003w /usr/sbin/in.rlogind ceb28b68cd8d5529a628fba865960237 SunOS 5.5.1 (security patch is 104935)
+Y .       /usr/bin/chkey 8175a6db1ba86e10ed6cc7d6014bf3f0 Sun Patch ID 104968-01
+O sig003w /usr/bin/chkey 58586ef17074749fd44a9b1273a287b9 SunOS 5.5.1 (security patch is 104968)
+Y .       /usr/sbin/newkey 8f8ce56286db65f92c0e6c387df2cd7a Sun Patch ID 104968-01
+O sig003w /usr/sbin/newkey 6afe3b00a344cbb516c77b4b8e0c81ae SunOS 5.5.1 (security patch is 104968)
+Y .       /usr/openwin/bin/ae b4fe6da435fa148568bd82f5d0a8427a Sun Patch ID 104976-03
+O sig003w /usr/openwin/bin/ae e34c83bd6894efae0e5c6ddb3f8b44a6 SunOS 5.5.1 (security patch is 104976)
+Y .       /usr/openwin/bin/cm 22a68ac763580123dbbe8089ce523e34 Sun Patch ID 104976-03
+O sig003w /usr/openwin/bin/cm bb3b62d13b31f6c46cfa11848babbca4 SunOS 5.5.1 (security patch is 104976)
+Y .       /usr/openwin/bin/cm_delete ed12f4d9412d90fe22d9ec77276872c1 Sun Patch ID 104976-03
+O sig003w /usr/openwin/bin/cm_delete 903891552977dd7a531ef5d352fc43a2 SunOS 5.5.1(security patch is 104976)
+Y .       /usr/openwin/bin/cm_insert 1bdfa80b4a26381f113906e6abca32b7 Sun Patch ID 104976-03
+O sig003w /usr/openwin/bin/cm_insert c4a47a101f0676a64643838ada5eb2b9 SunOS 5.5.1(security patch is 104976)
+Y .       /usr/openwin/bin/cm_lookup e672cad25ed1a226f706b9c95bfa083e Sun Patch ID 104976-03
+O sig003w /usr/openwin/bin/cm_lookup 0fae518d0e13ef430444a06c2f81950c SunOS 5.5.1 (security patch is 104976)
+Y .       /usr/openwin/bin/rpc.cmsd eb37269f363fea681f8b1035d7fbdaaf Sun Patch ID 104976-03
+O sig003w /usr/openwin/bin/rpc.cmsd 8916eb1aa4425d2a37bdfdc56a361bbd SunOS 5.5.1 (security patch is 104976)
+Y .       /platform/sun4u/kernel/drv/ebus 9a4afe9da22662d48e948386b007442d Sun Patch ID 105004-09
+O sig003w /platform/sun4u/kernel/drv/ebus 2cbfa21464165470fe33b5188be27d03 SunOS 5.5.1 sun4u (security patch is 105004)
+Y .       /platform/sun4u/kernel/drv/pci 2cdbca323c0b3c6353db85f0a5524513 Sun Patch ID 105004-09
+O sig003w /platform/sun4u/kernel/drv/pci 6edacf9fb3c0eb20fe08ff37f88d2e76 SunOS 5.5.1 sun4u (security patch is 105004)
+Y .       /platform/sun4u/kernel/drv/rootnex 2232f08f8aa55cec1f8cd37d7b93c5af Sun Patch ID 105004-09
+O sig003w /platform/sun4u/kernel/drv/rootnex 90dc5e63f64350de06868b9bb94a4c73 SunOS 5.5.1 sun4u (security patch is 105004)
+Y .       /kernel/drv/pci_pci cbe6287987fbf655a6784774f7f607ce Sun Patch ID 105004-09
+O sig003w /kernel/drv/pci_pci 720682f410c5cec7dddf5b5540c98208 SunOS 5.5.1 (security patch is 105004)
+Y .       /usr/bin/ps 0cc00814ec61c495bf47256aebb0f4ae Sun Patch ID 105050-01
+O sig003w /usr/bin/ps eda319c35374cd26a3785304c0d05bee SunOS 5.5.1 (security patch is 105050)
+Y .       /usr/ucb/ps 40ebaf3bc72e1dbb3a0c06889e0f5d4a Sun Patch ID 105050-01
+O sig003w /usr/ucb/ps d4a6a3ba8915fcdc5344362903f51d50 SunOS 5.5.1 (security patch is 105050)
+Y .       /usr/sbin/sysdef 373d96779c63dc363575ce6040fbade1 Sun Patch ID 105092-01
+O sig003w /usr/sbin/sysdef 672c89d24fb023fa7e4ceca9276347b9 SunOS 5.5.1 (security patch is 105092)
+Y .       /usr/4lib/libXt.so.4.1 34a15081ba27c1ec1d0fff3de1978e0d Sun Patch ID 105251-01
+O sig003w /usr/4lib/libXt.so.4.1 c8bf1725de9ffb561b4f3521ab778291 SunOS 5.5.1 (security patch is 105251)
+Y .       /kernel/misc/nfssrv 2871d548f2aa32d79d7dd06d55eee748 Sun Patch ID 105299-01
+O sig003w /kernel/misc/nfssrv b5e147e83c5cd9a8f6023324a78d1f40 SunOS 5.5.1 (security patch is 105299)
+Y .       /usr/bin/vacation c51447d2b4fac1a1a5c2083bd20e0f98 Sun Patch ID 105520-01
+O sig003w /usr/bin/vacation 1327c4daa044d6c742abdf9b54fab006 SunOS 5.5.1 (security patch is 105520)
+Y .       /kernel/fs/procfs f300d4377227aad651f2899f453d53b1 Sun Patch ID 104283-03 
+O sig003w /kernel/fs/procfs 0a3e6b47d2186f7fd6d924f0de973720 SunOS 5.5.1 (security patch is 104283)

@@ -1,0 +1,83 @@
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/5.1/signatures - 04/22/93
+#
+#-----------------------------------------------------------------------------
+#@DEST=SunOS/5/5.1/sun4
+#@CONFIG=SunOS/5
+#
+Y .       /usr/sbin/su  3fb72ef6 6f39ba3d 39dc2ada 758e41a1 624856f4 27698c46 61ca9f9f 2441d318 SunOS 5.1
+Y .       /usr/sbin/sulogin  4bb68333 46203871 a85d6fd1 786f55cd 65da09aa 43a9a97e 55f95b04 c550d4f8 SunOS 5.1
+Y .       /usr/bin/login  e7c67ccd db423400 6ba4be12 7fe22cb7 e4f297bf 5a81acf7 04504fec d6b089eb SunOS 5.1
+Y .       /usr/bin/passwd  73bccac9 98edfb65 c54e59d2 b53f41da 5d705ce3 2c973fa0 7e6bfdc0 ce073d2f SunOS 5.1
+Y .       /usr/bin/rdist  b10b8e83 bc3e7729 835b9561 6c881baa 75df6c3a b7f937a3 1cde9878 7fe0d208 SunOS 5.1
+Y .       /usr/bin/rlogin  607878a6 51c58af1 0049ea69 4b034966 8db6b460 da760295 78dce498 b849aa99 SunOS 5.1
+Y .       /usr/bin/rsh  b7d77110 d94507b7 5105a25d f33b6e3d c8206624 925d9f49 5ff39291 d63761d3 SunOS 5.1
+Y .       /usr/bin/su  99630788 30183532 8b30c3e0 67910b7d 4ac52a7d dd424e7e ee32a7bf 90a69b18 SunOS 5.1
+Y .       /usr/bin/yppasswd  2f34b5f0 46220ae6 ec13f698 488095c2 b8c41e3b 5346eb9c fd9a27d1 3398a533 SunOS 5.1
+Y .       /usr/sbin/in.comsat b047305903ff154cbe01f9483c94af87 SunOS 5.1
+Y .       /usr/sbin/in.fingerd a131ba6c2ee5defb0b3c86fc9b9e16a0 SunOS 5.1
+Y .       /usr/sbin/in.ftpd 6cdbfbd81c08079e10518e594f0354ea SunOS 5.1
+Y .       /usr/sbin/in.named aa8bf8d5fd4abbdecc9d595f81fa8640 SunOS 5.1
+Y .       /usr/sbin/in.rarpd c9ebe1149c90a2c16f9f1e24bffb64bb SunOS 5.1
+Y .       /usr/sbin/in.rdisc 01f3013eb154ae93c26d507dcda337f6 SunOS 5.1
+Y .       /usr/sbin/in.rexecd b3d4d45a356defb912707fd0eea00627 SunOS 5.1
+Y .       /usr/sbin/in.rlogind af8314a4ccaec37cf50b0d3b4eb02bb4 SunOS 5.1
+Y .       /usr/sbin/in.routed c084d5607b6b64b6b19ea0bb67799756 SunOS 5.1
+Y .       /usr/sbin/in.rshd b1f5c250f2b5d0854a17ef3a82990452 SunOS 5.1
+Y .       /usr/sbin/in.rwhod 30e7d180f04ef82bf98a380b746ddd2b SunOS 5.1
+Y .       /usr/sbin/in.talkd 9b3855d15679cd5a034aa823611eb65b SunOS 5.1
+Y .       /usr/sbin/in.telnetd 2ee8f21ea732c71f6b28ff0a706af653 SunOS 5.1
+Y .       /usr/sbin/in.tftpd 2945545b62740ef544de26325169befc SunOS 5.1
+Y .       /usr/sbin/in.tnamed a8c89ce4fdead2dc22a22225aed2abb5 SunOS 5.1
+Y .       /usr/sbin/in.comsat b047305903ff154cbe01f9483c94af87 SunOS 5.1
+Y .       /usr/sbin/in.fingerd a131ba6c2ee5defb0b3c86fc9b9e16a0 SunOS 5.1
+Y .       /usr/sbin/in.ftpd 6cdbfbd81c08079e10518e594f0354ea SunOS 5.1
+Y .       /usr/sbin/in.named aa8bf8d5fd4abbdecc9d595f81fa8640 SunOS 5.1
+Y .       /usr/sbin/in.rarpd c9ebe1149c90a2c16f9f1e24bffb64bb SunOS 5.1
+Y .       /usr/sbin/in.rdisc 01f3013eb154ae93c26d507dcda337f6 SunOS 5.1
+Y .       /usr/sbin/in.rexecd b3d4d45a356defb912707fd0eea00627 SunOS 5.1
+Y .       /usr/sbin/in.rlogind af8314a4ccaec37cf50b0d3b4eb02bb4 SunOS 5.1
+Y .       /usr/sbin/in.routed c084d5607b6b64b6b19ea0bb67799756 SunOS 5.1
+Y .       /usr/sbin/in.rshd b1f5c250f2b5d0854a17ef3a82990452 SunOS 5.1
+Y .       /usr/sbin/in.rwhod 30e7d180f04ef82bf98a380b746ddd2b SunOS 5.1
+Y .       /usr/sbin/in.talkd 9b3855d15679cd5a034aa823611eb65b SunOS 5.1
+Y .       /usr/sbin/in.telnetd 2ee8f21ea732c71f6b28ff0a706af653 SunOS 5.1
+Y .       /usr/sbin/in.tftpd 2945545b62740ef544de26325169befc SunOS 5.1
+Y .       /usr/sbin/in.tnamed a8c89ce4fdead2dc22a22225aed2abb5 SunOS 5.1
+Y .       /usr/sbin/inetd 9b9b13e2861ccc6efbc7e636ee879b33 SunOS 5.1
+#
+Y .       /usr/lib/expreserve 7123c501 a690b434 ba654398 0b7dd7e7 fcf77507 ee2e2404 04355e09 04b81a2f Sun Patch ID 100189-01
+O sig014w /usr/lib/expreserve 0155fb2b bd10fdcd f60d0bfe f40de7eb 6db4d1d5 569e761c aacef240 cc6d340a SunOS 5.1 (security patch is 100189)
+#
+Y .       /usr/lib/sendmail 682987c94d75d67795de69875687e964 Sun Patch ID 100840-06
+Y .       /usr/lib/sendmail 2458e9b843a34f0ef2f94479a67bdf35 Sun Patch ID 100840-06
+Y .       /usr/lib/sendmail.mx 2458e9b843a34f0ef2f94479a67bdf35 Sun Patch ID 100840-06
+#
+O sig016w /usr/lib/sendmail 705fcf5ac8e1cca4c7f46910388b0e0a Sun Patch ID 100840-03 (current is 100840-06)
+O sig016w /usr/lib/sendmail.mx a5c5983f228bdc56897d9ec61a6fde3 Sun Patch ID 100840-03 (current is 100840-06)
+O sig016w /usr/lib/sendmail a5c5983f228bdc56897d9ec61a6fde3 Sun Patch ID 100840-03 (current is 100840-06)
+O sig016w /usr/lib/sendmail  b2093466 00985186 530dff15 81fdb67a e579a6ab a000483e 73b079e4 cafdc5d9 SunOS 5.1 (security patch is 100840)
+O sig016w /usr/lib/sendmail.mx  c731538a 2bfe3ae0 ca8c680a cbb0a4de 5dee0187 df9726cc 77b28b09 53bd70bb SunOS 5.1 (security patch is 100840)
+O sig016w /usr/lib/sendmail  c731538a 2bfe3ae0 ca8c680a cbb0a4de 5dee0187 df9726cc 77b28b09 53bd70bb SunOS 5.1 (security patch is 100840)
+#
+#
+#
+Y .       /usr/sbin/tar fa28a18f37df734a840a6d6c2fcdeb75 Sun Patch ID 100975-02
+O sig017w /usr/sbin/tar 4ba14be1392849ac7efda514248261bc SunOS 5.1 (security patch is 100975)
+Y .       /usr/sbin/static/tar e72482af22124a68a302956219b2df1b Sun Patch ID 100975-02
+O sig017w /usr/sbin/static/tar 634a128aeb5c43e75373926383f5f2a1 SunOS 5.1 (security patch is 100975)
+#
+#
+Y .       /sbin/sh e380a339cda0de0964930e8087aa0aa5 SunOS 5.1
+Y .       /sbin/jsh e380a339cda0de0964930e8087aa0aa5 SunOS 5.1
+Y .       /usr/bin/sh f104647caf691031bf531419cb2cda96 SunOS 5.1
+Y .       /usr/bin/jsh f104647caf691031bf531419cb2cda96 SunOS 5.1
+Y .       /usr/bin/csh fd5d95665443929725ca01ac41183c80 SunOS 5.1
+Y .       /usr/bin/ksh acab8d1eec81ec25b5557d74c0dec848 SunOS 5.1
+Y .       /sbin/sync f563bfabf084ac8bcd5b3bcec5f99424 SunOS 5.1
+Y .       /usr/sbin/sync 177dc6ed350edad71c6bafda7a6707b4 SunOS 5.1

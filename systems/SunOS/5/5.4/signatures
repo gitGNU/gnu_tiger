@@ -1,0 +1,102 @@
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993-1995 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/5/5.4/sun4/signatures - 02/21/1995
+#
+#-----------------------------------------------------------------------------
+#
+#@DEST=SunOS/5/5.4/sun4
+#@CONFIG=SunOS/5
+#
+# Generated 1995/02/21 dls
+#
+Y .       /etc/lib/ld.so.1 44a96066f6ef39ef9eb4024885fcbcdf SunOS 5.4 
+Y .       /etc/lib/libdl.so.1 38204c540d5e58e76b4f5aaa8f7c1c28 SunOS 5.4 
+Y .       /etc/lib/nss_files.so.1 6e36d7a8a1da20e92fb0b6fc9e1a7e65 SunOS 5.4 
+Y .       /etc/lib/unix_scheme.so.1 8539e34e484cb4c23953bd8edfe579a1 SunOS 5.4 
+Y .       /kernel/strmod/kb 38c035485e7fa41219a9efafb3a856e4 Sun Patch ID 102044-01 [sun4]
+Y .       /kernel/strmod/kb 60e8770c04686e45a5363e9914f5cec8 Sun Patch ID 102044-01 [sun4c]
+Y .       /kernel/strmod/kb c19a88cc72cb981ddcb32e0b7f3ab1d8 Sun Patch ID 102044-01 [sun4d]
+Y .       /kernel/strmod/kb 376441bbb422fed146048d803dff0132 Sun Patch ID 102044-01 [sun4e]
+Y .       /kernel/strmod/kb cf54c8cf204080f018df5a226469edb2 Sun Patch ID 102044-01 [sun4m]
+O .       /kernel/strmod/kb 00482e8e59064938dc23a0e4bfa07a6b SunOS 5.4 sun4d (security patch is 102044)
+O .       /kernel/strmod/kb 8402101ffa0e52c4fe9bf17fe099df6c SunOS 5.4 sun4c (security patch is 102044)
+O .       /kernel/strmod/kb 983941426f275639898e1f71cfb5d710 SunOS 5.4 sun4m (security patch is 102044)
+O .       /kernel/strmod/kb 983941426f275639898e1f71cfb5d710 SunOS 5.4 sun4mL (security patch is 102044)
+O .       /kernel/strmod/kb afd666d438e3c1bca1239441c24aa0b3 SunOS 5.4 sun4e (security patch is 102044)
+O .       /kernel/strmod/kb ef4562bf9bde9a45df68fb1a3a885f29 SunOS 5.4 sun4 (security patch is 102044)
+Y .       /kernel/strmod/ms 9824ccacaf2de655d37fc42301a54c84 Sun Patch ID 102044-01
+O .       /kernel/strmod/ms 154204a020a5b4082c7f834fdcfd7e3e SunOS 5.4 (security patch is 102044)
+Y .       /kernel/strmod/rpcmod 14e5a1d8c9bcd849e0ae8ebf62f786b9 Sun Patch ID 102216-01
+O .       /kernel/strmod/rpcmod fe86bdd533985c77de832121b63d07d3 SunOS 5.4 (security patch is 102216)
+Y .       /sbin/ifconfig e6551bc82d450e405a80e22b6ee44602 SunOS 5.4 
+Y .       /sbin/init 5680f6e46cdfdbb72fa6f9855aa65b2f SunOS 5.4 
+Y .       /sbin/jsh ee4290cdbaa0dbf2103212b72c8046e0 SunOS 5.4 
+Y .       /sbin/sh ee4290cdbaa0dbf2103212b72c8046e0 SunOS 5.4 
+Y .       /sbin/su 126d7cf76ab7d4445bc9c2693ad4bab6 SunOS 5.4 
+Y .       /sbin/sulogin c81ecec4c258e4898028089642859109 SunOS 5.4 
+Y .       /sbin/sync c8b23719e06c78cd12eaaa72b1cd95a0 SunOS 5.4 
+Y .       /usr/4lib/libc.so.1.8 12cc5b72ff42a0905f8c3761c5480b4c SunOS 5.4 
+Y .       /usr/4lib/libc.so.2.8 560742ffcea4b633046a0c7c6a9b7398 SunOS 5.4 
+Y .       /usr/bin/at 7213d982c9454aa89fba6d0c3d6bd621 SunOS 5.4 
+Y .       /usr/bin/atq 00daab2ff943708e27d0e8f8c984cf38 SunOS 5.4 
+Y .       /usr/bin/atrm 37ea451e24b8da0f0558065fd83835e4 SunOS 5.4 
+Y .       /usr/bin/csh 6770abaa4bd0219d6fc0cff5b6b43576 SunOS 5.4 
+Y .       /usr/bin/ftp 1624a4c3b00672091b9bc6a051e6d028 SunOS 5.4 
+Y .       /usr/bin/jsh 9bbf5d4ee5d5796f8baab7d4f8947df1 SunOS 5.4 
+Y .       /usr/bin/sh 9bbf5d4ee5d5796f8baab7d4f8947df1 SunOS 5.4 
+Y .       /usr/lib/rsh 9bbf5d4ee5d5796f8baab7d4f8947df1 SunOS 5.4 
+Y .       /usr/bin/ksh a1aa0c40a969ee2aa12e03e74a12e88f SunOS 5.4 
+Y .       /usr/bin/lastcomm cb64a02f39c09a2d8fd514c8b2ab1c7f SunOS 5.4 
+Y .       /usr/bin/login 94639a588aecc4af727e4f963b314140 SunOS 5.4 
+Y .       /usr/bin/mail e483f3a492e3e1523dc9cb04e8f9508a SunOS 5.4 
+Y .       /usr/bin/ps 4aad42eb4a43fbe3420fecdf977147bf SunOS 5.4 
+Y .       /usr/bin/rcp d5705e26da261161bbfcaabddf0aee08 SunOS 5.4 
+Y .       /usr/bin/rdist 98aecb5b5421a373ca2b7dc6a7e5ef54 SunOS 5.4 
+Y .       /usr/bin/rlogin bfffbe92aa78e2e76e08c1a3d4947680 SunOS 5.4 
+Y .       /usr/bin/rpcinfo 51cb1a6b8fd6155568e214fb2bc3475e SunOS 5.4 
+Y .       /usr/bin/rsh b18e37a361847171af758ff1fbd83ab4 SunOS 5.4 
+Y .       /usr/bin/su e729859318d1d34b02632282b78576c4 SunOS 5.4 
+Y .       /usr/bin/telnet 434ec573e0d9d2ac1eddea3a916c5b6a SunOS 5.4 
+Y .       /usr/bin/time ba2edca11dfc1fe0e6e6386fd20e4254 SunOS 5.4 
+Y .       /usr/bin/timex 5e1642c275e5628d0913cf9c54920084 SunOS 5.4 
+Y .       /usr/sbin/chroot 55b3a60db472e12e26b944cecf79041f SunOS 5.4 
+Y .       /usr/sbin/cron ec770bad37a6a484b07009318d421295 SunOS 5.4 
+Y .       /usr/sbin/fuser f7d264cafc2ad02cb9751d8707acba74 SunOS 5.4 
+Y .       /usr/sbin/ifconfig 4edd9a52e45dd690d36d7cfc663ef420 SunOS 5.4 
+Y .       /usr/sbin/in.comsat 871a95368f7799a13c24cd3e864a18da SunOS 5.4 
+Y .       /usr/sbin/in.fingerd 2f8b4ef8191bfd691f120fcfe31e163b SunOS 5.4 
+Y .       /usr/sbin/in.ftpd 0eadfedd36147270512325ac33326db5 SunOS 5.4 
+Y .       /usr/sbin/in.named 327db20c32f660a8950e584b7cbf559d SunOS 5.4 
+Y .       /usr/sbin/in.rarpd 0e4ee8ae5189c023eb78a4fd806c682b SunOS 5.4 
+Y .       /usr/sbin/in.rdisc f0847b0fe30719a1521a2859853bc7ae SunOS 5.4 
+Y .       /usr/sbin/in.rexecd 2334ee079380d4a1eedef55d2ccc8ee1 SunOS 5.4 
+Y .       /usr/sbin/in.rlogind c9c701dbc8c9e7747fc5ac6800daa91f SunOS 5.4 
+Y .       /usr/sbin/in.routed ca184fa81eadf39fed273625e57ffa16 SunOS 5.4 
+Y .       /usr/sbin/in.rshd 95e5d17e4aa3281e71ed20cc05ea366d SunOS 5.4 
+Y .       /usr/sbin/in.rwhod 0d68e44fcc5300ca33d53af4e6fdbe17 SunOS 5.4 
+Y .       /usr/sbin/in.talkd 40b1f82b4cdc800f4ff6f62dabe56883 SunOS 5.4 
+Y .       /usr/sbin/in.telnetd 0a9868e53132bd5d0e88c1cad3b36994 SunOS 5.4 
+Y .       /usr/sbin/in.tftpd f528c73650cf1291093730a959af2582 SunOS 5.4 
+Y .       /usr/sbin/in.tnamed b73c9c3dfb43e00caa1e0bf61822e74c SunOS 5.4 
+Y .       /usr/sbin/in.uucpd 44f3c52e17911e4bb81a9cbdf879958b SunOS 5.4 
+Y .       /usr/sbin/inetd ed377f4618808deb52e38843e7f2d917 SunOS 5.4 
+Y .       /usr/sbin/init b1e30cd97471b2b61bbfb5411cfba6bc SunOS 5.4 
+Y .       /usr/sbin/modload a806c2392bc21870e9a4192c0e1f9686 SunOS 5.4 
+Y .       /usr/sbin/rpc.bootparamd eae573aa2759a25cd3e888d1e115b7f5 SunOS 5.4 
+Y .       /usr/sbin/rpc.nisd d56446e741ebc0d54e4b8a89dffdd9a3 SunOS 5.4 
+Y .       /usr/sbin/rpc.nisd_resolv 27641da7247f9792902409fe7ef4b85d SunOS 5.4 
+Y .       /usr/sbin/rpc.rexd 3a9b3948be109d9b6a342fcb5f15d9a8 SunOS 5.4 
+Y .       /usr/sbin/rpcbind 36c34648d86bc5d0bc0991f966e397c7 Sun Patch ID 102070-01
+O .       /usr/sbin/rpcbind d0a65de59a7923d2c8ee8377d609227b SunOS 5.4 (security patch is 102070)
+Y .       /usr/sbin/sync 5b3d18121b7a916cc129f8e6581ddc17 SunOS 5.4 
+Y .       /usr/ucb/ps 4bf07c292aaf48f6ac7e0214ec664778 SunOS 5.4 
+Y .       /usr/lib/libc.a d7249b8eed349e1736cb3b4c71af221d Sun Patch ID 101981-02
+O .       /usr/lib/libc.a 02b1422cd5c4f98ef118faf890d54eb5 SunOS 5.4 (security patch is 101981)
+Y .       /usr/lib/libc.so.1 09f45be78e1e17ed4f0345c930316ab4 Sun Patch ID 101981-02
+O .       /usr/lib/libc.so.1 4d6c9427e29f5f555fba2f4bbd4c7b71 SunOS 5.4 (security patch is 101981)
+O .       /usr/lib/libc.a bba0ce73adb6189ec94950086737851f Sun Patch ID 101981-01 (current is 101982-02)
+O .       /usr/lib/libc.so.1 14f902dc49eec284800a1cebcea8f35a Sun Patch ID 101981-01 (current is 101982-02)

@@ -1,0 +1,112 @@
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993-1998 Douglas Lee Schales, David K. Hess, David R. Safford, Ellen L. Mitchell
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/5/5.5.1/sun4/signatures - 06/09/1997
+#
+#-----------------------------------------------------------------------------
+#
+#@DEST=SunOS/5/5.5.1/sun4
+#@CONFIG=SunOS/5
+#
+# Generated 1997/06/09 ellenm
+#
+Y .       /sbin/ifconfig 7f552bad9967346518db5b547a0504f4 SunOS 5.5.1 
+Y .       /sbin/init 7ed0ae8107cb0e3fbe5db5e0b522e866 SunOS 5.5.1 
+Y .       /sbin/jsh 6c13b4ce42293561828be850d9fb1dae SunOS 5.5.1 
+Y .       /sbin/sh 6c13b4ce42293561828be850d9fb1dae SunOS 5.5.1 
+Y .       /sbin/mount 9ace7fe510cc7dfd6cf6201e50023f32 SunOS 5.5.1 
+Y .       /sbin/su 6b10c1b691ba5aef0407ebb79fe4feb3 SunOS 5.5.1 
+Y .       /sbin/sulogin 6b6c2f7ce0b69000ca65ae16a2fd03d7 SunOS 5.5.1 
+Y .       /usr/bin/at 6e30a9f4c8e0d3ada7a4b2ad8e483dd7 SunOS 5.5.1 
+Y .       /usr/bin/atq 8c974812dac6427f842d57e616ab2a8d SunOS 5.5.1 
+Y .       /usr/bin/atrm 9cddcf99b6dfeddc4da141e42091ab4d SunOS 5.5.1 
+Y .       /usr/bin/batch c3247a561499e35e868fe7a12362a7d1 SunOS 5.5.1 
+Y .       /usr/bin/csh a688c7f6794f78b80c930f5f8ae6648c SunOS 5.5.1 
+Y .       /usr/bin/ftp e3879e10c6190929d0b44cab3bea720d SunOS 5.5.1 
+Y .       /usr/bin/jsh 7ed90534683e6a7dcf81c603c0f86cd3 SunOS 5.5.1 
+Y .       /usr/bin/sh 7ed90534683e6a7dcf81c603c0f86cd3 SunOS 5.5.1 
+Y .       /usr/bin/ksh b3ad787cad1b630a9956c12e324b9237 SunOS 5.5.1 
+Y .       /usr/bin/login 635130471cda6d64d5f2a6667dc8ecfd SunOS 5.5.1 
+Y .       /usr/bin/lp eab4fd0d43025bfc6fda808ec706f273 SunOS 5.5.1 
+Y .       /usr/bin/lpstat 1f79bbae63f8ad330ea7d4b63472e184 SunOS 5.5.1 
+Y .       /usr/bin/mail 690e37c5af72c8f42991fd1dfc291510 SunOS 5.5.1 
+Y .       /usr/bin/mailx 9bceda90d461bf56f2aca8e100509e64 SunOS 5.5.1 
+Y .       /usr/bin/netstat c6260236ef468a51a594eaa0166ed2aa SunOS 5.5.1 
+Y .       /usr/bin/priocntl b4a6042657dc2614c92c947e762cd811 SunOS 5.5.1 
+Y .       /usr/bin/ps eda319c35374cd26a3785304c0d05bee SunOS 5.5.1 
+Y .       /usr/bin/rdist ce600be248b75abbd11aff7649de5011 SunOS 5.5.1 
+Y .       /usr/bin/rlogin a3a6368383315943a2eb9d07e76c9bc0 SunOS 5.5.1 
+Y .       /usr/bin/rsh 30b63c3daea49f8e0be673e89d758bb6 SunOS 5.5.1 
+Y .       /usr/bin/su a7d9ffeb66775ee04862dad9af789afa SunOS 5.5.1 
+Y .       /usr/bin/telnet 1c32b0838ddffd33056ae707855f08fd SunOS 5.5.1 
+Y .       /usr/bin/tftp 437eafc723559537922283f99d149e4b SunOS 5.5.1 
+Y .       /usr/bin/time da808b2d8c6a07c9885436e44148e5ea SunOS 5.5.1 
+Y .       /usr/bin/timex a4661afeefb0f53db7310908068338b7 SunOS 5.5.1 
+Y .       /usr/bin/tip 0fe38013789fd4c45f10f96a39e81548 SunOS 5.5.1 
+Y .       /usr/lib/expreserve c16dde4a8945f574c70e424d4c00e8ca SunOS 5.5.1 
+Y .       /usr/lib/exrecover 11eeac64e6686ec0c093ebe3a8694cb7 SunOS 5.5.1 
+Y .       /usr/lib/ld.so c8aaf184726bcf2acf82538c496483ff SunOS 5.5.1 
+Y .       /usr/lib/ld.so.1 388bb61328cc37a2272eb034686ee6e1 SunOS 5.5.1 
+Y .       /usr/lib/lddstub fc95a64a67d461c609c263f0e816793f SunOS 5.5.1 
+Y .       /usr/lib/libC.so.5 00618ce41a069fae97e191aa39c8af0d SunOS 5.5.1 
+Y .       /usr/lib/libC.so.3 39c0e391f723c73463242709927552db SunOS 5.5.1 
+Y .       /usr/lib/libc.a f712568e97e0bb3ff5f59fbedc66ef36 SunOS 5.5.1 
+Y .       /usr/lib/libc.so.1 c6594d6db933859d6c13f4e99c7c69c4 SunOS 5.5.1 
+Y .       /usr/lib/libelf.a ee20e34353a8f0c0eaba9e9a52f6ad75 SunOS 5.5.1 
+Y .       /usr/lib/libelf.so.1 cf5dff9a718349104f4f3b094c1bd909 SunOS 5.5.1 
+Y .       /usr/lib/libm.a 8c0f8159c5b094c7d96116faa8cf8cab SunOS 5.5.1 
+Y .       /usr/lib/libm.so.1 86a1c63947d92ef89872e96273f0600c SunOS 5.5.1 
+Y .       /usr/lib/libnsl.a 1fbcb42c35e320b44f0050a9c20b1302 SunOS 5.5.1 
+Y .       /usr/lib/libnsl.so.1 08cba3442a592a11108b75b27e4ad8d3 SunOS 5.5.1 
+Y .       /usr/lib/libresolv.so.1 2b98e27835d32e8c6029965bc125f4da SunOS 5.5.1 
+Y .       /usr/lib/librpcsvc.a eed65d40a386bd2bdbe573263cbbf3ca SunOS 5.5.1 
+Y .       /usr/lib/librpcsvc.so.1 5de2438fecb3f2a3ceb5b0386f3d8f21 SunOS 5.5.1 
+Y .       /usr/lib/libsec.a 3ab19e16bcc74b3aa8593a58490bc427 SunOS 5.5.1 
+Y .       /usr/lib/libsec.so.1 5accff440a5437d2cf4cf4b402feadf0 SunOS 5.5.1 
+Y .       /usr/lib/libsocket.a 1743a45162537e2e2336d1c204e4a099 SunOS 5.5.1 
+Y .       /usr/lib/libsocket.so.1 c0a737c5ae566a5d2562446d1707136e SunOS 5.5.1 
+Y .       /usr/lib/mail.local c1e8e84dd1575ab4771eaef8f17fbd9d SunOS 5.5.1 
+Y .       /usr/lib/makewhatis f96892f80dc36ec2340345ace78837e2 SunOS 5.5.1 
+Y .       /usr/lib/netsvc/rstat/rpc.rstatd 76c1f6cc4a048652d4ffd50ca5e7bd38 SunOS 5.5.1 
+Y .       /usr/lib/netsvc/rusers/rpc.rusersd ab94b603489a3c106345b01e1cce1584 SunOS 5.5.1 
+Y .       /usr/lib/netsvc/rwall/rpc.rwalld 88f0c59df422bde159ad8bfb60732c59 SunOS 5.5.1 
+Y .       /usr/lib/netsvc/spray/rpc.sprayd 0bc84b839f3d4d7fbbaf9a1771ce1680 SunOS 5.5.1 
+Y .       /usr/lib/netsvc/yp/ypbind 39504fea9dbf67c4ea25edb716ecde29 SunOS 5.5.1 
+Y .       /usr/lib/newsyslog 7232b3b6da29c3c799dbfaee0ac01661 SunOS 5.5.1 
+Y .       /usr/lib/nfs/lockd 2675af52ed4229b6a66ade211b963999 SunOS 5.5.1 
+Y .       /usr/lib/nfs/mountd acb400e56c6ae3a8b64631fab2abd5bb SunOS 5.5.1 
+Y .       /usr/lib/nfs/nfsd 57260f1c2d1b17b36a39c7744ed1579d SunOS 5.5.1 
+Y .       /usr/lib/nfs/rquotad c48f1f21b2d63c6c2febcb283a9ecb0a SunOS 5.5.1 
+Y .       /usr/lib/nfs/statd 7aa071dcd3a38239e26b41c59a093792 SunOS 5.5.1 
+Y .       /usr/lib/sendmail ab4f6058b14677a3521eccd01bf30f75 SunOS 5.5.1 
+Y .       /usr/sbin/ifconfig 8f0afc9c45273aec215244a7604d0dee SunOS 5.5.1 
+Y .       /usr/sbin/in.comsat 556f57e94ad59ca27af1085334dfef18 SunOS 5.5.1 
+Y .       /usr/sbin/in.fingerd 963ffb7f0d8b0391a4d13fa1df4f7b4a SunOS 5.5.1 
+Y .       /usr/sbin/in.ftpd de526b334baa1ec1262ee2cd27c258e1 SunOS 5.5.1 
+Y .       /usr/sbin/in.named 610a59bd7d0bc313cf462366a3f4f6a1 SunOS 5.5.1 
+Y .       /usr/sbin/in.rarpd 155cfbf4a601ec8866cfb929bfa014ca SunOS 5.5.1 
+Y .       /usr/sbin/in.rdisc 223224e77fe552d1fc918e48a9a11f5a SunOS 5.5.1 
+Y .       /usr/sbin/in.rexecd 3739fa38c9afbf15b149699b7c0219ea SunOS 5.5.1 
+Y .       /usr/sbin/in.rlogind ceb28b68cd8d5529a628fba865960237 SunOS 5.5.1 
+Y .       /usr/sbin/in.routed a2f07f39202545761abb9f63b71f0155 SunOS 5.5.1 
+Y .       /usr/sbin/in.rshd cb52e41712a909648f0933e5cb33792d SunOS 5.5.1 
+Y .       /usr/sbin/in.rwhod 3d22ce3a6311312bf2e93363f068b153 SunOS 5.5.1 
+Y .       /usr/sbin/in.talkd 3b33ee555e31ce18d13b4b0376e94682 SunOS 5.5.1 
+Y .       /usr/sbin/in.telnetd 68cf3269cf85dc35aad2fa188e956286 SunOS 5.5.1 
+Y .       /usr/sbin/in.tftpd 91258bb0a822acd8fe4113465ffe1582 SunOS 5.5.1 
+Y .       /usr/sbin/in.tnamed e83f3e05f4c45acee1c3ec6187a7742b SunOS 5.5.1 
+Y .       /usr/sbin/in.uucpd 19bc1a1bbc8b521a8433e6ee5c583351 SunOS 5.5.1 
+Y .       /usr/sbin/inetd d24027b204e94704f26c1661f747af0f SunOS 5.5.1 
+Y .       /usr/sbin/init 464adb9ab5b552ecc916ad4b35dbb398 SunOS 5.5.1 
+Y .       /usr/sbin/kerbd 4d8c16984e880706841cd00ae4bafa62 SunOS 5.5.1 
+Y .       /usr/sbin/keyserv 42534c992e402364bec58400e64930f0 SunOS 5.5.1 
+Y .       /usr/sbin/rpc.bootparamd 6483a2e0d1b52113a5a2004afe36e6a7 SunOS 5.5.1 
+Y .       /usr/sbin/rpc.nisd 2044bb21e1f6ed4623170388985a0b73 SunOS 5.5.1 
+Y .       /usr/sbin/rpc.nisd_resolv 428ef20b3c6c96737afcece74af63f04 SunOS 5.5.1 
+Y .       /usr/sbin/rpc.nispasswdd cc9a23f249b20c50d5a010349216f162 SunOS 5.5.1 
+Y .       /usr/sbin/rpc.rexd 9e51f3cb4a091dc8313e7f69785076c2 SunOS 5.5.1 
+Y .       /usr/sbin/rpcbind 70a043e49b671396795e7de10f69662b SunOS 5.5.1 
+Y .       /usr/sbin/syslogd 80038c3e051fcd8fa7917f23a1a24e8c SunOS 5.5.1 
+Y .       /usr/ucb/ps d4a6a3ba8915fcdc5344362903f51d50 SunOS 5.5.1 

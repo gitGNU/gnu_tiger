@@ -1,0 +1,357 @@
+#                      
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993-1995 Douglas Lee Schales, David K. Hess, David R. Saffo
+rd
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/5/5.4/sun4/signatures - 02/21/1995
+#
+#-----------------------------------------------------------------------------
+#
+#@DEST=SunOS/5/5.4/sun4
+#@CONFIG=SunOS/5
+#
+# Generated 1996/02/21 dls
+#
+Y . /etc/fs/nfs/mount 71b9932ff743bd14e9258d30fc1fa202 Sun Patch ID 101945-37 [sparc]
+O . /etc/fs/nfs/mount ef564eff055316b61bab84b07e1423f7 SunOS 5.4 (security patch is 101945)
+Y . /etc/lib/ld.so.1 1554083226b0ccccee66911621e823c2 Sun Patch ID 102049-02 [sparc]
+O . /etc/lib/ld.so.1 44a96066f6ef39ef9eb4024885fcbcdf SunOS 5.4 (security patch is 102049)
+Y . /etc/lib/ld.so.1 b07e21ebd515145179a4af6fac309d2f Sun Patch ID 102303-05 [sparc]
+Y . /etc/lib/libdl.so.1 38204c540d5e58e76b4f5aaa8f7c1c28 SunOS 5.4
+Y . /etc/lib/nss_files.so.1 6e36d7a8a1da20e92fb0b6fc9e1a7e65 SunOS 5.4
+Y . /etc/lib/unix_scheme.so.1 0ed1aa7f102f045d09fed1ea3a449fe8 Sun Patch ID 101945-37 [sparc]
+O . /etc/lib/unix_scheme.so.1 8539e34e484cb4c23953bd8edfe579a1 SunOS 5.4 (security patch is 101945)
+Y . /etc/name_to_sysnum 42f18b49cdb70b258483aaac001ece6a Sun Patch ID 101945-37 [sparc]
+Y . /etc/name_to_sysnum fe22dbf4f626dcffb307e5b108649e82 SunOS 5.4
+Y . /kadb 1d8995aa91de53cacc06573a92098bfe Sun Patch ID 101945-37 [sparc.sun4c]
+Y . /kadb 2538a2c12d8d673435a51a6309566c62 SunOS 5.4 sun4c
+Y . /kadb 25c1286bcccbddbbe14f388db57f30f6 SunOS 5.4 sun4m
+Y . /kadb 25c1286bcccbddbbe14f388db57f30f6 SunOS 5.4 sun4mL
+Y . /kadb 3c54c1f3d62ae8a2c4f453bd010c8534 SunOS 5.4 sun4
+Y . /kadb 419ae08cf4e3083b8166b9299142840c Sun Patch ID 101945-37 [sparc.sun4d]
+Y . /kadb 48aed0afc4f9558992bfcf6df36c8e98 Sun Patch ID 101945-37 [sparc.sun4e]
+Y . /kadb 510825f1f45adf2fd4e139da49d93ce1 Sun Patch ID 101945-37 [sparc.sun4]
+Y . /kadb 787b714641cea681ec316e4075acf88b Sun Patch ID 101945-37 [sparc.sun4m]
+Y . /kadb a085fe89b4fd7cb895fa333550372943 SunOS 5.4 sun4d
+Y . /kadb fabbb7783f63607f957cae145c4d25ce SunOS 5.4 sun4e
+Y . /kernel/drv/cn 9392b72140269ff5c770ce7446090b53 SunOS 5.4
+Y . /kernel/drv/cn d3653ffd0329e5dd868f6d062cfc3824 Sun Patch ID 101945-37 [sparc]
+Y . /kernel/drv/icmp 4c895c3a04f7bad926837db70fc830d4 SunOS 5.4
+Y . /kernel/drv/icmp 521f94a5d32a465b75264e0a7f1ff37a Sun Patch ID 101945-37 [sparc]
+Y . /kernel/drv/ip 7e7dddccd7fe251d1d54b69278c7a98b SunOS 5.4
+Y . /kernel/drv/ip c87cd2a62936aef57455b67bce22adcd Sun Patch ID 101945-37 [sparc]
+Y . /kernel/drv/logindmux da7000256d0448f69a2b14b09351d140 Sun Patch ID 101945-37 [sparc]
+Y . /kernel/drv/logindmux.conf a635c9721bd735dba94507e0b163836f Sun Patch ID 101945-37 [sparc]
+Y . /kernel/drv/qec 058956bfb1a285b9fff9dd84e8061be8 Sun Patch ID 102656-01 [sparc]
+Y . /kernel/drv/qec 3b989e0033a8b30218fb80ecfa072604 SunOS 5.4
+Y . /kernel/drv/sbi 480e8515b4c896ce1e1ee61185bce907 Sun Patch ID 101945-37 [sparc.sun4d]
+Y . /kernel/drv/sbi 80b058889e98631ea78e054d94eb9397 SunOS 5.4 sun4d
+Y . /kernel/drv/sd 53a078a90935c18d6cbd45f3dffbaa49 SunOS 5.4
+Y . /kernel/drv/sd fe8b9d63998201c1b201e979ce875f97 Sun Patch ID 101945-37 [sparc]
+Y . /kernel/drv/tcp 2d136da41ae3e7a6f6e8f9d374d3e3f3 SunOS 5.4
+Y . /kernel/drv/tcp fea93ff8c9e2ce0a5df3b40f445dd220 Sun Patch ID 101945-37 [sparc]
+Y . /kernel/drv/tl 56469eca64a20c89b239d5413ba08875 SunOS 5.4
+Y . /kernel/drv/tl f488bce800c2a5dc0ea89f35738066fb Sun Patch ID 101945-37 [sparc]
+Y . /kernel/drv/udp 9116cfc271d7d37a20b070170fdc4283 Sun Patch ID 101945-37 [sparc]
+Y . /kernel/drv/udp cf50b510c6a02717b8032bb109c892bf SunOS 5.4
+Y . /kernel/fs/autofs 3b7357130ad74b2a50ebb635a6dd0762 Sun Patch ID 101945-37 [sparc]
+Y . /kernel/fs/autofs 6e95ca18202de6be1217185b1d59c770 SunOS 5.4
+Y . /kernel/fs/cachefs 3309a50f2c4175d53673289c2a46168d SunOS 5.4
+Y . /kernel/fs/cachefs 685374f2dd99116503f882e1300f30e7 Sun Patch ID 101945-37 [sparc]
+Y . /kernel/fs/lofs b78753fea3ed2ab8a18fa0231db7150a SunOS 5.4
+Y . /kernel/fs/lofs dfb49890f4674cf70746996af7d86a8f Sun Patch ID 101945-37 [sparc]
+Y . /kernel/fs/nfs 0039a89a4f00a6db305afedfed4aa528 SunOS 5.4
+Y . /kernel/fs/nfs 9742a5a39731578544037815618f4645 Sun Patch ID 101945-37 [sparc]
+Y . /kernel/fs/procfs 4cced52199807ee6ecbfbcfba9114ffd Sun Patch ID 101945-37 [sparc]
+Y . /kernel/fs/procfs 815442c7d8d51b00ebd979d0fe364d25 SunOS 5.4
+Y . /kernel/fs/tmpfs 192e10d5c067d3b90a32e81333c7e25b Sun Patch ID 101945-37 [sparc]
+Y . /kernel/fs/tmpfs 3f73055ea812cc4528ede8021d096e2b SunOS 5.4
+Y . /kernel/fs/ufs b598cf175a435ccf13a12bd49f79c40e Sun Patch ID 101945-37 [sparc]
+Y . /kernel/fs/ufs cd505445bf2748e76157ffdd1d2dd1af SunOS 5.4
+Y . /kernel/misc/dlma d1f383a61b7020a4c223ea6e2257b4d4 Sun Patch ID 101945-37 [sparc.sun4d]
+Y . /kernel/misc/klmmod 1db4ef9d85ad93f0af95b49c6d6aad48 Sun Patch ID 102216-05 [sparc]
+Y . /kernel/misc/klmmod f0a41f77a9d39a60eeae0ff30a332ba0 SunOS 5.4
+Y . /kernel/misc/strplumb 5fbd744b3a3b9bfe719e44b3d642687f Sun Patch ID 101945-37 [sparc]
+Y . /kernel/misc/strplumb abbf3f9d27753e6f1c6b841933c37986 SunOS 5.4
+Y . /kernel/misc/swapgeneric 06e0381c299fc63d63df5294100ae016 SunOS 5.4
+Y . /kernel/misc/swapgeneric 2f2c6d59fea9eae25384ea6bb2a8f9cc Sun Patch ID 101945-37 [sparc]
+Y . /kernel/sched/TS 81221dac2b3576ea42d2028f80afcac3 SunOS 5.4
+Y . /kernel/sched/TS 81a240e68c9e61724eaf4e1f7ef1af3b Sun Patch ID 101945-37 [sparc]
+O . /kernel/strmod/kb 00482e8e59064938dc23a0e4bfa07a6b SunOS 5.4 sun4d (security patch is 102044)
+Y . /kernel/strmod/kb 376441bbb422fed146048d803dff0132 Sun Patch ID 102044-01 [sun4e]
+Y . /kernel/strmod/kb 38c035485e7fa41219a9efafb3a856e4 Sun Patch ID 102044-01 [sun4]
+Y . /kernel/strmod/kb 60e8770c04686e45a5363e9914f5cec8 Sun Patch ID 102044-01 [sun4c]
+O . /kernel/strmod/kb 8402101ffa0e52c4fe9bf17fe099df6c SunOS 5.4 sun4c (security patch is 102044)
+O . /kernel/strmod/kb 983941426f275639898e1f71cfb5d710 SunOS 5.4 sun4m (security patch is 102044)
+O . /kernel/strmod/kb 983941426f275639898e1f71cfb5d710 SunOS 5.4 sun4mL (security patch is 102044)
+O . /kernel/strmod/kb afd666d438e3c1bca1239441c24aa0b3 SunOS 5.4 sun4e (security patch is 102044)
+Y . /kernel/strmod/kb c19a88cc72cb981ddcb32e0b7f3ab1d8 Sun Patch ID 102044-01 [sun4d]
+Y . /kernel/strmod/kb cf54c8cf204080f018df5a226469edb2 Sun Patch ID 102044-01 [sun4m]
+O . /kernel/strmod/kb ef4562bf9bde9a45df68fb1a3a885f29 SunOS 5.4 sun4 (security patch is 102044)
+O . /kernel/strmod/ms 154204a020a5b4082c7f834fdcfd7e3e SunOS 5.4 (security patch is 102044)
+Y . /kernel/strmod/ms 9824ccacaf2de655d37fc42301a54c84 Sun Patch ID 102044-01 [sparc]
+Y . /kernel/strmod/rlmod 9195bc76e9beeef8f37ae31efac7d90a Sun Patch ID 101945-37 [sparc]
+O . /kernel/strmod/rpcmod 14e5a1d8c9bcd849e0ae8ebf62f786b9 Sun Patch ID 102216-01 (current is 102216-05)
+Y . /kernel/strmod/rpcmod 325eedd94d7c2a0b2df8df0ecd6c37fc Sun Patch ID 102216-05 [sparc]
+O . /kernel/strmod/rpcmod fe86bdd533985c77de832121b63d07d3 SunOS 5.4 (security patch is 102216)
+Y . /kernel/strmod/sockmod 965841fbc20fdfb2855fb3904b49d67c Sun Patch ID 101945-37 [sparc]
+O . /kernel/strmod/sockmod 97c3fce982e86c610e7680eefc686bfb SunOS 5.4 (security patch is 101945)
+Y . /kernel/strmod/telmod cee10b96b7ea461775e1eb3a66b5ad0c Sun Patch ID 101945-37 [sparc]
+Y . /kernel/strmod/timod 5a0b3f4bf644b7d157a2913b4713ddd9 Sun Patch ID 101945-37 [sparc]
+O . /kernel/strmod/timod b686bbe973e60234aee95b2774fe100d SunOS 5.4 (security patch is 101945)
+Y . /kernel/sys/c2audit 7f0a5ad827bfcf955644fe359e48f3cf Sun Patch ID 101945-37 [sparc]
+O . /kernel/sys/c2audit 85c4872cfee66676375753dc8d2f33de SunOS 5.4 (security patch is 101945)
+Y . /kernel/sys/kaio b0a067c16c1425b29a26eabf82107f9b Sun Patch ID 101945-37 [sparc]
+Y . /kernel/unix 12fa50b7899ad3520809be3ae873aa48 SunOS 5.4 sun4
+Y . /kernel/unix 18d25900099207a6d461ff968bf0a827 Sun Patch ID 101945-37 [sparc.sun4m]
+Y . /kernel/unix 3970dca4186d477470a9389eda88035d SunOS 5.4 sun4c
+Y . /kernel/unix 3b64857128127daa5c3edbe87515f037 Sun Patch ID 101945-37 [sparc.sun4c]
+Y . /kernel/unix 433271385cc58318d123a0e199fa459c SunOS 5.4 sun4e
+Y . /kernel/unix 5cd1991d5d72ec6277ffb22131235f33 Sun Patch ID 101945-37 [sparc.sun4e]
+Y . /kernel/unix 6769bcbbed28a1abefbeb4bbf37a38fd Sun Patch ID 101945-37 [sparc.sun4d]
+Y . /kernel/unix 7abdf76ac37c5165b9294ea4519a1b10 SunOS 5.4 sun4d
+Y . /kernel/unix a75a298cea08d804c97ae3ad5abed065 SunOS 5.4 sun4mL
+Y . /kernel/unix e2d289f2279d5354684bc80f731721fe Sun Patch ID 101945-37 [sparc.sun4]
+Y . /kernel/unix e8157aecfd2b3c4cde8700e8cf067390 SunOS 5.4 sun4m
+Y . /sbin/ifconfig e6551bc82d450e405a80e22b6ee44602 SunOS 5.4
+O . /sbin/init 5680f6e46cdfdbb72fa6f9855aa65b2f SunOS 5.4 (security patch is 101945)
+Y . /sbin/init 66457df3e21f5e13d626922beb069902 Sun Patch ID 101945-37 [sparc]
+Y . /sbin/jsh ee4290cdbaa0dbf2103212b72c8046e0 SunOS 5.4
+Y . /sbin/sh ee4290cdbaa0dbf2103212b72c8046e0 SunOS 5.4
+O . /sbin/su 126d7cf76ab7d4445bc9c2693ad4bab6 SunOS 5.4 (security patch is 101945)
+Y . /sbin/su 44d83f31906c46bec0c2fe99299d80c7 Sun Patch ID 101945-37 [sparc]
+Y . /sbin/sulogin 13e3177fd023bf268c3e6a8fd6424479 Sun Patch ID 101945-37 [sparc]
+O . /sbin/sulogin c81ecec4c258e4898028089642859109 SunOS 5.4 (security patch is 101945)
+Y . /sbin/sync c8b23719e06c78cd12eaaa72b1cd95a0 SunOS 5.4
+Y . /usr/4lib/libc.so.1.8 12cc5b72ff42a0905f8c3761c5480b4c SunOS 5.4
+Y . /usr/4lib/libc.so.1.8 8ac383ecab40ff04ce64e693eec8fa2d Sun Patch ID 101945-37 [sparc]
+Y . /usr/4lib/libc.so.2.8 560742ffcea4b633046a0c7c6a9b7398 SunOS 5.4
+Y . /usr/4lib/libc.so.2.8 56158e977d9659f573c39fb2d4282258 Sun Patch ID 101945-37 [sparc]
+Y . /usr/bin/aliasadm 7912562cf8b53d01e0fc12508fc10d38 Sun Patch ID 102066-06 [sparc]
+Y . /usr/bin/aliasadm b8fb4f9cdc985605dfb8a2e7c68d17e6 SunOS 5.4
+Y . /usr/bin/at 7213d982c9454aa89fba6d0c3d6bd621 SunOS 5.4
+Y . /usr/bin/atq 00daab2ff943708e27d0e8f8c984cf38 SunOS 5.4
+Y . /usr/bin/atrm 37ea451e24b8da0f0558065fd83835e4 SunOS 5.4
+Y . /usr/bin/csh 6770abaa4bd0219d6fc0cff5b6b43576 SunOS 5.4
+Y . /usr/bin/ftp 1624a4c3b00672091b9bc6a051e6d028 SunOS 5.4
+Y . /usr/bin/jsh 9bbf5d4ee5d5796f8baab7d4f8947df1 SunOS 5.4
+Y . /usr/bin/ksh a1aa0c40a969ee2aa12e03e74a12e88f SunOS 5.4
+Y . /usr/bin/lastcomm cb64a02f39c09a2d8fd514c8b2ab1c7f SunOS 5.4
+O . /usr/bin/ldd 3e9d5fe1044998f2546cfd5305e54f02 SunOS 5.4 (security patch is 102303)
+Y . /usr/bin/ldd b4011f4ab27c427cf3c932d464cd5b5d Sun Patch ID 102303-05 [sparc]
+Y . /usr/bin/login 3cd2b0eee98c58f541ccd28d3666af4a Sun Patch ID 102336-01 [sparc]
+O . /usr/bin/login 94639a588aecc4af727e4f963b314140 SunOS 5.4 (security patch is 102336)
+Y . /usr/bin/mail dcf88fae12565d4d27683b63cf850770 Sun Patch ID 102042-05 [sparc]
+O . /usr/bin/mail e483f3a492e3e1523dc9cb04e8f9508a SunOS 5.4 (security patch 102042)
+O . /usr/bin/mailcompat 25c719922dd640bbb4930e762f7438b3 SunOS 5.4 (security patch 102066)
+Y . /usr/bin/mailcompat 9a9ffde615899e62fa2b6b1b26e46712 Sun Patch ID 102066-06 [sparc]
+O . /usr/bin/mailstats 879bb923f1880a870ff2a80f33d77141 SunOS 5.4 (security patch 102066)
+Y . /usr/bin/mailstats d915dc7dbc773e651f1000a7ae565bc1 Sun Patch ID 102066-06 [sparc]
+O . /usr/bin/nistbladm ace3cf0718622fb25064839f8559a0d3 SunOS 5.4 (security patch is 101973)
+Y . /usr/bin/nistbladm af2dc96daded2ac3e300fde47557c44e Sun Patch ID 101973-15 [sparc]
+O . /usr/bin/ps 4aad42eb4a43fbe3420fecdf977147bf SunOS 5.4 (security patch 102711)
+Y . /usr/bin/ps f992d36af5b42d8d930701cc1ed6f962 Sun Patch ID 102711-01 [sparc]
+Y . /usr/bin/pvs cbde2f8413d8a59f067d166c83af0861 Sun Patch ID 102303-05 [sparc]
+Y . /usr/bin/rcp d5705e26da261161bbfcaabddf0aee08 SunOS 5.4
+Y . /usr/bin/rdist 98aecb5b5421a373ca2b7dc6a7e5ef54 SunOS 5.4
+Y . /usr/bin/rlogin bfffbe92aa78e2e76e08c1a3d4947680 SunOS 5.4
+Y . /usr/bin/rpcinfo 51cb1a6b8fd6155568e214fb2bc3475e SunOS 5.4
+Y . /usr/bin/rsh b18e37a361847171af758ff1fbd83ab4 SunOS 5.4
+Y . /usr/bin/sh 9bbf5d4ee5d5796f8baab7d4f8947df1 SunOS 5.4
+Y . /usr/bin/su 6dbed63057c16ce0f154b84a2fb62ff3 Sun Patch ID 101945-37 [sparc]
+O . /usr/bin/su e729859318d1d34b02632282b78576c4 SunOS 5.4 (security patch is 101945)
+Y . /usr/bin/telnet 434ec573e0d9d2ac1eddea3a916c5b6a SunOS 5.4
+Y . /usr/bin/time ba2edca11dfc1fe0e6e6386fd20e4254 SunOS 5.4
+Y . /usr/bin/timex 5e1642c275e5628d0913cf9c54920084 SunOS 5.4
+O . /usr/bin/tip 021905b5ae1bbbdbf264c48ea3b7bf14 SunOS 5.4 (security patch is 103070)
+Y . /usr/bin/tip f14f08e81a4f224d255988ce02a750c6 Sun Patch ID 103070-01 [sparc]
+Y . /usr/bin/vacation 679cbf8f423cf29c3487fc39806fbd10 Sun Patch ID 102066-06 [sparc]
+O . /usr/bin/vacation d4693c07ac888a0c3d5377f89098ca69 SunOS 5.4 (security patch is 102066)
+O . /usr/bin/ypcat 1e1e79f42f5bbb23ad5a65079f7f66cf SunOS 5.4 (security patch is 102704)
+Y . /usr/bin/ypcat 47530e9ddb97c05c7f20598a69081bc1 Sun Patch ID 102704-02 [sparc]
+O . /usr/bin/ypmatch 632ac6084865ab9845f6a5226a405ebc SunOS 5.4 (security patch is 102704)
+Y . /usr/bin/ypmatch da7adb85d870d38bcba0a117a40db6c6 Sun Patch ID 102704-02 [sparc]
+O . /usr/bin/ypwhich 20bac1902938dc81a6c050a152f7f24d SunOS 5.4 (security patch is 102704)
+Y . /usr/bin/ypwhich 8236affdb770f41c67848902093877f2 Sun Patch ID 102704-02 [sparc]
+O . /usr/ccs/bin/ar 40b22431fe0691a9d268a50438893bfc SunOS 5.4 (security patch is 102303)
+Y . /usr/ccs/bin/ar 67e4c84b31396fef411185774c3ecafc Sun Patch ID 102303-05 [sparc]
+O . /usr/ccs/bin/gprof 39630772ec7aae6e2743f361a1e79e0e SunOS 5.4 (security patch is 102303)
+Y . /usr/ccs/bin/gprof 70a549083e8cca3adb6271b059cd2e86 Sun Patch ID 102303-05 [sparc]
+O . /usr/ccs/bin/ld 407c6077c8a09310dea08f6d839d779c SunOS 5.4 SunOS 5.4 (security patch is 102303)
+Y . /usr/ccs/bin/ld e3633ae68879b89f925c441547dcac9e Sun Patch ID 102303-05 [sparc]
+Y . /usr/kernel/sched/RT 350e3469fcaa337ce86c926914b2b7b5 Sun Patch ID 101945-37 [sparc]
+Y . /usr/kernel/sched/RT e09159d9f7dc7f60bb78b0d7e028bc12 SunOS 5.4
+Y . /usr/kvm/adb 27de4a4f63d8e1a8a00e16d1222b7b82 Sun Patch ID 101945-37 [sparc.sun4c]
+Y . /usr/kvm/adb 27de4a4f63d8e1a8a00e16d1222b7b82 Sun Patch ID 101945-37 [sparc.sun4m]
+Y . /usr/kvm/adb 42ace3367f1c00c50c47162725520722 Sun Patch ID 101945-37 [sparc.sun4e]
+Y . /usr/kvm/adb 46ecd740eb52c3fbdac0726d157f6125 SunOS 5.4 sun4d
+Y . /usr/kvm/adb 4b919a42db4ee6ef721d4b4258191aaf Sun Patch ID 101945-37 [sparc.sun4d]
+Y . /usr/kvm/adb 6d6b59dcf4559d5d2a6b954e7d2c9977 SunOS 5.4 sun4e
+Y . /usr/kvm/adb dcabac581266afc38ad47e250a2c4ea2 SunOS 5.4 sun4c
+Y . /usr/kvm/adb dcabac581266afc38ad47e250a2c4ea2 SunOS 5.4 sun4m
+Y . /usr/kvm/adb dcabac581266afc38ad47e250a2c4ea2 SunOS 5.4 sun4mL
+Y . /usr/kvm/adb e015c30684ddd4b660fc109b23919fb4 Sun Patch ID 101945-37 [sparc.sun4]
+Y . /usr/kvm/adb fba5b078a1a43885dc0eb773404c8cf3 SunOS 5.4 sun4
+Y . /usr/kvm/crash 43a8a89ee4c7223c6419d0972f6c4290 Sun Patch ID 101945-37 [sparc.sun4d]
+Y . /usr/kvm/crash 43fbe8e0276642d374f9d2a876cd7566 SunOS 5.4 sun4c
+Y . /usr/kvm/crash 672a82b9b8608eed82b0ba198555dd49 Sun Patch ID 101945-37 [sparc.sun4m]
+Y . /usr/kvm/crash 7423e4a8c2d48d2199467b714cb4fa26 SunOS 5.4 sun4d
+Y . /usr/kvm/crash 8deddd0f2d430ddb46a9d79e0a89c1fc Sun Patch ID 101945-37 [sparc.sun4e]
+Y . /usr/kvm/crash 9753ba49b16b34933aba30f9642dcb6a Sun Patch ID 101945-37 [sparc.sun4]
+Y . /usr/kvm/crash a4e42d5f1c921a8c71f04851db16f10f SunOS 5.4 sun4e
+Y . /usr/kvm/crash c82f3f606a373b5654c0c10b79046d11 SunOS 5.4 sun4
+Y . /usr/kvm/crash d110108ddd7fecc45ff31f6e30ded1a6 Sun Patch ID 101945-37 [sparc.sun4c]
+Y . /usr/kvm/crash e0834250f22fe06cf0c576ba411a4ea8 SunOS 5.4 sun4m
+Y . /usr/kvm/crash e0834250f22fe06cf0c576ba411a4ea8 SunOS 5.4 sun4mL
+Y . /usr/kvm/lib/adb/sema 2bcce1a447094af9ca78d38f340a7287 SunOS 5.4 sun4
+Y . /usr/kvm/lib/adb/sema 2bcce1a447094af9ca78d38f340a7287 SunOS 5.4 sun4c
+Y . /usr/kvm/lib/adb/sema 2bcce1a447094af9ca78d38f340a7287 SunOS 5.4 sun4d
+Y . /usr/kvm/lib/adb/sema 2bcce1a447094af9ca78d38f340a7287 SunOS 5.4 sun4e
+Y . /usr/kvm/lib/adb/sema 2bcce1a447094af9ca78d38f340a7287 SunOS 5.4 sun4m
+Y . /usr/kvm/lib/adb/sema 2bcce1a447094af9ca78d38f340a7287 SunOS 5.4 sun4mL
+Y . /usr/kvm/lib/adb/sema 79a387fc983a75acc1986b1253ac75af Sun Patch ID 101945-37 [sparc.sun4]
+Y . /usr/kvm/lib/adb/sema 79a387fc983a75acc1986b1253ac75af Sun Patch ID 101945-37 [sparc.sun4c]
+Y . /usr/kvm/lib/adb/sema 79a387fc983a75acc1986b1253ac75af Sun Patch ID 101945-37 [sparc.sun4d]
+Y . /usr/kvm/lib/adb/sema 79a387fc983a75acc1986b1253ac75af Sun Patch ID 101945-37 [sparc.sun4e]
+Y . /usr/kvm/lib/adb/sema 79a387fc983a75acc1986b1253ac75af Sun Patch ID 101945-37 [sparc.sun4m]
+Y . /usr/kvm/prtdiag 35e108d30a34a3b8feaa81958a9f2984 SunOS 5.4 sun4d
+Y . /usr/kvm/prtdiag 5c9d48fc05afa39397b329ef90533de5 Sun Patch ID 101945-37 [sparc.sun4d]
+O . /usr/lib/autofs/automountd 530dcb1d46e3bcd3f180499253e8fbf6 SunOS 5.4 SunOS 5.4 (security patch is 101945)
+Y . /usr/lib/autofs/automountd 5ab26097dffece9ae99bad3a79c705bb Sun Patch ID 101945-37 [sparc]
+Y . /usr/lib/expreserve 4b3674a5c2b4963e12df89cb2296141a Sun Patch ID 102756-01 [sparc]
+O . /usr/lib/expreserve ac77fa3e2aa8692e206ad9d11f2dca28 SunOS 5.4 (security patch 102756)
+O . /usr/lib/fs/autofs/automount 0946a3c5bcda5a67a1f56dbb1f15418a SunOS 5.4 SunOS 5.4 (security patch is 101945)
+Y . /usr/lib/fs/autofs/automount 796bf8208769347a8418269b00009dea Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/fs/nfs/inetboot 0b1fd00c5fdbdd837745e8f3bca7acc3 SunOS 5.4 SunOS 5.4 (security patch is 101945)
+Y . /usr/lib/fs/nfs/inetboot df785387f46765c9fb293b2e1b311068 Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/fs/nfs/mount 82dd2c4d53645ce4474273cb83bd3b3a SunOS 5.4 SunOS 5.4 (security patch is 101945)
+Y . /usr/lib/fs/nfs/mount db75ef520185f9a7d7ec72718ca72fb3 Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/fs/nfs/umount 9f02f4fecfb1f0b8b445a2f355497f77 SunOS 5.4 SunOS 5.4 (security patch is 101945)
+Y . /usr/lib/fs/nfs/umount b470893589b487a3d0662442d640c889 Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/fs/ufs/ufsdump 025b317520110473105978a5502f136a SunOS 5.4 SunOS 5.4 (security patch is 102680)
+Y . /usr/lib/fs/ufs/ufsdump 5845eac51d21f64260116dbbe6e083bf Sun Patch ID 102680-03 [sparc]
+Y . /usr/lib/ld.so.1 1554083226b0ccccee66911621e823c2 Sun Patch ID 102049-02 [sparc]
+O . /usr/lib/ld.so.1 44a96066f6ef39ef9eb4024885fcbcdf SunOS 5.4 SunOS 5.4 (security patch is 102049)
+Y . /usr/lib/ld.so.1 b07e21ebd515145179a4af6fac309d2f Sun Patch ID 102303-05 [sparc]
+Y . /usr/lib/libaio.so.1 4e1fa79bf3299e549bfa6c3dab5bf52d Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/libaio.so.1 dd4776dd6fb8ae785a342470de2df67e SunOS 5.4 SunOS 5.4 (security patch is 101945)
+O . /usr/lib/libauth.a df8f419cf570d929065c4d12598aff8a SunOS 5.4 SunOS 5.4 (security patch is 101945)
+Y . /usr/lib/libauth.a e45c167243bc73050558fe6f18697842 Sun Patch ID 101945-37 [sparc]
+Y . /usr/lib/libauth.so.1 198dde1d4406a91f195d3a1e754e7644 Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/libauth.so.1 c849f0f67c163e77723dd043f3c47654 SunOS 5.4 SunOS 5.4 (security patch is 101945)
+O . /usr/lib/libbsm.a 751de0e82c4c02ef6f4982b541fbd123 SunOS 5.4 (security patch is 102218)
+Y . /usr/lib/libbsm.a c581d3027ce8b97eeda7af8f4d3b9f98 Sun Patch ID 102218-03 [sparc]
+O . /usr/lib/libbsm.so.1 1c89d1ee9279f253c327968a820ff9e4 SunOS 5.4 (security patch is 102218)
+Y . /usr/lib/libbsm.so.1 5d2f827ba16d6f07e86381e93b996b3b Sun Patch ID 102218-03 [sparc]
+O . /usr/lib/libc.a 02b1422cd5c4f98ef118faf890d54eb5 SunOS 5.4 (security patch is 101945)
+Y . /usr/lib/libc.a 5787b298b39af6ea958d1b056211f21a Sun Patch ID 102904-01 [sparc]
+Y . /usr/lib/libc.a 8b8d3a683b5c4f8650506a4d1de7351d Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/libc.a bba0ce73adb6189ec94950086737851f Sun Patch ID 101981-01 (current is 101945)
+O . /usr/lib/libc.a d7249b8eed349e1736cb3b4c71af221d Sun Patch ID 101981-02 (current is 101945)
+O . /usr/lib/libc.so.1 09f45be78e1e17ed4f0345c930316ab4 Sun Patch ID 101981-02 (current is 101945)
+O . /usr/lib/libc.so.1 14f902dc49eec284800a1cebcea8f35a Sun Patch ID 101981-01 (current is 101945)
+Y . /usr/lib/libc.so.1 20bd13d060cd0be58a2c07bcabbac8f2 Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/libc.so.1 4d6c9427e29f5f555fba2f4bbd4c7b71 SunOS 5.4 (security patch is 101945)
+Y . /usr/lib/libc.so.1 bf01edb99888f103fa7d05bc02d99274 Sun Patch ID 102904-01 [sparc]
+Y . /usr/lib/libelf.a 354d14f1900c19e90c4d8624a2212664 Sun Patch ID 102303-05 [sparc]
+O . /usr/lib/libelf.a dde9aacfbf61a6b74990c3a3a4cf4338 SunOS 5.4 (security patch is 102303)
+O . /usr/lib/libelf.so.1 3ae43167b670917a875093ae19962502 SunOS 5.4 (security patch is 102303)
+Y . /usr/lib/libelf.so.1 7b3df5b003ff3ce60b73c95e91c4147c Sun Patch ID 102303-05 [sparc]
+O . /usr/lib/libld.so.1 815dd32e281ad0ebf769eb38c8366f41 SunOS 5.4 (security patch is 102049)
+Y . /usr/lib/libld.so.1 cb1ba0f616b0587ce6f90efc27a6a63c Sun Patch ID 102049-02 [sparc]
+Y . /usr/lib/libld.so.2 1908d59f6867c5dde902a8c4ab2f6a6b Sun Patch ID 102303-05 [sparc]
+Y . /usr/lib/liblddbg.so.3 95acf959902a5ef7ffc94ca4902896d8 Sun Patch ID 102303-05 [sparc]
+Y . /usr/lib/libldstab.so.1 418394607500e2f0aee971272fd9dd63 Sun Patch ID 102303-05 [sparc]
+O . /usr/lib/libnisdb.a c93b002b1d08e70f64c5720621dea432 SunOS 5.4 (security patch is 101973)
+Y . /usr/lib/libnisdb.a cff9d05523990f0a01d700fef383f813 Sun Patch ID 101973-15 [sparc]
+Y . /usr/lib/libnisdb.so.2 1fa0b3053fa6adeb795edc0daaf945be Sun Patch ID 101973-15 [sparc]
+O . /usr/lib/libnisdb.so.2 37c598f623c177967979b4af53677a37 SunOS 5.4 (security patch is 101973)
+O . /usr/lib/libnsl.a 7d3fc88c4779b23b7c8bee1117b2b6ca SunOS 5.4 SunOS 5.4 (security patch is 101973)
+Y . /usr/lib/libnsl.a ce0f10344932998bad77616c172a9c10 Sun Patch ID 101973-15 [sparc]
+Y . /usr/lib/libnsl.so.1 4bff16c2b267619e7ed4f5c00e0d4d97 Sun Patch ID 101973-15 [sparc]
+O . /usr/lib/libnsl.so.1 bfdf53c79465d6437eadb6fa480c74f5 SunOS 5.4 (security patch is 101973)
+O . /usr/lib/libp/libc.a 29636c8179f6c25cd51a91c1a5d07750 SunOS 5.4 (security patch is 102904)
+Y . /usr/lib/libp/libc.a 86d8951e9275a7b1d52e98837ac9c24d Sun Patch ID 102904-01 [sparc]
+Y . /usr/lib/libp/libc.a ff1f16d2abeb6106b52945ef3becb02e Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/libsocket.a a22edae4d4cef5eda8780f3f27018fac SunOS 5.4 (security patch is 101945)
+Y . /usr/lib/libsocket.a bd424aeb12943a6707b009c01d98874c Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/libsocket.so.1 3d5ba9edc6b5fce88a146d84a2a86da1 SunOS 5.4 (security patch is 101945)
+Y . /usr/lib/libsocket.so.1 5361a834a665c6263052da95ab56696b Sun Patch ID 101945-37 [sparc]
+Y . /usr/lib/llib-lelf.ln 162e3921fe9c8efeb3714633e4d9f2df Sun Patch ID 102303-05 [sparc]
+O . /usr/lib/netsvc/yp/ypbind 7aed5f4189dcc7c038f83b9e96aa4296 SunOS 5.4 SunOS 5.4 (security patch is 101973)
+Y . /usr/lib/netsvc/yp/ypbind 9b8fcfd598b8ce962635f4d5cb849265 Sun Patch ID 101973-15 [sparc]
+Y . /usr/lib/netsvc/yp/ypxfr 3bef86bfbdbee48371901a309db02d1b Sun Patch ID 102704-02 [sparc]
+O . /usr/lib/netsvc/yp/ypxfr 4d974b8b94eeacc580e72bbb13dfeb25 SunOS 5.4 (security patch is 102704)
+Y . /usr/lib/nss_dns.so.1 0590efaa1b71d1169e6d391da04add28 Sun Patch ID 102165-02 [sparc]
+O . /usr/lib/nss_dns.so.1 6a457daf3cd09ddb5f3fdba86a95b0ad SunOS 5.4 (security patch is 102165)
+O . /usr/lib/nss_nisplus.so.1 45e4dd75b71b997832a1afb3f3a7c2d3 SunOS 5.4 (security patch is 102277)
+Y . /usr/lib/nss_nisplus.so.1 c83093959c0185e6bf1da5bf49be7fe5 Sun Patch ID 102277-02 [sparc]
+Y . /usr/lib/passwd_changer da902c553ba6e3ad91c9571fdf5d2750 Sun Patch ID 102336-01 [sparc]
+Y . /usr/lib/pics/libc_pic.a 1dc17b24f76012e1c7ed3d2e6d1ab79d Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/pics/libc_pic.a 813e5901a1fa8644aed7252c3ee2c68d SunOS 5.4 (security patch is 102904)
+Y . /usr/lib/pics/libc_pic.a a1fcf49780576e63abf586a732825d87 Sun Patch ID 102904-01 [sparc]
+Y . /usr/lib/rsh 9bbf5d4ee5d5796f8baab7d4f8947df1 SunOS 5.4
+Y . /usr/lib/security/unix_scheme.so.1 0ed1aa7f102f045d09fed1ea3a449fe8 Sun Patch ID 101945-37 [sparc]
+O . /usr/lib/security/unix_scheme.so.1 8539e34e484cb4c23953bd8edfe579a1 SunOS 5.4 (security patch is 101945)
+O . /usr/lib/sendmail 5dce1ac0580b6afb64947a62da5c5921 SunOS 5.4 (security patch 102066)
+O . /usr/lib/sendmail 91cf411344a476491818f7209d868fa1 SunOS 5.4 (security patch 102066)
+Y . /usr/lib/sendmail c2456fd0e789bfc38478b32363b8c20c Sun Patch ID 102066-06 [sparc]
+O . /usr/lib/sendmail.mx 5dce1ac0580b6afb64947a62da5c5921 SunOS 5.4 (security patch 102066)
+Y . /usr/lib/sendmail.mx c2456fd0e789bfc38478b32363b8c20c Sun Patch ID 102066-06 [sparc]
+O . /usr/lib/utmp_update 85bbbb7befa0be04e6f2f6c70a6a8d07 SunOS 5.4 (security patch is 101945)
+Y . /usr/lib/utmp_update c8c1108ab32b3796175bd72c86c9a987 Sun Patch ID 101945-37 [sparc]
+Y . /usr/openwin/bin/ff.core 45fa5c84bf1318fa04521495260c3b00 Sun Patch ID 102292-02 [sparc]
+Y . /usr/openwin/lib/libxview.a 2de1c3dc3ebc18cb174719475a5e0808 Sun Patch ID 101878-11 [sparc]
+Y . /usr/openwin/lib/libxview.so.3 a8dad56b948275cdddf1915d0d2af451 Sun Patch ID 101878-11 [sparc]
+Y . /usr/sbin/chroot 55b3a60db472e12e26b944cecf79041f SunOS 5.4
+Y . /usr/sbin/cron ec770bad37a6a484b07009318d421295 SunOS 5.4
+Y . /usr/sbin/fuser f7d264cafc2ad02cb9751d8707acba74 SunOS 5.4
+Y . /usr/sbin/ifconfig 4edd9a52e45dd690d36d7cfc663ef420 SunOS 5.4
+Y . /usr/sbin/in.comsat 871a95368f7799a13c24cd3e864a18da SunOS 5.4
+Y . /usr/sbin/in.fingerd 2f8b4ef8191bfd691f120fcfe31e163b SunOS 5.4
+O . /usr/sbin/in.ftpd 0eadfedd36147270512325ac33326db5 SunOS 5.4 (security patch is 101945)
+Y . /usr/sbin/in.ftpd 5e1d62ed03f91ac0bf6529a3bbf3937c Sun Patch ID 101945-37 [sparc]
+Y . /usr/sbin/in.named 327db20c32f660a8950e584b7cbf559d SunOS 5.4
+Y . /usr/sbin/in.rarpd 0e4ee8ae5189c023eb78a4fd806c682b SunOS 5.4
+Y . /usr/sbin/in.rdisc f0847b0fe30719a1521a2859853bc7ae SunOS 5.4
+Y . /usr/sbin/in.rexecd 2334ee079380d4a1eedef55d2ccc8ee1 SunOS 5.4
+O . /usr/sbin/in.rlogind c9c701dbc8c9e7747fc5ac6800daa91f SunOS 5.4 (security patch is 101945)
+Y . /usr/sbin/in.rlogind cfe28bd1da8d26acdb9b5e930efc3e57 Sun Patch ID 101945-37 [sparc]
+Y . /usr/sbin/in.routed ca184fa81eadf39fed273625e57ffa16 SunOS 5.4
+Y . /usr/sbin/in.rshd 95e5d17e4aa3281e71ed20cc05ea366d SunOS 5.4
+Y . /usr/sbin/in.rwhod 0d68e44fcc5300ca33d53af4e6fdbe17 SunOS 5.4
+Y . /usr/sbin/in.talkd 40b1f82b4cdc800f4ff6f62dabe56883 SunOS 5.4
+O . /usr/sbin/in.telnetd 0a9868e53132bd5d0e88c1cad3b36994 SunOS 5.4 (security patch is 101945)
+Y . /usr/sbin/in.telnetd a60b18950bb8d9aa631f1e0211bb0058 Sun Patch ID 101945-37 [sparc]
+Y . /usr/sbin/in.tftpd f528c73650cf1291093730a959af2582 SunOS 5.4
+Y . /usr/sbin/in.tnamed b73c9c3dfb43e00caa1e0bf61822e74c SunOS 5.4
+Y . /usr/sbin/in.uucpd 44f3c52e17911e4bb81a9cbdf879958b SunOS 5.4
+Y . /usr/sbin/inetd aee7c7f7cec0bde3fc464cc2983a442e Sun Patch ID 102922-03 [sparc]
+O . /usr/sbin/inetd ed377f4618808deb52e38843e7f2d917 SunOS 5.4 (security patch is 102922)
+Y . /usr/sbin/init 5bdf825244ab6159eb36991df17b217f Sun Patch ID 101945-37 [sparc]
+O . /usr/sbin/init b1e30cd97471b2b61bbfb5411cfba6bc SunOS 5.4 (security patch is 101945)
+O . /usr/sbin/makedbm 40afdaad933d6ad6606f53f193bd113b SunOS 5.4 (security patch is 102704)
+Y . /usr/sbin/makedbm ccc4a97ff61aa6fae464fbb1fcc104cc Sun Patch ID 102704-02 [sparc]
+Y . /usr/sbin/modload a806c2392bc21870e9a4192c0e1f9686 SunOS 5.4
+Y . /usr/sbin/rpc.bootparamd eae573aa2759a25cd3e888d1e115b7f5 SunOS 5.4
+Y . /usr/sbin/rpc.nisd a8f00e6b01b5b68d2391edf5b618e236 Sun Patch ID 101973-15 [sparc]
+O . /usr/sbin/rpc.nisd d56446e741ebc0d54e4b8a89dffdd9a3 SunOS 5.4 (security patch is 101973)
+Y . /usr/sbin/rpc.nisd_resolv 27641da7247f9792902409fe7ef4b85d SunOS 5.4
+Y . /usr/sbin/rpc.rexd 3a9b3948be109d9b6a342fcb5f15d9a8 SunOS 5.4
+Y . /usr/sbin/rpcbind 36c34648d86bc5d0bc0991f966e397c7 Sun Patch ID 102070-01
+O . /usr/sbin/rpcbind d0a65de59a7923d2c8ee8377d609227b SunOS 5.4 (security patch is 102070)
+Y . /usr/sbin/sync 5b3d18121b7a916cc129f8e6581ddc17 SunOS 5.4
+O . /usr/sbin/wall 343386b5ab1525bf6852d05c60fdaba3 SunOS 5.4 (security patch is 102680)
+Y . /usr/sbin/wall 646cc7897ae01d3120669750e2768839 Sun Patch ID 102680-03 [sparc]
+O . /usr/sbin/ypinit 306bc9c9efc202d33aeeb5e12db8dc32 SunOS 5.4 (security patch is 102704)
+Y . /usr/sbin/ypinit aed26b08433f9cf7a3bcaf692f853c3d Sun Patch ID 102704-02 [sparc]
+O . /usr/ucb/ps 4bf07c292aaf48f6ac7e0214ec664778 SunOS 5.4 (security patch 102711)
+Y . /usr/ucb/ps e033481e0007e5a02bd6f762e5d34bbf Sun Patch ID 102711-01 [sparc]
+O . /usr/ucb/vipw 4148206d1233914f2588aaa1cfdf197a SunOS 5.4 (security patch is 102960)
+Y . /usr/ucb/vipw 642e150b227660f0cdca36a92047afd3 Sun Patch ID 102960-01 [sparc]
+O . /usr/ucblib/libucb.a 175c008335ecc3666c0192da7fd438fb SunOS 5.4 (security patch is 101945)
+Y . /usr/ucblib/libucb.a b7569ef02a9fbdf153367bb7ca3202ea Sun Patch ID 101945-37 [sparc]
+O . /usr/ucblib/libucb.so.1 701c7b0aa2ee845f9a488d39e92177bc SunOS 5.4 (security patch is 101945)
+Y . /usr/ucblib/libucb.so.1 8781eb7f30a244969572a0ed2d123a33 Sun Patch ID 101945-37 [sparc]
