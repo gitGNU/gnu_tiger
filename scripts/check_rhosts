@@ -76,7 +76,6 @@ echo "# Performing check of /etc/hosts.equiv and .rhosts files..."
 
 haveallcmds AWK CAT EXPR GEN_PASSWD_SETS JOIN LS RM SED || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
-haveallvars HOSTNAME TESTLINK || exit 1
 
 check_entry()
 {

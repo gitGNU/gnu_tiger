@@ -19,7 +19,8 @@
 #
 # 05/18/2002 jfs Added check on banner (based on Titan's modules/smtpbanner.sh)
 # 05/01/2003 jfs Added notes on behaviour, this check will only run if 
-#                SENDMAILCF exists (after all, it's a sendmail-only check)
+#                SENDMAILCF exists (after all, it's a sendmail-only check).
+#                Fixed dependancies.
 #
 #-----------------------------------------------------------------------------
 #
@@ -59,7 +60,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds SENDMAILS AWK CAT CC EGREP FIND GET_MOUNTS LS RM SED SGREP STRINGS TR || exit 1
+  haveallcmds SENDMAILS AWK LS SED STRINGS || exit 1
   haveallfiles SENDMAILCF BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME || exit 1
   

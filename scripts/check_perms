@@ -24,6 +24,7 @@
 # 11/05/2002 jfs Small fix to prevent shell expansion to ocur while testing
 #                filenames (discovered due a broken self-made package that
 #                created a /usr/bin/*config directory, ouch.)
+# 05/01l/2003 jfs Fixed dependancies
 #
 #-----------------------------------------------------------------------------
 #
@@ -62,7 +63,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK GET_MOUNTS GREP LS RM SGREP 
+  haveallcmds AWK GET_MOUNTS GREP LS SGREP 
   haveallfiles FILE_ACL BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK || exit 1
   

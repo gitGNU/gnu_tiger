@@ -17,13 +17,6 @@
 #
 #  check_exports - 06/14/93
 #
-# 04/28/93 dls  Add '-L' to 'ls' so we get the permissions from the file
-#               instead of a symbolic link.
-# 05/30/99 ARC  Fixed problems with IRIX and other false alarms
-#
-#-----------------------------------------------------------------------------
-#
-#
 # Check NFS exports file for:
 #
 #       Anonymous ID = 0 and write access (fail)
@@ -39,6 +32,14 @@
 #                 is a diskless client, but the path is "unsafe" (warn)
 #       Exporting a filesystem with "root" access, the host
 #                 is not a diskless client, and the path is "unsafe" (warn)
+#
+#-----------------------------------------------------------------------------
+#
+# 04/28/93 dls  Add '-L' to 'ls' so we get the permissions from the file
+#               instead of a symbolic link.
+# 05/30/99 ARC  Fixed problems with IRIX and other false alarms
+#
+# 05/01/2003 jfs Fixed dependancies, added note.
 #
 #------------------------------------------------------------------------
 #
@@ -78,9 +79,9 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK GEN_BOOTPARAM_SETS GEN_EXPORT_SETS LS RM SED SORT 
+  haveallcmds AWK GEN_EXPORT_SETS SORT || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
-  haveallvars HOSTNAME
+  haveallvars HOSTNAMESLIST || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0

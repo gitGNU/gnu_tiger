@@ -71,7 +71,6 @@ echo "# Performing common access checks for root..."
 
 haveallcmds AWK GREP CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
-haveallvars TESTLINK HOSTNAME || exit 1
 
 if [ -f /etc/default/login ]; then
   if [ ! "`$GREP '^CONSOLE' /etc/default/login`" ]; then

@@ -55,7 +55,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds CAT SORT AWK LS RM || exit 1
+  haveallcmds CAT SORT AWK GREP || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -68,7 +68,7 @@ done
 echo
 echo "# Performing check of embedded pathnames..."
 
-haveallcmds CAT SORT AWK JOIN GREP || exit 1
+haveallcmds CAT SORT AWK GREP || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 {

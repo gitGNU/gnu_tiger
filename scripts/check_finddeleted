@@ -84,7 +84,6 @@ echo "# Performing check of deleted files used by processes..."
 
 haveallcmds GREP CAT LSOF PS CAT || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
-haveallvars TESTLINK HOSTNAME || exit 1
 
 
 

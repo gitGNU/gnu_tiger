@@ -28,6 +28,7 @@
 # 04/15/2003 jfs Removed the 'cd' to MAILSPOOL since the CAT of the passlist
 #		 will not work if BASEDIR is relative. Fixed the AWK call
 #		 (was being made to the wrong file!)
+# 05/01/2003 jfs Removed RM and CC from dependancies
 #
 #-----------------------------------------------------------------------------
 #
@@ -67,7 +68,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT CC EGREP FIND GET_MOUNTS LS RM SED SGREP STRINGS TR TAIL HEAD CUT || exit 1
+  haveallcmds AWK CAT EGREP FIND GET_MOUNTS LS SED SGREP STRINGS TR TAIL HEAD CUT || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   

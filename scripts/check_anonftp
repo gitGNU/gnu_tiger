@@ -78,7 +78,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds LS CAT AWK RM GROUPC FIND SGREP GREP || exit 1
+  haveallcmds LS CAT AWK GROUPC FIND SGREP GREP || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -89,7 +89,7 @@ done
 echo 
 echo "# Performing check of anonymous FTP..."
 
-haveallcmds CAT LS AWK SGREP GREP || exit 1
+haveallcmds LS CAT AWK GROUPC FIND SGREP GREP || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 checkfiles()

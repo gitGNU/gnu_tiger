@@ -75,7 +75,6 @@ echo "# Performing check of .netrc files..."
 
 haveallcmds AWK CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
-haveallvars TESTLINK HOSTNAME || exit 1
 
 
 check_file()

@@ -21,6 +21,11 @@
 # tripwire_run - 07/25/2002 - jfs
 #       Changed TigerInstallDir to .
 #
+# tripwire_run - 05/01/2003 - jfs - Fixed dependancies, awk -> $AWK
+#
+# TODO:
+# - Tripwire location should be moved to a predefined command
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -59,7 +64,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT FMT GEN_PASSWD_SETS JOIN LS RM || exit 1
+  haveallcmds AWK GREP || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -68,6 +73,8 @@ done
 }
 
 #------------------------------------------------------------------------
+haveallcmds AWK GREP || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
 echo
 echo "# Running Tripwire..."
 
@@ -79,7 +86,7 @@ echo "# Running Tripwire..."
 # jfs - 12/06/2002
 
 tmplog="$WORKDIR/trip.out.tmp.$$"
-/usr/sbin/tripwire --check 2> /dev/null | $GREP "Rule Name:" | awk '{print $NF}' > $tmplog
+/usr/sbin/tripwire --check 2> /dev/null | $GREP "Rule Name:" | $AWK '{print $NF}' > $tmplog
 
 while read filename
 do

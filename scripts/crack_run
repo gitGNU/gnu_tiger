@@ -17,6 +17,8 @@
 #
 # crack_run - 06/14/93
 #
+# 05/01/2003 - Fixed dependancies
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -55,7 +57,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT FMT GEN_PASSWD_SETS JOIN LS RM || exit 1
+  haveallcmds AWK CAT GEN_PASSWD_SETS || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -82,7 +84,7 @@ fi
 
 exit 0
 ########################################################################
-haveallcmds CRACK GEN_PASSWD_SETS CAT EXPR
+haveallcmds CRACK GEN_PASSWD_SETS CAT EXPR || exit 1
 
 localflag=
 [ "$Tiger_Crack_Local" = 'Y' ] && localflag="-l"

@@ -24,6 +24,8 @@
 #        Fixed some ! problems in Solaris by changing the ! DIFF to a
 #        check of the exit status
 #
+# check_issue - 05/01/2003 - jfs - Fixed dependancies
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -64,7 +66,7 @@ done
 [ "$Tiger_TESTMODE" = 'Y' ] && {
   haveallcmds DIFF || exit 1
   haveallfiles ISSUEFILE ISSUENETFILE BASEDIR WORKDIR || exit 1
-  haveallvars TESTLINK HOSTNAME
+  haveallvars TESTLINK HOSTNAME || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0

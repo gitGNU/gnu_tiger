@@ -105,6 +105,7 @@ echo
 echo "# Checking listening processes "
 
 haveallcmds CAT LSOF GREP CUT AWK SORT UNIQ || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
 
 okprocessusers=$Tiger_Listening_ValidUsers
 okprocess=$Tiger_Listening_ValidProcs

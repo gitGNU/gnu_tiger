@@ -70,6 +70,9 @@ done
 }
 #------------------------------------------------------------------------
 
+haveallcmds AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
 check_dev_file()
 {
 	device=$1

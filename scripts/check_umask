@@ -21,6 +21,8 @@
 # separated from check_logfiles since it's a broader check. The command
 # requirements have been modified to adjust to what it's really needed.
 #
+# 05/01/2003 - jfs - Fixed dependancies
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir="."
@@ -70,6 +72,7 @@ done
 #------------------------------------------------------------------------
 
 haveallcmds TAIL SED HEAD EXPAND GREP WC CUT  || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
 
 #####
 # Check to ensure that the umask is set correctly

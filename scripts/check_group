@@ -54,7 +54,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT GEN_GROUP_SETS GREP JOIN MV RM SORT UNIQ || exit 1
+  haveallcmds AWK CAT GEN_GROUP_SETS GREP JOIN MV SORT UNIQ || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
