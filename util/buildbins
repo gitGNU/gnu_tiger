@@ -16,6 +16,9 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # buildbins - 06/16/93
+# 
+# Build Tiger binaries: realpath, snefru, testsuid, md5, and getpermit
+# for the different operating systems.
 #
 #-----------------------------------------------------------------------------
 #
