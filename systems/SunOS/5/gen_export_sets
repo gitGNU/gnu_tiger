@@ -17,6 +17,13 @@
 #
 # SunOS/4/gen_export_sets - 06/14/93
 #
+# TODO:
+#
+# - This will not work for SunOS versions later than 5.5
+#   /etc/exports has been moved
+#   to /etc/dfs/dfstab (see share_nfs(1M) and nfssec(5)
+#  see  http://docs.sun.com/db/doc/802-1967/6i5vce4fu
+#
 #-----------------------------------------------------------------------------
 #
 
