@@ -24,6 +24,7 @@
 #            only 7.1 or greater are consider current (Debian Bug 219764)
 # 01/15/2004 jfs       Updated RedHat version (now it's 9 or greater), but
 #            added a note regarding Progeny support...
+# 03/21/2005 jfs       Use EGREP instead of grep -E
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -65,7 +66,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds CUT GREP RM  || exit 1
+  haveallcmds CUT EGREP RM  || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -75,13 +76,13 @@ done
 
 echo
 echo "# Checking OS release..."
-haveallcmds CUT GREP RM  || exit 1
+haveallcmds CUT EGREP RM  || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 if [ -e /etc/redhat-release ]
 then
         REDHAT_VERSION=`$CUT -f5 -d' ' /etc/redhat-release`
-        $GREP -E "[A-Za-z]" $REDHAT_VERSION 1> /dev/null
+        $EGREP "[A-Za-z]" $REDHAT_VERSION 1> /dev/null
 	if [ $? -eq 1 ]
 	then
 		MAJOR=`echo $REDHAT_VERSION | $CUT -d. -f1`
@@ -110,12 +111,12 @@ then
 	# these are the codenames for the older debian releases
 	# if we see any of them we know we fail right away
         DEBIAN_VERSION=`$CUT -f1 -d' ' /etc/debian_version`
-        $GREP -E "hamm|bo|rex|buzz" /etc/debian_version 2> /dev/null
+        $EGREP "hamm|bo|rex|buzz" /etc/debian_version 2> /dev/null
         if [ $? -eq 0 ]
         then
                 message FAIL osv002 "" "Out of date Debian GNU/Linux version"
         else
-            $CUT -f1 -d' ' /etc/debian_version | $GREP -E "[A-Za-z]" 1> /dev/null
+            $CUT -f1 -d' ' /etc/debian_version | $EGREP "[A-Za-z]" 1> /dev/null
             if [ $? -eq 1 ]
             then
                 MAJOR=`echo $DEBIAN_VERSION | $CUT -d \. -f 1`
