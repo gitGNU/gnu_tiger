@@ -73,7 +73,7 @@
 # ----------------------------------------------------------------------
 # Check for system configuration once a month
 #
-* 2 *         check_services check_signatures check_umask check_ftpusers check_embedded check_exrc
+1 2 *         check_services check_signatures check_umask check_ftpusers check_embedded check_exrc
 #
 # ----------------------------------------------------------------------
 # Run a password cracker against the local passwords once a month
