@@ -191,9 +191,9 @@ $AWK -F: '{
                 printf("Login %s has no password.\n", $1);
 	if ($2 != "" && length($2) != 13 && length($2) != 34 &&
 	    length($2) != 1 && $2 !~ /^\$[0-9a-zA-Z\.]+\$/ && $2 !~ /^!/ )
-		printf("Login %s has an unsual password field length.\n", $1);
+		printf("Login %s has an unusual password field length.\n", $1);
 	if ($2 != "" && $2 !~ /^\$[0-9a-f]+\$/ && $2 !~ /^[!*]/ )
-		printf("Login %s has an unsual password content.\n", $1);
+		printf("Login %s has an unusual password content.\n", $1);
 }' < $PW > "$OUT"
 
 # NOTE: I've found some passwords with '/'. Is this common?
