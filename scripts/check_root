@@ -17,6 +17,9 @@
 #
 # check_root - 05/30/99
 #
+# 11/16/2003 jfs Applied patch from Nicolas François to work non-interactively
+#            even in SuSE (broken in previous patch) This problem has also
+#            been reported multiple times in Debian: #218056, #220924
 # 10/19/2003 jfs Applied patch from Ryan Bradetich which fixes mesg check
 #            in SuSE. Also fixed message on root logins in SSHD
 # 09/19/2003 jfs Applied patch from Nicolas François in order to properly
@@ -132,10 +135,12 @@ if [ -f /etc/X11/gdm/gdm.conf ]; then
 fi
 
 [ -n "$MESG" -a -x "$MESG" ] && {
+  tty 2>&1 > /dev/null && {
   if $MESG | $GREP "is y" >/dev/null
   then
     message WARN root003w "" "Root user has message capability turned on."
   fi
+  }
 }
 
 [ -z "$SSHD_CONFIG" ] && {
