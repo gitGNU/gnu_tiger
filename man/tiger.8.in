@@ -2,7 +2,7 @@
 .SH NAME
 tiger \- UNIX Security Checker
 .SH SYNOPSIS
-.B "tiger [-B tigerdir] [-l logdir] [-w workdir] [-b bindir] [-e|-E] [-S] [-H] [-c tigerrc] [-q]"
+.B "tiger [-vthqGSH]  [-B dir] [-l dir|@host] [-w dir] [-b dir] [-e|-E] [-c config] [-A arch] [-O os] [-R release]"
 .LP
 .SH DESCRIPTION
 .LP
@@ -21,7 +21,7 @@ Specify the directory where
 .I tiger
 is installed.  If not specified, @tigerhomedir@ is used.
 .TP
-.I "\-l logdir"
+.I "\-l logdir|@logserver"
 Specify the name of the directory where
 .I tiger
 will write the security report.  This defaults to @tigerlogdir@.
@@ -29,7 +29,10 @@ The filename of the report will
 be of the form 
 .RI 'security.report. hostname.date.time.'
 If the directory  begins  with a \fB@\fR, the name will
-be interpreted as a tiger logging server.
+be interpreted as a tiger logging server. Tiger logging's server
+is currently a server that listens in port (tcp) 5353 on a remote
+host. The tiger process will just send the results to that server
+using a telnet connection.
 .TP
 .I "\-w workdir"
 Specify a directory to use for creating scratch files.  This defaults
@@ -80,6 +83,31 @@ if run on the client itself.
 .I "\-q"
 Supress messages to be as quiet as possible, only 
 security messages will be shown.
+.TP
+.I "\-A arch"
+This option overrides the default value obtained for the current architecture
+detected by the internal configuration engine to a value defined
+by the user.
+.TP
+.I "\-O os"
+This option overrides the default value obtained for the current operating
+system detected by the internal configuration engine to a value defined
+by the user.
+.TP
+.I "\-R release"
+This option overrides the default value obtained for the current 
+operating system release detected by the internal configuration engine 
+to a value defined by the user.
+.LP
+Notice that changing the real values for the operating system and
+architecture 
+.B Tiger
+is running in might result in scripts being run which are not
+appropiate to it, and, as a consequence, unexpected (and potentially 
+dangerous) errors might be generated. When executed
+.B Tiger
+will show which operating system, release and architecture thinks it is
+running in.
 .LP
 .SH MODULES
 .LP
