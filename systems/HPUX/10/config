@@ -62,6 +62,8 @@ LN=/bin/ln
 WC=/bin/wc
 TEE=/bin/tee
 EXPAND=/usr/bin/expand
+REALPATH=$BINDIR/realpath
+SNEFRU=$BINDIR/snefru
 #
 # Disable diff because it doesn't support -D... so we can not
 # use diff... this will cause reports to be mailed as is... future

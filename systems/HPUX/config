@@ -73,6 +73,8 @@ MESG=/usr/bin/mesg
 ID=/usr/bin/id
 EXPAND=/usr/bin/expand
 CUT=/usr/bin/cut
+REALPATH=$BINDIR/realpath
+SNEFRU=$BINDIR/snefru
 # Setup PWCK depending on the status of the system
 # (is it in trusted mode?)
 /usr/lbin/getprdef -r >/dev/null 2>/dev/null
