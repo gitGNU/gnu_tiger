@@ -22,6 +22,7 @@
 # it also determines which services are running wrapped in tcp-wrappers.
 # (based on check_inetd)
 #
+# check_tcpd - 10/07/2003 - jfs - Remove temporary files
 # check_tcpd - 08/11/2003 - jfs
 #     Check for the availability of TCPD and only run the checks on inetd
 #     if TCPD is available. Preliminary code for XINETD. Also check for
@@ -226,5 +227,7 @@ haveallfiles INETDFILE && {
 #      delete $xinetd_set $xinetd_set.src
 #    done
 #  }
+
+delete $tmpservices $tmpinetd
 
 exit 0
