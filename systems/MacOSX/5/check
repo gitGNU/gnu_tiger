@@ -1,0 +1,114 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/5/check - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds GREP SED || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+if [ -x /usr/kvm/eeprom ]; then
+  EEPROM="/usr/kvm/eeprom"
+else
+  EEPROM="/usr/sbin/eeprom"
+fi
+if [ -x $EEPROM ]; then
+  status=`$EEPROM |
+        $GREP '^secur.*=' |
+        $GREP -v 'badlogins' |
+	$SED -e 's/^secur.*=\(.*\)$/\1/'`
+
+  [ ! -n "$status" -o "$status" = "none" ] && {
+  message WARN no-id "" "The PROM monitor is not in secure mode."
+}
+fi
+
+#
+# nfs:nfsportmon information due to Caspar Dik via comp.unix.solaris
+#
+
+nfsportmon=0
+$SED -e 's/\*.*$//' -e '/^$/d' -e 's/=/ = /' /etc/system |
+{
+  while read _set var eq value
+  do
+    case "$var" in
+      "nfs:nfs_portmon") nfsportmon="$value";;
+    esac
+  done
+
+  [ "$nfsportmon" = 0 ] && {
+    message WARN misc008w "" "NFS port checking disabled in kernel."
+  }
+}
+
+if $SGREP "/sbin/sh.*/dev/console" /etc/rcS; then
+  message WARN misc014w "" "/etc/rcS contains a vulnerability.  See explanation for details."
+fi
+
+[ -f /var/sadm/install/contents ] && {
+  $EGREP '^/dev' /var/sadm/install/contents |
+  while read file type x x x mode owner group pkg
+  do
+    [ "$type" = 'c' ] && {
+      case "$file" in
+	*clone*:ie|*clone*:le|*clone*:qe) {
+	  [ "$mode" != 0600 ] && {
+	    message WARN misc016w "" "$file is defined with mode \`$mode' in /var/sadm/install/contents; should be \`0600'."
+	  }
+	  [ "$owner" != root ] && {
+	    message WARN misc017w "" "$file is defined with owner \`$owner' in /var/sadm/install/contents; should be \`root'."
+	  }
+	}
+        ;;
+      esac
+    }
+  done
+}

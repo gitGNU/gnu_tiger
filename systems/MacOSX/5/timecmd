@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# NeXT/3/timecmd - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+$DATE |
+$AWK '{print substr($4,1,5);}'

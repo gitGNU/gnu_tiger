@@ -1,0 +1,181 @@
+# -*- sh -*-
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/5/config - 06/14/93
+# Updated for compiles, findcmd, and whoami
+#
+#-----------------------------------------------------------------------------
+#
+
+UUID="`/usr/bin/id | /usr/bin/sed -e 's/^uid=\([0-9][0-9]*\)[^0-9].*$/\1/'`"
+
+[ "$UUID" != '0' -a "$Tiger_TESTMODE" != 'Y' ] && {
+  echo 1>&2
+  echo 'This script should be run from a super-user account.' 1>&2
+  echo 1>&2
+  exit 1
+}
+findcmd()
+{
+  CMD=$1
+
+  SRCH=/sbin:/usr/local/bin:/bin:/usr/bin:/etc:/usr/ucb:/usr/sbin:/usr/lib
+
+  SAVEIFS=$IFS
+  IFS=:
+  set $SRCH
+  IFS=$SAVEIFS
+  for dir
+  do
+    [ $TESTEXEC $dir/$CMD ] && {
+      echo $dir/$CMD
+      return
+    }
+  done
+}
+
+TESTEXEC=-x
+( [ $TESTEXEC /bin/sh ] ) 2> $WORKDIR/te.$$
+[ -s $WORKDIR/te.$$ ] && TESTEXEC=-f
+export TESTEXEC
+WHOAMI=`findcmd whoami`
+CAT=`findcmd cat`
+LS=`findcmd ls`
+# With /usr/bin/ls, just '-l' to get group owner
+# For /usr/ucb/ls, use "-lg"
+LSGROUP="-l"
+# -L to show file instead of symlink
+LSLINK="-L"
+RM=`findcmd rm`
+AWK=`findcmd awk`
+GREP=`findcmd grep`
+EGREP=`findcmd egrep`
+SGREP="$EGREP -s"
+SED=`findcmd sed`
+SORT=`findcmd sort`
+COMM=`findcmd comm`
+TAIL=`findcmd tail`
+MV=`findcmd mv`
+TR=`findcmd tr`
+IFCONFIG=`findcmd ifconfig`
+JOIN=`findcmd join`
+GROUPSS=`findcmd groups`
+FILECMD=`findcmd file`
+UNIQ=`findcmd uniq`
+BASENAME=`findcmd basename`
+CHMOD=`findcmd chmod`
+CHOWN=`findcmd chown`
+LN=`findcmd ln`
+PASTE=`findcmd paste`
+DIFF=`findcmd diff`
+DIFFD=' '
+MAILER=`findcmd mail`
+SENDMAILS="/usr/lib/sendmail /usr/lib/sendmail.mx"
+SENDMAILCF="/etc/mail/sendmail.cf"
+export SENDMAILS SENDMAILCF
+#
+export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
+export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME
+export CHMOD CHOWN LN PASTE DIFF DIFFD MAILER
+#
+UNAME=`findcmd uname`
+GETHOSTNAME="/usr/bin/uname -n"
+EXPR=`findcmd expr`
+STRINGS=`findcmd strings`
+FIND=`findcmd find`
+FINDXDEV=-xdev
+FMT=`findcmd fmt`
+CC=`findcmd gcc`
+if [ -z "$CC" ]; then
+  CC=`findcmd cc`
+fi
+CFLAGS="-DNEEDGETWD"
+PS=`findcmd ps`
+DATE=`findcmd date`
+DATECMD="$DATE +%y%m%d"
+TIMECMD="$DATE +%H:%M"
+TESTLINK=-h
+TESTEXEC=-x
+#
+export UNAME GETHOSTNAME EXPR STRINGS FIND FINDXDEV
+export FMT CC PS DATE DATECMD TIMECMD TESTLINK CFLAGS TESTEXEC
+#
+WAIT=wait
+#
+#
+YPCAT=`findcmd ypcat`
+NISCAT=`findcmd niscat`
+TCPD=`findcmd tcpd`
+#
+export WAIT YPCAT NISCAT TCPD
+#
+#
+MAILSPOOL=/var/mail
+ETCSHELLS=/etc/shells
+CRONSPOOL=/var/spool/cron/crontabs
+#
+export MAILSPOOL ETCSHELLS CRONSPOOL
+# egrep regex that defines a local filesystem
+LOCFS="(ufs|tmpfs)"
+export LOCFS
+#
+# System dev directories...
+# 
+DEVDIRSYS="/dev/ /devices"
+#
+export DEVDIRSYS
+#
+SYSDEFAULTPATH="/usr/sbin:/usr/bin"
+export SYSDEFAULTPATH
+
+CDIR="$BASEDIR/systems"
+eval `
+  while read var file
+  do
+    if [ -f "$CONFIG_DIR/$file" ]; then
+      loc="$CONFIG_DIR"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$ARCH/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV/$ARCH"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV"
+    elif [ -f "$CDIR/$OS/$REL/$file" ]; then
+      loc="$CDIR/$OS/$REL"
+    elif [ -f "$CDIR/$OS/$file" ]; then
+      loc="$CDIR/$OS"
+    else
+      loc=""
+    fi
+    if [ "$loc" != "" ]; then
+      echo $var="$loc/$file;"
+    else
+      echo "$var=;"
+    fi
+    echo "export $var;"
+  done << EOL
+GETFS getfs"
+GEN_PASSWD_SETS gen_passwd_sets
+GEN_GROUP_SETS gen_group_sets
+GEN_ALIAS_SETS gen_alias_sets
+CHECK_CRON check_cron
+GEN_BOOTPARAM_SETS gen_bootparam_sets
+GEN_EXPORT_SETS gen_export_sets
+GEN_SERVICES_SETS gen_services
+GET_MOUNTS gen_mounts
+SIGNATURE_FILE signatures
+SERVICESFILE services
+INETDFILE inetd
+FILE_ACL file_access_list
+SUID_LIST suid_list
+REL_FILE_EXCP rel_file_exp_list
+GEN_CRON_FILES gen_cron
+GETCLIENTDIRS gendlclients
+GEN_INETD_SETS gen_inetd
+GETDISKS getdisks
+EMBEDDEDLIST embedlist
+GETUSERHOME getuserhome
+EOL
+`

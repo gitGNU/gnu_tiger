@@ -1,0 +1,8 @@
+/etc/rc
+/etc/rc.boot
+/etc/rc.local
+/etc/rc.uucp
+/etc/rc.swap
+/.profile
+/.cshrc
+/.login

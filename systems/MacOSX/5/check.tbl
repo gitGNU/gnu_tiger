@@ -1,0 +1,14 @@
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# NeXT/3.0/check.tbl - 03/42/93
+#
+#-----------------------------------------------------------------------------
+#
+#
+# Add new system specific checks here.  One script name per line.
+#
+check_printcap
