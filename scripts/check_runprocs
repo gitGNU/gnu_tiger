@@ -75,7 +75,7 @@ haveallcmds PS GREP || exit 1
 
 processes=$Tiger_Running_Procs
 [ -z "$processes" ] && {
-	message FAIL con009e "" "There are no running process configured. Please add the Tiger_Running_Procs variable to tigerrc."
+	message ERROR con009e "" "There are no running process configured. Please add the Tiger_Running_Procs variable to tigerrc."
 	exit 1
 }
 

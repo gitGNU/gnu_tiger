@@ -82,7 +82,7 @@ runtable()
 	  echo "# Running '$script'..."
 	  $script
 	else
-	  echo "--ERROR-- [misc005w] Can't find '$script'..."
+	  echo "--ERROR-- [misc005e] Can't find '$script'..."
 	fi
         ;;
       *)
@@ -93,7 +93,7 @@ runtable()
 	  echo "# Running '$SCRIPTDIR/$script'..."
 	  $SCRIPTDIR/$script
 	else
-	  echo "--ERROR-- [misc005w] Can't find $script'..."
+	  echo "--ERROR-- [misc005e] Can't find $script'..."
 	fi
         ;;
     esac

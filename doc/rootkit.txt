@@ -14,12 +14,12 @@ not recognize the file, a FAIL is issued.
 The 'chkrootkit' program has detected a suspicious directory
 which might be an indication of an intrusion. 
 A full analysis of the system is recommended to determine the 
-presence of further signs of intrusion since a rookit might have
+presence of further signs of intrusion since a rootkit might have
 been installed. 
-%rootkit004f
+%rootkit004w
 The 'chkrootkit' program has detected a possible rootkit installation
 A full analysis of the system is recommended to determine the 
-presence of further signs of intrusion since a rookit might have
+presence of further signs of intrusion since a rootkit might have
 been installed. 
 %rootkit005a
 The 'chkrootkit' program has detected a rootkit installation
@@ -29,10 +29,10 @@ rootkit is indeed installed.
 %rootkit006a
 A rootkit is installed by intruders in systems which have been
 successfully compromised and in which they have obtained full
-administrator priviledges. The installation of a rookit is 
+administrator privileges. The installation of a rootkit is 
 an indication of a major system compromise.
 
-If the installation of a rookit is confirmed you are encouraged 
+If the installation of a rootkit is confirmed you are encouraged 
 to power off the system and follow the steps outlined by
 Steps for Recovering from a UNIX or NT System Compromise
 (http://www.cert.org/tech_tips/root_compromise.html)

@@ -513,15 +513,15 @@ run_script()
 	            if [ $__script_owner -eq $UUID ]; then
 			$__script_run
 		    else
-			echo "--ERROR-- [misc024w] The $__script_run script will not be run since it is owned by a user ($__script_owner) different than the one running Tiger ($UUID)"
+			echo "--ERROR-- [misc024e] The $__script_run script will not be run since it is owned by a user ($__script_owner) different than the one running Tiger ($UUID)"
   			__error=1
 		    fi
 	    else
-          	echo "--ERROR-- [misc025w] The $__script_run will not be run since it is not executable"
+          	echo "--ERROR-- [misc025e] The $__script_run will not be run since it is not executable"
                 __error=1
             fi
         else
-          echo "--ERROR-- [misc005w] Can't find '$script'..."
+          echo "--ERROR-- [misc005e] Can't find '$script'..."
           __error=1
         fi
   done

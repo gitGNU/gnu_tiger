@@ -37,7 +37,7 @@ UNIX file utilities and text utilities (the GNU versions work fine for this).
 Mailing lists
 -------------
 
-There are now two maillings list available for the 'tiger' at
+There are now two mailing lists available for the 'tiger' at
 savannah.gnu.org. These two mailing lists are:
 
 - a user's mailing list: tiger-user@mail.freesoftware.fsf.org
@@ -101,9 +101,9 @@ Research Computing, available at http://www-arc.com/tara), one internally
 developed by the HP corporation by Bryan Gartner and the last one developed 
 for the Debian GNU/Linux distribution by Javier Fernandez-Sanguino.
 
-These forks were merged on may 2002 and in june 2002 the new source code,
+These forks were merged on may 2002 and in June 2002 the new source code,
 now labeled as the 3.0 release, was published at the Savannah site.
-The 3.1 release was distributed in october 2002, it was considered
+The 3.1 release was distributed in October 2002, it was considered
 an unstable release and included some new checks, a new autoconf script
 for automatic configuration, but mostly included  fixes from
 bugs found after testing Tiger in Debian GNU/Linux and in other 

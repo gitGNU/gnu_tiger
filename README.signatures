@@ -20,7 +20,7 @@ If you want to generate fresh signature and file_access_list for your
 system you can use the scripts 'util/mksig' and 'util/mkfilelst' which
 will, respectively, create a signatures.$OS-$REV-$ARCH and
 file_access_list.$OS-$REV-$ARCH file in the current directory you can
-install under the appropiate systems/$OS/$REV/$ARCH directory (and
+install under the appropriate systems/$OS/$REV/$ARCH directory (and
 rename them to 'signatures' and 'file_access_list')
 
 You can retrieve updated signatures (MD5 and SHA-1 signatures) from

@@ -87,10 +87,10 @@ check_dev_file()
 		then
 		case $device in
 		/dev/st[0-9])
-			message FAIL dev001 "" "$device has world permissions"
+			message FAIL dev001f "" "$device has world permissions"
 		;;
 		*)
-			message FAIL dev002 "" "$device has world permissions"
+			message FAIL dev002f "" "$device has world permissions"
 		;;
 		esac
 		fi

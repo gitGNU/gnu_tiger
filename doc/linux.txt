@@ -73,12 +73,12 @@ denial of service attacks:
 %lin013f
 It is common to protect systems against Denial of Service attacks using
 SYN packets (commonly known as "SYN flooding") by activating support
-of TCP syncookies. Note, however, that activating this violates some RFCS:
+of TCP syncookies. Note, however, that activating this violates some RFCs:
   # sysctl -w net.ipv4.tcp_syncookies = 1
 %lin014f
 It is possible to send IP spoofed packets from this machine. Spoofed
 packets are commonly used by trojans that make use of compromised hosts
-to deliver denial of service, man in the middle or conection hijacking.
+to deliver denial of service, man in the middle or connection hijacking.
 You should consider configuring your kernel to not permit this:
   # sysctl -w net.ipv4.conf.all.rp_filter = 2
   # sysctl -w net.ipv4.conf.default.rp_filter = 2
@@ -96,7 +96,7 @@ filtering that is done on the network:
   # sysctl -w net.ipv4.conf.all.accept_source_route = 0
   # sysctl -w net.ipv4.conf.default.accept_source_route = 0
 %lin017w
-Suspicious packets recieved by the kernel should be logged to detect
+Suspicious packets received by the kernel should be logged to detect
 incoming attacks. To activate this logging capability:
   # sysctl -w net.ipv4.conf.all.log_martians = 1
   # sysctl -w net.ipv4.conf.default.log_martians = 1

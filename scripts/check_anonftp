@@ -193,12 +193,12 @@ haveallcmds GETUSERHOME && {
 
     [ -f $ftphome/etc/passwd ] && {
       $SGREP '^[^:]*:[a-zA-Z0-9\./,]*:' $ftphome/etc/passwd | $SGREP -v '::' && {
-        message WARN ftp003w "" '~ftp/etc/passwd contains accounts with passwords.'
+        message WARN ftp003w "" "$ftphome/etc/passwd contains accounts with passwords."
       }
     }
 
     [ -s $ftphome/.rhosts ] && {
-      message ALERT ftp002a "" '~ftp/.rhosts exists and is not empty:'
+      message ALERT ftp002a "" "$ftphome/.rhosts exists and is not empty:"
       $CAT $ftphome/.rhosts
       echo
     }

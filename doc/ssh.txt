@@ -8,12 +8,12 @@ Valid options are: yes, without-password, forced-commands-only,
 and no.
 %ssh003w
 The RhostsAuthentication directive determines if .rhosts or 
-/etc/hosts.equiv is sufficent authentication.  This option
+/etc/hosts.equiv is sufficient authentication.  This option
 only applies to protocol version 1 and is generally believed
 to be insecure.
 %ssh004w
 The PasswordAuthentication directive determines if passwords
-are a sufficent authentication.
+are a sufficient authentication.
 %ssh005e
 The variable SSHD_CONFIG is not defined which means that you have
 not setup (or the system has been enable to find) your SSH configuration

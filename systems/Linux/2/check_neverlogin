@@ -96,7 +96,7 @@ haveallfiles BASEDIR WORKDIR ETCSHELLS || exit 1
 # Just make this check just in case
 if [ ! -r $WORKDIR/pass.list.$$ ]
 then
-	message FAIL pass008e "" "File $WORKDIR/pass.list.$$ is not readable"
+	message ERROR pass008e "" "File $WORKDIR/pass.list.$$ is not readable"
 	exit 1
 fi
 

@@ -176,7 +176,7 @@ this problem, place a '*' in the password field in /etc/passwd.
 %sig022f
 The patchdiag.xref files is not available in the configuration directory. This
 means that the script cannot proceed further since it does not have any
-information of which are the appropiate patches for this system.
+information of which are the appropriate patches for this system.
 
 Please download the patchdiag file from Sunsolve, you can use, for example,
 the following link:

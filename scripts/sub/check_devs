@@ -69,7 +69,7 @@ done
 eval $greps | $GREP -v '^'/hw> $WORKDIR/dev.list.$$
 
 [ -s $WORKDIR/dev.list.$$ ] && {
-  message WARN fsys006a "" "Unexpected device files found:"
+  message ALERT fsys006a "" "Unexpected device files found:"
   $SORT $WORKDIR/dev.list.$$ |
   while read file
   do

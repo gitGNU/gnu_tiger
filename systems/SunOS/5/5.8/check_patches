@@ -121,7 +121,7 @@ then
 	fi
   done
 else
-   message WARN sig022f "" "This system does not have a patchdiag.xref file (looked for it in $CONFIG_DIR)"
+   message FAIL sig022f "" "This system does not have a patchdiag.xref file (looked for it in $CONFIG_DIR)"
 fi
 
 delete $WORKDIR/showrev.$$

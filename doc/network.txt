@@ -1,11 +1,11 @@
 %netw001f
-The listed file is world writeable.  chomd -ow file to correct.
+The listed file is world writable.  chmod -ow file to correct.
 %netw002f
 The listed file is not owned by an 'administrative' account.
 Change the ownership, or add your admin user to 'Tiger_Admin_Accounts'
 list of valid administrative users.
 %netw003f
-The inetd daemon is not configured with loggin enabled.  If xinetd
+The inetd daemon is not configured with login enabled.  If xinetd
 based, add the 'filelog' or 'syslog' options in /etc/sysconfig/xinetd
 configuration file.
 %netw004f

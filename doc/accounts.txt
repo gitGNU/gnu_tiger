@@ -109,7 +109,7 @@ and compromise of this account could lead to trojan executables in
 typical search paths.
 %acc019w
 The listed login ID may be missing a login program initialization
-file.  This file controls the behavour of the login process and of
+file.  This file controls the behaviour of the login process and of
 many important environment variables.
 %acc020w
 The listed login ID does not have a valid login program or shell.

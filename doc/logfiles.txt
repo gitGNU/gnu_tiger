@@ -18,7 +18,7 @@ The log file "utmp" should exist so that a list of current users on the
 server can be listed.  This is accessed by the command "who".
 It might not exist due to a system configuration error or an 
 intruder that has tried to cover this tracks by removing it.
-%logf005w
+%logf005f
 The log file does not have proper permissions set. It is recommended that
 you change the permissions to those suggested for these file.
 %logf005w
@@ -29,12 +29,12 @@ The log file "loginlog" should exist to show a user login attempts
 on the server.  
 It might not exist due to a system configuration error or an 
 intruder that has tried to cover this tracks by removing it.
-%logf006f
+%logf007f
 The log file "messages" should exist to show a trace of the system logs
 (including reboots and kernel messages), it is also often used by the 
 syslog daemon to log information. The contents of the "messages" logfile
 depends upon the configuration of the syslog.conf and varies by 
-distribution and/or system administrator preferrence.
+distribution and/or system administrator preference.
 It might not exist if you have configured your system to use a 
 different file for logging or if an intruder has tried to cover 
 his tracks by removing it since the messages file might contain 

@@ -226,8 +226,7 @@ installbinaries:
 installconfig:
 	@echo "Copying configuration files..."
 	@for file in $(CONFIGFILES); do \
-	  cp $$file $(DESTDIR)$(TIGERCONFIG)/$$file; \
-	  chmod 640 $(DESTDIR)$(TIGERCONFIG)/$$file; \
+	  $INSTALL -m 0640 $$file $(DESTDIR)$(TIGERCONFIG)/$$file; \
 	done
 	@echo "Copying general configuration..."
 	@sed -e 's%^TigerLogDir=.*$$%TigerLogDir="'$(TIGERLOGS)'"%' \
@@ -240,11 +239,11 @@ installconfig:
 
 install: installdirs installbinaries installconfig installmanpages
 	cd c && $(MAKE) install
-	@echo "Copying miscellaneus dirs..."
+	@echo "Copying miscellaneous dirs..."
 	@for dir in $(MISCDIRS); do \
 	  tar cf - $$dir | (cd $(DESTDIR)$(TIGERHOME); tar xpf -); \
 	done
-	@echo "Copying miscellaneus files..."
+	@echo "Copying miscellaneous files..."
 	@for file in $(MISCFILES); do \
 	  cp -p $$file $(DESTDIR)$(TIGERHOME)/$$file; \
 	done

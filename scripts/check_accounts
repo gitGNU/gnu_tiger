@@ -240,7 +240,7 @@ check_users()
                str="$str world write"
                ;;
          esac
-         message FAIL acc006w "" "${str} access."
+         message WARN acc006w "" "${str} access."
          changelog "WARN : chmod : $mode : $home/."
        }
      }
@@ -282,7 +282,7 @@ check_users()
 
      # Non-zero sized .hushlogin
      [ -s "$home/.hushlogin" ] &&
-       message ALERT acc007a '' "Logon ID $user has a non-zero length .hushlogin"
+       message ALERT acc007a '' "Login ID $user has a non-zero length .hushlogin"
 
      # Check shell initialization files.
      # TODO: Bob Hall suggest disabling the check for standard UNIX accounts. 
@@ -297,7 +297,7 @@ check_users()
          case \"$shell\" in
            $shcase)
              [ ! -r "${home}/.${shell##*/}rc" ] && {
-               message WARN acc019w \"\" \"Logon ID $user may be missing a shell initialization file ${home}/.${shell##*/}rc.\"
+               message WARN acc019w \"\" \"Login ID $user may be missing a shell initialization file ${home}/.${shell##*/}rc.\"
              }
              ;;
            *)

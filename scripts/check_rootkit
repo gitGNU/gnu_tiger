@@ -159,10 +159,10 @@ haveallcmds CHKROOTKIT >/dev/null && {
   		message WARN rootkit003w "" "Chkrootkit has detected a suspicious directory"
 		echo $line ;;
 		Possible*)
-  		message WARN rootkit004f "" "Chkrootkit has detected a possible rootkit installation"
+  		message WARN rootkit004w "" "Chkrootkit has detected a possible rootkit installation"
 		echo $line ;;
 		Warning:' 'Possible*)
-  		message WARN rootkit004f "" "Chkrootkit has detected a possible rootkit installation"
+  		message WARN rootkit004w "" "Chkrootkit has detected a possible rootkit installation"
 		echo $line ;;
 		Warning:' '*installed)
   		message ALERT rootkit005a "" "Chkrootkit has detected a rootkit installation"

@@ -102,7 +102,7 @@ $TRIPWIRE --check 2> /dev/null | $GREP "Rule Name:" | $AWK '{print $NF}' > $tmpl
 
 while read filename
 do
-	message FAIL trip01 "" "Detected modified file $filename"
+	message FAIL trip01f "" "Detected modified file $filename"
 done < $tmplog
 	
 delete $tmplog

@@ -68,6 +68,7 @@ CUT=/usr/bin/cut
 HEAD=/usr/bin/head
 RM=/usr/bin/rm
 AWK=/usr/bin/awk
+# Note: grep does not support -E
 GREP=/usr/bin/grep
 EGREP=/usr/bin/egrep
 # Silent grep

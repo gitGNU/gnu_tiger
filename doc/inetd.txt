@@ -26,7 +26,7 @@ be checked, and if anything unusual is found, the system should
 be checked for other signs of intrusion.
 %inet006f
 The 'rexd' (or 'exec') service is very insecure and should never be
-nabled.  Known rexd servers have little or no security in their design
+enabled.  Known rexd servers have little or no security in their design
 or implementation. Intruders can exploit this service to execute 
 commands as any user.
 
@@ -61,7 +61,7 @@ The listed entry is a local addition to the `inetd.conf' file.
 This should be checked to see if it is a valid addition.  If it
 is not, it should be removed.
 %inet012w
-The 'sysstat' service is enabled, this system provides a considerable
+The 'systat' service is enabled, this system provides a considerable
 number of information to remote anonymous users.
 Consider disabling it by editing the inetd.conf file,
 removing the 'systat' entry, and sending a HUP signal to the
@@ -80,7 +80,7 @@ The listed entry has been modified in order for it to be protected
 by using tcp wrappers. This has been changed from default installation
 (which did not provide it) but is probably a better setup.
 %inet016f
-The listed entry was protected by tcp wrappers by the systema but has,
+The listed entry was protected by tcp wrappers by the system but has,
 for some unknown reason, changed to no longer be protected by them. Make
 sure that the service is secured since, if not using tcp wrappers, 
 access control for it might be disabled.
@@ -169,7 +169,7 @@ Consider disabling it by editing the inetd.conf file,
 removing the 'echo' and/or 'chargen' entries, and sending a HUP signal to the
 'inetd' process.
 %inet026w
-The linuxconf service can be utalized for remote administration.
+The linuxconf service can be utilized for remote administration.
 
 Consider disabling it by editing the inetd.conf file,
 removing the 'linuxconf' entry, and sending a HUP signal to the
@@ -183,7 +183,7 @@ and sending a HUP signal to the 'inetd' process.
 %inet098w
 Services that pass sensitive information (including passwords) should
 be replaced with the family of programs that comprise secure shell (ssh)
-which use strong encryption based on public-key criptography.
+which use strong encryption based on public-key cryptography.
 
 You can use the freely-available OpenSSH implementation at 
 http://www.openssh.org
@@ -216,7 +216,7 @@ Xinetd's configuration file.
 %xnet003e
 The script cannot read the xined configuration file in this system. This
 should not usually happen since the script should be running with
-root priviledges. In order to analyse the configuration file you need
+root privileges. In order to analyse the configuration file you need
 to run this script as a user who can read all the Xinetd configuration
 files.
 %xnet004i

@@ -1,6 +1,6 @@
-%dev001
+%dev001f
 Tape devices used for backups should not have world permissions.
-%dev002
+%dev002f
 Devices that have improper (world) permissions might be accessed by
 any system user. This might open security holes if these are shared
 devices or hold binaries (disks for example). The administrator should
@@ -17,20 +17,20 @@ limiting access to only the owner (usually root).
 %boot02
 The grub configuration file (/boot/grub/grub.conf) should have
 permissions limiting access to only the owner (usually root).
-%boot03
+%boot03w
 A boot loader configuration file could not be found.  That means
 that neither /etc/lilo.conf nor /boot/grub/grub.conf exists.
-%ptch01
+%ptch01f
 AutoRPM has determined that there are updated packages waiting
 to be installed.
-%ptch02
+%ptch02f
 apt-get has determined that there are updated packages waiting
 to be installed.
 %ptch03
 The machine does not appear to be a RedHat or Debian system.
 This test can currently only determine current patch levels
 if it can find autorpm or apt-get.
-%ptch04
+%ptch04w
 No patch management tool could be found on the system.  
 The scripts looks for autorpm followed by apt-get.  If either
 one is found it is used to determine if updated packages
@@ -43,31 +43,31 @@ Some errors might be printed on the output and the security check
 will be done only on the current available list of packages (which
 might not be up-to-date). Make sure that you are running the tool
 as an administrative user.
-%osv001
+%osv001f
 The operating system version appears to be less than RedHat 6.2
 Due to security enhancements and fixes available in recent releases,
 running an older version of RedHat is strongly discouraged.
-%osv002
+%osv002f
 The operating system version appears to be less than Debian 3.0
 Due to security enhancements and fixes available in recent releases,
 running an older version of Debian is strongly discouraged.
-%osv003
+%osv003w
 The machine does not appear to be a RedHat or Debian system.
 This test can not suggest a recommended version number for your
 operating system.
-%osv004
+%osv004w
 The machine is running an unreleased version of Debian GNU/Linux.
 This version is not supported by the security team so it might not
-be up-to-date security wase (support is only provided for the latest
+be up-to-date security wise (support is only provided for the latest
 release). That is, "run at your own risk".
-%sum001
+%sum001f
 The system does not appear to require a password during single-user
 mode boot.  Either add a password to your boot loader or add the line:
 ~~:S:wait:/sbin/sulogin
-to your /etc/inittab file.  This line should be added immeditaly before
+to your /etc/inittab file.  This line should be added immediately before
 the line containing "rc 0".
-%trip01
+%trip01f
 Tripwire has detected an inconsistency in the noted file.  This file
 has been modified in some way since the database was built -- either
-upgraded, removed or tampered with.  If this modification is legitmate
+upgraded, removed or tampered with.  If this modification is legitimate
 please refresh the tripwire database by running "tripwire --update"

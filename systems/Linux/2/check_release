@@ -93,15 +93,15 @@ then
 		# (but only for x86) see http://transition.progeny.com/
 		if [ $MAJOR -lt 9 ]
 		then
-			message FAIL osv001 "" "Out of date Redhat Linux version $REDHAT_VERSION"
+			message FAIL osv001f "" "Out of date Redhat Linux version $REDHAT_VERSION"
 
 #		elif [ $MAJOR -eq X -a $MINOR -lt X ]
 #	        then
-#	       	         message FAIL osv001 "" "Out of date Redhat Linux version $REDHAT_VERSION"
+#	       	         message FAIL osv001f "" "Out of date Redhat Linux version $REDHAT_VERSION"
 #       		         return
        		 fi
 	else
-                 message WARN osv004 "" "Unreleased RedHat Linux version \`$REDHAT_VERSION'"
+                 message WARN osv004w "" "Unreleased RedHat Linux version \`$REDHAT_VERSION'"
 	fi
 	
 # Debian seems to put either a number or a codename in their
@@ -114,7 +114,7 @@ then
         $EGREP "hamm|bo|rex|buzz" /etc/debian_version 2> /dev/null
         if [ $? -eq 0 ]
         then
-                message FAIL osv002 "" "Out of date Debian GNU/Linux version"
+                message FAIL osv002f "" "Out of date Debian GNU/Linux version"
         else
             $CUT -f1 -d' ' /etc/debian_version | $EGREP "[A-Za-z]" 1> /dev/null
             if [ $? -eq 1 ]
@@ -123,17 +123,17 @@ then
                 MINOR=`echo $DEBIAN_VERSION | $CUT -d \. -f 2`
                 if [ "$MAJOR" -lt 3 ]
                 then
-                        message FAIL osv002 "" "Out of date Debian GNU/Linux version \`$DEBIAN_VERSION'"
+                        message FAIL osv002f "" "Out of date Debian GNU/Linux version \`$DEBIAN_VERSION'"
                 elif [ "$MAJOR" -eq 3 -a "$MINOR" -lt 0 ]
                 then
-                        message FAIL osv002 "" "Out of date Debian GNU/Linux version \`$DEBIAN_VERSION'"
+                        message FAIL osv002f "" "Out of date Debian GNU/Linux version \`$DEBIAN_VERSION'"
                 fi
             else
-                        message WARN osv004 "" "Unreleased Debian GNU/Linux version \`$DEBIAN_VERSION'"
+                        message WARN osv004w "" "Unreleased Debian GNU/Linux version \`$DEBIAN_VERSION'"
 	     fi
 	    
         fi
 else
-        message WARN osv003 "" "This check only works for Redhat and Debian"
+        message WARN osv003w "" "This check only works for Redhat and Debian"
 fi
  

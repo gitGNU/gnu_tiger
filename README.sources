@@ -103,7 +103,7 @@ Other (related) tools:
 There are a number of security tools that have inspired Tiger in some way,
 either in philosophy or checks. Some of the tools below are not specifically
 auditing tools but hardening tools (such as Titan or Bastille) and Tiger
-has been configured to check for the default not-secure configurations taht
+has been configured to check for the default not-secure configurations that
 they have been programmed to fix. 
 
 - Dan Farmer's COPS (Computer Oracle and Password System) developed in 1989

@@ -69,11 +69,11 @@ embedded references.
 The executable is group writable, world writable or both.  This can
 enable an intruder to gain unauthorized privileges if they are able to
 overwrite the executable.
-%embed003i
+%embed004i
 See the 'embed' explanation for an explanation of the format of the
 embedded references.
 
 The file or directory is group writable, world writable or both.  This
 may indicate a vulnerability in the system.  It will be necessary to
 study the file and programs in which the pathname was found to
-determine whether there
+determine whether there is a problem.

@@ -14,6 +14,6 @@ The indicated file or directory associated with a printer control has
 group or world write permissions.  This may represent a security
 vulnerability.
 %pcap003w
-The indicated executable associsated with a printer control has
+The indicated executable associated with a printer control has
 group or world write permissions.  This may represent a security
 vulnerability, as it may be possible to replace the executable.

@@ -44,7 +44,7 @@ be checked, and if unusual, the system should be examined for other signs
 of intrusion.
 %kis009w
 There is an .exrc file outside of any user's home directory. This file can
-be loaded inadvertenly by a user if executing an editor in that directory
+be loaded inadvertently by a user if executing an editor in that directory
 and could introduce unexpected commands through it.
 Note that in all modern versions of vi, you have to set the exrc option
 in your home's directory .exrc file before vi will read the exrc in
@@ -74,11 +74,12 @@ library and the server is not restarted the system is still vulnerable.
 An application in the system is using a deleted file. This might be an 
 indication of an intruder executing rogue processes and removing the files
 from disk so that they cannot be traced or detected by the local administrator.
-This has been observerd both in intruders running password cracking programs
+This has been observed both in intruders running password cracking programs
 or worms propagating through remote attacks.
 This also can happen if a local application is using shared libraries which have
 been upgraded but the service itself has not been restarted in order to
-use the new libraries.
+use the new libraries.  Notice that if there was a vulnerability in the
+library and the server was not restarted the system is still vulnerable.
 %kis013a
 A interface is set up on promiscuous mode, this is a common method
 used by attackers to capture user account and and password information.

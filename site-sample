@@ -86,4 +86,4 @@ i#
 #
 # Define where Integrit is installed (if you use it)
 #
-#INTEGRIT=/usr/local/bin/aide
+#INTEGRIT=/usr/local/bin/integrit

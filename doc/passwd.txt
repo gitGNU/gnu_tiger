@@ -28,7 +28,7 @@ applied to all users via their /etc/login.defs configuration values.
 %pass008e
 The password file was not generated and cannot be analysed. This might
 probably happen due to Tiger not running with full administrative access.
-%pass009e
+%pass009f
 The format of a given configuration file used for user (or group) 
 authentication has some inconsistency that might be a security vulnerability.
 %pass010w
@@ -61,7 +61,7 @@ The listed login ID has a user ID of zero (0) and is not the 'root'
 account.  This should be checked to see if it is legitimate.  In any
 case, having login ID's with a user ID of zero tends to lead to security
 problems, and should be avoided (except for 'root')
-%pass18f
+%pass018f
 The listed administrative login should have an impossible password.
 Files owned by this login ID may reside in critical system directories
 and compromise of this account could lead to trojan executables in

@@ -5,7 +5,7 @@ Aide configuration files can make use of variable substitution in a way Tiger
 cannot make use of in the current Tiger version. Please supply a custom
 configuration file using Tiger_Run_AIDE_CFG_OVERRIDE and/or make sure 
 no variable substitution is used in the Aide configuration file.
-%aide003w
+%aide003wsum
 Aide detected changes in filesystem integrity. This line is only the summary.
 %aide003w
 Aide detected, by checking against the files' the attributes in the database,

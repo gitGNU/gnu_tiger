@@ -118,7 +118,7 @@ fi
 fi
 
 
-# Tara (which this cod was derived from, has removed the following
+# Tara (which this code was derived from, has removed the following
 # it is thus removed but the code below should be revised). Maybe
 # the REPORTER stuff is needed for older versions of Crack?
 #haveallcmds RM CRACK REPORTER || exit 1

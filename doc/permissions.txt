@@ -160,7 +160,7 @@ systems, even this functionality isn't lost... there is no reason for
 %perm26f
 The file '/etc/login.access' provides finer control over user
 access, it can be modified to allow or disallow remote access
-to priviledged accounts.  If this file is writable by non-root
+to privileged accounts.  If this file is writable by non-root
 users, then unauthorized access or privileges may be obtained.
 %perm27f
 The file '/etc/login.conf' is used by default on some BSD systems, 

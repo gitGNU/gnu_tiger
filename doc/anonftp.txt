@@ -3,16 +3,16 @@ There doesn't appear to be an anonymous ftp setup on this machine,
 and hence there is nothing to check.
 %ftp002a
 There is a .rhosts file in the top level of the anonymous ftp
-directories.  This can allow unauthorized 'rlogin's or 'rsh's to
+directory.  This can allow unauthorized 'rlogin's or 'rsh's to
 occur to the ftp account. This indicates a possible intrusion.
 The contents of the file are listed immediately following the message.
 The machine should be checked for other signs of intrusion and should
 be cleaned up.  The .rhosts file should be removed.
 %ftp003w
-The etc/passwd file in the anonymous ftp directories appears to
+The etc/passwd file in the anonymous ftp directory appears to
 contain valid entries in the password field.  If these are valid,
 then the file can be retrieved and a password cracking program
-run against it.  The etc/passwd file in the anonymous ftp directories
+run against it.  The etc/passwd file in the anonymous ftp directory
 should simply have a '*' in the password field, and should only
 include entries for the 'ftp' and 'root' accounts.
 

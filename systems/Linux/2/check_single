@@ -93,6 +93,6 @@ else
 	$GREP "$SULOGIN_STRING" /etc/inittab 1> /dev/null
 	if [ $? -eq 1 ]
 	then
-		message FAIL sum001 "" "Recommend addition to /etc/inittab:  $SULOGIN_STRING"
+		message FAIL sum001f "" "Recommend addition to /etc/inittab:  $SULOGIN_STRING"
 	fi
 fi

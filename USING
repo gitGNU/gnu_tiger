@@ -72,7 +72,7 @@ will only contain "new" information and will only be mailed when
 there *is* new information.
 
 This can be helpful to make Tiger behave as a Host Intrusion Detection 
-System (HIDS) but it has some caveats, make sure to read README.hids
+System (HIDS) but it has some caveats, make sure to read README.hostids
 if your intention is to use Tiger in this way.
 
 ------------------------------------------------------------------------

@@ -2,80 +2,82 @@
 .SH NAME
 tigexp \- UNIX Security Checker Explanation Generator
 .SH SYNOPSIS
-.B "tigexp msgid [msgid [msgid...]]"
+.B tigexp
+.IR msgid " [" msgid [ msgid ...]]
 .LP
-.B "tigexp [-f|-F] [security_report]"
+.B tigexp
+.RB [ -f | -F ]
+.RI [ security_report ]
 .LP
 .SH DESCRIPTION
 .LP
-Tigexp is used to generate explanations of the output from the
-Tiger security checking package.  In the first form,
-.I tigexp
+\fBTigexp\fR is used to generate explanations of the output from the
+\fBTiger\fR security checking package.  In the first form,
+.B tigexp
 will generate an explanation of each of the message ids listed.
 In the second form, the security report specified will be scanned
 and explanations generated.  The
-.I "\-f"
+.B "\-f"
 option will generate one explanation for each unique message id
 in the security report, whereas the
-.I "\-F"
+.B "\-F"
 option will output the security report with explanations inserted
 after each entry in the report.
 .PP
-There are five different message levels produced by Tiger. Each of 
-the message levels is the last letter of the message id. The are:
-.TP 
+There are five different message levels produced by \fBTiger\fR. Each of
+the message levels is the last letter of the message id. The levels are:
+.TP
 .I ALERT
-A message of this level indicates that Tiger has detected a 
+A message of this level indicates that \fBTiger\fR has detected a
 possible intrusion attempt or troublesome misconfiguration which can
-expose the whole system to attack.
-.TP 
+expose the whole system to attacks.
+.TP
 .I FAIL
 Messages of this level indicate a violation of a generic security policy
-or a possible intrusion. Appropiate action should be taken to fix this
+or a possible intrusion. Appropriate action should be taken to fix this
 security issue.
-.TP 
+.TP
 .I WARN
 Messages of this level indicate a security issue which should be checked
 further and might indicate a probable vulnerability or exposure. Most
-.I Tiger
+.B Tiger
 messages appear in this category.
-.TP 
+.TP
 .I INFO
 These includes information messages which are not necessarily a security
-violation but might be useful for the administrator. Note that the 
+violation but might be useful for the administrator. Note that the
 .I tigerrc
-configuration file through the 
+configuration file through the
 .I Tiger_Show_INFO_Msgs
-option determines wether or not 
-.I Tiger
-shows these items. The default behaviour is to 
+option determines whether or not
+.B Tiger
+shows these items. The default behaviour is to
 .I not
 show them.
-.TP 
+.TP
 .I ERROR
 These messages are errors in the execution of
-.I Tiger
-(or any of its scripts), this is probably due to a misconfiguration 
-in the program, because of a problem in the installation or because 
-a file needed for the test is missing. The script who outputs this error 
+.B Tiger
+(or any of its scripts), this is probably due to a misconfiguration
+in the program, because of a problem in the installation or because
+a file needed for the test is missing. The script who outputs this error
 should be investigated further.
+.TP
 .I CONFIG
 Messages with this level inform of stages in the configuration process
-of 
-.I Tiger
-they are not errors (otherwise 
-.I ERROR 
+of \fBTiger\fR. They are not errors (otherwise
+.I ERROR
 would be used) but notices for the user running the program explaining, for
 example, which configuration might be used.
 .SS OPTIONS
 .TP
-.I "\-f"
+.B "\-f"
 Scan the indicated security report and generate explanations of
 it.  One explanation will be generated for each unique message
 id in the security report.  If the name of a security report is not
 given, then the report is read from stdin.
 .TP
-.I "\-F"
+.B "\-F"
 Output the indicated security report with explanations inserted
 after each entry in the report.  If the name of a security report
 is not given, then the report is read from stdin.
@@ -84,7 +86,7 @@ is not given, then the report is read from stdin.
 $TIGERHOMEDIR/doc/explain.idx
 .LP
 .SH SEE ALSO
-tiger(8)
+.BR tiger (8)
 .LP
 .SH BUGS
 If the explanation index is out of date, it doesn't recognize it

@@ -86,7 +86,7 @@ progalias()
     [ -n "$TigerCheckEmbedded" ] && {
       echo "$prog $source" >> $TigerCheckEmbedded
     }
-    message INFO ali005w "$rcpt" "Alias \`$alias' contains a program entry${fmsg}:"
+    message WARN ali005w "$rcpt" "Alias \`$alias' contains a program entry${fmsg}:"
     case "$prog" in 
       *uudecode) message FAIL ali002f "" "Program alias \`$alias' executes $prog.";;
     esac

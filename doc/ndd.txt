@@ -69,8 +69,8 @@ ID or sequence numbers that are based on the time of day for spoofing
 services.
  # ndd -set /dev/ip ip_respond_to_timestamp 0
 %ndd011w
-This option determins if HP-UX will include explanitory text in the
-RST segement it sends.  This text is helpful for debugging, but is also
+This option determines if HP-UX will include explanatory text in the
+RST segment it sends.  This text is helpful for debugging, but is also
 useful to potential intruders.
 To disable this do:
  # ndd -set /dev/tcp tcp_text_in_resets 0

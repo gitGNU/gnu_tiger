@@ -86,7 +86,7 @@ invalid characters removed, as it may contain a typo or possibly a
 command.
 %rcmd016w
 The user has an .rhosts file. The use of rhosts files is not a recommended
-method for secure access to remote hosts, you should consider wether or
+method for secure access to remote hosts, you should consider whether or
 not the user needs to have an .rhosts file and, in any case, consider
 the use of safer replacement for the 'r' commands including public-key
 cryptography programs (such as SSH implementations)

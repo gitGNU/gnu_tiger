@@ -151,13 +151,13 @@ $AWK -F: '{
 
 $AWK -F: '{ print $1 }' $PW | $SORT | $UNIQ -d > $OUT
 if [ -s "$OUT" ] ; then
-	message FAIL pass001w "" "File $PW has duplicate user names"
+	message WARN pass001w "" "File $PW has duplicate user names"
         $COLUMN "$OUT"
 fi
 $AWK -F: '{ print $1 " " $3 }' $PW | $SORT -n +1 | $TEE ${TMPFILE}-1 |
 $UNIQ -d -f 1 | $AWK '{ print $2 }' > ${TMPFILE}-2
 if [ -s "${TMPFILE}-2" ] ; then
-	message FAIL pass001w "" "File $PW has duplicate user ids:"
+	message WARN pass002w "" "File $PW has duplicate user ids:"
         while read uid; do
                 $GREP -w $uid ${TMPFILE}-1
         done < ${TMPFILE}-2 | $COLUMN
@@ -199,7 +199,7 @@ $AWK -F: '{
 
 $AWK -F: '{ print $1 }' $PW | $SORT | $UNIQ -d > $OUT
 if [ -s "$OUT" ] ; then
-	message FAIL pass001w "" "File $PW has duplicate user names:"
+	message WARN pass001w "" "File $PW has duplicate user names:"
         $COLUMN "$OUT"
 fi
 }
@@ -230,14 +230,14 @@ $AWK -F: '{
 if [ -s "$OUT" ] ; then
         $CAT "$OUT" |
 	while read message; do
-		message FAIL pass009e "" "$message"
+		message FAIL pass009f "" "$message"
 	done
 fi
 
 $AWK -F: '{ print $1 }' $GRP | $SORT | $UNIQ -d > $OUT
 
 if [ -s "$OUT" ] ; then
-	message FAIL pass010w "" "File $GRP has duplicate group ids:"
+	message WARN pass010w "" "File $GRP has duplicate group ids:"
         $COLUMN "$OUT"
 fi
 }
@@ -247,7 +247,7 @@ fi
 if [ -s "$USERCHECK" ] ; then
         $CAT "$USERCHECK" | $SORT | $UNIQ |
 	while read message; do
-		message FAIL pass009e "" "$message"
+		message FAIL pass009f "" "$message"
 	done
 fi
 

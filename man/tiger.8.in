@@ -2,7 +2,24 @@
 .SH NAME
 tiger \- UNIX Security Checker
 .SH SYNOPSIS
-.B "tiger [-vthqGSH]  [-B dir] [-l dir|@host] [-w dir] [-b dir] [-e|-E] [-c config] [-A arch] [-O os] [-R release]"
+.B "tiger"
+.RB [ -vthqGSH "] [" -B
+.IR dir ]
+.RB [ -l
+.IR dir | @host ]
+.RB [ -w
+.IR dir ]
+.RB [ -b
+.IR dir ]
+.RB [ -e | -E ]
+.RB [ -c
+.IR config ]
+.RB [ -A
+.IR arch ]
+.RB [ -O
+.IR os ]
+.RB [ -R
+.IR release ]
 .LP
 .SH DESCRIPTION
 .LP
@@ -11,77 +28,73 @@ data files which is used for checking for security problems on a
 UNIX system.  It scans system configuration files, file systems,
 and user configuration files for possible security problems and
 reports them.  The command
-.B tigexp(8)
-can be used to obtain explanations of the problems reported by
-.I tiger.
+.BR tigexp (8)
+can be used to obtain explanations of the problems reported by \fBtiger\fR.
 .SS OPTIONS
 .TP
-.I "\-B tigerdir"
+.BI "\-B " tigerdir
 Specify the directory where
-.I tiger
+.B tiger
 is installed.  If not specified, @tigerhomedir@ is used.
 .TP
-.I "\-l logdir|@logserver"
+.BI "\-l " logdir\fR|\fI@logserver
 Specify the name of the directory where
-.I tiger
+.B tiger
 will write the security report.  This defaults to @tigerlogdir@.
 The filename of the report will
-be of the form 
-.RI 'security.report. hostname.date.time.'
-If the directory  begins  with a \fB@\fR, the name will
-be interpreted as a tiger logging server. Tiger logging's server
+be of the form 'security.report.\fIhostname.date.time\fR'.
+If the directory begins with a \fB@\fR, the name will
+be interpreted as a tiger logging server.  Tiger logging's server
 is currently a server that listens in port (tcp) 5353 on a remote
-host. The tiger process will just send the results to that server
+host.  The tiger process will just send the results to that server
 using a telnet connection.
 .TP
-.I "\-w workdir"
+.BI "\-w " workdir
 Specify a directory to use for creating scratch files.  This defaults
-to
-.I @tigerworkdir@.
+to \fI@tigerworkdir@\fR.
 .TP
-.I "\-b bindir"
+.BI "\-b " bindir
 Specify the directory which contains (or will contain) the binaries
 generated from the C modules.  If the systems directories contain
 all the binaries, they will be used directly from there.  If not,
-then if the
+then if
 .I bindir
 contains the binaries, these will be used.  If none are found in
 either place, then an attempt will be made to compile the C code
-and install the executables into the
-.I bindir.
+and install the executables into \fIbindir\fR.
 .TP
-.I "\-c tigerrc"
+.BI "\-c " tigerrc
 Specify an alternate name for the
 .I tigerrc
 control file.  The default is '@tigerconfigdir@/tigerrc'.
 .TP
-.I "\-e"
+.B "\-e"
 This option will cause explanations to be inserted into the security
 report following each message.  This can greatly increase the size
 of the report, as explanations may appear repeatedly.
 .TP
-.I "\-E"
+.B "\-E"
 This option indicates that a separate explanation report should be
 created, with explanations for each type of message only appearing
-once.  The filename of the explanation report will be of the form
-.RI 'explain.report. hostname.date.time.'
+once.  The filename of the explanation report will be of the
+form 'explain.report.\fIhostname.date.time\fR'.
 .TP
-.I "\-G"
+.B "\-G"
 Generate the signatures (MD5 hashes and file permissions)
 for system binary files.
 .TP
-.I "\-H"
+.B "\-H"
 This option will format the report into HTML creating local links
 to the problem descriptions.
 .TP
-.I "\-S"
+.B "\-S"
 This option indicates that a surface level check of the configuration
 files of any diskless clients served by this machine should be checked
 at the same time.  The checks will not be as in depth as they would be
 if run on the client itself.
 .TP
-.I "\-q"
-Supress messages to be as quiet as possible, only 
+.B "\-q"
+Suppress messages to be as quiet as possible, only
 security messages will be shown.
 .TP
 .I "\-A arch"
@@ -113,7 +126,7 @@ running in.
 .LP
 .B Tiger
 is composed of a series of modules. Each of these modules check specific
-security issues related to UNIX systems. The framework provided by 
+security issues related to UNIX systems.  The framework provided by
 .B Tiger
 allows the provision of both generic modules and those specific for
 the operating system the software runs in. Modules can be executed
@@ -121,191 +134,191 @@ stand alone, from cron or through the
 .B tiger
 program (which will execute all those available).
 .TP
-.I check_accounts
+.B check_accounts
 Checks the accounts provided in the system, looking for disabled accounts
 with cron, rhosts, .forward, and valid shells.
 .TP
-.I check_aliases
+.B check_aliases
 Performs a check for mail aliases and improper configuration.
 .TP
-.I check_anonftp
+.B check_anonftp
 Determines if the anonymous FTP service is properly configured.
 .TP
-.I check_cron
+.B check_cron
 Validates the cron entries in the system.
 .TP
-.I check_embedded
+.B check_embedded
 Determines if embedded pathnames are configured properly.
 .TP
-.I check_exports
+.B check_exports
 Analyses configuration files for NFS exported filesystems to see if 
 access is properly restricted.
 .TP
-.I check_group
+.B check_group
 Checks the UNIX groups available in the system, looking for conflicts
 and improper entries.
 .TP
-.I check_inetd
+.B check_inetd
 Checks the inetd configuration file: compares against services 
-definition, valid directory paths, non-existant binaries and active
+definition, valid directory paths, non-existent binaries and active
 services.
 .TP
-.I check_known
-Looks for known intrusion signs including backdors and mail spools.
+.B check_known
+Looks for known intrusion signs including backdoors and mail spools.
 .TP
-.I check_netrc
+.B check_netrc
 Checks if users's netrc files are insecurely configured.
 .TP
-.I check_nisplus
+.B check_nisplus
 Looks for wrong configuration in the NIS+ entries.
 .TP
-.I check_passwd
+.B check_passwd
 Checks the UNIX users available in the system, looking for conflicts
 and improper entries.
 .TP
-.I check_path
+.B check_path
 Validates the binaries in user's PATHs as well as PATH definitions
 used by scripts in order to determine insecure definitions.
 .TP
-.I check_perms
+.B check_perms
 Check filepermissions and inconsistencies.
 .TP
-.I check_printcap
+.B check_printcap
 Analyses the configuration for the printer control file.
 .TP
-.I check_rhosts
+.B check_rhosts
 Checks rhosts files in order to see if user's configuration leaves the
 system open to attack.
 .TP
-.I check_sendmail
+.B check_sendmail
 Checks sendmail configuration files.
-.I check_signatures
+.B check_signatures
 Compares binary files signatures against those stored in the local database
 (provided with the program).
 .TP
-.I check_system
+.B check_system
 This module calls the operating system's specific modules available at
-.B /usr/lib/tiger/systems/
+\fB/usr/lib/tiger/systems/\fR.
 .TP
-.I check_apache
+.B check_apache
 Checks the
-.I Apache 
-configuration file and reports on generic issues whcih might introduce
+.B Apache
+configuration file and reports on generic issues which might introduce
 exposures or vulnerabilities in the system.
 .TP
-.I check_devices
+.B check_devices
 Checks for devices's permissions, warning about devices that have world
 permissions.
 .TP
-.I check_exrc
-Analyses .exrc files that are not in user's home directories. The vi
+.B check_exrc
+Analyses .exrc files that are not in user's home directories. The \fBvi\fR
 command will look for the existence of such a file in the current
-directory, and so may inadvertenly perform commands that can
-compromise your system's security when starting vi or ex.
+directory, and so may inadvertently perform commands that can
+compromise your system's security when starting \fBvi\fR or \fBex\fR.
 .TP
-.I check_finddeleted
+.B check_finddeleted
 Checks if deleted files are being used by any process in the current 
 system. This might be an indication of intrusion (a user executing
 processes and then deleting its files) or of unpatched servers
 (which, if not restarted use old library files and are still 
-vulnerable)
+vulnerable).
 .TP
-.I check_ftpusers
+.B check_ftpusers
 Analyses the system's /etc/ftpusers and determines if the administrative
 users are in that file.
-.TP 
-.I check_issue
-Checks the /etc/issue and /etc/issue.net file to determine if they
-contain the appropiate content (this is defined in the ISSUEFILE and
-ISSUENETFILE)
 .TP
-.I check_logfiles
-Checks for the existance of log files (wtmp, btmp, lastlog and utmp). It
+.B check_issue
+Checks the /etc/issue and /etc/issue.net file to determine if they
+contain the appropriate content (this is defined in the ISSUEFILE and
+ISSUENETFILE).
+.TP
+.B check_logfiles
+Checks for the existence of log files (wtmp, btmp, lastlog and utmp).  It
 will also check for proper umask settings.
 .TP
-.I check_lilo
+.B check_lilo
 Analyses configuration files for lilo and grub boot loaders (Linux-specific).
 .TP
-.I check_listeningprocs
+.B check_listeningprocs
 Checks for processes listening on TCP/IP sockets (servers) in the system as 
 well as users running them. Will warn if the user running a server is not 
 an authorised one or if the server is listening on all available interfaces.
 .TP
-.I check_passwdformat
+.B check_passwdformat
 Checks the format of the /etc/passwd file in order to
 determine inconsistencies which indicate an intrusion or misconfiguration.
 .TP
-.I check_patches
+.B check_patches
 Checks if patches are available for the system (i.e. new packages).
-It will use autorpm or apt-get to check this (so this tools need to be
+It will use autorpm or apt\-get to check this (so this tools need to be
 properly configured). This check is specific to Linux (RedHat or Debian).
 .TP
-.I check_root
+.B check_root
 Checks if remote root login is allowed to the local system.
 .TP
-.I check_rootdir
+.B check_rootdir
 Checks the permissions for the root directory.
 .TP
-.I check_rootkit
+.B check_rootkit
 Tries to find systems which have been rootkited, it does so by
 looking for trojaned \fBls\fR and \fBfind\fR commands.
 It also includes a wrapper to run the \fBchkrootkit\fR program 
 and format the results in Tiger's message format.
 .TP
-.I check_single
+.B check_single
 Checks if the system is properly configured to disallow single-user
 access. This check is specific to Linux.
 .TP
-.I check_release
-Analyses the verions of the operating system and determines if it is
+.B check_release
+Analyses the version of the operating system and determines if it is
 too out of date. This check is specific to Linux (RedHat or Debian).
 .TP
-.I check_runprocs
+.B check_runprocs
 This module will check if the processes configured in 
 .I tigerrc
 are running currently in the system. If any of the processes
-is not running 
+is not running,
 .B Tiger
 will warn the administrator (this acts as a lightweight software watchdog)
 .TP
-.I check_services
+.B check_services
 Check which services are configured in the system (usually in
 /etc/services) versus the ones that should be configured (in the
 provided services file)
 .TP
-.I check_tcpd
-Tests for the existance of tcp-wrappers and changes in their configuration
-it also determines which services are running wrapped in tcp-wrappers.
+.B check_tcpd
+Tests for the existence of tcp\-wrappers and changes in their configuration
+it also determines which services are running wrapped in tcp\-wrappers.
 .TP
-.I check_umask
+.B check_umask
 Check for umask setting in configuration files.
 .TP
-.I check_xinetd
+.B check_xinetd
 Checks which xinetd services are enabled or disabled.
 .TP
-.I crack_run
+.B crack_run
 Runs a local installation of the \fBCrack\fR program which can be used
 to determine if local user passwords are easy (or not) to guess.
 .TP
-\fItripwire_run\fR \fIaide_run\fR \fIintegrit_run\fR
+\fBtripwire_run\fR \fBaide_run\fR \fBintegrit_run\fR
 Wrappers for a number of integrity checkers, these programs enhance the
-support of \fBTiger\fR for MD5 and SHA-1 binary signatures and file
-system permission checks (implemenented with the the \fIcheck_perms\fR
-and \fIcheck_signatures\fR scripts). You should consider installing 
-any of these three programs (\fITripwire\fR, \fIAide\fR or \fIIntegrit\fR) 
+support of \fBTiger\fR for MD5 and SHA\-1 binary signatures and file
+system permission checks (implemented with the the \fBcheck_perms\fR
+and \fBcheck_signatures\fR scripts).  You should consider installing
+any of these three programs (\fBTripwire\fR, \fBAide\fR or \fBIntegrit\fR)
 and use read-only locations (such as CD-ROM) to store the hashes of the system.
 .TP
-.I deb_checkadvisories
+.B deb_checkadvisories
 This module checks against a list of stored Debian Security
 Advisories in order to see if the system has any package installed
 whose version might be subject to any security vulnerability (Debian-specific).
 .TP
-.I deb_checkmd5sums
+.B deb_checkmd5sums
 Compares the MD5 sums of binary files against those provided after installation.
 Changes in these files might be an indication of a compromised system
 (Debian-specific).
 .TP
-.I deb_nopackfiles
+.B deb_nopackfiles
 Looks for files installed in the system's directories that are not provided
 by any installed Debian packages (Debian-specific).
 .LP
@@ -318,27 +331,26 @@ tool.
 .TP
 .I @tigerconfigdir@/cronrc
 Configuration file for the
-.I Tigercron
+.B Tigercron
 tool.
 .TP
 .I @tigerlogdir@
 Location of the log messages generated by 
 .B Tiger 
-when run through 
-.I cron
+when run through \fBcron\fR.
 .TP
 .I @tigerworkdir@
 Working directory used by
 .B Tiger
 scripts to create temporary files.
 .SH SEE ALSO
-tigexp(8)
+.BR tigexp (8)
 .PP
 There are also a number of 
 .I README
 files that describe in detail the behaviour of 
 .B Tiger
-and how it can be used to setup a host-based instrusion detection
+and how it can be used to setup a host-based intrusion detection
 system. These can be found in the top directory of the sources or
 in 
 .B @tigerhomedir@ 
@@ -351,23 +363,23 @@ There are a lot more things to check.
 Some places in the package are not shell meta-character or white-space
 safe.
 .LP
-Report or read known bugs at  the
+You can report or read known bugs at the
 .I http://savannah.nongnu.org/projects/tiger
 webpage.
 .LP
 For Debian-specific (known) bugs read the 
-.B /usr/share/doc/tiger/README.Debian
+.I /usr/share/doc/tiger/README.Debian
 document or the
-.B http://bugs.debian.org/tiger
+.I http://bugs.debian.org/tiger
 webpage.
 .SH AUTHOR
 .B Tiger
 was originally developed by a team of the 
-Texas A&M University Supercomputer Center, as of september 1993, 
+Texas A&M University Supercomputer Center, as of September 1993,
 the development done via the Network Group, Computing & Information Services.
 .PP
 This software was written originally by Douglas Lee Schales, Dave K. Hess, Khalid Warraich,
-and Dave R. Safford (circa 1993)
+and Dave R. Safford (circa 1993).
 .PP
 A
 .B lot
@@ -376,10 +388,10 @@ Liam Forbes <lforbes at arsc.edu>, Nathan Bills <bills AT arsc.edu> and
 Mike Kienenberger <mkienenb at arsc.edu>, including support for quite a number 
 of operating systems.
 .PP
-Current upsteam maintenance of 
+Current upstream maintenance of
 .B Tiger 
 is being done by Javier Fernandez-Sanguino Peña and coordinated at
-.I http://savannah.nongnu.org/projects/tiger
+\fIhttp://savannah.nongnu.org/projects/tiger\fR.
 .PP
 The adaptation for the GNU/Linux operating system was made by
 Robert L. Ziegler <rlz at mediaone.net>
@@ -387,12 +399,10 @@ Robert L. Ziegler <rlz at mediaone.net>
 The modifications for the Debian GNU/Linux operating system have been made 
 by Javier Fernandez-Sanguino Peña <jfs at computer.org>, including a number of
 checks for the GNU/Linux
-operating systems (
-.B check_listeningprocs
-) and some specific for Debian (
-.B deb_checkadvisories
-,
+operating systems
+.RB ( check_listeningprocs )
+and some specific for Debian
+.RB ( deb_checkadvisories ,
 .B deb_checkmd5sums
 and
-.B deb_nopackfiles
-).
+.BR deb_nopackfiles ).

@@ -9,7 +9,7 @@ can allow Trojan horse programs or viruses to be planted into these
 executables and spread by `root'.  Often these executables are owned by
 `bin', `uucp' or other system accounts.  If these commands are never
 used by root, then this is not a problem.  If they are, you should
-consider changing the owner to `root'. Because of SMI's recent decission
+consider changing the owner to `root'. Because of SMI's recent decision
 to install most /usr/sbin/* and /usr/bin/* executables
 as owned by `bin', this account will not flag a warning.
 

@@ -68,7 +68,7 @@ physical access to the console can enter the PROM monitor and
 execute commands which allow them to read and modify memory, boot
 alternate OS's etc.  See the 'eeprom' man page for information
 on securing the PROM monitor.
-%misc005w
+%misc005e
 The listed security check file from a check.d/ file does not
 exist.
 %misc006w
@@ -198,21 +198,21 @@ off the setuid and/or setgid bits.
 %misc016w
 
 The `ie', `le', and `qe' device files can be used to snoop packets
-from the network (ethernet in these cases).  This ability should be
+from the network (Ethernet in these cases).  This ability should be
 restricted.  The permissions on the listed files should be 0600.  The
 Solaris package facility will occasionally reset these permissions to
 what they are defined to be in in the /var/sadm/install/contents file.
-Therefore, they must be changed there as well.  The file is an ascii
+Therefore, they must be changed there as well.  The file is an ASCII
 file and can be edited with any editor.
 %misc017w
 
 The `ie', `le', and `qe' device files can be used to snoop packets
-from the network (ethernet in these cases).  This ability should be
+from the network (Ethernet in these cases).  This ability should be
 restricted.  The listed device files should be owned by root and only
 readable/writable by root in order to restrict access. The Solaris
 package facility will occasionally reset the ownership and permissions to
 what they are defined to be in in the /var/sadm/install/contents file.
-Therefore, they must be changed there as well.  The file is an ascii
+Therefore, they must be changed there as well.  The file is an ASCII
 file and can be edited with any editor.
 %misc017f
 The umask settings used in the boot scripts is insecure. 
@@ -221,7 +221,7 @@ This means that probably the boot scripts will create files
 permissions are 022 or 022.
 %misc018w
 There are two umask settings in the boot scripts, this probably means
-that only one of them will be valid. Check the appropiate file to
+that only one of them will be valid. Check the appropriate file to
 fix this issue.
 %misc019w
 Tiger was unable to found any umask settings to be used in the boot
@@ -236,19 +236,19 @@ There are no umask entries in the configuration file. It is recommended
 that there are umask entries set in the configuration file.
 %misc022f
 The umask setting in the configuration file is insecure.  Umask must be 
-set as to prevent public write (ie. either 002 or 022).
+set as to prevent public write (i.e. either 002 or 022).
 %misc023w
 There are more than two umask entries in the configuration file.  Please 
 check if the umask settings are secure (to prevent public write, suggested 
 values are either 002 or 022).
-%misc024f
+%misc024e
 The script will not be run since it belongs to a different owner than the
 one running the Tiger program (or script). Since running this script might
 introduce a risk (if the script was dropped in a directory that Tiger searches
 for by an attacker to have it run) it will not be executed.
 This might be a problem in the installation of Tiger so you should recheck
 the script owner and permissions.
-%misc025f
+%misc025e
 The script will not be run since it is not executable. This might be a problem
 with the installation of Tiger so you should recheck the script's file owner
 and permissions.

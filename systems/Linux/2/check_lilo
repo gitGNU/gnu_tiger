@@ -144,7 +144,7 @@ then
 fi
 
 [ "$found" != 'Y' ] && {
-	message WARN boot03 "" "Could not access LILO's or Grub's configuration file"
+	message WARN boot03w "" "Could not access LILO's or Grub's configuration file"
 }
 
 exit 0

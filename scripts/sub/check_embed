@@ -282,9 +282,5 @@ do
 done
 
 delete $newfile $oldfile $record $WORKDIR/tmp1.$$
-#
-exit 0
-#
-exit 0
-#
+
 exit 0

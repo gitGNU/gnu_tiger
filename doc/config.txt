@@ -1,12 +1,12 @@
 %con001c
-The configuration file listed was not read in because it was
+The configuration file listed was not read because it was
 a directory.
 %con002c
-The configuration file listed was not read in because it is
+The configuration file listed was not read because it was
 not owned by `root'.  This is to prevent someone from
 modifying the configuration file.
 %con003c
-The configuration file listed was not read in because it is
+The configuration file listed was not read because it was
 writable by non-root users.  This is to prevent someone from
 modifying the configuration file.
 %con004c
@@ -50,6 +50,11 @@ There doesn't exist a configuration variable or it is not properly
 defined. Since the variable is needed for the module to run, it
 will probably exit. This is a configuration problem. It is 
 necessary to add the variable to the tigerrc configuration file.
+%con010c
+The filesystem is not recognised by Tiger as a local filesystem 
+for this operating system and will not be analysed by it. If this
+is a local filesystem then the configuration script for this
+operating system needs to be modified.
 %init001e
 The indicated variable, which should specifies the pathname to a command,
 does not have a value. This message should not appear on platforms
@@ -95,7 +100,7 @@ An attempt was made to run one of the support scripts directly.
 These scripts can only be invoked by the top level scripts.
 %init009e
 The script wanted to use a temporary script which already exists, this
-might mean somebody created it to make use of an (fortunately unexistant) 
+might mean somebody created it to make use of a (fortunately non-existent) 
 race condition. The script will not proceed further since it will not
 use a file which it did not create itself.
 %util001e
@@ -112,5 +117,5 @@ directory.  This indicates an internal error.
 The indicated file exists, but can not be read.  This usually happens
 if you do not run the scripts from an account with super-user privileges.
 %run001e
-A needed file cannot be read, probably due to insuficient priviledges.
+A needed file cannot be read, probably due to insufficient privileges.
 Make sure that Tiger is run by the superuser (root) account.

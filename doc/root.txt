@@ -8,5 +8,5 @@ The indicated /etc/ftpusers file allows remote root ftp logins.  The entry
 "root" should be added to this file.
 %root003w
 The root user should not have the message capability turned on.  This
-could lead to inadvertant modification of files with the root user is
+could lead to inadvertent modification of files with the root user is
 logged in.

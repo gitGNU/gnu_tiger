@@ -14,7 +14,7 @@ The overall procedure is:
 policy template for the module or a previous run to check against,
 if available. Only messages not reported before (or not in the policy
 will be checked against)
-3.- The report (wether full or differential) is sent through e-mail
+3.- The report (whether full or differential) is sent through e-mail
 to the address configured at 'Tiger_Mail_RCPT'
 
 Tiger can be configured so that it is run as a cron job hourly. 
@@ -65,7 +65,7 @@ other methods. Some ideas:
 	a) just use GPG/PGP to sign or encrypt the e-mails. You need however
 	to place a private key in the agent (and it could be compromised)
 	b) use a VPN tunnel between agents and the mailserver. This could
-	be done either using a permament SSH tunnel, an Ipsec VPN...
+	be done either using a permanent SSH tunnel, an Ipsec VPN...
 
 2.- there is no such thing (currently) as a Tiger Server, unlike other 
 HIDS (If anyone wants to write one please say so :) so there's no way to
