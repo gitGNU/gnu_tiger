@@ -286,7 +286,7 @@ trippid=
   $SCRIPTDIR/check_rootdir >> $logtmp
 }
 
-[ "Tiger_Check_ETCISSUE" != 'N' ] && {
+[ "$Tiger_Check_ETCISSUE" != 'N' ] && {
   echo "`$TIMECMD`> Performing /etc/issue login banner checks..."
   $SCRIPTDIR/check_issue >> $logtmp
 }
