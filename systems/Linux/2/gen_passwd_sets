@@ -27,6 +27,9 @@
 # Linux/2/gen_passwd_sets - 11/18/2003 - jfs
 #      Fixed call to YPCAT (only do it if it has been found). Thanks to
 #      Dale Martin for the patch.
+# Linux/2/gen_passwd_sets - 01/15/2004 - jfs 
+#      YPCAT call to avoid errors in hosts that are not properly configured.
+#      (i.e. nsswitch.conf is defined to use NIS but there's no NIS host)
 #
 #-----------------------------------------------------------------------------
 #
@@ -139,17 +142,28 @@ do
 	     echo "--WARN-- [miscxxxx] The '+' key in the /etc/passwd file should only be used in nsswitch 'compat' mode."
 	   }
 
-	    [ "$source" = compat ] && [ -n "$YPCAT" ] && {
-		$YPCAT passwd > $WORKDIR/nis_passwd.$$
+	    [ "$source" = "compat" ] && [ -n "$YPCAT" ] && {
+		$YPCAT passwd > $WORKDIR/nis_passwd.$$ 2>/dev/null
+		if [ $? -eq 0 ] ; then
 		echo "NIS" > $WORKDIR/nis_passwd.$$.src
 		echo $WORKDIR/nis_passwd.$$ >> $outfile
+		else
+		# Ypcat has not succeded, remove the temporary file
+		$RM $WORKDIR/nis_passwd.$$ 
+		fi
 	    }
 
 	 ;;
     nis)   [ "$local" != 1 ] && [ -n "$YPCAT" ] && {
-             $YPCAT passwd > $WORKDIR/nis_passwd.$$
+             $YPCAT passwd > $WORKDIR/nis_passwd.$$ 2>/dev/null
+             $YPCAT passwd > $WORKDIR/nis_passwd.$$ 2>/dev/null
+	     if [ $? -eq 0 ] ; then
 	     echo "NIS" > $WORKDIR/nis_passwd.$$.src
 	     echo $WORKDIR/nis_passwd.$$ >> $outfile
+	     else
+	     # Ypcat has not succeded, remove the temporary file
+	     $RM $WORKDIR/nis_passwd.$$ 
+	     fi
 	   }
 	 ;;
 # This is from SunOS, what should we do here for Linux? (if anything)
