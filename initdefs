@@ -88,7 +88,7 @@ haveallvars()
       echo "--ERROR-- [init007e] Don't have required variable $__var."
       __retval=1
     }
-    if [ __retval -eq 0 -a ! -n "$__val" ]
+    if [ $__retval -eq 0 -a ! -n "$__val" ]
     then
       echo "--ERROR-- [init007e] Required variable $__var is empty."
       __retval=1
