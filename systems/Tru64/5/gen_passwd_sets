@@ -1,0 +1,75 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#     Copyright (C) 2004 Ryan Bradetich
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# Tru64/5/gen_passwd_sets - 03/24/2003
+#
+#-----------------------------------------------------------------------------
+#
+
+local=0
+for parm
+do
+  case "$parm" in
+    -p) ;;
+    -l) local=1;;
+    *)	outfile="$parm";;
+  esac
+done
+
+zappasswd()
+{
+  IFS=:
+  while read user passwd rest
+  do
+     passwd=`$EDAUTH -g $user | $AWK -F':' '/u_pwd=/ { print substr($4, 7) }'` 
+     case $passwd in
+      # Normal UNIX passwds (13 chars)
+      [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./])
+           passwd="crypt3"
+           ;;
+      "")
+           passwd=""
+           ;;
+      *)
+           passwd="*"
+           ;;
+    esac
+    echo "$user:$passwd:$rest"
+  done
+}
+
+$GREP -v '^[-+]' /etc/passwd |
+$SORT |
+{
+  if [ "$passwordflag" = 'Y' ]; then
+    $CAT
+  else
+    zappasswd
+  fi
+} > $WORKDIR/etc_passwd.$$
+
+echo "/etc/passwd" > $WORKDIR/etc_passwd.$$.src
+echo $WORKDIR/etc_passwd.$$ >> $outfile
+
+[ -n "$YP" ] && {
+  $YPCAT passwd |
+  $SORT |
+  $COMM -23 - $WORKDIR/etc_passwd.$$ > $WORKDIR/nis_passwd.$$
+  echo "NIS" > $WORKDIR/nis_passwd.$$.src
+  echo $WORKDIR/nis_passwd.$$ >> $outfile
+}

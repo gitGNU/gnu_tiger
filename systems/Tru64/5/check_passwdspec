@@ -1,0 +1,93 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2003 Javier Fernandez-Sanguino
+#     Copyright (C) 2004 Ryan Bradetich
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_passwdspec: Perform system specific password checks here like
+#               password aging checks, etc.
+#
+# 03/30/2004 rbradetich@uswest.net - Initial release
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallfiles BASEDIR || exit 1
+  haveallcmds AWK CUT PASSWD || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+#------------------------------------------------------------------------
+haveallfiles BASEDIR || exit 1
+haveallcmds AWK CUT PASSWD || exit 1
+
+echo
+echo "# Verifying system specific password checks..."
+
+saveifs=$IFS
+IFS=:
+# Check for password aging
+[ -r /etc/passwd ] && {
+  $CUT -f1,2 -d':' /etc/passwd |
+  while read user pwd
+  do 
+    age=`$PASSWD -q $user | $AWK '{ print $5 }'`
+    if [ -z "$age" -o $age = 0 ]
+    then
+      message WARN pass19w "" "Login ID $user does not have password aging enabled."
+    fi
+
+    [ "$Tiger_Check_PASSWD_SHADOW" = 'Y' -a -s /etc/passwd -a "$pwd" != "*" ] && {
+      message WARN pass20w "" "Login ID $user is not configured to use shadow passwords."
+    }
+  done
+}
+IFS=$saveifs
+
+exit 0

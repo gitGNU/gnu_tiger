@@ -2,6 +2,7 @@
 #
 #     tiger - A UN*X security checking system
 #     Copyright (C) 2003 Javier Fernandez-Sanguino
+#     Copyright (C) 2004 Ryan Bradetich
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +16,7 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# Tru64/config - 04/15/2003
+# Tru64/5/config - 04/15/2003
 # 
 # Preliminary version based on information provided by Florian Felgenhauer
 # notice that all the gen_ scripts might need to be modified, specially
@@ -50,8 +51,8 @@ CAT=/usr/bin/cat
 CUT=/usr/bin/cut
 HEAD=/usr/bin/head
 LS=/usr/bin/ls
-# -g to show group ownership
-LSGROUP="-lg"
+# -l to show group ownership
+LSGROUP="-l"
 # -L to show file instead of symlink
 LSLINK="-L"
 RM=/usr/bin/rm
@@ -67,7 +68,7 @@ TAIL=/usr/ucb/tail
 MV=/usr/bin/mv
 TR=/usr/bin/tr
 JOIN=/usr/bin/join
-GROUPSS=/usr/ucb/groups
+GROUPC=/usr/ucb/groups
 FILECMD=/usr/bin/file
 UNIQ=/usr/bin/uniq
 BASENAME=/usr/bin/basename
@@ -80,15 +81,26 @@ MAILER=/usr/bin/mail
 ID=/usr/bin/id
 WC=/usr/bin/wc
 EXPAND=/usr/bin/expand
-NETSTAT=/usr/bin/netstat
+NETSTAT=/usr/sbin/netstat
 LSOF=/usr/sbin/LSOF
+TEE=/usr/bin/tee
+REALPATH=$BINDIR/realpath
+SNEFRU=$BINDIR/snefru
+PWCK=/usr/sbin/pwck
+GRPCK=/usr/sbin/grpck
 SENDMAILS="/usr/lib/sendmail /usr/lib/sendmail.mx"
-SENDMAILCF="/etc/sendmail.cf"
+SENDMAILCF="/var/adm/sendmail/sendmail.cf"
+PASSWD=/usr/bin/passwd
+EDAUTH=/usr/tcb/bin/edauth
+WAIT=wait
+INETDCONF=/etc/inetd.conf
+NTPCONF=/etc/ntp.conf
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED CUT HEAD
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME
-export CHMOD CHOWN LN PASTE DIFF MAILER ID WC
-export NETSTAT SENDMAILS SENDMAILCF EXPAND  LSOF
+export CHMOD CHOWN LN PASTE DIFF MAILER ID WC TEE REALPATH SNEFRU
+export NETSTAT SENDMAILS SENDMAILCF EXPAND LSOF PWCK GRPCK PASSWD
+export EDAUTH WAIT INETDCONF NTPCONF
 #
 UNAME=/usr/bin/uname
 GETHOSTNAME=/usr/bin/hostname
@@ -136,6 +148,9 @@ export FS_WDIRSYS
 SYSDEFAULTPATH="/usr/bin:/usr/ucb"
 export SYSDEFAULTPATH
 #
+GETUSERHOME="$CDIR/default/getuserhome"
+export GETUSERHOME
+
 CDIR="$BASEDIR/systems"
 eval `
   while read var file
@@ -179,6 +194,5 @@ GETCLIENTDIRS gendlclients
 GEN_INETD_SETS gen_inetd
 GETDISKS getdisks
 EMBEDDEDLIST embedlist
-GETUSERHOME getuserhome
 EOL
 `

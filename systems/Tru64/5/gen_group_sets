@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#     Copyright (C) 2004 Ryan Bradetich.
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# Tru64/5/gen_group_sets - 03/25/2004
+#
+#-----------------------------------------------------------------------------
+#
+
+$GREP -v '^[-+]' /etc/group |
+$SORT > $WORKDIR/etc_group.$$
+
+echo "/etc/group" > $WORKDIR/etc_group.$$.src
+echo $WORKDIR/etc_group.$$
+
+[ -n "$YPCAT" ] && {
+  $YPCAT group >$WORKDIR/nis_group.orig.$$ 2>/dev/null
+  if [ $? -eq 0 ] ; then
+    $SORT < $WORKDIR/nis_group.orig.$$
+    $AWK '{print substr($0, 1, 255);}' |
+    $COMM -23 - $WORKDIR/etc_group.$$ > $WORKDIR/nis_group.$$
+    echo "NIS" > $WORKDIR/nis_group.$$.src
+    echo $WORKDIR/nis_group.$$
+  fi
+  # Ypcat has not succeded (ouch), remove the temporary file
+  $RM $WORKDIR/nis_group.orig.$$
+}
+
+[ "$SERVERCHECK" = "Y" ] && {
+  $GETCLIENTDIRS |
+  while read client dir
+  do
+    [ -f "$dir/etc/group" ] && {
+      $GREP -v '^[-+]' $dir/etc/group |
+      $SORT > $WORKDIR/group.$$.$client
+      echo "$client:/etc/group" > $WORKDIR/group.$$.$client.src
+      echo $WORKDIR/group.$$.$client
+    }
+  done
+}
