@@ -17,6 +17,8 @@
 #
 # genmsgidx  - 06/14/93
 #
+# 08/13/2003 - jfs - Avoided bashism
+#
 #-----------------------------------------------------------------------------
 
 basedir=${TIGERHOMEDIR:=.}
@@ -77,10 +79,11 @@ AWK=`findcmd awk`
 BASENAME=`findcmd basename`
 CHMOD=`findcmd chmod`
 
-haveallof commands AWK BASENAME || exit 1
+haveallof commands AWK LS BASENAME || exit 1
 haveallof variables BASEDIR || exit 1
 
-for infile in $(ls $BASEDIR/doc/*.txt)
+$LS $BASEDIR/doc/*.txt |
+for infile 
 do
   file=`$BASENAME $infile`
   $AWK '
