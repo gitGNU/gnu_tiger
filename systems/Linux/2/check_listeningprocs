@@ -20,6 +20,8 @@
 #              Changed the case statement into an eval in order
 #              to properly work for more than two processes or users
 #              (i.e. with "process1|process2")
+# check_listeningprocs - 04/23/2003 - jfs
+#		Changed TigerInstallDir to '.'
 #
 # TODO:
 # - this script seems to have problems if a program opens an UDP socket
@@ -28,7 +30,7 @@
 #   (the socket is in fact open and could be accessed remotely)
 #
 #-----------------------------------------------------------------------------
-TigerInstallDir='/usr/lib/tiger'
+TigerInstallDir='.'
 
 
 #
