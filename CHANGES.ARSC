@@ -1,512 +1,251 @@
-ARSC Changes to tiger from tiger-2.2.3 distribution
-1998-06-16
+Changes 05/15/02
+Updated to work correctly with SunOS
+Updated to work correctly with IRIX (pending)
+Updated check_root for openSSH permitRootLogin
+Updated SunOS/5/gen_passwd_sets to address null shell in passwd file
+Updated util/installsigs to delete the root signature file
+Added check_rootkit to find rootkit-ed systems
 
-lof=lforbes@arsc.edu (Liam Forbes)
-nlb=bills@arsc.edu (Nathan Bills)
-mlk=mkienenb@arsc.edu (Mike Kienenberger)
 
-tiger-2.2.3/tiger.cron.arsc
-    mlk: modified tiger to run post-processing script
+Changes    08/27/01 - 09/14/01
 
-tigerrc
-    lof,nlb,mlk: customized to ARSC
-    
-site.indigo13
-site.weinhard
-    lof: created
+Updated gen_passwd for Linux to accomodate PAM.
+Updated initdefs (pathmsg) to address the daemon owner (printcap).
+Updated check_known to handle truncated owner permissions.
+Updated check_root for ssh permitRootLogin
+Updated check_inetd for tcp wrappers positive testing
+Updated check_known to handle promiscuous interfaces
 
-Makefile
-    nlb: added
-	    ./scripts/check_sendmail \
-    at line 57.  The installer was not copying over the check_sendmail
-    script over to the install directory.
-    
-    mlk: Updated Makefile paths:
-	TIGERHOME=/usr/local/adm/pkg/tiger/tiger-2.2.3/production
-	TIGERWORK=/var/local/scratch/tiger
-	TIGERLOGS=/var/local/logs/tiger
 
-    nlb: added
+Changes    06/02/99
+-------
 
-        if [ ! -d $(TIGERLOGS) ]; then \
-          mkdir -p $(TIGERLOGS); \
-          chmod 755 $(TIGERLOGS); \
-        fi; \
-        if [ ! -d $(TIGERWORK) ]; then \
-          mkdir -p $(TIGERWORK); \
-          chmod 755 $(TIGERWORK); \
-        fi; \
-        if [ ! -d $(TIGERBIN) ]; then \
-          mkdir -p $(TIGERBIN); \
-          chmod 755 $(TIGERWORK); \
-        fi; \
+Developed a new tigerrc to support customer's security checklist.
+More extensive tigerrc is in tigerrc-dist.
 
-c/realpath.c
-    mlk: added after includes
-	#ifndef MAXPATHLEN
-	#  ifdef	PATH_MAX
-	#    define MAXPATHLEN PATH_MAX
-	#  else	/* PATH_MAX */
-	#    define MAXPATHLEN 1024
-	#  endif	/* PATH_MAX */
-	#endif	/* MAXPATHLEN */
+Fixed bug in check_root for Linux boxes.
+ 
+Updated systems service file.
 
-c/snefru.c
-    nlb: Removed semicolons on lines 1274 and 1381.
+Changes    05/30/99
+-------
 
-config
-    mlk: Updated paths
-	TigerLogDir='/var/local/logs/tiger'
-	TigerWorkDir='/var/local/scratch/tiger'
+Developed HTML output capability (tiger -H).
+Fixed systems files for SunOS and IRIX
 
-doc/accounts.txt
-    mlk: added acc014i message
-	%acc014i
-	The listed login ID has no password.  However, NIS is enabled and the entry
-	begins with a '+' so it's likely that the entry is an NIS entry.
-	These can usually be safely ignored.
+Changes    04/20/99
+-------
 
-doc/explain.idx
-    mlk: rebuilt using "sudo ./util/genmsgidx doc/*.txt"
-    
-doc/inetd.txt
-    mlk: added %inet014i message
-	%inet014i
-	The program listed in the `inetd' configuration file does not
-	exist or is not executable.  This is an expected possible state for
-	the IRIX OS as this daemon's binary has been prefixed with a '?'
-	in inetd.conf.
-	
-doc/rhosts.txt
-    mlk: added %rcmd014w message
-	%rcmd014w
-	A plus sign (+) in the host field of a .rhosts file followed by a minus
-	sign (-) preceeding the user field means that remote access has been removed for
-	the named user for all systems.  However, if this feature isn't supported for
-	your implementation of hosts.equiv, this opens your site to a dangerous
-	vulnerability.   See rcmd002f for details.
+Corrected numerous small bugs in scripts.
 
-scripts/check_accounts
-    mlk: added check for + entries for NIS
-	elif [ "X$YP" = "XYES" -a "X`echo $user | $GREP '^+'" != "X" ]; then
-	    message INFO acc014i$msgid "$cmsg" "NIS Login ID $user does not have a password."
+Updated the systems directories to reflect current OS 
+configurations for Linux, SunOS, and IRIX and default.
 
-scripts/check_cron
-    mlk: fixed incorrect check of $2 not being set
+Cleaned up the output a bit.
 
-diff -cw tiger-2.2.3.dist/scripts/check_cron tiger-2.2.3/scripts/check_cron
-*** tiger-2.2.3.dist/scripts/check_cron Fri Jan  7 06:34:00 1994
---- tiger-2.2.3/scripts/check_cron      Tue Jun 16 14:22:41 1998
-***************
-*** 83,88 ****
-      cmd="`echo \"$com\" | $AWK '{print $1}'`"
-    
-      base=`$BASENAME "$cmd"`
-      case "$base" in
-        sh|csh|ksh|tcsh|zsh|bash)
-!       [ "$2" != "-c" ] && cmd=$2;;
---- 83,89 ----
-      cmd="`echo \"$com\" | $AWK '{print $1}'`"
-+     cmdarg2="`echo \"$com\" | $AWK '{print $2}'`"
-    
-      base=`$BASENAME "$cmd"`
-      case "$base" in
-        sh|csh|ksh|tcsh|zsh|bash)
-!       [ "$cmdarg2" != "-c" ] && cmd=$cmdarg2;;
+	--- Advanced Research Corporation
 
-scripts/check_exports
-    mlk: added check for existance of export_set
+Changes   03/09/94
+-------
 
-scripts/check_inetd
-    mlk: improved matching and comparing of services entries
-	 added SGI-specific ?binary format detection and reporting
+Fix to ./scripts/sub/check_embed.  This was disabling the
+check_embedded script.
 
-diff -cw tiger-2.2.3.dist/scripts/check_inetd tiger-2.2.3/scripts/check_inetd
-*** tiger-2.2.3.dist/scripts/check_inetd        Fri Nov 19 05:10:04 1993
---- tiger-2.2.3/scripts/check_inetd     Tue Jun 16 14:28:09 1998
-***************
-*** 56,62 ****
-  echo
-  echo "# Performing check of 'services' and 'inetd'..."
-  
-! haveallcmds CAT AWK LS SORT GREP COMM JOIN || exit 1
-  haveallfiles BASEDIR WORKDIR || exit 1
-  
-  saveifs=$IFS
---- 56,62 ----
-  echo
-  echo "# Performing check of 'services' and 'inetd'..."
-  
-! haveallcmds SED CAT AWK LS SORT GREP COMM JOIN || exit 1
-  haveallfiles BASEDIR WORKDIR || exit 1
-  
-  saveifs=$IFS
-***************
-*** 94,100 ****
-    # Check that these services are not set for any other services.
-    while read currservice currport
-    do 
-!     matches=`$GREP " $currport$" $services | $AWK '{ print $1 }'`
-      for service in $matches
-      do
-        if [ $service != $currservice ]; then
---- 94,100 ----
-    # Check that these services are not set for any other services.
-    while read currservice currport
-    do 
-!     matches=`$AWK '{ print $1 " " $2 }' $services | $GREP " $currport$" | $AWK '{ print $1 }'`
-      for service in $matches
-      do
-        if [ $service != $currservice ]; then
-***************
-*** 104,113 ****
-    done < $SERVICESFILE
-  
-    # Print out any other entries that have been added
-!   $COMM -23 $services $SERVICESFILE |
-    while read currservice currport
-    do
-      message INFO inet004i "" "$currservice is $currport (local addition)."
-    done
-  }
-  
---- 104,124 ----
-    done < $SERVICESFILE
-  
-    # Print out any other entries that have been added
-!   $AWK '{ print $1 " " $2 }' $services |
-!        $GREP -v '^#' | $GREP -v '^ $' | $SORT |
-    while read currservice currport
-    do
-+     matchescount=""
-+     matches=`$AWK '{ print $1 " " $2 }' $SERVICESFILE | $GREP " $currport$" | $AWK '{ print $1 }'`
-+     for service in $matches
-+     do
-+       if [ $service = $currservice ]; then
-+           matchescount="$matchescount."
-+       fi
-+     done
-+     if [ "x$matchescount" = "x" ]; then
-        message INFO inet004i "" "$currservice is $currport (local addition)."
-+     fi
-    done
-  }
-  
-***************
-*** 132,137 ****
---- 143,149 ----
-  
-    [ "$count" -lt 2 ] && tcpdpath=
-      
-+   $GREP -v '^#' $infile | grep -v '^$' |
-    while read currservice s p t user currbinary parm1 parms
-    do
-      if [ "$currservice" = 'rexd' ]; then
-***************
-*** 142,159 ****
-        message WARN inet013w "" "'netstat' service is enabled."
-      fi
-      
-!     [ $currbinary = 'internal' ] && continue
-  
-      if [ -f "$currbinary" ]; then
-        [ -n "$TigerCheckEmbedded" -a "$user" = 'root' ] && {
-        echo "$currbinary $inetdsrc" >> $TigerCheckEmbedded
-        }
-      else
-        message INFO inet010i "" "$currbinary for $currservice does not exist."
-      fi
-      
-      lgetpermit "$currbinary" |
-      pathmsg inet008 inet009 "$currbinary" root "inetd entry for $currservice service uses"
-  
-      if [ "$currbinary" = "$tcpdpath" ]; then
-        if [ -f "$parm1" ]; then
---- 154,186 ----
-        message WARN inet013w "" "'netstat' service is enabled."
-      fi
-      
-!     [ "$currbinary" = 'internal' ] && continue
-  
-      if [ -f "$currbinary" ]; then
-        [ -n "$TigerCheckEmbedded" -a "$user" = 'root' ] && {
-        echo "$currbinary $inetdsrc" >> $TigerCheckEmbedded
-        }
-+ # SGI IRIX currbinary paths can be prefixed with '?' to indicate
-+ # optional existance of the binary
-+     elif [ "X$OS" = "XIRIX" -a "X`echo $currbinary | $SED 's:[?]::'`" != "X$currbinary" ]; then
-+       if [ -f "`echo $currbinary | $SED 's:[?]::'`" ]; then
-+         [ -n "$TigerCheckEmbedded" -a "$user" = 'root' ] && {
-+           echo "`echo $currbinary | $SED 's:[?]::'` $inetdsrc" >> $TigerCheckEmbedded
-+         }
-+       else
-+         message INFO inet014i "" "`echo $currbinary | $SED 's:[?]::'` for $currservice does not exist (flagged as optional)."
-+       fi
-      else
-        message INFO inet010i "" "$currbinary for $currservice does not exist."
-      fi
-      
-+     if [ "X$OS" = "XIRIX" -a "X`echo $currbinary | $SED 's:[?]::'`" != "X$currbinary" ]; then
-+       lgetpermit "`echo $currbinary | $SED 's:[?]::'`" |
-+       pathmsg inet008 inet009 "`echo $currbinary | $SED 's:[?]::'`" root "inetd entry for $currservice service uses"
-+     else
-        lgetpermit "$currbinary" |
-        pathmsg inet008 inet009 "$currbinary" root "inetd entry for $currservice service uses"
-+     fi
-  
-      if [ "$currbinary" = "$tcpdpath" ]; then
-        if [ -f "$parm1" ]; then
-***************
-*** 167,173 ****
-        lgetpermit "$parm1" |
-        pathmsg inet008 inet009 "$parm1" root "inetd entry for $currservice service uses"
-      fi
-!   done < $infile
-  
-    while read service exppath currpath parm1 parms
-    do
---- 194,200 ----
-        lgetpermit "$parm1" |
-        pathmsg inet008 inet009 "$parm1" root "inetd entry for $currservice service uses"
-      fi
-!   done
-  
-    while read service exppath currpath parm1 parms
-    do
-***************
-*** 195,209 ****
-    done
-    delete $WORKDIR/inet1.$$
-  
-!   $AWK '{printf("%s %s\n",$1,$3)}' $infile > $WORKDIR/f1.$$
-!   $AWK '{printf("%s %s\n",$1,$3)}' $INETDFILE |
-!   $COMM -23 $WORKDIR/f1.$$ - |
-    while read service protocol
-    do
-!     x="`$GREP \"^$service[    ]\" $infile`"
-      message INFO inet011i "$x" "Locally added entry \`$service'in inetd.conf:"
-    done
--   delete $WORKDIR/f1.$$
-  }
-  
-  realpath="$REALPATH -d"
---- 222,246 ----
-    done
-    delete $WORKDIR/inet1.$$
-  
-!   # Print out any other entries that have been added
-!   $AWK '{ print $1 " " $3 }' $infile |
-!        $GREP -v '^#' | $GREP -v '^ $' | $SORT |
-    while read service protocol
-    do
-!     matchescount=""
-!     matches=`$AWK '{ print $1 " " $3 }' $INETDFILE | $GREP " $protocol$" | \
-!       $AWK '{ print $1 }'`
-!     for currservice in $matches
-!     do
-!         if [ "X$service" = "X$currservice" ]; then
-!             matchescount="$matchescount."
-!         fi
-!     done
-!     if [ "X$matchescount" = "X" ]; then
-!       x="`$EGREP \"^$service[     ]\" $infile`"
-        message INFO inet011i "$x" "Locally added entry \`$service' in inetd.conf:"
-+     fi
-    done
-  }
-  
-  realpath="$REALPATH -d"
+New Stuff  01/06/94
+---------
 
-scripts/check_known
-    nlb: changed typo of $file_LIST to $file_list at line 72
-	 changed '$CAT "$file"' to '$LS -l "$file"' at line 81 to better show
-	   non-zero size.
-    mlk: removed - from strings option list at line 132
-	 filtered out known UNICOS "back" strings from "back" /bin/login check
-	   and noted that this was an ill-defined check.
-	 Added check for .$owner.pop files '-a ".$owner.pop" != "$file"' to
-	   valid mail spool file check
-	   
-scripts/check_path
-    mlk: Now only removing comments that start at column 1.  "#"s elsewhere
-	 might be contained inside quoted strings.
-	 (No good way to handle this case.) line 184,236
+Updated signature files for SunOS 4.x and SunOS 5.x.
 
-scripts/check_printcap 
-    mlk: put main loop inside check for $infile -- infile may not exist!
+Bug fixes...
 
-scripts/check_rhosts
-    mlk: added warning check for rcmd014w
-	 verbosed error for rcmd009f.
-	 
-scripts/config
-    mlk: Updated paths
-	TigerLogDir='/var/local/logs/tiger'
-	TigerWorkDir='/var/local/scratch/tiger'
+If the current directory is a descendant of a directory for which the
+user does not have 'read' permissions (i.e., search only), then csh
+and find do not always work.  Workaround is to 'cd /' where necessary.
+Not sure this has been completely implemented.
 
-scripts/crack_run
-    mlk: added missing "|| exit 1" action after haveallcmds on line 60
+typo in scripts/sub/check_devs (Multiple people)
 
-scripts/find_files:
-    nlb: Changed typo of x$Tiger_FSSCan_Unowned to x$Tiger_FSScan_Unowned
-	 Changed typo of GETMOUNTS to GET_MOUNTS
-	 Changed typo of suid to sgid on comment on line 158
-    mlk: added missing last (9th) element sgid to file stat reading loop at
-           line 260
-	 Put echo of find commands inside loop and uncommented it on line
-	   268 -> 272
-    
-scripts/sub/check_devs 
-    net.tamu.edu patch (replacement) installed to fix two typos
-    
-scripts/sub/check_embed 
-    mlk: removed - from strings option list at line 163
+scripts/sub/check_devs exited if GENCLIENTDIRS undefined (Sally Noonan).
 
-scripts/sub/check_suid
-scripts/sub/check_sgid
-    nlb: added check for "commands text" in addition to searching for "script"
-    mlk: filtered out program names when doing searches for set[ug]id scripts
-    mlk: removed - from strings option list at line 58 and 65
-    
-systems/AIX/3/3.2/config
-systems/AIX/3/config
-systems/HPUX/config
-systems/IRIX/4/config
-systems/NeXT/3/3.0/config
-systems/NeXT/3/3.1/config
-systems/NeXT/3/config
-systems/SunOS/4/config 
-systems/SunOS/5/5.3/config 
-systems/SunOS/5/config 
-systems/UNICOS/7/7.0.0/config 
-systems/UNICOS/7/config 
-systems/UNICOS/config
-    mlk: added check to search default directory last before giving up
-    mlk: config needs rewriting so that every single config file doesn't have to
-    	be updated for every program change
-    
-    elif [ -f "$CDIR/default/$file" ]; then
-      loc="$CDIR/default"
+-x 'test' switch is not portable. (Sally Noonan)
 
-systems/IRIX/4/gen_mounts
-    mlk: renamed print to PRINT (to avoid conflict with reserved word?)
-    
-systems/IRIX/6
-systems/IRIX/config
-systems/IRIX/gen_mounts
-systems/IRIX/getdisks
-    mlk: Created IRIX 6 configuration
-    
-systems/NeXT/3/3.0/inetd
-systems/NeXT/3/3.0/services
-systems/NeXT/3/3.1/inetd
-systems/NeXT/3/3.1/services
-    mlk: Moved systems/NeXT/3/[inetd,services] to 3.0,3.1 
-    
-systems/NeXT/3/3.3
-    mlk: Created NextStep 3.3 configuration
+AIX doesn't need '-g' (Dorian Deane)
 
-systems/NeXT/3/check_cron
-    mlk: removed comments from cronfiles before processing
-    
-systems/NeXT/3/gen_cron
-    mlk: removed comments from cronfiles before processing
+IRIX test doesn't shortcircuit (Steve Rikli)
 
-systems/NeXT/3/gen_export_sets 
-    mlk: tossed output from nidump to /dev/null
+IRIX config had wrong definition for DATECMD and TIMECMD (Steve Rikli)
 
-systems/NeXT/gen_mounts
-    mlk: created from systems/NeXT/3/gen_mounts (which was deleted)
-         fixed readonly detection
-	 added bsd 4.3 local filesystem detection
+Crude 'smrsh' check performing poorly (Patrick Nolan & Mohamed el Lozy)
 
-systems/UNICOS/7/gen_mounts
-    mlk: Moved systems/UNICOS/gen_mounts 7
+Changes for performance and robustness, as suggested by Goran
+Larsson.  A C program is used to get file ownership and permissions
+instead of 'ls | awk'.  (If the C program won't compile, we fall
+back to 'ls | awk'.
 
-systems/UNICOS/10
-    mlk: created UNICOS 10 configuration
+Changes to check_anonftp for performance.
 
-systems/UNICOS/config
-    nlb: corrected STRINGS=/usr/ucb/strings
-    mlk: added CC=/opt/ctl/bin/cc as first default
+Added -c switch to allow specifying alternate 'tigerrc' script (John Reynolds)
 
-systems/UNICOS/gen_export_sets
-    mlk: added support for undocumented UNICOS exports format that allows
-	   line continuation and defaults to "-access="  (translates back into
-	   standard /etc/exports format)
+'tigexp' loses command line parameters on NeXT 3.0 (Kelly Cunningham)
 
-systems/UNICOS/gen_mounts
-    mlk: Created new gen_mounts
+Added ethernet device files to check list for SunOS 5 (was already there
+in SunOS 4).  Also inspects /var/sadm/install/contents to check the
+perms there so that they don't get accidentally changed back.
 
-systems/UNICOS/getdisks
-    mlk: Created new getdisks
+New Stuff  10/31/93
+---------
 
-systems/default/config
-    mlk: added missing "SGID_LIST sgid_list" line
-    mlk: sent ps output to /dev/null during yp checks
+Mailling list available.  See the README file for more information.
 
-systems/default/file_access_list 
-    mlk: added missing suid and sgid fields
+Support for TAMU Linux distribution, may work on other Linux' as well.
 
-systems/default/gen_alias_sets 
-    ?: alias names changed to be self-explanatory (full-path)
-    
-systems/default/gen_cron
-    ?: created from "generic SYSV/gen_cron"
+Updated signatures for SunOS 4.x & SunOS 5.x for security patches.
 
-tiger
-    mlk: sent stderr from "/bin/kill -0 $crackpid" to /dev/null at line 254
+'installsig' script for installing new signature files (util/installsig).
+We will try to maintain up to date security patch signature files in
+the directory net.tamu.edu:/pub/security/TAMU/tiger-sigs.  Note that
+at present, only SunOS 4.x and SunOS 5.x are being actively maintained
+(not that there is a bias here, it is just easier for me to get information
+on these... contributions will be welcomed).
 
-util/flogit
-    nlb: added 'sgidfile="$7"' at line 18
-	 added code to append found sgid files to $sgidfile at line 42
-	 
-    elif [ "x$Tiger_FSScan_Setgid" != 'xN' -a \( -g "$file" -a -f "$file" \) ]; then
-      echo "$file" >> $sgidfile
+Various minor bug fixes relating to various platforms.
 
-util/gethostinfo
-    mlk: added distinction between UNICOS and UNICOSMK
-	   if($5 == "CRAY"){
-		if($6 == "T3E")
-		{
-		    printf("UNICOSMK %s %s.%s\n", $3, $5, $6);
-		}
-		else
-		{
-		    printf("UNICOS %s %s.%s\n", $3, $5, $6);
-		}
-	   }
+Fixed check_suid to handle MD5 signatures.
 
-tigerrc-TAMU
-tigerrc-all
-tigerrc-dist
-    nlb: Added .kshrc and .less to USERDOTFILES
-	 Added Tiger_FSScan_Setgid to all tigerrc files
-	Tiger_FSScan_Setgid=Y           # Setgid executables
+check_embedded now will optionally wait for the file system scans to
+complete and will check all setuid executables found for "bad"
+embedded pathnames.  See 'tigerrc' for configuring details.
 
-1998-07-30 mlk  Changed Tiger_Embed_Check_SUID=Y to =N as the check isn't
-        real useful (except maybe after an attack or an operating system
-        upgrade), takes great deals of cpu time, and isn't easily filtered
-        out of the logs.   (And by the time we have trojan binaries on
-        the system, we're probably already in too much trouble.)
+New Stuff  08/17/93
+---------
 
-1998-08-28 13:28 mlk
-    ./systems/IRIX/4/gen_passwd_sets
-    ./systems/NeXT/3/gen_passwd_sets
-    ./systems/default/gen_passwd_sets
-                Added missing "| $SORT" pipe before writing password entries
-                into a file (needed for join in check_accounts)
+Script for checking embedded pathnames.  The other scripts collect
+filenames which are then fed into the check_embedded script.  This
+checks the ownership and permissions of all of these embedded pathnames.
+Be warned... this can generate *lots* of output.
 
-    ./util/gethostinfo
-                Added "IRIX64" to be the same as IRIX in uname
+Pathname checking is now much more complete.  Every "problem" is
+reported in detail, instead of saying "Hey, there's a problem with
+this pathname".
 
-1998-09-03 mlk  Removed "cd /" command before find command in find_files
-        # Not sure why we're cd'ing to /, but it breaks all relative paths
-        #     being used in the find options.  Commented out --mlk
-        #     cd /
+'tigercron' should work a lot better now.
 
-1998-10-07 mlk
-    ./util/getfs-nfs
-		Ran home directories through $REALPATH before comparing to
-		mountpoints to resolve links before comparing to mounted
-		filesystems.
+Script for checking BSD printcap printer control file.
+
+Signatures for IRIX 4.0.5*, thanks to Steve Rikli.
+Signatures for NeXTOS 3.1, thanks to William McVey, et al.
+
+Cleaned up output... much of the output now gets formatted to (default)
+80 columns.
+
+Digital signature checking now works with SNEFRU or MD5.  Automagically
+detects which signature to generate.
+
+Signature checking is a lot faster now, especially if you have a
+clean system (the signature database is ordered such that the
+"good" signatures are first).
+
+Interface to 'password' generator scripts changed so that the 
+generator scripts can do sanity checking on the base files.  Interfaces
+to all of the other generator scripts will be changed in next release.
+
+Makefile for installing everything.  I'm not happy with the installation
+process this time either... if anyone wants to contribute a snazzy
+installation script I'll be happy to include it... 
+
+
+New Stuff  06/17/93
+---------
+
+First off, there are some man pages in the 'man' directory.  They are
+definitely lacking.  If I ever stop adding stuff to the package, maybe
+I will be able to write better documentation.
+
+********
+Explain facility.  All messages (should) have a message ID associated
+with them in square brackets [].  The script 'tigexp' can be used to
+get an explanation of the message.  Some (many?) of the explanations
+are lacking.  You can also insert the explanations into the output
+of 'tiger' by using the '-e' flag.  If anyone has suggestions or
+improved explanations, don't hesitate to send them to me.
+
+********
+Crack 4.1 interface.  'tiger' will now run Alec Muffett's password
+cracker 'Crack'.  See the 'tigerrc' file and 'site-sample' file for
+information on enabling it (it is disabled by default).
+
+********
+Systems:
+
+SunOS 4.1.1 sun3, 4.1.1 sun4, 4.1.2, 4.1.3, 5.1, 5.2 sun4
+NeXT 3.0
+
+There, but untested (and I do mean untested).  You can try them,
+but they have *never* been used, so I have no idea what to expect.
+Some parts are missing (i.e., no signature files).
+
+AIX 3.x (if this one works... any idea why so many setuid's on AIX 3?)
+HPUX (probably anything up to 9.x)
+IRIX 4.x
+UNICOS 6.x 7.x (if those pesky users didn't use the machine so much...)
+
+********
+More checks.  A few of the additions since the last release are:
+
+check_aliases:  Check mail aliases for problems.
+check_cron:  Check 'cron' entries for problems.
+check_group:  Cross reference 'group' files for problems.
+check_passwd:  Cross reference 'passwd' files for problems.
+check_path:  Check 'root' (and optionally all users) PATH for problems.
+
+In addition all previous scripts have been beefed up with many more
+checks.  File Permission databases have been improved (though they
+still need more work).  Scripts which check the path to executables
+and files now check the pathname thoroughly, even in the face of
+symbolic links.
+
+The file system scans now report device files, world writable
+directories, symbolic links to system files, in addition to setuid
+executables.  Also the setuid checks now attempt to determine if a
+setuid program is an old version of a binary for which a security
+patch was released (i.e., it was moved out of the way, but never
+deleted or chmod'd, and hence may still be a security problem).
+
+For servers of diskless or dataless clients, some "quick" checks of
+the clients can be performed on the server (see man/tiger.man).  Not
+everything can be checked.  Plus, support is not complete.
+
+It is possible to install 'tiger' now so that you don't have to
+feed it all the names of the directories on each invocation.
+Just run 'Install'... it will prompt for names.
+
+'tigercron' provides a simple-cron facility with report differencing
+capability and mailing of reports.  This is just started and needs
+more work to be really useful.  See the 'cronrc' file for a sample
+input to it.
+
+Checks for the availability of a utility commands have been moved
+nearer to where they are actually needed (as opposed to having them
+at the top of each script).  This enables more checks to be performed
+when only a few commands are missing.
+
+All cleanup of scratch files goes through the 'delete' routine which
+won't delete a file that isn't in the scratch work directory.  This
+is to prevent programmer errors from zapping the wrong file [what?
+programmer errors?  Never... :)]
+
+Some more C code added.  Handling of obtaining a compilation of the
+source improved.  For casual use, nothing need be done.  The C code
+will be compiled and installed in the Bindir (TIGERHOME/bin by default).
+For regular use, or use in a large group of systems, sharing the
+tiger directories, the binaries can be compiled and stored in the
+respective system directories.  The scripts will use the binary
+directly from that directory.  The Solaris 2.x (SunOS 5) directory
+provides precompiled binaries (no C compiler by default).
+
+Finally, if you try to run this on a system with an old or broken
+Bourne shell, or one without functions, have a peek at util/setsh.
+This will change all the '#!' headers to some other shell (i.e. ksh or
+bash).  Note that 'tiger' has never been run under either of these,
+but it might be worth a shot.
+
