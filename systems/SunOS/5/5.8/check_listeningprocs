@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -23,13 +23,14 @@
 # check_listeningprocs - 14 April 2003
 #    Added support for Solaris
 #
-# 04/21/2003 - jfs - REmoved useless echo
+# 04/21/2003 - jfs - Removed useless echo, use safe delete instead of RM
+#                    Fixed typo in grep (USER instead of COMMAND)
 #
 # TODO:
 # - Use NETSTAT together with this program, might be useful to simplify
 #   it.
 # - This script will not look for processes which are listening on an
-#   specific interface (not 0.0.0.0)
+#   specific interface (not 0.0.0.0) or are listening on AF_INET6 sockets
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -132,7 +133,7 @@ do
 	while read port
 	do
 		name=`$PS -p $pid -o fname |$GREP -v COMMAND`
-		user=`$PS -p $pid -o user |$GREP -v COMMAND`
+		user=`$PS -p $pid -o user |$GREP -v USER`
 		echo "$name $user AF_INET 0.0.0.0:$port" >> $WORKDIR/procs.$$
 	done
 done
@@ -147,7 +148,7 @@ do
 
 done 
 
-$RM $WORKDIR/procs.$$ $WORKDIR/openprocs.$$
+delete $WORKDIR/procs.$$ $WORKDIR/openprocs.$$
 exit 0 
 
 
