@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+#
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation; either version 2, or (at your option)
@@ -9,6 +10,15 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #  
+# Custom check made by HP (provided by Bryan Gartner) for RedHat 6.2
+# servers, implements a set of checks of permitted and not permitted
+# services. 
+#
+# This check will be integrated into Tiger through the development 
+# of specific modules (written in shell to avoid depending in Perl)
+# and is included as a way to show how specific checks can be written
+# by system administrators.
+#
 use strict;
 
 # BUG - UID/GID still wrong
