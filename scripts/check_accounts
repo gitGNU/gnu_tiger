@@ -20,6 +20,12 @@
 # Checks the accounts provided in the system, looking for disabled accounts
 # with cron, rhosts, .forward, and valid shells.
 #
+# 01/18/2004 rbrad Applying 4 Savannah patches:
+#	* 2466 - Remove redundant check (check was moved to check_passwd).
+#	* 2467 - Fix bug in USERDOTFILES when USERDOTFILES is empty.
+#	* 2468 - Cleanup and comment check_disabled().
+#	* 2469 - New check: Verify parent of $home is owned by administrative
+#                user.
 # 10/01/2003 jfs  For some reason this script stopped working in Linux
 #            massaged it to work again (changed while read in function
 #            to explicit parameter calling). Also added a check to
@@ -151,43 +157,25 @@ check_disabled()
   user=$1
   home=$2
   host=$3
-  shell=$4
-  if [ "$OS" = "Linux" -a -z "$shell" ]
-  then
-       shell="/bin/sh"
-  fi
 
-  [ $TESTEXEC "$shell" ] && {
-     eval "
-	case \"$shell\" in
-	  $shcase)
-	  message WARN acc001w \"\" \"Login ID $user is disabled, but still has a valid shell.\"
-	   ;;
-           "/bin/false")
-           ;;
-           "/dev/null")
-           ;;
-           "/sbin/nologin")
-           ;;
-	  *)  [ $TESTEXEC $shell -a ! -c $shell ] &&
-	  message INFO acc002i \"\" \"Login ID $user is disabled, and has a shell\"
-	    ;;
-        esac "
-    }
-  [ -d "$home/" -a "$host" = "$HOSTNAME" ] && {
-      [ -d $home/ ] && {
-	[ -s $home/.forward ] && $SGREP '\|' $home/.forward &&
-	message WARN acc003w "" "Login ID $user is disabled, but has a .forward file which executes commands."
-	[ -s $home/.rhosts ] && {
-	  owner=`$LS -ld $home/.rhosts | $AWK '{print $3}'`
-	  [ "$owner" = "$user" ] && {
-	    message WARN acc004w "" "Login ID $user is disabled, but has a .rhosts file"
-	  }
-	}
-     }
-  }
-  [ -n "$CHECK_CRON" -a "`$CHECK_CRON $user`" = 'YES' ] &&
+  # Check for an active cron file.
+  [ -n "$CHECK_CRON" -a "`$CHECK_CRON $user`" = 'YES' ] && 
     message WARN acc005w "" "Login ID $user is disabled, but has a 'cron' file or cron entries."
+
+  # Return if home directory is not local or does not exists.
+  ([ ! -d "$home/" ] || [ "$host" != "$HOSTNAME" ]) && return
+
+  # Check the .forward file.
+  [ -s $home/.forward ] && $GREP '\|' $home/.forward 2>&1 >/dev/null && 
+    message WARN acc003w "" "Login ID $user is disabled, but has a .forward file which executes commands."
+
+  # Check the .rhosts file.
+  [ -s $home/.rhosts ] && {
+    owner=`$LS -ld $home/.rhosts | $AWK '{print $3}'`
+    [ "$owner" = "$user" ] && {
+      message WARN acc004w "" "Login ID $user is disabled, but has a .rhosts file"
+    }
+  }
 }
 
 check_users()
@@ -200,7 +188,7 @@ check_users()
      # a valid password).
      case $hash in
        '*')
-         check_disabled "$user" "$home" "$host" "$shell"
+         check_disabled "$user" "$home" "$host"
          ;;
      esac
 
@@ -249,6 +237,13 @@ check_users()
      [ $uid -gt $Tiger_Accounts_Trust ] && {
        getpermit ${home%/*}/ | {
          read _f owner group ur uw ux gr gw gx or ow ox suid sgid sticky
+
+	 eval "case $owner in
+		$Tiger_Admin_Accounts)
+			;;
+		*)
+			message WARN acc023w \"\" \"Login ID $user's parent directory (${home%/*}) has non-administrative \\\`$owner' ownership.\"
+	 esac"
 
          [ "${gw}${ow}" != '00' ] && {
            str="Login ID $user's parent directory (${home%/*}/) has"
@@ -306,7 +301,7 @@ check_users()
      }
 
      # Check permissions on user dotfiles.
-     dotfiles=${USERDOTFILES-".cshrc .bashrc .kshrc .profile .login .exrc .forward"}
+     dotfiles=${USERDOTFILES:-".cshrc .bashrc .kshrc .profile .login .exrc .forward"}
      for file in $dotfiles
      do
        [ -f "$home/$file" ] && {

@@ -44,6 +44,8 @@
 # 10/19/2003 jfs Patch from Nicolas François which uses EGREP instead of GREP
 #    in order to avoid Solaris problems.
 # 10/11/2003 jfs Patch from Ryan Braderitch's to fix a WARN -> FAIL
+# 01/18/2004 rbrad Applied Savannah patch:
+#	* 2466 - update list of shells to ignore.
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -146,7 +148,7 @@ check_passwd_entries()
 
     # Check for valid shells.
     eval "case \"$shell\" in
-      /bin/false)
+      /bin/false|/usr/bin/false|/dev/null|/sbin/nologin)
          ;;
       $shcase)
          [ \"$hash\" = \* ] && {
