@@ -88,6 +88,10 @@ For generic information on OS behavior:
 - For OpenBSD (for future porting)
   OpenBSD manpages: http://www.openbsd.org/cgi-bin/man.cgi
 
+- For IRIX
+  http://www.sgi.com/support/security/
+  http://www-viz.tamu.edu/~sgi-faq/faq/html-1/security.html
+
 Other (related) tools:
 ----------------------
 
