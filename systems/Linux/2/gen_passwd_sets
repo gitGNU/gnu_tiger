@@ -33,6 +33,12 @@
 #      Also, redirect error of ypcat's which to /dev/null since it's not
 #      a requirement of the script (others are) and many systems do not 
 #      include it, specially in Debian (Debian bug #225910)
+# Linux/2/gen_passwd_sets - 06/17/2004 - jfs 
+#      Change to do proper extraction of users from passwd and shadow files
+#      avoiding conflicts when sorting lines with and without alphabetical
+#      characters (which might make some lines be swapped and some users 
+#      not be accounted for properly)
+#      NOTE: This should be done in other systems too
 #
 #-----------------------------------------------------------------------------
 #
@@ -108,9 +114,16 @@ do
 	    then
 		if [ -r /etc/shadow ] 
 		then
-		$SORT /etc/passwd > $WORKDIR/p.$$
-		$SORT /etc/shadow |
-		$JOIN -t: -e " " -o 2.1 1.2 2.3 2.4 2.5 2.6 2.7 - $WORKDIR/p.$$ |
+		$CAT /etc/passwd /etc/shadow | $SORT -u |
+		$AWK -F : '{ print $1 } ' >$WORKDIR/u.$$
+		>$WORKDIR/p.$$
+		>$WORKDIR/s.$$
+		$CAT $WORKDIR/u.$$ |
+		while read user; do
+			$GREP "^$user:" /etc/passwd >>$WORKDIR/p.$$
+			$GREP "^$user:" /etc/shadow >>$WORKDIR/s.$$
+		done
+		$JOIN -t: -e " " -o 2.1 1.2 2.3 2.4 2.5 2.6 2.7 $WORKDIR/s.$$ $WORKDIR/p.$$ |
 		{
 			if [ "$passwordflag" = 'Y' ]; then
 			    $CAT
@@ -123,7 +136,9 @@ do
 		    echo "/etc/passwd" > $WORKDIR/etc_passwd.$$.src
 		    echo $WORKDIR/etc_passwd.$$ >> $outfile
 		}
-		$RM -f $WORKDIR/p.$$
+		$RM $WORKDIR/u.$$
+		$RM $WORKDIR/p.$$
+		$RM $WORKDIR/s.$$
 		else 
 		      echo "--FAIL-- [run001e] The file /etc/shadow is available but not readable by the user running Tiger."
 		fi
