@@ -1,0 +1,21 @@
+Login ID nfsnobody has a duplicate home directory \(/var/lib/nfs\) with another user
+Login ID \w+ is disabled, but still has a valid shell (\/sbin\/nologin)
+Login ID nfsnobody appears to be a dormant account
+/bin/rpm in root's PATH from default is not owned by root \(owned by rpm\). 
+/usr/bin/gendiff in root's PATH from default is not owned by root \(owned by rpm\)
+/usr/bin/rpm2cpio in root's PATH from default is not owned by root \(owned by rpm\)
+/usr/bin/rpmdb in root's PATH from default is not owned by root \(owned by rpm\)
+/usr/bin/rpmquery in root's PATH from default is not owned by root \(owned by rpm\)
+/usr/bin/rpmsign in root's PATH from default is not owned by root \(owned by rpm\)
+/usr/bin/rpmverify in root's PATH from default is not owned by root \(owned by rpm\)
+/dev/agpgart has world permissions 
+/dev/log has world permissions 
+/dev/null has world permissions 
+/dev/ptmx has world permissions 
+/dev/qng has world permissions 
+/dev/rtc has world permissions 
+/dev/vsys has world permissions 
+Log file /var/log/wtmp permission should be 644 
+Log file /var/log/btmp does not exist 
+Log file /var/run/utmp permission should be 644 
+Log file /var/log/loginlog does not exist 
