@@ -17,11 +17,21 @@
 #
 #  config (top level) - 06/14/93
 #
-# 04/29/93 dls  Added support for 'tigerrc' file.
-# 04/15/2003 jfs  Modified to support -B to work in the local dir 
+# 08/13/2003 jfs  Added some of ARSC changes including:
+#                 - support for signature generation (enhanced with also
+#                   file_access_list generation and better error checking)
+#                 - usage printing (but modified it to only exit with error
+#                   if -h has not been issued)
+#                 - Moved RCFILE check down so that RCFILEs can be used in 
+#                   common locations if not specified
+#                 Also removed CRACK, CRACKDIR and REPORTER exports since
+#                 these can now be done from the configuration files
+#                 (with the loc_override)
+# 04/26/2003 jfs  Added a -q(uiet) option (to be used when using tigercron)
 # 04/21/2003 jfs  Modified to only use hostname -f for Linux _and_
 #		  moved hostname check after RCFILE parsing!
-# 04/26/2003 jfs  Added a -q(uiet) option (to be used when using tigercron)
+# 04/15/2003 jfs  Modified to support -B to work in the local dir 
+# 04/29/93 dls  Added support for 'tigerrc' file.
 #
 #-----------------------------------------------------------------------------
 #
@@ -38,6 +48,121 @@ TigerConfigDir='.'
 LANG="C"
 LC_TIME="C"
 export LANG LC_TIME
+error_siggen()
+{
+  dir=$1
+  file=$2
+  tmpdir=$3
+  echo "There is already a $file file in $tmpdir"
+  echo "Please remove it and rerun Tiger"
+  cd $dir
+  exit 1
+}
+
+do_siggen()
+{
+  echo "  Generating new digital signatures for binaries"
+  set X `$BASEDIR/util/gethostinfo` unknown unknown unknown
+  OS=${OS:=$2}
+  REV=${REV:=$3}
+  ARCH=${ARCH:=$4}
+  if [ ! -d "$BASEDIR/systems/$OS/$REV/$ARCH/" ] 
+  then
+        printf "Creating the directory $BASEDIR/systems/$OS/$REV/$ARCH/ where signatures will be stored..."
+    	mkdir -p "$BASEDIR/systems/$OS/$REV/$ARCH/"
+	echo "...created"
+  fi
+# NOTE: I'm not sure it's ok to create the directory since
+# if there are no config files in it or in it's parent the
+# default might not apply
+  PWD=`pwd`
+  cd $WORKDIR
+  if [ ! -f "signatures.$OS-$REV-$ARCH" ] 
+  then
+    printf "Generating and installing signatures..."
+    $BASEDIR/util/mksig
+    $BASEDIR/util/installsig "signatures.$OS-$REV-$ARCH"
+    rm "signatures.$OS-$REV-$ARCH"
+    echo "...done"
+  else
+    error_siggen "$PWD" "signatures.$OS-$REV-$ARCH" "$WORKDIR"
+  fi
+  if [ ! -f "file_access_list.$OS-$REV-$ARCH" ] 
+  then
+    printf "Generating and installing file access lists..."
+    $BASEDIR/util/mkfilelst
+    mv "file_access_list.$OS-$REV-$ARCH" $BASEDIR/systems/$OS/$REV/$ARCH/file_access_list
+    echo "...done"
+  else
+    error_siggen "$PWD" "file_access_list.$OS-$REV-$ARCH" "$WORKDIR"
+  fi
+  cd $PWD
+  exit 0
+}
+
+do_usage()
+{
+echo "Tiger, version $TIGERVERSION"
+echo "Usage: ./tiger [-B dir] [-d dir|@host] [-w dir] [-b dir] [-e|-E] [-GH] [-q]"
+echo ""
+echo "       -B name"
+echo "              Specify  the directory where tiger is installed.  If"
+echo "              not specified, '$BASEDIR' is used."
+echo ""
+echo "       -d name"
+echo "              Specify the name of the directory where  tara  will"
+echo "              write  the  security  report.  This defaults to    "
+echo "              '$LOGDIR'. The filename  of  the report will be of "
+echo "              the form 'security.report.host-name.date.time.'    "
+echo "              If the directory  begins  with a "@", the name will"
+echo "              be interpreted as a tiger logging server."
+echo ""
+echo "       -w name"
+echo "              Specify a directory to  use  for  creating  scratch"
+echo "              files.  This defaults to '$WORKDIR'."
+echo ""
+echo "       -b name"
+echo "              Specify  the directory which contains (or will con-"
+echo "              tain) the binaries generated from  the  C  modules."
+echo "              If  the  systems  directories contain all the bina-"
+echo "              ries, they will be used directly  from  there.   If"
+echo "              not,  then  if  the  bindir  contains the binaries,"
+echo "              these will be used.  If none are  found  in  either"
+echo "              place,  then an attempt will be made to compile the"
+echo "              C code and install the executables into the bindir."
+echo ""
+echo "       -c name"
+echo "              Specify  an  alternate  name for the tigerrc control"
+echo "              file.  The default is '$RCFILE'."
+echo ""
+echo "       -e     This option will cause explanations to be  inserted"
+echo "              into  the  security  report following each message."
+echo "              This can greatly increase the size of  the  report,"
+echo "              as explanations may appear repeatedly."
+echo ""
+echo "       -E     This  option  indicates that a separate explanation"
+echo "              report should be  created,  with  explanations  for"
+echo "              each  type  of  message  only  appearing once.  The"
+echo "              filename of the explanation report will be  of  the"
+echo "              form 'explain.report.hostname.date.time.'"
+echo ""
+echo "       -G     Generate the signatures (MD5 hashes and file permissions)"
+echo "              for system binary files."
+echo ""
+echo "       -H     This option will format the report into HTML creat-"
+echo "              ing local links to the problem descriptions."
+echo ""
+echo "       -S     This option indicates that a surface level check of"
+echo "              the  configuration  files  of  any diskless clients"
+echo "              served by this machine should  be  checked  at  the"
+echo "              same  time.   The checks will not be as in depth as"
+echo "              they would be if run on the client itself."
+echo ""
+echo "       -q     Supress messages to be as quiet as possible, only "
+echo "              security messages will be shown."
+echo ""
+echo "Report bugs at http://savannah.nongnu.org/projects/tiger"
+}
 
 checkfile()
 {
@@ -77,7 +202,7 @@ checkfile()
   fi
 
   LOGDIR=${TigerLogDir:=.}
-  WORKDIR=${TigerWorkDir:=${TMPDIR:=/tmp/}}
+  WORKDIR=${TigerWorkDir:=${TMPDIR:=/tmp}}
   RCFILE=${TigerConfigDir:=.}/tigerrc
   IGNORE_FILE=${TigerConfigDir:=.}/tiger.ignore
   TIGERHOMEDIR="$BASEDIR"
@@ -94,6 +219,7 @@ checkfile()
   do
     case $1 in
      -v) doversion=1;;
+     -h) do_usage; exit 0;;
      -B) BASEDIR=$2; shift;;
      -l) LOGDIR=$2; shift;;
      -w) WORKDIR=$2; shift;;
@@ -101,6 +227,7 @@ checkfile()
      -c) RCFILE=$2; shift;;
      -e) EXPLAINREPORT=I;;
      -E) EXPLAINREPORT=Y;;
+     -G) do_siggen;;
      -S) SERVERCHECK=Y;;
      -O) OS=$2; shift;;
      -A) ARCH=$2; shift;;
@@ -108,7 +235,7 @@ checkfile()
      -t) Tiger_TESTMODE=Y;;
      -H) HTML=Y;;
      -q) QUIET=Y;;
-      *) echo "--ERROR-- [con006e] Unknown option $1";;
+      *) echo "--ERROR-- [con006e] Unknown option $1"; do_usage; exit 1;;
     esac
     shift;
   done
@@ -159,14 +286,12 @@ checkfile()
     [ "$QUIET" != "Y" ] &&  {
     echo "--CONFIG-- [con005c] Using configuration files for $OS $REV. Using"
     echo "           configuration files for generic $OS $REL."
-    echo "           Not all checks may be performed."
     }
     CONFIG_DIR="$CONFIG_LOC/$OS/$REL"
   elif [ -f "$CONFIG_LOC/$OS/config" ]; then
     [ "$QUIET" != "Y" ] &&  {
     echo "--CONFIG-- [con005c] No configuration files for $OS $REV.  Using"
     echo "           configuration files for generic $OS."
-    echo "           Not all checks may be performed."
     }
     CONFIG_DIR="$CONFIG_LOC/$OS"
   elif [ -f "$CONFIG_LOC/default/config" ]; then
@@ -193,14 +318,14 @@ checkfile()
   }
   export OUTPUTMETHOD
   
-
-  [ -n "$RCFILE" -a ! -f "$RCFILE" ] && {
-    echo "Control file "$RCFILE" not found... exiting..."
-    exit 1
-  }
-
+  #
+  # If RCFILE is not defined consider using some sane defaults  
+  #
   [ ! -n "$RCFILE" ] && {
-    for file in './.tigerrc' './tigerrc' '/etc/tiger/tigerrc' '$HOME/.tigerrc' '$BASEDIR/tigerrc'
+    for file in '/etc/tiger/tigerrc' '/usr/local/etc/tigerrc' './.tigerrc' './tigerrc' '$BASEDIR/tigerrc' '$HOME/.tigerrc' 
+  # TODO: Check with ARSC if there is a preference on their behalf
+  # for this ordering since Tara 3.0.3 uses
+  # for file in './.tigerrc' './tigerrc' '$HOME/.tigerrc' '$BASEDIR/tigerrc'
     do
       eval rc=$file
       if checkfile $rc $file; then
@@ -208,6 +333,11 @@ checkfile()
 	break
       fi
     done
+  }
+
+  [ -n "$RCFILE" -a ! -f "$RCFILE" ] && {
+    echo "Control file "$RCFILE" not found... exiting..."
+    exit 1
   }
 
   #
@@ -238,12 +368,18 @@ checkfile()
     fi
   done
 
-  [ -n "$SITECONFIG" -a -r "$SITECONFIG" ] && . $SITECONFIG
-    
+  [ -n "$SITECONFIG" -a -r "$SITECONFIG" ] && 
+  {
+    $GREP -v '^#' $SITECONFIG |
+    $SED -e 's/^\(.*\)=/export \1; \1=/' > $WORKDIR/sitefile.$$
+    . $WORKDIR/sitefile.$$
+    $RM -f $WORKDIR/sitefile.$$
+  }
+
   HOSTNAMESLIST=${HOSTNAMESLIST:=$HOSTNAME}
 
   export CONFIGURED_ALREADY OS REL REV ARCH HOSTNAME
-  export CONFIG_DIR CONFIG_FILE HOSTNAMESLIST CRACK REPORTER CRACKDIR
+  export CONFIG_DIR CONFIG_FILE HOSTNAMESLIST
 
   [ "$TigerNoBuild" != 'Y' ] && {
     > $WORKDIR/tigercmds.$$
