@@ -75,7 +75,7 @@ done
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
   haveallcmds FIND GREP || exit 1
-  [ "$Tiger_DPKG_Optimize" = "N" ] && haveallcmds DPKG || exit 1
+  [ "$Tiger_DPKG_Optimize" = "N" ] || haveallcmds DPKG || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
