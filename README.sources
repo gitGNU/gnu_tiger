@@ -9,12 +9,47 @@ or they have been developed in other programming languages (usually Perl).
 Information Sources:
 -------------------
 
+- "Practical UNIX & Internet Security" by Simon Garfinkel and Gene Spafford.
+  (http://www.oreilly.com/catalog/puis/). A _must_ read (although some issues
+  are dated) I still need to read the third edition though 
+  (http://www.oreilly.com/catalog/puis3/)
+
 - CERT's Security Improvement Modules
-- SANS Step by Step Guides
+  available at http://www.cert.org/security-improvement/
 
+- SANS's SCORE (Security Consensus Operational Readiness Evaluation)
+  http://www.sans.org/score/
+  and the Step by Step Guides
+  available at http://store.sans.org/store_category.php?category=consguides
 
-Other tools:
------------
+For generic information on OS behavior:
+---------------------------------------
+- For Linux:
+	Linux manpages available at  http://www.tldp.org/docs.html#man
+	(searchable at http://www.linux101.org/site/man.php?)
+	Securing Debian Manual:
+	http://www.debian.org/doc/manuals/securing-debian-howto/index.en.html
+	RedHat's Security Guide: 
+	http://www.redhat.com/docs/manuals/linux/RHL-9-Manual/security-guide/
+	and many other documentation at The Linux Documentation Project
+	(http://www.tldp.org/)
+
+- For Solaris
+  Reference information for the Solaris Operating Environment, 
+  available at http://soldc.sun.com/documentation/reference/index.html
+  including the Solaris manpages: http://docs.sun.com/db?p=subj/manpages_solaris
+
+- For AIX 
+  AIX manpages: http://publib.boulder.ibm.com/cgi-bin/ds_form?lang=en_US
+
+- For HP-UX
+  HP-UX manpages: http://docs.hp.com/hpux/os/man_pages.html
+  
+- For OpenBSD (for future porting)
+  OpenBSD manpages: http://www.openbsd.org/cgi-bin/man.cgi
+
+Other (related) tools:
+----------------------
 
 There are a number of security tools that have inspired Tiger in some way,
 either in philosophy or checks. Some of the tools below are not specifically
@@ -25,11 +60,11 @@ they have been programmed to fix.
 - Dan Farmer's COPS (Computer Oracle and Password System) developed in 1989
   [unfortunately, it was distributed with a 'non-free' license]
 
-- Titan (written by Brad Powell, Matt Archibald, and Dan Farmer) an auditing
+- Titan (written by Brad Powell, Matt Archibald, and Dan Farmer), an auditing
   and hardening tool for FreeBSD, Linux and Solaris
   http://www.fish.com/titan/
 
-- Bastille-Linux a hardening tool for Linux and HP-UX
+- Bastille-Linux, a hardening tool for Linux and HP-UX
 
 
 As for Titan, the following modules are implemented in Tiger checks:
