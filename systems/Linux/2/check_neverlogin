@@ -101,7 +101,9 @@ for user in `$LASTLOG | $AWK '/Never logged in/ {print$1}'`; do
 	$TEST "$result" = 1 && result=`$AWK -F:  "/^$user:/ "'{ if (length($2) > 12) printf("2\n"); if ($2 == "") printf("3\n"); }' $passwdfile` 
 	# Note: if length is less than 2 then the account is locked (system
 	# account)
-	echo "Checking $user $SHELL $result"
+
+	# Only add for debugging:
+	#echo "Checking $user $SHELL $result"
 	$TEST "$result" = 2 && \
 		message FAIL acc024f "" "User $user has got a password and a valid shell ($SHELL) but never logged in."
 	$TEST "$result" = 3  && \
