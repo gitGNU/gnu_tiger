@@ -1,66 +1,117 @@
 
+For starters
+------------
+
 'tiger' is a set of scripts that scan a Un*x system looking for
 security problems, in the same fashion as Dan Farmer's COPS.  'tiger'
 was originally developed to provide a check of UNIX systems on the A&M
 campus that want to be accessed from off campus (clearance through the
-packet filter).  As such, we needed something that *anyone* could run
+packet filter).  As such, they needed something that *anyone* could run
 if they could figure out how to get it down to their machine.
 
 If you just want to run it, without regards to time considerations,
-then just 'cd' into the tiger directory and run './tiger' as 'root'.
+then just 'cd' into the tiger directory, edit the 'config' file 
+so that TigerWorkDir and TigerLogDir point to '.' and then run 
+'./tiger -B .' as 'root'.
 
---->  You should check to see if you have the latest digital signatures
-      for the system(s) you are checking.  I regularly place updated
-      signature files on anonymous FTP at
-
-      net.tamu.edu:/pub/security/TAMU/tiger-sigs/*
-
-      The util/installsigs script can be used to install the updated
-      signatures.  As of Tiger 2.2.2, installsigs is also capable
-      of installing signatures for new OS releases (not new platforms
-      or major releases though).
-
-*NOTE*
-
-The 'tigerrc' file is set up for TAMU hosts, and disables/reduces some
-of the checks.  You should probably copy 'tigerrc-dist' to 'tigerrc'
-and edit it to taste.  It is set for a fuller check mode (TAMU hosts
-might want to run with this config file as well).  'tigerrc-all' has
-everything already maxed out and enabled (except for PATH_ALL).
+The 'tigerrc' file is set up for a generic host, and enables all checks.
+You can customize this file as needed.
 
 (Or use the '-c' switch to use an alternate tigerrc file as of 2.2.2)
 
-------------------------------------------------------------------------
+Please read the file USING for more information on how to use Tiger.
+And read the file COPYING for legal stuff.
 
-I recommend that you read the USING file for anything other than the
-aforementioned situation.
+If you have any thing to say about 'tiger', please let us know (see
+below).  New things to check, how to improve things, *anything*, send 
+it in... if you think someone else has already sent in a bug report, 
+suggestion, etc., send it in anyway... the more times someone hits us
+over the head with something, the more likely it is to get fix/included...
 
-****
+Needs
+-----
 
-See the file COPYING for legal stuff.
+Tiger needs a standard POSIX shell to run, a C compiler if you wish to compile
+the binaries used and some other (optional) utilities, including the standard
+UNIX file utilities and text utilities (the GNU versions work fine for this).
 
-------------------------------------------------------------------------
 
-If you have any thing to say about 'tiger', please let us know.  New
-things to check, how to improve things, *anything*, send it in... if
-you think someone else has already sent in a bug report, suggestion,
-etc., send it in anyway... the more times someone hits me over the
-head with something, the more likely it is to get fix/included...
+Mailing lists
+-------------
 
-********** NOTE NOTE NOTE NOTE NOTE NOTE ************
+There are now two maillings list available for the 'tiger' at
+savannah.gnu.org. These two mailing lists are:
 
-There is now a mailling list available for 'tiger'.  To subscribe,
-send mail to 'majordomo@net.tamu.edu'.  Include in the body of the
-message:
+- a user's mailing list: tiger-user@mail.freesoftware.fsf.org
+    Dedicated to users of the Tiger tool, feel free to ask here any questions
+    on how to run the tool, configure it or adapt it to your system.
+    http://mail.freesoftware.fsf.org/mailman/listinfo/tiger-user
 
-subscribe tiger
+- a developer's mailing list:  tiger-devel@mail.freesoftware.fsf.org
+    If you want to help us improve Tiger this is where all discussion on 
+    improvements on the tool take place.
+    http://mail.freesoftware.fsf.org/mailman/listinfo/tiger-devel
 
-or 
+Note that the previous mailing list (at 'majordomo@net.tamu.edu') does
+no longer work.
 
-subscribe tiger alternate_email_address
+Availability
+-------------
 
-The mailling list is managed via Brent Chapman's 'majordomo' package.
+The latest versions of Tiger can be downloaded from Savannah at
+http://savannah.gnu.org/files/?group=tiger
 
-Doug.
+Previous versions are available at the "TAMU Security Tools: Tiger" page
+http://www.net.tamu.edu/network/tools/tiger.html
 
-Doug.Schales@net.tamu.edu
+You can browse the CVS code at
+http://savannah.nongnu.org/cgi-bin/viewcvs/tiger/tiger/
+
+More information on the project, including bug tracking, task manager, etc.
+available at:
+http://savannah.nongnu.org/projects/tiger
+
+Latest signatures
+-----------------
+
+You can check to see if you have the latest digital signatures
+for the system(s) you are checking.  There are some signature files 
+available on anonymous FTP at
+
+      net.tamu.edu:/pub/security/TAMU/tiger-sigs/*
+
+The util/installsigs script can be used to install the updated
+signatures.  As of Tiger 2.2.2, installsigs is also capable
+of installing signatures for new OS releases (not new platforms
+or major releases though).
+
+Note however, that these signatures have not been updated for quite some
+time (and might not be up-to-date with your current system). If you can
+provide newer signatures please submit them to the developer's mailing
+list.
+
+History
+-------
+
+Tiger was originally developed by the A&M campus of the Texas University,
+it was written at the same time that COPS, SATAN and Internet Scanner were.
+Eventually, after the 2.2.4 version, which was released in 1994, development
+of Tiger stalled.
+
+Three different forks evolved after Tiger: TARA (developed by Advanced
+Research Computing, available at http://www-arc.com/tara), one internally
+developed by the HP corporation by Bryan Gartner and the last one developed 
+for the Debian GNU/Linux distribution by Javier Fernandez-Sanguino.
+
+These forks were merged on may 2002 and in june 2002 the new source code,
+now labeled as the 3.0 release, was published at the Savannah site.
+The 3.1 release was distributed in october 2002, it was considered
+an unstable release and included some new checks, a new autoconf script
+for automatic configuration, but mostly included  fixes from
+bugs found after testing Tiger in Debian GNU/Linux and in other 
+operating systems. Over 2200 lines of code and documentation were included
+in this release.
+
+
+First version by Doug.Schales@net.tamu.edu
+Last update by Javier Fernandez-Sanguino
