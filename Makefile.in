@@ -1,7 +1,7 @@
 #
 #  You only need to 'make' tiger if you are planning to run it
-#  on a regular basis.
-#
+#  on a regular basis, or to compile the binaries (sources under c/)
+#  for your platform (these binaries might be needed by some checks)
 #
 #------------------------------------------------------------------------
 #
@@ -31,6 +31,11 @@ TIGERLOGS=@tigerlog@
 # sub-directory under $(TIGERHOME)/systems
 #
 TIGERBIN=@tigerbin@
+#
+# Which is the prefix of where the system is going to be installed.
+# 
+prefix=@prefix@
+#
 #------------------------------------------------------------------------
 #
 # End of user customization...
@@ -117,11 +122,11 @@ install:
         fi; \
 	if [ ! -d $(prefix)/$(TIGERWORK) ]; then \
 	  mkdir -p $(prefix)/$(TIGERWORK); \
-	  chmod 755 $(prefix)/$(TIGERWORK); \
+	  chmod 700 $(prefix)/$(TIGERWORK); \
 	fi; \
 	if [ ! -d $(prefix)/$(TIGERLOGS) ]; then \
 	  mkdir -p $(prefix)/$(TIGERLOGS); \
-	  chmod 755 $(prefix)/$(TIGERLOGS); \
+	  chmod 700 $(prefix)/$(TIGERLOGS); \
 	fi; \
 	if [ ! -d $(prefix)/$(TIGERHOME)/scripts ]; then \
 	  mkdir $(prefix)/$(TIGERHOME)/scripts; \
@@ -166,4 +171,22 @@ distclean: clean
 	cd c && $(MAKE) distclean 
 	-find log/ -type f -exec rm -f {} \;
 	-find run/ -type f -exec rm -f {} \;
-	-rm -f Makefile configure 
+	-rm -f Makefile 
+
+maintainerclean: distclean
+	-rm -f configure tiger config tigercron
+
+configure: configure.in
+	autoconf
+
+# Configure the package with the defaults (will install to /usr/local/)
+config: configure
+	./configure
+	chmod 755 tiger tigercron config
+
+# Configure the package to run in the local dir
+config-local: configure
+	./configure --with-tigerhome=. --with-tigerconfig=. \
+		--with-tigerwork=run/ --with-tigerlog=log/ --with-tigerbin=. \
+		--prefix=/usr/local/tiger
+	chmod 755 tiger tigercron config
