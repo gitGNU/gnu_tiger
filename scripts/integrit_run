@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 #     tiger - A UN*X security checking system
-#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#     Copyright (C) 2003 Javier Fernandez-Sanguino
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,11 +15,17 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# tripwire_run - 11/07/2001
-# Paul Telford <paul_telford@hp.com>
+# integrit_run - 08/09/2003
+# 
+# Runs the integrit file checker and reports the results through the mesasging
+# interface.
 #
-# tripwire_run - 07/25/2002 - jfs
-#       Changed TigerInstallDir to .
+# 08/13/2003 - jfs - Respect the override (if done) from the site configuration
+#                    file
+# 
+#-----------------------------------------------------------------------------
+# TODO
+# - Test further this script.
 #
 #-----------------------------------------------------------------------------
 #
@@ -59,9 +65,9 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT FMT GEN_PASSWD_SETS JOIN LS RM || exit 1
+  haveallcmds RM || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
-  haveallvars TESTLINK HOSTNAME
+  haveallvars TESTLINK HOSTNAME Tiger_INTEGRIT_CFG
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
@@ -69,21 +75,52 @@ done
 
 #------------------------------------------------------------------------
 echo
-echo "# Running Tripwire..."
+echo "# Running Integrit file checker..."
+
+# Integrit binary location|override + default check
+# Which, find, user-supplied var or tigexp's findcmd?:
+if [ -z "$INTEGRIT" ] 
+then
+if [ -z "${Tiger_INTEGRIT_LOC_OVERRIDE}" ]
+then
+   INTEGRIT=`which integrit`
+else
+   INTEGRIT=${Tiger_INTEGRIT_LOC_OVERRIDE}
+fi
+fi
+
+haveallcmds RM INTEGRIT || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+haveallvars TESTLINK HOSTNAME Tiger_INTEGRIT_CFG || exit 1
 
 # TODO: 
-# - The location of tripwire should be tested and not be
+# - The location of integrit should be tested and not be
 #   hardcoded in the script.
-# - This script should be changed also to work with other
-#   file integrity tests (for example aide)
-# jfs - 12/06/2002
 
-tmplog="$WORKDIR/trip.out.tmp.$$"
-/usr/sbin/tripwire --check 2> /dev/null | $GREP "Rule Name:" | awk '{print $NF}' > $tmplog
+INTEGRIT_RPT="$WORKDIR/integrit.out.tmp.$$"
+safe_temp $INTEGRIT_RPT
+trap 'delete $INTEGRIT_RPT; exit 1' 1 2 3 15
 
-while read filename
-do
-	message FAIL trip01 "" "Detected modified file $filename"
-done < $tmplog
-	
-delete $tmplog
+$INTEGRIT -c -C $Tiger_INTEGRIT_CFG 2> /dev/null > $INTEGRIT_RPT
+
+# TODO: calling INTEGRIT should check the errors (if any)
+# i.e. check $? and determine what happened
+
+# Differentiate between added, changed and removed files
+for status in changed removed detected; do
+	$GREP ${INTEGRIT_RPT} -e "^${status}:" | 
+	$AWK '{ print $2; }' |
+	while read result
+	do
+	case "${status}" in
+		changed) exp="integ003w";;
+		removed) exp="integ004w";;
+		added)   exp="integ005w";;
+	esac
+	message WARN ${exp} "" "Detected ${status} for file ${result}"
+	done
+done
+
+delete $INTEGRIT_RPT
+
+exit 0
