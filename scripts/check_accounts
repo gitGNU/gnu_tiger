@@ -18,8 +18,12 @@
 # check_accounts - created 06/14/93
 #
 # Checks the accounts provided in the system, looking for disabled accounts
-# with cron, rhosts, .forward, and valid shells.
+# with cron, rhosts, and .forward files as well as proper configuration
+# (home directory accesibility, shell configuration files, dormant accounts
+# and .hushlogin files)
 #
+# 01/21/2004 jfs  Removed TODO (no longer applies here), expanded description and
+#                fixed typo.
 # 01/18/2004 rbrad Applying 4 Savannah patches:
 #	* 2466 - Remove redundant check (check was moved to check_passwd).
 #	* 2467 - Fix bug in USERDOTFILES when USERDOTFILES is empty.
@@ -71,10 +75,6 @@
 #               and checks config files in home directories for
 #               writability.
 #-----------------------------------------------------------------------------
-# TODO:
-# - Some 'valid' shells such as nologin or noshell might be listed under
-#  /etc/shells but are really invalid. The script should maybe check these
-#  cases or provide a way to define $NOSHELL in order to exclude these.
 #
 #-----------------------------------------------------------------------------
 #
@@ -195,7 +195,7 @@ check_users()
      # Verify the home directory is accessable.
      [ ! -d "$home/" ] && {
        [ $Tiger_Accounts_Trust -lt $uid ] && [ "$host" = "$HOSTNAME" ] && {
-         message WARN acc022w "" "Login ID $user home directory ($home) is not accessable."
+         message WARN acc022w "" "Login ID $user home directory ($home) is not accessible."
        }
        continue
      }

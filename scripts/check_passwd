@@ -46,6 +46,16 @@
 # 10/11/2003 jfs Patch from Ryan Braderitch's to fix a WARN -> FAIL
 # 01/18/2004 rbrad Applied Savannah patch:
 #	* 2466 - update list of shells to ignore.
+# 01/21/2004 jfs Moved comment from check_accounts to here and expanded
+#       shcase definition to be equivalent to the one there.
+#-----------------------------------------------------------------------------
+# TODO:
+# - Some 'valid' shells such as nologin or noshell might be listed under
+#  /etc/shells but are really invalid. The script should maybe check these
+#  cases or provide a way to define $NOSHELL in order to exclude these.
+#  Notice that the list of valid shells is derived from /etc/shells (a sane
+#  default is also used) but the way the 'case' segment is structured 
+#  invalid shells listed are omitted.
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -147,6 +157,8 @@ check_passwd_entries()
     [ x$shell = x ] && shell=/bin/sh
 
     # Check for valid shells.
+    # TODO: The hardcoded list of shells could be user defined 
+    # (i.e. in tigerrc)
     eval "case \"$shell\" in
       /bin/false|/usr/bin/false|/dev/null|/sbin/nologin)
          ;;
@@ -206,7 +218,7 @@ conflict_check()
 
 # Define shcase to be a list of valid shells, so we can check for
 # shell initilization files.
-shcase='/bin/sh|/bin/csh'
+shcase='/bin/sh|/bin/csh|/bin/bash|/bin/tcsh|/bin/ksh'
 [ -n "$ETCSHELLS" -a -s "$ETCSHELLS" ] && {
   shells=`$GREP -v '^#' $ETCSHELLS`
   shcase=`echo $shells | $TR ' ' '|'`
