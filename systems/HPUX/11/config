@@ -23,7 +23,8 @@
 #                    Added GRPCK.
 # 08/09/2003 - jfs - Applied patch from Ryan Bradetich to include NDD support
 # 11/18/2003 - jfs - Add EXPAND (patch from  Ryan Bradetich)
-# 11/19/2003 - jfs - Add REALPÂTH and SNEFRU (patch from  Ryan Bradetich)
+# 11/19/2003 - jfs - Add REALPATH and SNEFRU (patch from  Ryan Bradetich)
+# 01/07/2004 - rbrad - Add NETSTAT
 #
 #-----------------------------------------------------------------------------
 #
@@ -75,6 +76,7 @@ CUT=/usr/bin/cut
 REALPATH=$BINDIR/realpath
 SNEFRU=$BINDIR/snefru
 NDD=/usr/bin/ndd
+NETSTAT=/usr/bin/netstat
 # Setup PWCK depending on the status of the system
 # (is it in trusted mode?)
 /usr/lbin/getprdef -r >/dev/null 2>/dev/null
@@ -108,9 +110,9 @@ SENDMAILCF="/usr/lib/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL HEAD MV TR JOIN GROUPSS FILECMD UNIQ PASTE
-export BASENAME CHOWN CHMOD LN DIFF MAILER WC TEE ID EXPAND CUT NDD MESG PWCK 
+export BASENAME CHOWN CHMOD LN DIFF MAILER WC TEE ID EXPAND CUT NDD MESG PWCK
 export GRPCK GETPRDEF
-export REALPATH SNEFRU SSHD_CONFIG SENDMAILS SENDMAILCF
+export REALPATH SNEFRU SSHD_CONFIG SENDMAILS SENDMAILCF NETSTAT
 #
 UNAME=/bin/uname
 GETHOSTNAME=/bin/hostname
