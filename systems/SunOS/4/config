@@ -63,13 +63,15 @@ LN=/usr/bin/ln
 PASTE=/usr/bin/paste
 DIFF=/usr/bin/diff
 MAILER=/usr/bin/mail
+ID=/usr/bin/id
+WC=/usr/bin/wc
 SENDMAILS="/usr/lib/sendmail /usr/lib/sendmail.mx"
 SENDMAILCF="/etc/sendmail.cf"
 export SENDMAILS SENDMAILCF
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED CUT HEAD
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME
-export CHMOD CHOWN LN PASTE DIFF MAILER
+export CHMOD CHOWN LN PASTE DIFF MAILER ID WC
 #
 UNAME=/usr/bin/uname
 GETHOSTNAME=/usr/bin/hostname

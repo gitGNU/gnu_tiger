@@ -78,6 +78,7 @@ CHOWN=`findcmd chown`
 LN=`findcmd ln`
 PASTE=`findcmd paste`
 DIFF=`findcmd diff`
+ID=`findcmd ID`
 MAILER=`findcmd mail`
 [ ! -n "$MAILER" ] && MAILER=`findcmd mailx`
 [ ! -n "$MAILER" ] && MAILER=`findcmd Mail`
@@ -95,7 +96,7 @@ X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -1`
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME
-export CHMOD CHOWN LN PASTE
+export CHMOD CHOWN LN PASTE ID
 #
 UNAME=`findcmd uname`
 HOSTNAME=`findcmd hostname`

@@ -17,11 +17,23 @@
 #
 # SunOS/gen_cron - 06/14/93
 #
+# SunOS/gen_cron - 08/12/2002 - jfs - Fixed so that it works standalone
+#
 #-----------------------------------------------------------------------------
 #
+[ -z "$LS" ] && LS=`which ls`
+[ -z "$SED" ] && SED=`which sed`
+[ -z "$CRONSPOOL" ] && CRONSPOOL=/var/spool/cron/crontabs
 
 outfile=$1
-> $outfile
+
+#if [ -z "$outfile" ] 
+#then
+#	echo "Usage: $0 file"
+#	exit 1
+#fi
+
+[ -n "$outfile" ] && > $outfile
 
 [ ! -n "$GETUSERHOME" ] && GETUSERHOME=echo
 
@@ -29,7 +41,7 @@ outfile=$1
   cd $CRONSPOOL
   $LS -l $LSGROUP *
 ) |
-while read x y owner a b c d e file
+while read perm y owner group size date1 date2 file
 do
   [ "$owner" != "root" ] && {
     echo "--WARN-- CRON file \`$file' is owned by $owner."

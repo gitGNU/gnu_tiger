@@ -61,6 +61,7 @@ LN=/bin/ln
 PASTE=/usr/bin/paste
 DIFF=/usr/bin/diff
 MAILER=/usr/bin/mail
+ID=/usr/bin/id
 SENDMAILS="/usr/bin/smail"
 # I'm not sure what a SMAIL config file looks like...
 SENDMAILCF=""
