@@ -25,6 +25,7 @@ IMPROVEMENTS
 - check_patches for Solaris should generate better messages for security
   and/or recommended patches (|R|S|). The check needs to be tested for
   Solaris 9 too.
+  Also check_patches should only output information for packages installed.
 
 - check_known should be improved to detect for symlink attacks and
   hard links in user writable directories (/tmp, /var/tmp and, in
