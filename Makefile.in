@@ -141,57 +141,70 @@ all:
 	./util/genmsgidx
 
 installdirs:
-	if [ ! -d $(DESTDIR)$(TIGERHOME) ]; then \
+	echo "Creating $(TIGERHOME)..."
+	@if [ ! -d $(DESTDIR)$(TIGERHOME) ]; then \
 	  mkdir -p $(DESTDIR)$(TIGERHOME); \
 	  chmod 755 $(DESTDIR)$(TIGERHOME); \
-        fi; \
-	if [ ! -d $(DESTDIR)$(TIGERWORK) ]; then \
+        fi
+	echo "Creating $(TIGERWORK)..."
+	@if [ ! -d $(DESTDIR)$(TIGERWORK) ]; then \
 	  mkdir -p $(DESTDIR)$(TIGERWORK); \
 	  chmod 700 $(DESTDIR)$(TIGERWORK); \
-	fi; \
-	if [ ! -d $(DESTDIR)$(TIGERLOGS) ]; then \
+	fi
+	echo "Creating $(TIGERLOGS)..."
+	@if [ ! -d $(DESTDIR)$(TIGERLOGS) ]; then \
 	  mkdir -p $(DESTDIR)$(TIGERLOGS); \
 	  chmod 700 $(DESTDIR)$(TIGERLOGS); \
-	fi; \
-	if [ ! -d $(DESTDIR)$(TIGERHOME)/scripts ]; then \
+	fi
+	echo "Creating $(TIGERHOME)/scripts..."
+	@if [ ! -d $(DESTDIR)$(TIGERHOME)/scripts ]; then \
 	  mkdir $(DESTDIR)$(TIGERHOME)/scripts; \
 	  chmod 755 $(DESTDIR)$(TIGERHOME)/scripts; \
-	fi; \
-	if [ ! -d $(DESTDIR)$(TIGERHOME)/util ]; then \
+	fi
+	echo "Creating $(TIGERHOME)/util..."
+	@if [ ! -d $(DESTDIR)$(TIGERHOME)/util ]; then \
 	  mkdir $(DESTDIR)$(TIGERHOME)/util; \
 	  chmod 755 $(DESTDIR)$(TIGERHOME)/util; \
-	fi; \
-	if [ ! -d $(DESTDIR)$(TIGERBIN) ]; then \
-	  mkdir $(DESTDIR)$(TIGERBIN); \
+	fi
+	echo "Creating $(TIGERBIN)..."
+	@if [ ! -d $(DESTDIR)$(TIGERBIN) ]; then \
+	  mkdir -p $(DESTDIR)$(TIGERBIN); \
 	  chmod 755 $(DESTDIR)$(TIGERBIN); \
-	fi; \
-	if [ ! -d $(DESTDIR)$(TIGERCONFIG) ]; then \
-	  mkdir $(DESTDIR)$(TIGERCONFIG); \
+	fi
+	echo "Creating $(TIGERCONFIG)..."
+	@if [ ! -d $(DESTDIR)$(TIGERCONFIG) ]; then \
+	  mkdir -p $(DESTDIR)$(TIGERCONFIG); \
 	  chmod 700 $(DESTDIR)$(TIGERCONFIG); \
-	fi; \
+	fi
 
 install: installdirs
 	cd c && $(MAKE) install
-        for dir in $(MISCDIRS); do \
+	echo "Copying miscellaneus dirs..."
+	@for dir in $(MISCDIRS); do \
 	  tar cf - $$dir | (cd $(DESTDIR)$(TIGERHOME); tar xpf -); \
-	done; \
-	for file in $(MISCFILES); do \
+	done
+	echo "Copying miscellaneus files..."
+	@for file in $(MISCFILES); do \
 	  cp -p $$file $(DESTDIR)$(TIGERHOME)/$$file; \
-	done; \
-	for file in $(CONFIGFILES); do \
+	done
+	echo "Copying configuration files..."
+	@for file in $(CONFIGFILES); do \
 	  cp -p $$file $(DESTDIR)$(TIGERCONFIG)/$$file; \
-	done; \
-	for file in $(BINARIES); do \
+	done
+	echo "Copying binaries..."
+	@for file in $(BINARIES); do \
 	  cp -p $$file $(DESTDIR)$(TIGERBIN)/$$file; \
 	  chmod 755 $(DESTDIR)$(TIGERBIN)/$$file ; \
-	done; \
-	for file in $(SCRIPTS); do \
+	done
+	echo "Copying scripts..."
+	@for file in $(SCRIPTS); do \
 	  sed -e 's%^TigerInstallDir=.*$$%TigerInstallDir="'$(TIGERHOME)'"%' \
 	      $$file > $(DESTDIR)$(TIGERHOME)/$$file;\
 	  chmod 755 $(DESTDIR)$(TIGERHOME)/$$file; \
-	done; \
+	done
+	echo "Copying general configuration..."
 	cp config $(DESTDIR)$(TIGERHOME)/config
-	chmod 644 $(DESTDIR)$(TIGERHOME)/config;
+	chmod 644 $(DESTDIR)$(TIGERHOME)/config
 
 clean: 
 	cd c && $(MAKE) clean
