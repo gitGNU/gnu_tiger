@@ -17,15 +17,15 @@
 #
 # difflogs - 06/16/93
 #
+# 09/19/2003 - jfs - Fix from Nicholas François to work properly in Solaris.
+# 05/12/2003 - jfs - Sort input before diffing. For some reason some
+#                    checks might not always sort information properly
+#                    and people might get spurious reports.
 # 12/26/2001 jfs Modified intensively to work properly. Added
 #  a new feature and associated variables in tigerrc so that cron jobs 
 #  can be compared against a "template" (policy-compliant?) runs. 
 #  This can reduce false positives even if they cannot be reduced 
 #  in a given module.
-#
-# 05/12/2003 - jfs - Sort input before diffing. For some reason some
-#                    checks might not always sort information properly
-#                    and people might get spurious reports.
 #-----------------------------------------------------------------------------
 #
 [ -z "$DIFF" ] && DIFF=`which diff`
@@ -60,7 +60,7 @@ if [ -s "$oldfile" ]; then
 	'#ifdef TIGERCHANGES') flag=1;;
 	\#endif*) flag=0;;
 	'#ifndef TIGERCHANGES') flag=2;;
-	'#else TIGERCHANGES') {
+	\#else*) {
 	  [ $flag -eq 1 ] && flag=2
 	  [ $flag -eq 2 ] && flag=1
 	}
