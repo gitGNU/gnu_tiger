@@ -19,7 +19,7 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 
 
-DEB_ADV_DIR=~jfs/debian/www/webml/english/security/
+DEB_ADV_DIR=~jfs/debian/www/webwml/english/security/
 if [ -d $DEB_ADV_DIR ] 
 then
 	find $DEB_ADV_DIR -name "*data" -exec cat \{\} \; | perl retrieve-advisories.pl >debian_advisories
