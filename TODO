@@ -32,6 +32,11 @@ approach)
    checks and checks/bug fixes from TARA 3.0.3 version.
    . Full documentation and user manual describing checks, policy 
    (BS-7799) compliance and comparison with other tools and checks.
+   . Provide other logging mechanisms (syslog, snmp) if tools are
+     available.
+   . Checks for SANS's Top 10 (generic) and Top 20 (UNIX) vulnerabilities
+     (notice, however, that most are remote checks which Tiger cannot
+     implement that well..)
 
 Released:
 - Version 3.2 (stable): major bug fix version
