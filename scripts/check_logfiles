@@ -21,6 +21,14 @@
 #                  detected when testing in Solaris 8. Also changed == to =
 #
 #-----------------------------------------------------------------------------
+# TODO:
+# 
+# -logfile location should not be hardcoded in this script since it might
+#  not be proper for the system that is running.
+# Sample:
+#   in Solaris: wtmp is /var/adm/wtmpx, utmp is /var/adm/utmpx, lastlog is
+#		/var/log/lastlog, btmp does not seem to exist.
+#		And maybe also sulog and messages should be checked.
 #
 TigerInstallDir="."
 
