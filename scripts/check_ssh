@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 #     tiger - A UN*X security checking system
 #     Copyright (C) 2003 Ryan Bradetich
@@ -18,6 +18,7 @@
 # check_ssh - Checks for configuration directives in the SSH configuration
 #             file.
 #
+# 01/07/2004 - rbrad - Applied Savannah Patch: 2439 to make POSIX compliant.
 # 11/19/2003 - jfs - This script is not POSIX compliant (yet)
 # 09/19/2003 - jfs - Applied patch from Ryan Braderitch fixing typoes (sp?)
 # 09/03/2003 - jfs - Removed PermitRootLogin since that's checked by check_root
@@ -143,27 +144,31 @@ parse_sshd_config_file()
 	while read line
 	do
 		line=${line%%\#*}
-		[[ "$line" = Protocol* ]] && {
-			found_Protocol=1
-			parse_Protocol ${line##Protocol } $1 && {
-				message WARN ssh001w "" "Protocol $proto is enabled in $file"
-			}	
-		}
+		key=${line%% *}
+		line=${line##${key}}
 
+		case "$key" in
+			Protocol)
+				found_Protocol=1
+				parse_Protocol $line $1 && {
+					message WARN ssh001w "" "Protocol $proto is enabled in $file"
+				}	
+				;;
+				
+			RhostsAuthentication)
+				found_RhostsAuthentication=1
+				parse_directive $line $Tiger_SSH_RhostsAuthentication && {
+					message WARN ssh003w "" "The RhostsAuthentication directive in $1 is set to the unapproved value: $line."
+				}
+				;;
 
-		[[ "$line" = RhostsAuthentication* ]] && {
-			found_RhostsAuthentication=1
-			parse_directive ${line##RhostsAuthentication } $Tiger_SSH_RhostsAuthentication && {
-				message WARN ssh003w "" "The RhostsAuthentication directive in $1 is set to the unapproved value: ${line##RhostsAuthentication }."
-			}
-		}
-
-		[[ "$line" = PasswordAuthentication* ]] && {
-			found_PasswordAuthentication=1
-			parse_directive ${line##PasswordAuthentication } $Tiger_SSH_PasswordAuthentication && {
-				message WARN ssh004w "" "The PasswordAuthentication directive in $1 is set to the unapproved value: ${line##PasswordAuthentication }."
-			}
-		}
+			PasswordAuthentication)
+				found_PasswordAuthentication=1
+				parse_directive $line $Tiger_SSH_PasswordAuthentication && {
+					message WARN ssh004w "" "The PasswordAuthentication directive in $1 is set to the unapproved value: $line."
+				}
+				;;
+		esac
 	done < $1
 
 	# Check the default values if the entry was not specified.
