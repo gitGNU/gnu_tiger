@@ -29,12 +29,7 @@ Tiger_Check_ROOTDIR=Y           # Fast, only 2 checks
 Tiger_Check_ROOT_ACCESS=Y       # Fast
 Tiger_Check_PATH=Y		# Fast for just root... varies for all 
 Tiger_Check_EMBEDDED=Y		# Several minutes
-Tiger_Check_OS=Y                # Fast
-Tiger_Check_SINGLE=Y            # Fast
 Tiger_Check_BACKUPS=Y           # Fast
-Tiger_Check_BOOT=Y              # Fast
-Tiger_Check_PATCH=N             # Depends on your network connection
-				# (if no timeout is fixed it might stall)
 Tiger_Check_LOGFILES=Y          # Fast
 Tiger_Check_USERUMASK=Y         # Fast
 Tiger_Check_ETCISSUE=N		# Fast, needs to be customised
@@ -48,6 +43,22 @@ Tiger_Check_APACHE=N		# Fast
 Tiger_Check_SENDMAIL=N		# Fast
 Tiger_Check_PRINTCAP=Y		# Fast
 Tiger_Check_EXRC=N		# Depends on the size of the filesystem
+# OS specific checks
+# You can comment them if they are not appropiate to your system but
+# they will not run if you are running a different OS
+# - Linux specific
+Tiger_Check_PATCH=N             # Depends on your network connection
+				# (if no timeout is fixed it might stall)
+Tiger_Check_SINGLE=Y            # Fast
+Tiger_Check_BOOT=Y              # Fast
+Tiger_Check_INITTAB=Y              # Fast
+Tiger_Check_RCUMASK=Y              # Fast
+Tiger_Check_NEVERLOG=Y              # Fast
+Tiger_Check_OS=Y                # Fast
+# - Linux and Solaris specific
+Tiger_Check_NETWORKCONFIG=Y     # Fast
+# - HPUX specific
+Tiger_Check_TRUSTED=Y
 # 
 # Should reports with no info be sent on cron?
 #
