@@ -388,4 +388,8 @@ checkfile()
     . $WORKDIR/tigercmds.$$
     $RM -f $WORKDIR/tigercmds.$$
   }
+
+  # set the PATH 
+  PATH=/sbin:/usr/sbin:/bin:/usr/bin
+  export PATH
 }
