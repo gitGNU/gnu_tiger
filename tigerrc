@@ -89,18 +89,62 @@ Tiger_Show_INFO_Msgs=N
 # the 'john' package can be configured to crack the passwords periodicly 
 Tiger_Run_CRACK=N               # First time, ages; subsequent fairly quick
 #
+# Custom Crack binary location (like read-only media),
+# this can be a generic location which can be overriden by the site
+# configuration file.
+#Tiger_CRACK_LOC_OVERRIDE=/mnt/cdrom/crack/Crack
+#Tiger_CRACKREPORTER_LOC_OVERRIDE=/mnt/cdrom/crack/Reporter
+# This directory needs to be writable for Crack to work
+#Tiger_CRACKDIR_LOC_OVERRIDE=/usr/local/crack
+#
 # Should we use canonical fully qualified domain names
 # in the reports?
 #
 Tiger_Output_FQDN=Y
 #
+# Integrity checkers:
+# Note: 
+# - Make sure you don't run more than one integrity checker as it will 
+# slow down checking drastically.
+# - These checks are disabled since they are provided by the own programs
+# when installing most integrity-checking programs (this is the default
+# behaviour in Debian, for example)
+#
 # Run Tripwire file integrity checker
 #
-# Disabled in Debian since this check is provided by itself when
-# installing either Tripwire or other integrity-checking packages
-# (aide, samhain...)
 Tiger_Run_TRIPW=N		# Slow
 #
+# Custom Tripwire binary location (like read-only media)
+# This can be a generic location which can be overriden by the site
+# configuration file.
+#Tiger_TRIPW_LOC_OVERRIDE=/mnt/cdrom/tripw/tripwire
+#
+# Run Aide file integrity checker
+Tiger_Run_AIDE=N                # Slow
+# Verbose reporting (not implemented yet)
+#Tiger_Run_AIDE_VERBOSE=1
+#
+# The options below are usefull if you use custom settings.
+# These can be a generic location which can be overriden by the site
+# configuration file.
+# Custom Aide location (like read-only media)
+#Tiger_AIDE_LOC_OVERRIDE=/mnt/cdrom/aide/aide.bin
+# Custom Aide configuration file (say, read-only media)
+#Tiger_AIDE_CFG_OVERRIDE=/mnt/cdrom/aide/aide.conf
+# Custom database (for instance in read-only media)
+#Tiger_AIDE_DB_OVERRIDE=/mnt/cdrom/aide/in.db
+#
+# I think there are enough hints to best practices like storing
+# crucial data ON READ-ONLY MEDIA.
+#
+# Run Integrit file integrity checker
+Tiger_Run_INTEGRIT=N                # Slow
+Tiger_INTEGRIT_CFG=/etc/integrit/integrit.conf
+#
+# Custom Integrit location (like read-only media)
+#Tiger_INTEGRIT_LOC_OVERRIDE=/mnt/cdrom/integrit/integrit.bin
+
+
 # Line size (for formatting of output)... default is 79...
 # Specifying '0' means unlimited
 #
@@ -295,7 +339,7 @@ Tiger_Listening_ValidProcs=''
 #
 # The process list below is just an example, change it to suit your
 # needs
-#Tiger_Running_Procs='syslogd testing'
+Tiger_Running_Procs='syslogd cron atd klogd'
 #
 # Should we optimize DPKG checks? (by not using dpkg but looking on
 # the file database at /var/lib/dpkg?)
