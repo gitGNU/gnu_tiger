@@ -138,9 +138,7 @@ do
 	done
 done
 
-> $WORKDIR/openprocs.$$
-
-$CAT $WORKDIR/openprocs.$$ |
+$CAT $WORKDIR/procs.$$ |
 $SORT | $UNIQ |
 while read proc user type asocket 
 do
@@ -148,8 +146,5 @@ do
 
 done 
 
-delete $WORKDIR/procs.$$ $WORKDIR/openprocs.$$
+delete $WORKDIR/procs.$$ 
 exit 0 
-
-
-
