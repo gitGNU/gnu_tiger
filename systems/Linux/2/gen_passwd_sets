@@ -152,7 +152,7 @@ do
 	     echo $WORKDIR/nis_passwd.$$ >> $outfile
 	   }
 	 ;;
-# This is from SunOS, what do to do for Linux?
+# This is from SunOS, what should we do here for Linux? (if anything)
 #    nisplus) [ "$local" != 1 ] && {
 #               $NISCAT passwd.org_dir > $WORKDIR/nisplus_passwd.$$
 #	       echo "NIS+" > $WORKDIR/nisplus_passwd.$$.src
