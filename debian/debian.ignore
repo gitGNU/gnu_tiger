@@ -16,3 +16,15 @@ The owner of /var/run/utmp should be root (owned by utmp).
 /etc/inetd.conf should not have group read.
 /etc/inetd.conf should not have world read.
 /etc/pam.d/sudo should not have world read.
+The directory /dev/ataraid resides in a device directory.
+The directory /dev/cciss resides in a device directory.
+The directory /dev/fd resides in a device directory.
+The directory /dev/input resides in a device directory.
+The directory /dev/pts resides in a device directory.
+The directory /dev/rd resides in a device directory.
+The directory /dev/usb resides in a device directory.
+The directory /dev/ida resides in a device directory.
+/dev/null has world permissions
+/dev/ptmx has world permissions
+/dev/gpmctl has world permissions
+/dev/gpmdata has world permissions
