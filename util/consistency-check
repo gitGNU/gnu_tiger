@@ -35,7 +35,7 @@ fi
 check_progcall () {
 echo "Checking $PROGRAM call to scripts"
 cat $PROGRAM |
-grep -v ^# |
+grep -v '^#' |
 grep SCRIPTDIR/ |
 while read line
 do
@@ -54,7 +54,7 @@ do
 	if [ -f "$script" -a -x "$script" -a -s "$script" ] 
 	then
 		script=`basename $script`
-		found=`cat $PROGRAM | grep -v ^# | grep SCRIPTDIR/$script`
+		found=`cat $PROGRAM | grep -v '^#' | grep SCRIPTDIR/$script`
 		[ -z "$found" ] &&
 		echo "WARN: Script $script will not be run by $PROGRAM"
 	fi
@@ -68,24 +68,24 @@ done
 check_configuse () {
 echo "Checking $PROGRAM use of config lines"
 cat $PROGRAM |
-grep -v ^# |
+grep -v '^#' |
 sed -ne 's/^.*Tiger_Check_\([a-z]*\)\" != '[YN]' !.*/Tiger_Check_\1/pg' |
 while read configcheck
 do
 	[ -n "$configcheck" ] && 
-	[ -z "`grep $configcheck $CONFIG | grep -v ^#`" ] &&
+	[ -z "`grep $configcheck $CONFIG | grep -v '^#'`" ] &&
 	echo "ERR: $PROGRAM uses $configcheck which is not in $CONFIG"
 done
 
 echo "Checking configuration lines of $CONFIG in $PROGRAM"
 cat $CONFIG |
-grep -v ^# |
+grep -v '^#' |
 grep ^Tiger_Check |
 awk -F = '{ print $1; }' |
 while read configcheck
 do
 	[ -n "$configcheck" ] && 
-	[ -z "`grep $configcheck $PROGRAM | grep -v ^#`" ] &&
+	[ -z "`grep $configcheck $PROGRAM | grep -v '^#'`" ] &&
 	echo "ERR: $CONFIG defines $configcheck which is not used by $PROGRAM"
 done
 }

@@ -116,7 +116,7 @@ do
 	denyfirst=0; export denyfirst
 	alldenied=0; export alldenied
 	options=""; export options
-	$CAT $file |  $GREP -v ^# |
+	$CAT $file |  $GREP -v '^#' |
 	while read line
 	do
 		if [ ! -z "`echo $line | $GREP -i \"<Directory\"`" ] ; then

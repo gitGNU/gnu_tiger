@@ -9,7 +9,7 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 
-/bin/cat /etc/services | grep -v ^# | 
+/bin/cat /etc/services | grep -v '^#' | 
 while read service type other other2
 do
 	[ ! -z "$service" ] && echo $service $type
