@@ -444,6 +444,7 @@ trippid=
 
 [ "$Tiger_TESTMODE" != 'Y' ] && {
   echo "`$TIMECMD`> Security report completed for ${HOSTNAME}."
+  echo "`$TIMECMD`> Security report completed for ${HOSTNAME}." >>$logtmp
   if [ "$EXPLAINREPORT" = "Y" ]; then
     $BASEDIR/tigexp -f $logtmp > $expreport
     $MV $logtmp $logfile
