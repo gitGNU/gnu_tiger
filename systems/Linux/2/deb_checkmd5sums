@@ -93,7 +93,7 @@ do
 			[ -f "$installed" ]  && [ ! -L "$installed" ] && {
 				md5sum=`$MD5SUM "/$installed" | $CUT -f 1 -d " "`
 				[ "$md5pck" = "$md5sum" ] ||  
-				message ERROR lin005e "" "Installed file \`$installed\' checksum differs from installed packages."
+				message ERROR lin005e "" "Installed file \`$installed' checksum differs from installed packages."
 			}
 			[ ! -f "$installed" ] &&  {
 			# Check for locales purged by locale-purge
