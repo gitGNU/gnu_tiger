@@ -147,7 +147,13 @@ MISCDIRS=./bin \
 	./systems
 
 all:
+	@if [ ! -d bin ]; then \
+	  mkdir bin; \
+	fi
 	cd c && $(MAKE) install
+	@if [ ! -d html ]; then \
+	  mkdir html; \
+	fi
 	cd util && sh doc2html
 	./util/genmsgidx
 
