@@ -15,12 +15,14 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# check_passwdformat - date 
+# check_passwdformat - jfs - October 2002
 #
 # 10/13/2002 - check_passwdformat
 #       This script checks the format of the /etc/passwd file in order to
-#       determine inconsistencies. 
+#       determine inconsistencies which indicate an intrusion 
+#       or misconfiguration.
 #       This script is based on SuSE's and OpenBSD's daily security check.
+# 08/08/2003 - jfs - Improved temporary file creation.
 #
 #-----------------------------------------------------------------------------
 #
@@ -81,6 +83,9 @@ haveallfiles BASEDIR WORKDIR || exit 1
 
 OUT=$WORKDIR/passwdcheck.$$
 TMPFILE=$WORKDIR/passwdcheck.tmp.$$
+safe_temp $OUT $TMPFILE
+trap 'delete $OUT $TMPFILE ; exit 1' 1 2 3 15
+ 
 #
 # /etc/passwd check
 #
