@@ -40,7 +40,7 @@ echo "/etc/group" > $WORKDIR/etc_group.$$.src
 echo $WORKDIR/etc_group.$$
 
 [ -n "$YPCAT" ] && {
-  $YPCAT group >$WORKDIR/nis_group.orig.$$
+  $YPCAT group >$WORKDIR/nis_group.orig.$$ 2>/dev/null
   if [ $? -eq 0 ] ; then
   $SORT < $WORKDIR/nis_group.orig.$$
   $AWK '{print substr($0, 1, 255);}' |
