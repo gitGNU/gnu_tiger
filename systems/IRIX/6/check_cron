@@ -15,11 +15,11 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# IRIX/4/check_cron - 06/14/93
+# IRIX/6/check_cron - 06/14/93
 #
 #-----------------------------------------------------------------------------
 #
-if [ -f /usr/spool/cron/crontabs/$1 ]; then
+if [ -f "$CRONSPOOL/$1" ]; then
   echo "YES"
 else
   echo "NO"
