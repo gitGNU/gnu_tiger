@@ -129,7 +129,7 @@ trap 'tigercleanup; exit 1' 1 2 3 15
 [ "$Tiger_TESTMODE" = 'Y' ] && {
   haveallcmds CAT DATE DATECMD GEN_PASSWD_SETS GREP MV RM TIMECMD || exit 1
   haveallfiles BASEDIR SCRIPTDIR WORKDIR CONFIG_DIR LOGDIR || exit 1
-  haveallvars HOSTNAME
+  haveallvars HOSTNAME OS REL REV ARCH || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
@@ -139,7 +139,7 @@ trap 'tigercleanup; exit 1' 1 2 3 15
 
 haveallcmds CAT DATE DATECMD GEN_PASSWD_SETS GREP MV RM TIMECMD || exit 1
 haveallfiles BASEDIR SCRIPTDIR CONFIG_DIR LOGDIR WORKDIR || exit 1
-haveallvars HOSTNAME OS REL REV ARCH
+haveallvars HOSTNAME OS REL REV ARCH || exit 1
 
 version="$TIGERVERSION"
 
