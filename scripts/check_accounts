@@ -190,7 +190,7 @@ check_users()
      # a valid password).
      case $hash in
        '*')
-         check_disabled "$user" "$home" "$host"
+         check_disabled "$user" "$home" "$host" "$shell"
          ;;
      esac
 
