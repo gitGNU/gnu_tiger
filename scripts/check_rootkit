@@ -146,6 +146,9 @@ haveallcmds CHKROOTKIT >/dev/null && {
 	echo "# Running chkrootkit ($CHKROOTKIT) to perform further checks..."
 # TODO: This code does not show some of chkrootkit's messages (such as
 # suspicious files)
+# TODO2: Consider sending output to /dev/null to avoid the
+# 'warning, got bogus unix line' messages that netstat might output 
+# (See Debian Bug 223847)
 	$CHKROOTKIT -q |
 # Note: we use the quiet mode to avoid parsing all the lines of 
 # "Searching for..." things
