@@ -20,7 +20,9 @@
 # 04.25.2001
 # Javier Fernandez-Sanguino <jfs@computer.org>
 #
-# 07/25/2002 - jfs #       Changed TigerInstallDir to .
+# 08/09/2003 - jfs - Improved checked (might give false positives if comments
+#		     where used)
+# 07/25/2002 - jfs - Changed TigerInstallDir to .
 #
 #-----------------------------------------------------------------------------
 #
@@ -71,7 +73,7 @@ haveallcmds AWK GREP || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 if [ -r /etc/inittab ] ; then
-	CTRALTDEL_STRING="ctraltdel:/sbin/shutdown"
+	CTRALTDEL_STRING="^ctraltdel:/sbin/shutdown"
 	$GREP "$CTRALTDEL_STRING" /etc/inittab 1> /dev/null
 	if [ $? -eq 1 ]
 	then
