@@ -80,7 +80,7 @@ checkfile()
   fi
 
   LOGDIR=${TigerLogDir:=.}
-  WORKDIR=${TigerWorkDir:=${TMPDIR:=/tmp/}}
+  WORKDIR="$TigerWorkDir"
   RCFILE=${TigerConfigDir:=.}/tigerrc
   IGNORE_FILE=${TigerConfigDir:=.}/tiger.ignore
   TIGERHOMEDIR="$BASEDIR"
@@ -124,6 +124,19 @@ checkfile()
     echo "tiger, version $TIGERVERSION"
     exit 0
   }
+
+  if [ -z "$WORKDIR" ] ; then
+          WORKDIR=${TMPDIR:=/tmp}
+          ( umask 077; mkdir $WORKDIR/tiger.$$ ) || { echo "$0: Cannot create temporary directory" >&2; exit 1; }
+          WORKDIR="$WORKDIR/tiger.$$"
+  fi
+  # TODO: WORKDIR should be removed on exit if it is located in a temporary
+  # directory
+  if [ ! -d "$WORKDIR" ] ; then
+          echo "Configured working directory $WORKDIR does not exist" >&2
+          exit 1
+  fi
+
 
   echo "Configuring..."
 

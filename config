@@ -17,6 +17,7 @@
 #
 #  config (top level) - 06/14/93
 #
+# 01/21/2005 jfs  Safer creation of $WORKDIR if undefined 
 # 08/13/2004 jfs  Setup all locales as 'C' (Debian bug  #270108)
 # 04/28/2004 jfs  Changed -f RCFILE check to -r to allow use through ssh
 #                 as suggested by Falk Siemonsmeier:
@@ -226,7 +227,7 @@ checkfile()
   fi
 
   LOGDIR=${TigerLogDir:=.}
-  WORKDIR=${TigerWorkDir:=${TMPDIR:=/tmp}}
+  WORKDIR="$TigerWorkDir"
   RCFILE=${TigerConfigDir:=.}/tigerrc
   IGNORE_FILE=${TigerConfigDir:=.}/tiger.ignore
   TIGERHOMEDIR="$BASEDIR"
@@ -264,7 +265,6 @@ checkfile()
     shift;
   done
 
-
   TIGERVERSION="`/bin/cat $TIGERHOMEDIR/version.h 2>/dev/null`"
   [ ! -n "$TIGERVERSION" ] && TIGERVERSION="undetermined"
   export TIGERVERSION
@@ -273,6 +273,19 @@ checkfile()
     echo "tiger, version $TIGERVERSION"
     exit 0
   }
+
+  if [ -z "$WORKDIR" ] ; then
+	  WORKDIR=${TMPDIR:=/tmp}
+	  ( umask 077; mkdir $WORKDIR/tiger.$$ ) || { echo "$0: Cannot create temporary directory" >&2; exit 1; }
+	  WORKDIR="$WORKDIR/tiger.$$"
+  fi
+  # TODO: WORKDIR should be removed on exit if it is located in a temporary 
+  # directory
+  if [ ! -d "$WORKDIR" ] ; then
+  	  echo "Configured working directory $WORKDIR does not exist" >&2
+	  exit 1
+  fi
+
 
   [ "$QUIET" != "Y" ] && echo "Configuring..."
 
