@@ -18,13 +18,14 @@
 # tripwire_run - 11/07/2001
 # Paul Telford <paul_telford@hp.com>
 #
+# Runs tripwire (either a predefined location based on tigerrc) or 
+# the version found in path to test filesystem integrity.
+#
+# tripwire_run - 08/13/2003 - jfs - Tripwire location is no longer hardcoded
+# tripwire_run - 08/08/2003 - jfs - Temporary file creation.
+# tripwire_run - 05/01/2003 - jfs - Fixed dependancies, awk -> $AWK
 # tripwire_run - 07/25/2002 - jfs
 #       Changed TigerInstallDir to .
-#
-# tripwire_run - 05/01/2003 - jfs - Fixed dependancies, awk -> $AWK
-#
-# TODO:
-# - Tripwire location should be moved to a predefined command
 #
 #-----------------------------------------------------------------------------
 #
@@ -78,15 +79,25 @@ haveallfiles BASEDIR WORKDIR || exit 1
 echo
 echo "# Running Tripwire..."
 
-# TODO: 
-# - The location of tripwire should be tested and not be
-#   hardcoded in the script.
-# - This script should be changed also to work with other
-#   file integrity tests (for example aide)
-# jfs - 12/06/2002
 
 tmplog="$WORKDIR/trip.out.tmp.$$"
-/usr/sbin/tripwire --check 2> /dev/null | $GREP "Rule Name:" | $AWK '{print $NF}' > $tmplog
+safe_temp $tmplog
+trap 'delete $tmplog; exit 1' 1 2 3 15
+
+# Tripwire binary location|override + default check
+# Which, find, user-supplied var or tigexp's findcmd?:
+if [ -z "$TRIPWIRE" ]
+if [ -z "${Tiger_TRIPW_LOC_OVERRIDE}" ]
+then
+        TRIPWIRE=`which tripwire`
+else
+        TRIPWIRE=${Tiger_TRIPW_LOC_OVERRIDE}
+fi
+fi
+
+haveallcmds TRIPWIRE || exit 1
+
+$TRIPWIRE --check 2> /dev/null | $GREP "Rule Name:" | $AWK '{print $NF}' > $tmplog
 
 while read filename
 do
@@ -94,3 +105,4 @@ do
 done < $tmplog
 	
 delete $tmplog
+exit 0
