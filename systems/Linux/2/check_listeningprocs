@@ -22,6 +22,9 @@
 #              (i.e. with "process1|process2")
 # check_listeningprocs - 04/23/2003 - jfs
 #		Changed TigerInstallDir to '.'
+# check_listeningprocs - 09/19/2003 - jfs
+#             Allow empty okprocess and okprocessuser with the patch
+#            provided by Nicolas François
 #
 # TODO:
 # - this script seems to have problems if a program opens an UDP socket
@@ -84,10 +87,8 @@ echo "# Checking listening processes "
 haveallcmds GREP CUT AWK SORT UNIQ || exit 1
 haveallcmds LSOF || haveallcmds NETSTAT || exit 1
 
-okprocessusers=$Tiger_Listening_ValidUsers
-okprocess=$Tiger_Listening_ValidProcs
-[ ! -n "$okprocessusers" ] && okprocessusers="root"
-[ ! -n "$okprocess" ] && okprocess=""
+okprocessusers=${Tiger_Listening_ValidUsers-"root"}
+okprocess=${Tiger_Listening_ValidProcs-""}
 export okprocess okprocessusers
 
 if [ ! -z "$LSOF" ] 

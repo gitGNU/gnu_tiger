@@ -25,6 +25,9 @@
 #             Use safe delete() instead of RM
 # check_listeningprocs - 08/08/2003 - jfs 
 #             Improved temporary file creation.
+# check_listeningprocs - 09/19/2003 - jfs 
+#             Allow empty okprocess and okprocessuser with the patch
+#            provided by Nicolas François
 #
 # TODO: 
 # - provide a way (based on the Linux version) to work with Netstat's
@@ -109,10 +112,8 @@ echo "# Checking listening processes "
 haveallcmds CAT LSOF GREP CUT AWK SORT UNIQ || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
-okprocessusers=$Tiger_Listening_ValidUsers
-okprocess=$Tiger_Listening_ValidProcs
-[ ! -n "$okprocessusers" ] && okprocessusers="root"
-[ ! -n "$okprocess" ] && okprocess=""
+okprocessusers=${Tiger_Listening_ValidUsers-"root"}
+okprocess=${Tiger_Listening_ValidProcs-""}
 
 safe_temp "$WORKDIR/procs.$$" "$WORKDIR/openprocs.$$"
 trap 'delete $WORKDIR/procs.$$ $WORKDIR/openprocs.$$  ; exit 1' 1 2 3 15
