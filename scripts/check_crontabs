@@ -19,6 +19,8 @@
 #
 # Ideas from Dan Farmer's 'cron.chk' from COPS 1.04.
 # 
+# check_crontabs  - 11/19/2003 - jfs Introduce some more information on
+#            allow/deny checks as suggested by unspawn.
 # check_crontabs  - 08/19/2003 - jfs Renamed to check_crontabs
 # check_crontabs  - 08/14/2003 - jfs Added OUTPUTMETHOD to dependancies 
 #                            incorporated changes from ARSC tara version 3.0.3
@@ -177,7 +179,27 @@ delete $WORKDIR/cron.in.$$
      message WARN cron004w "" "Root crontab does not exist"
 
 # Check for existence of root cron.allow
-[ ! -f /etc/cron.allow ] &&
+[ -z "$CRONALLOW" ] && CRONALLOW=/etc/cron.allow
+[ -z "$CRONDENY" ] && CRONDENY=/etc/cron.deny
+if [ -f "$CRONALLOW" ]
+then
+   $CAT  $CRONALLOW |
+   $GREP -v "^#" | 
+   while read user
+   do
+        message WARN cron006w "User $user is allowed cron usage."
+   done
+fi
+if [ -f "$CRONDENY" ]
+then
+   $CAT $CRONDENY |
+   $GREP -v "^#" | 
+   while read user
+   do
+        message INFO cron007i "User $user is denied cron usage."
+   done
+else
      message WARN cron005w "" "Use of cron is not restricted"
+fi
 
 exit 0
