@@ -17,6 +17,8 @@
 #
 # default/config - 06/14/93
 #
+# default/config - 04/15/2003 - jfs - Fixed typos and added necessary programs
+#
 #-----------------------------------------------------------------------------
 #
 
@@ -78,7 +80,13 @@ CHOWN=`findcmd chown`
 LN=`findcmd ln`
 PASTE=`findcmd paste`
 DIFF=`findcmd diff`
-ID=`findcmd ID`
+ID=`findcmd id`
+CUT=`findcmd cut`
+HEAD=`findcmd head`
+WC=`findcmd wc`
+DIFF=`findcmd diff`
+EXPAND=`findcmd expand`
+LSOF=`findcmd lsof`
 MAILER=`findcmd mail`
 [ ! -n "$MAILER" ] && MAILER=`findcmd mailx`
 [ ! -n "$MAILER" ] && MAILER=`findcmd Mail`
@@ -96,7 +104,7 @@ X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -1`
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME
-export CHMOD CHOWN LN PASTE ID
+export CHMOD CHOWN LN PASTE ID CUT HEAD WC DIFF EXPAND LSOF
 #
 UNAME=`findcmd uname`
 HOSTNAME=`findcmd hostname`
