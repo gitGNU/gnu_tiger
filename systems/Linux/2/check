@@ -15,10 +15,16 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# SunOS/4/check - 06/14/93
-# This file can be used as a template file for creating system checks
-# In any case, it is used by scripts/check_system to run all the checks for a 
-# given system.
+# Linux/2/check - 08/12/2002
+# 
+# Checks for Linux systems2002
+# 
+# Linux/2/check - 04/23/2003 - jfs
+# 	Removed CC dependancy, added TODO
+#-----------------------------------------------------------------------------
+# TODO:
+#
+# - Checks should also be done based on Debian distribution
 #
 #-----------------------------------------------------------------------------
 #
@@ -58,7 +64,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds CAT CC GREP RM SGREP STRINGS || exit 1
+  haveallcmds CAT GREP RM SGREP STRINGS || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -67,7 +73,7 @@ done
 
 #------------------------------------------------------------------------
 
-haveallcmds CAT CC GREP RM SGREP STRINGS || exit 1
+haveallcmds CAT GREP RM SGREP STRINGS || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 SYSTEMDIR=$BASEDIR/systems/Linux/2
