@@ -18,8 +18,12 @@
 #
 # Thanks to Steve Rikli for the revised config file
 #
-#-----------------------------------------------------------------------------
+# 09/19/2003 - jfs - Added UUID and USERNAME definition
 #
+# ----------------------------------------------------------------------
+UUID=`id -u`
+USERNAME=`whoami`
+export UUID USERNAME
 AWK=/usr/bin/awk
 export AWK
 BASENAME=/bin/basename

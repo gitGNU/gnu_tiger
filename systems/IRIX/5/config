@@ -18,9 +18,12 @@
 # default/config - 06/14/93
 # ARC config     - 04/27/99
 # ARC config     - 05/10/99  Fixed IRIX 6.5 bug
+# jfs - 09/19/2003 - Added UUID and USERNAME definition
 #
-#-----------------------------------------------------------------------------
-#
+# ----------------------------------------------------------------------
+UUID=`id -u`
+USERNAME=`whoami`
+export UUID USERNAME
 
 findcmd()
 {

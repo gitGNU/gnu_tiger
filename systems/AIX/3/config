@@ -16,8 +16,25 @@
 #
 # AIX/3/config - 06/14/93
 #
+# 09/19/2003 - jfs - Added UUID definition or otherwise scripts will not
+#          be run.
+# 
 #-----------------------------------------------------------------------------
 #
+#UUID=`/usr/bin/id | /bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
+UUID=`id -u`
+USERNAME=`whoami`
+# This will work in most shells
+[ "$UUID" = "" ] && UUID=$UID
+[ "$USERNAME" = "" ] && USERNAME=$USER
+# Last resort
+[ "$UUID" = "" -a ! "$USERNAME" = "" ] && {
+        # Try this and see it works
+        UUID=`grep  ^$USERNAME: /etc/passwd  |awk -F : '{print $3}'`
+}
+export UUID
+
+
 AWK=/usr/bin/awk
 export AWK
 BASENAME=/usr/bin/basename

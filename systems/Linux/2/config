@@ -60,7 +60,7 @@ USERNAME=`whoami`
 }
 export UUID
 
-[ "$UNAME" != "root" ] && {
+[ "$USERNAME" != "root" ] && {
   echo " " 1>&2
   echo "This script should be run from a super-user account." 1>&2
   echo " " 1>&2
