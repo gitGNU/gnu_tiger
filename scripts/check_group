@@ -15,7 +15,10 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# check_group  - 06/14/93
+# check_group  - created 06/14/93
+# check_group  - 08/14/2003 - jfs - Added OUTPUTMETHOD to dependancies
+# check_group  - 08/09/2003 - jfs - Re-added RM to dependancies.
+# check_group  - 08/08/2003 - jfs - Safe temporary file creation
 # check_group  - 06/26/2003 - jfs - Added Ryan Braderitch's patch
 #
 #-----------------------------------------------------------------------------
@@ -55,7 +58,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT GEN_GROUP_SETS GREP JOIN MV SORT UNIQ || exit 1
+  haveallcmds AWK CAT GEN_GROUP_SETS GREP JOIN MV SORT UNIQ RM OUTPUTMETHOD || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -66,8 +69,14 @@ done
 echo
 echo "# Performing check of group files..."
 
-haveallcmds GEN_GROUP_SETS CAT SORT AWK UNIQ GREP JOIN MV || exit 1
+haveallcmds AWK CAT GEN_GROUP_SETS GREP JOIN MV SORT UNIQ RM OUTPUTMETHOD || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
+
+safe_temp "$WORKDIR/grp.list.$$" "$WORKDIR/grp2.$$" "$WORKDIR/g1name.$$" "$WORKDIR/g2name.$$" "$WORKDIR/g1gid.$$" "$WORKDIR/g2gid.$$" "$WORKDIR/grp2new.$$"
+
+trap 'delete "$WORKDIR/grp.list.$$" "$WORKDIR/grp2.$$" \
+"$WORKDIR/g1name.$$" "$WORKDIR/g2name.$$" "$WORKDIR/g1gid.$$" \
+"$WORKDIR/grp2new.$$" "$WORKDIR/g2gid.$$"; exit 1' 1 2 3 15
 
 $GEN_GROUP_SETS > $WORKDIR/grp.list.$$
 
