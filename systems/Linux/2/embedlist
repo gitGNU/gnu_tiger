@@ -8,6 +8,8 @@
 /etc/rc
 /etc/rc?
 /etc/init.d/*
+/etc/rc.d/*
+/etc/rc.d/init.d/*
 /.profile
 /.cshrc
 /.login
