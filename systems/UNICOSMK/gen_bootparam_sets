@@ -3,7 +3,3 @@
 # The Cray doesn't support diskless clients.
 
 exit 0
-#
-exit 0
-#
-exit 0

@@ -86,7 +86,3 @@ fi
 $RM -f $WORKDIR/gfsa1.$$ $WORKDIR/gfsa2.$$
 #
 exit 0
-#
-exit 0
-#
-exit 0

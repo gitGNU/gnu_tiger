@@ -20,6 +20,8 @@
 #-----------------------------------------------------------------------------
 #
 
+[ -z "$SED" ] && SED=`which sed`
+
 haveallof()
 {
   retval=0
@@ -42,9 +44,5 @@ haveallof variables HOSTNAME || exit 1
 
 $SED -e 's/$/ '$HOSTNAME'/'
 
-#
-exit 0
-#
-exit 0
 #
 exit 0
