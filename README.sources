@@ -59,7 +59,8 @@ For generic information on OS behavior:
   	http://sunsolve.sun.com/pub-cgi/show.pl?target=patches/patch-license&nav=pub-patches
 
 - For AIX 
-  AIX manpages: http://publib.boulder.ibm.com/cgi-bin/ds_form?lang=en_US
+  AIX 5.x manpages: http://publib16.boulder.ibm.com/cgi-bin/ds_form?lang=en_US&viewset=AIX
+  AIX 4.3 manpages: http://publib.boulder.ibm.com/cgi-bin/ds_form?lang=en_US
   AIX 4.3 documentation library:
   	http://publib.boulder.ibm.com/cgi-bin/ds_form?lang=en_US
   IBM Redbooks http://www.redbooks.ibm.com/
