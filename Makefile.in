@@ -1,4 +1,3 @@
-# Generated automatically from Makefile.in by configure.
 #
 #  You only need to 'make' tiger if you are planning to run it
 #  on a regular basis.
@@ -11,7 +10,7 @@
 # contain the checking scripts, the platform specific scripts, etc.
 # None of this will need to be writable once installed.
 #
-TIGERHOME=/export/home/system/tiger-3.1
+TIGERHOME=@tigerhome@
 #
 # This directory is used for scratch files while the scripts
 # are running.  It can be /tmp.  By using something other
@@ -21,17 +20,17 @@ TIGERHOME=/export/home/system/tiger-3.1
 # 
 # Of course, it is necessary that this directory be writable.
 #
-TIGERWORK=./run
+TIGERWORK=@tigerwork@
 #
 # Where do log files go.  This directory must be writable.
 #
-TIGERLOGS=./log
+TIGERLOGS=@tigerlog@
 #
 # Where do binary executables go... this is only used if the
 # binary executables don't exist in the appropriate platform
 # sub-directory under $(TIGERHOME)/systems
 #
-TIGERBIN=/usr/local/bin
+TIGERBIN=@tigerbin@
 #------------------------------------------------------------------------
 #
 # End of user customization...

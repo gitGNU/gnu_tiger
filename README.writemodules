@@ -131,7 +131,8 @@ Sat, 18 May 2002 20:35:26 +0200
 #
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+# This is the directory Tiger is installed on
+TigerInstallDir='.'
 
 #
 # Set default base directory.

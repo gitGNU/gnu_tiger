@@ -1,0 +1,41 @@
+dnl Process this file with autoconf to produce a configure script.
+
+dnl This file is just some unique file that configure will check
+dnl for to make sure it's in the right directory.
+AC_INIT(tiger)
+
+AC_ARG_WITH(tigerhome, [  --with-tigerhome=LOCATION        Location of all Tiger files],
+tigerhome=$withval, tigerhome="no")
+if test "$tigerhome" = "no" ; then
+        tigerhome=/usr/local/tiger
+fi
+
+AC_ARG_WITH(tigerconfig, [  --with-tigerconfig=LOCATION        Location of Tiger configuration files],
+tigerconfig=$withval, tigerconfig="no")
+if test "$tigerconfig" = "no" ; then
+        tigerconfig=/usr/local/tiger
+fi
+
+AC_ARG_WITH(tigerwork, [  --with-tigerwork=LOCATION        Location of all the temporary files created by Tiger],
+tigerwork=$withval, tigerwork="no")
+if test "$tigerwork" = "no" ; then
+        tigerwork=/usr/local/tiger/run
+fi
+
+AC_ARG_WITH(tigerlog, [  --with-tigerlog=LOCATION        Location of all the logfiles created by Tiger],
+tigerlog=$withval, tigerlog="no")
+if test "$tigerlog" = "no" ; then
+        tigerlog=/usr/local/tiger/log
+fi
+
+AC_ARG_WITH(tigerbin, [  --with-tigerbin=LOCATION        Location of the Tiger binaries],
+tigerbin=$withval, tigerbin="no")
+if test "$tigerbin" = "no" ; then
+        tigerbin=/usr/local/bin
+fi
+
+AC_SUBST(tigerhome)
+AC_SUBST(tigerwork)
+AC_SUBST(tigerlog)
+AC_SUBST(tigerbin)
+AC_OUTPUT(Makefile config tigercron)
