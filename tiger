@@ -301,10 +301,16 @@ aidepid=
 }
 
 [ "$Tiger_Check_INETD" != 'N' ] && {
-  echo "`$TIMECMD`> Checking 'inetd' configuration..."
-  run_script check_inetd >> $logtmp
-  echo "`$TIMECMD`> Checking 'tcpd' configuration..."
-  run_script check_tcpd >> $logtmp
+  [ -n "$INETDFILE" ] && [ -f "$INETDFILE" ] && {
+	echo "`$TIMECMD`> Checking 'inetd' configuration..."
+        run_script check_inetd >> $logtmp
+        echo "`$TIMECMD`> Checking 'tcpd' configuration..."
+        run_script check_tcpd >> $logtmp
+  }
+  [ -n "$XINETDCONF" ] && [ -f "$XINETDCONF" ] && {
+    echo "`$TIMECMD`> Checking 'xinetd' configuration..."
+    run_script check_xinetd >> $logtmp
+  }
 }
 
 [ "$Tiger_Check_SERVICES" != 'N' ] && {
