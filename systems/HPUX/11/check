@@ -15,30 +15,15 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# check_trusted: Verifies the system is running in trusted mode.
-# For more information on trusted mode in HP-UX please read
-# http://docs.hp.com/hpux/onlinedocs/B2355-90121/B2355-90121.html 
-# Tested on HP-UX 11.11, HP-UX 11.00, and HP-UX 10.20.
-#
-# 06/25/2003 rbradetich@uswest.net - Initial release
-# 06/26/2003 jfs - Added a TODO item, added a check to see if GETPRDEF is
-#                  available.
-# 08/09/2003 jfs - Patch from Ryan Bradetich which adds a check to determine
-#                  system will lock accounts after a number of failed attempts.
-#
-#-----------------------------------------------------------------------------
-# TODO:
-# - HP documentation says that only HP-UX Release 10.10 and later support
-# enabling trusted mode. Consider including a check to determine we
-# are not in an _ancient_ system
-#
-# - This check can be improved in the future to possibly specify the 
-#   number of failed login attempts, etc.
-#
+# HPUX/11/check - 08/09/2003
+# 
+# Specific checks for HPUX systems
+# 
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
 
+#
 # Set default base directory.
 # Order or preference:
 #      -B option
@@ -62,6 +47,7 @@ done
   echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
   exit 1
 }
+
 . $basedir/config
 
 . $BASEDIR/initdefs
@@ -71,29 +57,22 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallfiles BASEDIR || exit 1
-  haveallcmds GETPRDEF || exit 1
+  haveallcmds CAT GREP RM SGREP STRINGS || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
 }
+
 #------------------------------------------------------------------------
-haveallfiles BASEDIR || exit 1
-haveallcmds GETPRDEF || exit 1
 
-echo
-echo "# Verifying trusted mode..."
+haveallcmds CAT GREP RM SGREP STRINGS || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
 
-$GETPRDEF -r 2>&1 >/dev/null
-if [ $? -eq 4 ]; then
-  message WARN trust001w "" "The system is not running in trusted mode."
-  exit 0
-fi
 
-# Verify the number of login attempts are limited.
-num=`$GETPRDEF -m umaxlntr`
-( [ -z "$num" ] || (( ${num#umaxlntr=} < 1 ))) && {
-  message WARN trust002w "" "The system is not configured to limit the number of login attempts."
+# Generic check_ndd check
+[ "$Tiger_Check_NETWORKCONFIG" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for network (ndd) configuration..."
+	$BASEDIR/systems/default/check_ndd
 }
 
-exit 0

@@ -78,9 +78,12 @@ SYSTEMDIR=$BASEDIR/systems/HPUX
 # the systems/Linux/2/check script.
 # 
 
-# Define system specific configuration variables.
-
 # Verify the system is running in trusted mode.
 [ "$Tiger_Check_TRUSTED" = 'Y' ] && {
   $SYSTEMDIR/check_trusted
+}
+
+# Perform system specific password checks.
+[ "$Tiger_Check_PASSWD" != 'N' ] && {
+  $SYSTEMDIR/check_passwdspec
 }

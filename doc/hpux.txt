@@ -7,3 +7,11 @@ http://www.faqs.org/faqs/hp/hpux-faq/section-68.html
 and at the HP document "Administering your HP-UX Trusted System"
 (B2355-90121) available at 
 http://docs.hp.com/hpux/onlinedocs/B2355-90121/B2355-90121.html
+%trust002w
+When the system is in trusted mode, HP-UX can enforce a default
+number of login attempts before the account is disabled.  This
+is useful for prefenting potential intruders from brute forcing
+and/or guessing passwords.  Since limiting the number of logins
+can also be used as a Denial of Service attack, the number of
+login attempts is configurable on a per-user basis.  Read the
+default(4) and modprpw(1M) man pages for additional information.

@@ -1,0 +1,115 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_passwdspec: Perform system specific password checks here like
+#               password aging checks, etc.
+#
+# 07/10/2003 rbradetich@uswest.net - Initial release
+# 08/09/2003 jfs - Included in the Tiger release but changed its name to 
+#                  check_passwdspec. Added safer temporary file creation.
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallcmds AWK GEN_PASSWD_SETS || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+#------------------------------------------------------------------------
+haveallfiles BASEDIR WORKDIR || exit 1
+haveallcmds AWK GEN_PASSWD_SETS || exit 1
+
+echo
+echo "# Verifying system specific password checks..."
+
+safe_temp $WORKDIR/pass.list.$$
+trap 'delete $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
+
+# Generate the password sets with the passwords.
+$GEN_PASSWD_SETS -p $WORKDIR/pass.list.$$
+
+#
+# Check for password aging.  Accounts with /bin/false for a shell or non-valid
+# characters in the password hash are not checked.
+#
+while read passwd_set
+do
+  $AWK -F: '{print $1, $2, $7}' $passwd_set |
+  while read login hash shell
+  do
+    # Ignore password aging check if the shell is /bin/false.
+    [ "$shell" = /bin/false ] && continue
+
+    # Get the age and password field from the tcbfile if it exists.
+    tcbfile="/tcb/files/auth/${login%${login#?}}/$login"
+    [ -f $tcbfile ] && {
+      age=`$AWK -F: '/u_exp\#[0-9]/ {print $0}' $tcbfile`
+      [ -n "$age" ] && continue
+
+      # Make sure the password hash only contains valid characters.
+      hash=`$AWK -F: '/u_pwd=/ { print substr($2,7) }' $tcbfile`
+      [[ "$hash" != +([a-zA-Z0-9\./]) ]] && continue
+
+      # Valid password hash without an password expiration date.
+      message WARN acc016w "" "Login ID $login does not have password aging enabled."
+      continue
+    }
+
+    [[ "$hash" != [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./],+([a-zA-Z0-9\./]) ]] && {
+      # Valid password hash without an password expiration date.
+      message WARN acc016w "" "Login ID $login does not have password aging enabled."
+    }
+  done 
+done < $WORKDIR/pass.list.$$
+
+delete $WORKDIR/pass.list.$$
+exit 0

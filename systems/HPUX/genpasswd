@@ -16,6 +16,7 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # HPUX/genpasswd - 06/14/93
+# HPUX/genpasswd - 06/26/2003 - jfs - Patch to identify password hashes
 #
 #-----------------------------------------------------------------------------
 #
