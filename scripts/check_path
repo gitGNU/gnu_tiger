@@ -16,8 +16,10 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_path  - 06/14/93
-# ARC check_path - 05/10/99  Fixed problem with parse_csh
 #
+# 09/19/2003 jfs Use -L to check properly for symlinks (I've check and
+#                its supported by all the LS implementations I've seen)
+#                (Fixes Debian Bug #161993)
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
 # 08/13/2003 jfs Return if the files do not exist (a safeguard for the
 #                functions but these is redundant code anyway)
@@ -25,13 +27,8 @@
 # 10/22/2002 jfs Fixed check for PATH in config files (was not done properly
 #            due to the way it was being tested)
 # 07/25/2002 jfs Added a sanity check for password files
+# ARC check_path - 05/10/99  Fixed problem with parse_csh
 #
-#-----------------------------------------------------------------------------
-# TODO:
-#
-# - This script does not check properly for symlinks and should be fixed 
-#   to check directories instead of the links that point to them 
-#   (Debian Bug #161993)
 #
 #-----------------------------------------------------------------------------
 #
@@ -102,12 +99,8 @@ checkcmds()
   okgroup=$Tiger_ROOT_PATH_OK_Group_Write
   [ "$_user" != 'root' ] && okgroup=$Tiger_PATH_OK_Group_Write
 
-# TODO : this should be fixed to skip symlinks (see Debian bug:
-# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=161993&repeatmerged=yes)
-# It could be done with the option -L (will follow symlinks instead of
-# avoiding them) but I have to check if this is a GNU-only option
   [ -d $_dir ] &&
-  $LS -d $_dir/* |
+  $LS -Ld $_dir/* |
   getpermit |
   while read _execfile _owner _group ur uw ux gr gw gx or ow ox suid sgid stk
   do
