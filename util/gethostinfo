@@ -17,8 +17,12 @@
 #
 # util/gethostinfo - 04/22/93
 #
+# 07/26/2002 jfs Modified so it can work if called directly. Removed
+#                unnecesary exit's
+#
 #-----------------------------------------------------------------------------
 #
+[ -z "$WORKDIR" ] && WORKDIR=./run
 
 findcmd()
 {
@@ -123,9 +127,5 @@ HOSTINFO=`findcmd hostinfo`
   '
   exit
 }
-#
-exit 0
-#
-exit 0
 #
 exit 0
