@@ -12,6 +12,35 @@ like to see posts in Bugtraq related to tiger.
 (such as http://lists.insecure.org/lists/bugtraq/1998/Jun/0160.html
 from Marc Heuse dated Fri Jun 26 1998 - 08:24:17 BST)
 
+- Convert scripts/check_network (RedHat based) into a number of tests.
+  This is a script provided by Bryan Gartner from HP
+  It currently checks for:
+  	- Inetd configuration files (are xinetd or inetd files writable?
+	  are they owned by the proper user? does inetd use -l? does
+	  xinetd have filelog or syslog?)
+	- Does /etc/securetty exist? Does it have other entries besides vc/tty?
+	  Is ownership of the file ok?
+	- Is ip forwarding enabled?
+	- Which version of DNS/Wu-ftpd is it running?
+	- PermitRooLogin or Rhosts in sshd?
+	- EXPN/VRFY support in mail host?
+	Necessary services:
+	- Is syslog running?
+	- Is omniback running?
+	Not allowed (per policy):
+	- Is fingerd running? 
+	- Is identd runnig?
+	- Are inetd internal services running?
+	- Is a routing daemon enabled?
+	- R-commands?
+	- X server
+	- Tftpd
+	- NIS
+	- UUCP
+	- R-exd?
+	- NFS
+
+
 - Update signatures using TAMU's (and maybe knowngoods.org's) signature
 database.
 See http://savannah.nongnu.org/pm/task.php?group_project_id=472&group_id=2247&func=browse
@@ -109,6 +138,8 @@ https://savannah.nongnu.org/pm/task.php?group_id=2247&group_project_id=632
 NOTE: Tiger modular behaviour makes it difficult to share data but it's easier
 to make simple checks than if using other monolythic tools (like CIS's, 
 OpenBSD's or SuSE's)
+
+- Implement logging to syslog (TARA 3.0.3 does it through logger)
 
 - Implement IDMEF to send message on alerts. Consider the use of the XML
   library available at  http://www.silicondefense.com/idwg/snort-idmef/
