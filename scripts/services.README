@@ -1,0 +1,8 @@
+Obtained authorized service listing from:
+
+	http://www.iana.org/assignments/port-numbers
+
+and then did
+
+	grep -v '^#' services.list | \
+	    awk '$1 ~ /^[a-zA-Z]/ { print $1, " ", $2 }' > services

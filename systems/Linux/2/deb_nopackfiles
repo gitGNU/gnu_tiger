@@ -1,0 +1,93 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2000, 2001 Javier Fernandez-Sanguino Peña
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# Linux/deb_nopackfiles - 23/08/2001
+#
+#-----------------------------------------------------------------------------
+TigerInstallDir='.'
+
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds DPKG GREP || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  message CONFIG init003c "" "$0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Checking installed files against packages..."
+
+haveallcmds DPKG GREP || exit 1
+
+
+for file in /bin/* /usr/bin/* /sbin/* /usr/sbin/* /lib/* /usr/X11R6/bin/*
+do
+	[ -f $file ] && [ ! -L $file  ] && {
+	# We have two options here, use dpkg (non-optimal but on the safe side)
+	# or use grep (optimal but not on the safe side)
+		if [ "$Tiger_DPKG_Optimize" = "N" ]
+		then
+			pack=`$DPKG -S $file 2>/dev/null`
+			# Alternative (optimal but not following standard way)
+		else 
+			pack=`$GREP -x -F "${file}" /var/lib/dpkg/info/*.list`
+			# To search for diversions
+			[ "$pack" = "" ] && { 
+				pack=`$GREP -x -F "${file}" /var/lib/dpkg/diversions`
+			}
+		fi
+		[ "$pack" = "" ] && {
+		message WARN lin001w "" "File \`$file' does not belong to any package." 
+		}
+	}
+done 

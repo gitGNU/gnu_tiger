@@ -1,0 +1,8 @@
+%issue001w
+The /etc/issue file does not have the designated content.  This file
+is often used as a local login banner and should contain appropriate
+content, often an unwelcome message.
+%issue002w
+The /etc/issue.net file does not have the designated content.  This file
+is often used as a network login banner by programs and should contain
+appropriate content, often an unwelcome message.

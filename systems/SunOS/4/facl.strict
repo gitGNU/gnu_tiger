@@ -1,0 +1,137 @@
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/4/file_access_list - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+#                           owner group s g r w x   r w x   r w xLVL MessageIDs
+#------------------------------------------------------------------------------
+/                           root  .     . . 1 . 1   1 0 1   1 0 1 W 018 018 018
+/etc                        root  .     . . 1 . 1   1 0 1   1 0 1 W 019 019 019
+/bin                        root  .     . . 1 . 1   1 0 1   1 0 1 W 001 002 003
+/sbin                       root  .     . . 1 . 1   1 0 1   1 0 1 W 001 002 003
+/usr                        root  .     . . 1 . 1   1 0 1   1 0 1 W 001 002 003
+/usr/5include               root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/xpg2include            root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/xpg2lib                root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/xpg2bin                root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/hosts                  root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/sccs                   root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/share                  root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/export                 root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/lang                   root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/openwin		    root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/diag                   root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/demo                   root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/5lib                   root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/games                  root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/bin                    root  .     . . 1 . 1   1 0 1   1 0 1 A 001 002 003
+/usr/lib                    root  .     . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/usr/ucb                    root  .     . . 1 . 1   1 0 1   1 0 1 A 001 002 003
+/usr/*                      .     .     . . . . .   . 0 .   . 0 . . 001 002 003
+/var                        root  .     . . . . .   1 0 1   1 0 1 . 001 002 003
+/var/yp			    root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/var/yp/*                   root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/var/yp/*/*                 root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/var/spool		    root  .     . . . . .   1 0 1   1 0 1 . 001 002 003
+/tftpboot                   root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+#
+/dev                        root  .     . . . . .   1 0 1   1 0 1 . 001 002 003
+/dev/tty		    root  .     0 0 1 1 0   1 1 0   1 1 0 . 001 002 003
+/dev/null		    root  .     0 0 1 1 0   1 1 0   1 1 0 . 001 002 003
+/dev/zero		    root  .     0 0 1 1 0   1 1 0   1 1 0 . 001 002 003
+/dev/mem		    root  kmem  0 0 1 1 0   1 0 0   0 0 0 . 001 002 003
+/dev/kmem		    root  kmem  0 0 1 1 0   1 0 0   0 0 0 . 001 002 003
+/dev/mbio		    root  .     0 0 1 1 0   0 0 0   0 0 0 . 001 002 003
+/dev/mbmem		    root  .     0 0 1 1 0   0 0 0   0 0 0 . 001 002 003
+/dev/nit		    root  .     0 0 1 1 0   0 0 0   0 0 0 . 001 002 003
+/dev/audio		    .     .     0 0 . . .   . . .   . . . . 001 002 003
+/dev/audioctl		    .     .     0 0 . . .   . . .   . . . . 001 002 003
+/dev/console		    .     .     0 0 1 1 0   0 . .   0 . . . 001 002 003
+/dev/eeprom		    root  .     0 0 1 1 0   1 0 0   0 0 0 . 001 002 003
+/dev/openprom		    root  .     0 0 1 1 0   1 0 0   1 0 0 . 001 002 003
+/dev/sbus*                  root  .     0 0 . . 0   0 0 0   0 0 0 . 001 002 003
+/dev/vme*                   root  .     0 0 . . 0   0 0 0   0 0 0 . 001 002 003
+#
+/vmunix                     root  .     0 0 1 . 1   1 0 0   1 0 0 . 001 002 003
+/boot                       root  .     0 0 1 . .   0 0 0   0 0 0 . 001 002 003
+/.cshrc                     root  .     0 0 1 . .   0 0 0   0 0 0 W 006 006 006
+/.login                     root  .     0 0 1 . .   0 0 0   0 0 0 W 006 006 006
+/.profile                   root  .     0 0 1 . .   0 0 0   0 0 0 W 006 006 006
+/.forward                   root  .     . . 1 . .   0 0 0   0 0 0 W 006 006 006
+/.rhosts                    root  .     . . 1 . 0   0 0 0   0 0 0 W 006 006 006
+#
+/etc/aliases                root  .     . . 1 . 0   0 0 0   0 0 0 F 007 007 007
+/etc/aliases.dir            root  .     . . 1 . 0   0 0 0   0 0 0 F 007 007 007
+/etc/aliases.pag            root  .     . . 1 . 0   0 0 0   0 0 0 F 007 007 007
+/etc/bootparams             root  .     . . 1 . 0   0 0 0   0 0 0 W 001 002 003
+/etc/exports                root  .     . . 1 . 0   0 0 0   0 0 0 W 008 008 008
+/etc/fstab                  root  .     . . 1 . 0   0 0 0   0 0 0 W 001 002 003
+/etc/gettytab               root  .     . . 1 . 0   0 0 0   0 0 0 W 001 002 003
+/etc/group                  root  .     . . 1 . 0   1 0 0   1 0 0 F 009 009 009
+/etc/hosts                  root  .     . . 1 . 0   1 0 0   1 0 0 F 001 002 003
+/etc/hosts.allow            root  .     . . 1 . 0   . 0 0   . 0 0 W 010 010 010
+/etc/hosts.deny		    root  .     . . 1 . 0   . 0 0   . 0 0 W 010 010 010
+/etc/hosts.equiv            root  .     . . 1 . 0   0 0 0   0 0 0 W 011 011 011
+/etc/hosts.lpd              root  .     . . 1 . 0   0 0 0   0 0 0 W 011 011 011
+/etc/inetd.conf             root  .     . . 1 . 0   0 0 0   0 0 0 W 012 012 012
+/etc/ld.so.cache	    root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/motd                   root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/mtab                   root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/netgroup               root  .     . . 1 . 0   0 0 0   0 0 0 F 013 013 013
+/etc/passwd                 root  .     . . 1 . 0   1 0 0   1 0 0 A 014 014 014
+/etc/printcap               root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/rc                     root  .     0 0 1 . 0   0 0 0   0 0 0 F 015 015 015
+/etc/rc.boot                root  .     0 0 1 . 0   0 0 0   0 0 0 F 015 015 015
+/etc/rc.local               root  .     0 0 1 . 0   0 0 0   0 0 0 F 015 015 015
+/etc/remote                 root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/security               root  wheel . . . . .   0 0 1   0 0 1 A 005 005 005
+/etc/security/passwd.adjunct root wheel . . . . .   0 0 0   0 0 0 A 005 005 005
+/etc/modules		    root  .     . . . . .   1 0 1   1 0 1 . 001 002 003
+/etc/resolv.conf            root  .     . . 1 . 0   1 0 0   1 0 0 W 016 016 016
+/etc/rpc                    root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/sendmail.cf            root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/services               root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/syslog.conf            root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/syslog.pid             root  .     . . 1 . 0   0 0 0   0 0 0 W 001 002 003
+/etc/ttys                   root  .     . . 1 . 0   . 0 0   . 0 0 W 001 002 003
+/etc/ttytab                 root  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/utmp                   root  .     . . 1 . 0   1 0 0   1 0 0 W 017 017 017
+/etc/*                      root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+#
+/etc/uucp/Permissions	    root  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/uucp/Systems           uucp  .     . . 1 . 0   0 0 0   0 0 0 . 001 002 003
+#
+/usr/bin/uulog              root  .     0 0 . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/uuto               root  .     0 0 . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/uupick             root  .     0 0 . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/cu                 uucp  uucp  1 0 . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/tip                uucp  .     1 0 . 0 1   . 0 .   . 0 . . 001 002 003
+/usr/bin/uucp               uucp  uucp  1 0 . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/uux                uucp  uucp  1 0 . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/uuname             uucp  uucp  1 0 . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/uustat             uucp  uucp  1 0 . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/write              root  tty   0 1 . . 1   . 0 .   . 0 . . 001 002 003
+/usr/bin/wall               root  tty   0 1 . . 1   . 0 .   . 0 . . 001 002 003
+#
+/usr/bin/login              root  .     1 0 1 . 1   1 0 1   1 0 1 F 001 002 003
+/usr/bin/su                 root  .     1 0 1 . 1   . 0 .   . 0 . F 001 002 003
+/usr/bin/passwd             root  .     1 0 1 . 1   . 0 .   . 0 . F 001 002 003
+/usr/bin/sh                 root  .     0 0 1 . 1   1 0 1   1 0 1 W 001 002 003
+/usr/bin/*                  root  .     . . 1 . 1   . 0 .   . 0 . . 001 002 003
+
+

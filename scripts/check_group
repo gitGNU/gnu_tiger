@@ -1,0 +1,155 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_group  - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT GEN_GROUP_SETS GREP JOIN MV RM SORT UNIQ || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing check of group files..."
+
+haveallcmds GEN_GROUP_SETS CAT SORT AWK UNIQ GREP JOIN MV || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+$GEN_GROUP_SETS > $WORKDIR/grp.list.$$
+
+saveifs=$IFS
+
+$CAT $WORKDIR/grp.list.$$ > $WORKDIR/grp2.$$
+newfile=$WORKDIR/grp2new.$$
+
+while read group1
+do
+  src1=`$CAT $group1.src`
+  $SORT $group1 > $WORKDIR/g1name.$$
+  $SORT -t: +2 -3 $group1 > $WORKDIR/g1gid.$$
+
+  $AWK -F: '{print $1}' $WORKDIR/g1name.$$ |
+  $UNIQ -d |
+  while read grpname
+  do
+    message WARN grp001w "" "Groupname \`$grpname' exists multiple times in $src1."
+  done
+
+  $AWK -F: '{print $3}' $WORKDIR/g1gid.$$ |
+  $UNIQ -d |
+  while read gid
+  do
+    message WARN grp002w "" "GID $gid exists multiple times in $src1."
+  done
+
+  $AWK -F: 'NF != 4 {print}' $WORKDIR/g1gid.$$ |
+  while read entry
+  do
+    message WARN grp003w "$entry" "Malformed entry in $src1:"
+  done
+  
+  $GREP -v "^$group1\$" $WORKDIR/grp2.$$ |
+  while read group2
+  do
+    src2=`$CAT $group2.src`
+
+    $SORT $group2 > $WORKDIR/g2name.$$
+    $SORT -t: +2 -3 $group2 > $WORKDIR/g2gid.$$
+    $JOIN -t: -o 1.1 1.3 2.3 $WORKDIR/g1name.$$ $WORKDIR/g2name.$$ |
+    {
+      IFS=:
+      while read grpname gid1 gid2
+      do
+	IFS=$saveifs
+	[ "$gid1" != "$gid2" ] && {
+	  message WARN grp004w "" "GID conflict for group \`$grpname' between $src1 (gid = $gid1) and $src2 (gid = $gid2)."
+	}
+	IFS=:
+      done
+    }
+
+    $JOIN -t: -j 3 -o 1.3 1.1 2.1 $WORKDIR/g1gid.$$ $WORKDIR/g2gid.$$ |
+    {
+      IFS=:
+      while read gid name1 name2
+      do
+	IFS=$saveifs
+	[ "$name1" != "$name2" ] && {
+	  message WARN grp005w "" "Groupname conflict for gid $gid between $src1 (group $name1) and $src2 (group $name2)."
+	}
+	IFS=:
+      done
+    }
+    echo "$group2" >> $newfile
+    delete $WORKDIR/g2gid.$$ $WORKDIR/g2name.$$
+  done
+  delete $WORKDIR/g1gid.$$ $WORKDIR/g1name.$$ $WORKDIR/grp2.$$
+  [ -s $newfile ] && $MV $newfile $WORKDIR/grp2.$$
+done < $WORKDIR/grp.list.$$ |
+$OUTPUTMETHOD
+
+while read file
+do
+  delete $file $file.src
+done < $WORKDIR/grp.list.$$
+
+[ -n "$GRPCK" ] && {
+  if ! $GRPCK /etc/group /etc/gshadow >/dev/null 2>&1 ; then
+    message WARN grp006w "" "Integrity of group files questionable (grpck -r)."
+  fi
+}
+
+delete $WORKDIR/grp.list.$$ $WORKDIR/grp2new.$$

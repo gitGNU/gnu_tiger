@@ -1,0 +1,128 @@
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# NeXT/3/file_access_list - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+#                           owner group s g r w x   r w x   r w x
+#--------------------------------------------------------------------------
+/                           root  wheel . . 1 . 1   1 0 1   1 0 1 W 018 018 018
+/bin                        root  wheel . . 1 . 1   1 0 1   1 0 1 W 001 002 003
+/usr                        root  wheel . . 1 . 1   1 0 1   1 0 1 W 001 002 003
+/private                    root  staff . . 1 . 1   1 . 1   1 0 1 W 001 002 003
+/lib                        root  wheel . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/usr/prman                  root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/shlib                  root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/pub                    root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/standalone             root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/template               root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/netware                root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/dict                   root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/etc                    root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/filesystems            root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/usr/bin                    root  wheel . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/usr/lib                    root  wheel . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/usr/ucb                    root  wheel . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/usr/*                      root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/private/Net                root  wheel . . . . .   . . .   . 0 . . 001 002 003
+/private/adm                root  staff . . . . .   . . .   . 0 . . 001 002 003
+/private/dev                root  wheel . . . . .   . 0 .   . 0 . . 001 002 003
+/private/etc                root  wheel . . . . .   . 0 .   . 0 . . 001 002 003
+/private/preserve           root  wheel . . . . .   . . .   . 0 . . 001 002 003
+/private/spool              root  wheel . . . . .   . 0 .   . 0 . . 001 002 003
+/private/tftpboot           root  wheel . . . . .   . . .   . 0 . . 001 002 003
+/private/vm                 root  wheel . . . . .   . 0 .   . 0 . . 001 002 003
+/etc/netinfo                root  wheel . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/etc/nulib                  root  wheel . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/etc/sendmail               root  wheel . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/etc/uucp                   root  wheel . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/etc/yp                     root  wheel . . 1 . 1   1 . 1   1 0 1 . 001 002 003
+/etc/zoneinfo               root  wheel . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+#
+/sdmach                     root  wheel . . 1 0 0   1 0 0   1 0 0 . 001 002 003
+/.cshrc                     root  .     . . 1 . .   . 0 .   . 0 . W 006 006 006
+/.login                     root  .     . . 1 . .   . 0 .   . 0 . W 006 006 006
+/.profile                   root  .     . . 1 . .   . 0 .   . 0 . W 006 006 006
+/.forward                   root  .     . . 1 . .   . 0 .   . 0 . W 006 006 006
+/.rhosts                    root  .     . . 1 . 0   0 0 0   0 0 0 W 006 006 006
+#
+/etc/sendmail/aliases       root  .     . . 1 . 0   1 . 0   1 0 0 F 007 007 007
+/etc/sendmail/aliases.dir   root  .     . . 1 . 0   1 0 0   1 0 0 F 007 007 007
+/etc/sendmail/aliases.pag   root  .     . . 1 . 0   1 0 0   1 0 0 F 007 007 007
+/etc/bootparams             root  .     . . 1 . 0   . 0 0   . 0 0 W 001 002 003
+/etc/exports                root  .     . . 1 . 0   . 0 0   . 0 0 W 008 008 008
+/etc/fstab                  root  .     . . 1 . 0   . 0 0   . 0 0 W 001 002 003
+/etc/gettytab               root  .     . . 1 . 0   . 0 0   . 0 0 W 001 002 003
+/etc/group                  root  .     . . 1 . 0   1 0 0   1 0 0 F 009 009 009
+/etc/hosts.allow            root  .     . . 1 . 0   1 0 0   1 0 0 W 010 010 010
+/etc/hosts.deny		    root  .     . . 1 . 0   1 0 0   1 0 0 W 010 010 010
+/etc/hosts.equiv            root  .     . . 1 . 0   0 0 0   0 0 0 W 011 011 011
+/etc/hosts.lpd              root  .     . . 1 . 0   . 0 0   . 0 0 W 011 011 011
+/etc/inetd.conf             root  .     . . 1 . 0   . 0 0   . 0 0 W 012 012 012
+/etc/motd                   root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/mtab                   root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/netgroup               root  .     . . 1 . 0   0 0 0   0 0 0 F 013 013 013
+/etc/passwd                 root  .     . . 1 . 0   1 0 0   1 0 0 A 014 014 014
+/etc/rc                     root  .     . . 1 . 0   . 0 0   . 0 0 F 015 015 015
+/etc/rc.boot                root  .     . . 1 . 0   . 0 0   . 0 0 F 015 015 015
+/etc/rc.local               root  .     . . 1 . 0   . 0 0   . 0 0 F 015 015 015
+/etc/rc.cdrom               root  .     . . 1 . 0   . 0 0   . 0 0 F 015 015 015
+/etc/rc.swap                root  .     . . 1 . 0   . 0 0   . 0 0 F 015 015 015
+/etc/rc.uucp                root  .     . . 1 . 0   . 0 0   . 0 0 F 015 015 015
+/etc/remote                 root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/resolv.conf            root  .     . . 1 . 0   1 0 0   1 0 0 W 016 016 016
+/etc/rpc                    root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/sendmail/sendmail.mailhost.cf root . . . 1 . 0 1 0 0   1 0 0 W 001 002 003
+/etc/sendmail/sendmail.sharedsubsidiary.cf root . . . 1 . 0 1 0 0 1 0 0 W 001 002 003
+/etc/sendmail/sendmail.subsidiary.cf root . . . 1 . 0 1 0 0 1 0 0 W 001 002 003
+/etc/services               root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/syslog.conf            root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/syslog.pid             root  .     . . 1 . 0   . 0 0   . 0 0 W 001 002 003
+/etc/ttys                   root  .     . . 1 . 0   . 0 0   . 0 0 W 001 002 003
+/etc/utmp                   root  .     . . 1 . 0   1 0 0   1 0 0 W 001 002 003
+#
+/etc/uucp/L-devices	    uucp  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/uucp/L-dialcodes	    uucp  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/uucp/L.aliases	    uucp  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/uucp/L.cmds	    root  .     . . 1 . 0   0 0 0   0 0 0 . 001 002 003
+/etc/uucp/L.sys  	    uucp  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+#
+/usr/bin/uulog              uucp  daemon . . . 0 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/uusend             uucp  daemon . . . 0 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/ruusend            uucp  daemon . . . 0 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/uusnap             uucp  daemon . . . 0 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/uupick             uucp  daemon . . . 0 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/uuq                uucp  daemon . . . 0 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/uupoll             uucp  daemon . . . 0 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/cu                 root  daemon . . . . 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/tip                root  daemon . . . . 1  . 0 .   . 0 . . 001 002 003
+/usr/bin/uucp               uucp  daemon . . . 0 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/uux                uucp  daemon . . . 0 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/uuname             uucp  daemon . . . 0 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/uudecode           uucp  daemon . . . . 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/uuencode           uucp  daemon . . . . 1  . 0 1   . 0 . . 001 002 003
+/usr/bin/write              root  tty    . . . . 1  . 0 .   . 0 . . 001 002 003
+/usr/bin/wall               root  tty    . . . . 1  . 0 .   . 0 . . 001 002 003
+#
+/usr/bin/login              root  .     . . 1 . 1   1 0 1   1 0 1 F 001 002 003
+/usr/bin/su                 root  .     . . 1 . 1   . 0 .   . 0 . F 001 002 003
+/usr/bin/su.nowheel         root  .     . . 1 . 1   . 0 .   . 0 . F 001 002 003
+/usr/bin/su.wheel           root  .     . . 1 . 1   . 0 .   . 0 . F 001 002 003
+/usr/bin/at                 agent .     . . 1 . 1   . 0 .   . 0 . . 001 002 003
+/usr/bin/atq                agent .     . . 1 . 1   . 0 .   . 0 . . 001 002 003
+/usr/bin/atrm               agent .     . . 1 . 1   . 0 .   . 0 . . 001 002 003
+/usr/bin/*                  root  .     . . 1 . 1   . 0 .   . 0 . . 001 002 003

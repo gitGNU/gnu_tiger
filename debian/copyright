@@ -1,0 +1,46 @@
+This package was debianized by Javier Fernandez-Sanguino Peña <jfs@computer.org>
+ on Thu, 23 Aug 2001 15:07:16 +0200.
+
+It was downloaded from ftp://sunsite.unc.edu/pub/Linux/system/security
+(original site is at http://www.net.tamu.edu/ftp/security/TAMU
+more information at http://www.net.tamu.edu/network/tools/tiger.html)
+
+The TARA version which has been also integrated in this package 
+(even if the name of the upstream source has not been changed) is
+available for download from http://www.arsc.com
+
+
+Upstream Author(s): 
+ Douglas Lee Schales
+ Dave Hess
+ Khalid Warraich
+ Dave Safford
+[modifications for support of Redhat Linux 2.x. made by]
+ Robert L. Ziegler (rlz@mediaone.net) 
+[modifications for NeXT, IRIX, SunOS 5.x, AIX 4, UNICOS systems
+ as well as a big number of bug fixes and new scripts, made by the
+ group from Advanced Research Corporation for tara, composed of:]
+ Liam Forbes <lforbes@arsc.edu>
+ Nathan Bills <bills@arsc.edu> and
+ Mike Kienenberger <mkienenb@arsc.edu>
+[new checks for RedHat and Debian GNU/Linux 2.x. made by]
+ Paul Telford <paul_telford@hp.com>
+ Bryan Gartner <bryang@soccer.fc.hp.com>
+[modifications for support of Debian GNU/Linux 2.x. made by]
+ Javier Fernandez-Sanguino Peña <jfs@computer.org>
+
+
+Copyright: (c) 1993 Texas A&M University Supercomputer Center
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 1, or (at your option)
+    any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+You can find a copy of the GPL license in your Debian system under
+the /usr/share/common-licenses directory.

@@ -1,0 +1,28 @@
+chargen	dgram	udp	wait	root	internal 
+chargen	stream	tcp	nowait	root	internal 
+comsat	dgram	udp	wait	root	/etc/comsat comsat
+daytime	dgram	udp	wait	root	internal 
+daytime	stream	tcp	nowait	root	internal 
+discard	dgram	udp	wait	root	internal 
+discard	stream	tcp	nowait	root	internal 
+echo	dgram	udp	wait	root	internal 
+echo	stream	tcp	nowait	root	internal 
+exec	stream	tcp	nowait	root	/etc/rexecd rexecd
+finger	stream	tcp	nowait	nobody	/etc/fingerd fingerd
+ftp	stream	tcp	nowait	root	/etc/ftpd ftpd
+instsrv	stream	tcp	nowait	netinst	/u/netinst/bin/instsrv instsrv -r /tmp/netinstalllog /u/netinst/scripts
+login	stream	tcp	nowait	root	/etc/rlogind rlogind
+ntalk	dgram	udp	wait	root	/etc/talkd talkd
+pcnfsd	sunrpc_udp udp	wait	root	/etc/rpc.pcnfsd pcnfsd 150001 1
+rexd	sunrpc_tcp tcp	wait	root	/usr/etc/rpc.rexd rexd 100017 1
+rstatd	sunrpc_udp udp	wait	root	/usr/etc/rpc.rstatd rstatd 100001 1-3
+rusersd	sunrpc_udp udp	wait	root	/usr/etc/rpc.rusersd rusersd 100002 1-2
+rwalld	sunrpc_udp udp	wait	root	/usr/etc/rpc.rwalld rwalld 100008 1
+shell	stream	tcp	nowait	root	/etc/rshd rshd
+sprayd	sunrpc_udp udp	wait	root	/usr/etc/rpc.sprayd sprayd 100012 1
+talk	dgram	udp	wait	root	/etc/talkd talkd
+telnet	stream	tcp	nowait	root	/etc/telnetd telnetd
+tftp	dgram	udp	wait	nobody	/etc/tftpd tftpd -n
+time	dgram	udp	wait	root	internal 
+time	stream	tcp	nowait	root	internal 
+uucp	stream	tcp	nowait	root	/etc/uucpd uucpd

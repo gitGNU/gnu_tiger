@@ -1,0 +1,35 @@
+
+TODO stuff for Debian's tiger:
+
+
+- Make Source package=tara and upgrade to 2.4.
+  ISSUE: tara package did not include properly the Debian directories
+  and stuff, diff might get garbled (new files were placed in the / directory,
+  how were the sources patched?)
+
+- Get access to the ARSC patch (send an email to developers) since the
+  CHANGES.ARSC details patches that have not (yet) been included in the
+  package. I could derive some from the description but only a few.
+
+- Write a manpage for tigerrc
+
+- Make a transition from templates at /var/log/tiger to /etc/tiger/templates
+
+- Provide templates for known false positives in tiger
+
+- Consider providing scripts in new packages 
+  for the different OS  (AIX, HP-UX...) so that a Debian system can be used
+  for host-scanning different OS
+  ISSUE: provide the compiled C programs for those target platforms
+
+- Add new scripts based on TITAN's which is, unfortunately,
+  non-free (even if it is so for a good cause). 
+
+- Add a checklist based on scripts to be used for host hardening.
+
+- Translate some checks into Bastille plugins
+
+DONE (previous TODO)
+
+- Checkout all the changes made by the Tara team, including improved
+  scripts and fixes for some platforms

@@ -1,0 +1,128 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_root - 05/30/99
+#
+# 05/30/99  Added feature to check for no console root logins
+#
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir="/usr/lib/tiger"
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK GREP CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing common access checks for root..."
+
+haveallcmds AWK GREP CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+haveallvars TESTLINK HOSTNAME || exit 1
+
+if [ -f /etc/default/login ]; then
+  if [ ! "`$GREP '^CONSOLE' /etc/default/login`" ]; then
+     message WARN root001w "" "Remote root login allowed in /etc/default/login."
+     echo
+  fi
+fi
+
+if [ -f /etc/securetty ]; then
+  if [ "`$GREP '^ttyp' /etc/securetty`" ]; then
+     message WARN root001w "" "Remote root login allowed in /etc/securetty"
+     echo
+  fi
+fi   
+
+if [ -f /etc/ttytab ]; then
+  if [ "`$GREP " secure" /etc/ttytab | $GREP -v console`" ]; then
+     message WARN root001w "" "Remote root login allowed in /etc/ttytab"
+     echo
+  fi
+fi   
+if [ -f /etc/security/access.conf ]; then
+  if [ "`$GREP '^+:root' /etc/security/access.conf`" ]; then
+     message WARN root001w "" "Remote root login allowed in /etc/security/access.conf"
+     echo
+  fi
+fi
+if [ -f /etc/ftpusers ]; then
+  if [ ! "`$GREP '^root' /etc/ftpusers`" ]; then
+     message WARN root002w "" "Remote root access allowed in /etc/ftpusers"
+     echo
+  fi
+fi
+if [ -f /etc/X11/xdm/Xresources ]; then
+  if [ "`$GREP ^xlogin.Login.allowRootLogin /etc/X11/xdm/Xresources | $CUT -d : -f 2`" = "true" ]; then
+     message WARN root004w "" "Root access allowed for xdm"
+     echo
+  fi
+fi
+if [ -f /etc/X11/gdm/gdm.conf ]; then
+  [ "`$GREP ^AllowRoot /etc/X11/gdm/gdm.conf | $CUT -d = -f 2`" = "true" ] || \
+  [ "`$GREP ^AllowRemoteRoot /etc/X11/gdm/gdm.conf | $CUT -d = -f 2`" = "true" ] &&
+  {
+     message WARN root004w "" "Root access allowed for gdm"
+     echo
+  }
+fi
+[ -n "$MESG" ] && {
+  if $MESG | $GREP "is y" >/dev/null 2>&1
+    then
+      message WARN root003w "" "Root user has message capability turned on."
+  fi
+}
+exit 0

@@ -1,0 +1,6 @@
+%rootdir001f
+The inode for the root directory is not on inode 2.  This is a security 
+breach.  To check the inode number, use "stat /" command.
+%rootdir002f
+The permissions for the root directory are not secure.
+

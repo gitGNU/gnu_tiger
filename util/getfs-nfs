@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# util/getfs-nfs - 04/22/93
+#
+#-----------------------------------------------------------------------------
+#
+
+haveallof()
+{
+  retval=0
+  what=$1
+  shift
+  for file
+  do
+    eval cmd=\$$file
+    [ ! -n "$cmd" ] && {
+      echo "--CONFIG-- Don't have all required $what (missing $file)"
+      retval=1
+    }
+  done
+  return $retval
+}
+
+fscase="`$GET_MOUNTS |
+	 $TR ':' ' ' |
+	 $SORT -r |
+	 $AWK '{
+	      if(substr($1, length($1), 1) == "/")
+                  printf(\"%s*)\", $1);
+              else
+                  printf(\"%s/*)\", $1);
+	      printf(\"fs=%s; type=%s;\", $1, $2);
+              if($4 != \"\")
+                  printf(\"host=%s;;\", $3);
+              else
+                  printf(\"host=$HOSTNAME;;\");
+         }'` *) fs=unknown; type=unknown; host=unknown;;"
+
+while read user dir
+do
+  eval "case $dir/ in $fscase esac"
+  echo "$user $dir $host"
+done
+#
+exit 0
+#
+exit 0
+#
+exit 0

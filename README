@@ -1,0 +1,66 @@
+
+'tiger' is a set of scripts that scan a Un*x system looking for
+security problems, in the same fashion as Dan Farmer's COPS.  'tiger'
+was originally developed to provide a check of UNIX systems on the A&M
+campus that want to be accessed from off campus (clearance through the
+packet filter).  As such, we needed something that *anyone* could run
+if they could figure out how to get it down to their machine.
+
+If you just want to run it, without regards to time considerations,
+then just 'cd' into the tiger directory and run './tiger' as 'root'.
+
+--->  You should check to see if you have the latest digital signatures
+      for the system(s) you are checking.  I regularly place updated
+      signature files on anonymous FTP at
+
+      net.tamu.edu:/pub/security/TAMU/tiger-sigs/*
+
+      The util/installsigs script can be used to install the updated
+      signatures.  As of Tiger 2.2.2, installsigs is also capable
+      of installing signatures for new OS releases (not new platforms
+      or major releases though).
+
+*NOTE*
+
+The 'tigerrc' file is set up for TAMU hosts, and disables/reduces some
+of the checks.  You should probably copy 'tigerrc-dist' to 'tigerrc'
+and edit it to taste.  It is set for a fuller check mode (TAMU hosts
+might want to run with this config file as well).  'tigerrc-all' has
+everything already maxed out and enabled (except for PATH_ALL).
+
+(Or use the '-c' switch to use an alternate tigerrc file as of 2.2.2)
+
+------------------------------------------------------------------------
+
+I recommend that you read the USING file for anything other than the
+aforementioned situation.
+
+****
+
+See the file COPYING for legal stuff.
+
+------------------------------------------------------------------------
+
+If you have any thing to say about 'tiger', please let us know.  New
+things to check, how to improve things, *anything*, send it in... if
+you think someone else has already sent in a bug report, suggestion,
+etc., send it in anyway... the more times someone hits me over the
+head with something, the more likely it is to get fix/included...
+
+********** NOTE NOTE NOTE NOTE NOTE NOTE ************
+
+There is now a mailling list available for 'tiger'.  To subscribe,
+send mail to 'majordomo@net.tamu.edu'.  Include in the body of the
+message:
+
+subscribe tiger
+
+or 
+
+subscribe tiger alternate_email_address
+
+The mailling list is managed via Brent Chapman's 'majordomo' package.
+
+Doug.
+
+Doug.Schales@net.tamu.edu

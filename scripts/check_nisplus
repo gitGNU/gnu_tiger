@@ -1,0 +1,152 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_nisplus - ??/??/??
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT FMT GEN_PASSWD_SETS JOIN LS RM || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+getaccessmsg()
+{
+  r="$1"
+  m="$2"
+  c="$3"
+  d="$4"
+
+  sep=""
+  txt=""
+  [ $r -eq 1 ] && {
+    txt="read"
+    sep=", "
+  }
+  [ $m -eq 1 ] && {
+    txt="$txt${sep}modify"
+    sep=", "
+    [ "$r$m$c" = '110' ] && sep=", and"
+  }
+  [ $c -eq 1 ] && {
+    txt="$txt${sep}create"
+    sep=", and "
+  }
+  [ $d -eq 1 ] && {
+    txt="$txt${sep}delete"
+  }
+  echo "$txt"
+}
+
+ownread="0000100000000000"
+
+[ -f /usr/bin/nisdefaults ] &&
+/usr/bin/nisdefaults -s |
+while read domain
+do
+  /usr/bin/niscat -o "[],passwd.org_dir.$domain" |
+  $AWK '
+  /^Owner[ 	]*:/ {
+    split($0, data, ":");
+    split(data[2], ownerd, ".");
+    owner=substr(ownerd[1], 2);
+  }
+  /^Access Rights[ 	]*:/ {
+    split($0, data, ":");
+    printf("%s ", owner);
+    for(i=2;i<=17;i++)
+      if(substr(data[2], i, 1) == "-")
+        printf("0 ");
+      else
+	printf("1 ");
+    needuser=1
+  }
+  /[ 	][ 	]*/ && needuser == 1 {
+    start=index($0, "'"'"'");
+    if(start != 0){
+      temp=substr($0, start+1);
+      len=length(temp)-1;
+      user=substr(temp, 1, len);
+      print user;
+      needuser=0
+    }
+  }
+  ' |
+  while read owner nr nm nc nd or om oc od gr gm gc gd wr wm wc wd user
+  do
+    [ "$nr$nm$nc$nd$or$om$oc$od$gr$gm$gc$gd$wr$wm$wc$wd" != "$ownread" ] && {
+      nobody_access="`getaccessmsg $nr $nm $nc $nd`"
+      owner_access="`getaccessmsg 0 $om $oc $od`"
+      group_access="`getaccessmsg $gr $gm $gc $gd`"
+      world_access="`getaccessmsg $wr $wm $wc $wd`"
+
+      [ -n "$nobody_access" ] && {
+	message WARN nisplus001 "" "NIS+ passwd entry for $user has $nobody_access for \`nobody'."
+      }
+      [ -n "$owner_access" ] && {
+	message WARN nisplus002 "" "NIS+ passwd entry for $user has owner $owner_access."
+      }
+      [ -n "$group_access" ] && {
+	message WARN nisplus003 "" "NIS+ passwd entry for $user has group $group_access."
+      }
+      [ -n "$world_access" ] && {
+	message WARN nisplus004 "" "NIS+ passwd entry for $user has world $world_access."
+      }
+    }
+  done
+done

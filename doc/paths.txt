@@ -1,0 +1,60 @@
+%path001w
+The indicated file is in root's PATH, and is group writable, world
+writable or both.  This can allow Trojan horse programs or viruses to be
+planted into these executables and spread by `root'.  The group
+and world write permissions should be removed.
+%path002w
+The indicated file is in root's PATH, but is not owned by root.  This
+can allow Trojan horse programs or viruses to be planted into these
+executables and spread by `root'.  Often these executables are owned by
+`bin', `uucp' or other system accounts.  If these commands are never
+used by root, then this is not a problem.  If they are, you should
+consider changing the owner to `root'. Because of SMI's recent decission
+to install most /usr/sbin/* and /usr/bin/* executables
+as owned by `bin', this account will not flag a warning.
+%path003i
+No PATH variable could be extracted from the indicated file.  This either
+indicates that the PATH is not set in the file, or that the file is too
+complex to be able to extract it.
+%path004w
+The PATH variable from the indicated initialization file for `root' puts `.'
+(dot) in the PATH.  Having dot in `root's path can allow Trojan horse
+programs to be unknowingly executed by root.
+
+References: curry/33-34
+            garfinkel/151-153
+%path005w
+The PATH variable from the indicated user and initialization file
+contains the `.' (dot) directory, but it is not the last component.
+This can cause Trojan horse programs to be executed.  It is recommended
+that `.' not be in the PATH (especially for `root'), but if it is included,
+it should be the last directory listed in the PATH variable.
+
+References: curry/33-34
+            garfinkel/151-153
+%path006w
+The indicated directory from a user's PATH variable is writable.  This can
+allow commands in this directory to be replaced with Trojan horse programs.
+Note that this can be reported even if the directory itself does not have
+group or world write permissions.  This message is generated if any directory
+component of the pathname is writable (the directory itself can be replaced
+with a new, writable one if a directory higher up is writable).
+
+References: curry/33-34
+            garfinkel/151-153
+%path007w
+The indicated directory is in `root's PATH, but is not owned by 'root'.
+This can allow Trojan horse programs to be placed into any executables
+in this directory.  The ownership of the directory should be changed
+to `root'.
+%path008i
+The indicated setuid program is in root's PATH, but is not owned by
+root.  Since it is setuid to a user other than root, there usually is
+no solution for this.  You should be aware of these though, as they
+can allow Trojan horse programs or viruses to be planted into these
+executables and spread by `root'.  Often these executables are owned
+by `bin', `uucp' or other system accounts.  If these commands are
+never used by root, then this is not a problem.
+%path009w
+An initial setting of the PATH variable should be setup in the default
+locations for shell login programs (/etc/profile, /etc/csh.login, etc.).

@@ -1,0 +1,195 @@
+
+
+  Do you wonder how much time does it take for the scripts provided in Tiger
+to run? Ok. The following OUTPUT shown below represents the time it takes
+to run each of the scripts. The test was made in an extremely *simple*
+system (my laptop, with very few users and no overhead). Even if the
+configuration is extremely simple you can see which scripts will take 
+more time in any given system to run. They are the following:
+check_path, check_embedded, check_inetd, check_tcpd, and check_devices.
+
+  Consider this information when configuring Tiger since you might want
+to not have resource intensive (if they could be considered as such)
+scripts from the cron daemon (by editing /etc/tiger/tigercron in Debian
+GNU/Linux systems).
+
+This output has been generated with:
+
+for i in scripts/check_* systems/Linux/2/check_* systems/Linux/2/check_*
+do 
+	echo "Running $i"; sudo time sh $i >/dev/null 
+done
+
+-- Javier Fernandez-Sanguino Pen~a <jfs@computer.org> Sat, 18 May 2002 20:21:41 +0200
+
+--------------------------------- OUTPUT --------------------------
+
+Running scripts/check_accounts
+1.28user 1.01system 0:07.39elapsed 30%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (38514major+20414minor)pagefaults 0swaps
+
+Running scripts/check_aliases
+0.34user 0.16system 0:00.49elapsed 101%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5887major+5487minor)pagefaults 0swaps
+
+Running scripts/check_anonftp
+0.24user 0.23system 0:00.47elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5544major+5394minor)pagefaults 0swaps
+
+Running scripts/check_cron
+2.17user 1.14system 0:03.30elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (49436major+34782minor)pagefaults 0swaps
+
+Running scripts/check_devices
+10.86user 6.35system 0:17.26elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (242449major+185894minor)pagefaults 0swaps
+
+Running scripts/check_embedded
+17.26user 8.23system 0:29.15elapsed 87%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (364960major+201723minor)pagefaults 0swaps
+
+Running scripts/check_exports
+0.31user 0.19system 0:00.50elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (6439major+5930minor)pagefaults 0swaps
+
+Running scripts/check_ftpusers
+0.54user 0.43system 0:00.96elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (16748major+13322minor)pagefaults 0swaps
+
+Running scripts/check_group
+0.27user 0.27system 0:00.55elapsed 97%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (7657major+6362minor)pagefaults 0swaps
+
+Running scripts/check_inetd
+13.55user 8.52system 0:22.16elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (429283major+225849minor)pagefaults 0swaps
+
+Running scripts/check_issue
+Command exited with non-zero status 1
+0.31user 0.15system 0:00.45elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5067major+5291minor)pagefaults 0swaps
+
+Running scripts/check_known
+0.37user 0.27system 0:00.64elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (9125major+7036minor)pagefaults 0swaps
+
+Running scripts/check_listeningprocs
+0.53user 0.25system 0:00.78elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (10763major+10119minor)pagefaults 0swaps
+
+Running scripts/check_logfiles
+Command exited with non-zero status 1
+0.00user 0.00system 0:00.00elapsed 0%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (256major+34minor)pagefaults 0swaps
+
+Running scripts/check_netrc
+0.32user 0.23system 0:00.56elapsed 97%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (7463major+6328minor)pagefaults 0swaps
+
+Running scripts/check_tcpd
+12.46user 8.12system 0:20.57elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (414905major+202768minor)pagefaults 0swaps
+
+Running scripts/check_nisplus
+0.30user 0.12system 0:00.42elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (4607major+4856minor)pagefaults 0swaps
+
+Running scripts/check_passwd
+0.41user 0.27system 0:00.68elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (10147major+7815minor)pagefaults 0swaps
+
+Running scripts/check_path
+19.43user 5.76system 0:25.35elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (376022major+126802minor)pagefaults 0swaps
+
+Running scripts/check_perms
+1.66user 0.95system 0:02.60elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (35233major+28412minor)pagefaults 0swaps
+
+Running scripts/check_printcap
+0.48user 0.22system 0:00.69elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (8705major+7291minor)pagefaults 0swaps
+
+Running scripts/check_rhosts
+0.29user 0.25system 0:00.55elapsed 97%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (7461major+6128minor)pagefaults 0swaps
+
+Running scripts/check_root
+0.30user 0.19system 0:00.48elapsed 101%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5842major+5574minor)pagefaults 0swaps
+
+Running scripts/check_rootdir
+Command exited with non-zero status 1
+0.32user 0.14system 0:00.46elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5269major+5429minor)pagefaults 0swaps
+
+Running scripts/check_sendmail
+0.37user 0.13system 0:00.50elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5416major+5461minor)pagefaults 0swaps
+
+Running scripts/check_signatures
+1.12user 0.50system 0:01.61elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (21062major+15520minor)pagefaults 0swaps
+
+Running scripts/check_system
+Command exited with non-zero status 1
+62.62user 41.13system 1:45.09elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (426071major+261560minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_cron
+0.00user 0.01system 0:00.00elapsed 142%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (251major+33minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_inittab
+0.26user 0.18system 0:00.43elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (4749major+5044minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_lilo
+Command exited with non-zero status 1
+0.26user 0.22system 0:00.48elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5383major+5493minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_patches
+2.17user 0.22system 0:02.39elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (7282major+5690minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_rcumask
+0.23user 0.24system 0:00.47elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5381major+5317minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_release
+0.32user 0.16system 0:00.47elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5414major+5437minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_single
+0.28user 0.16system 0:00.45elapsed 97%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (4751major+5037minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_cron
+0.00user 0.01system 0:00.00elapsed 142%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (251major+33minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_inittab
+0.31user 0.13system 0:00.43elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (4749major+5044minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_lilo
+Command exited with non-zero status 1
+0.33user 0.15system 0:00.48elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5383major+5493minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_patches
+2.19user 0.16system 0:02.35elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (7281major+5686minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_rcumask
+0.27user 0.18system 0:00.46elapsed 97%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5382major+5319minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_release
+0.34user 0.12system 0:00.47elapsed 97%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (5413major+5434minor)pagefaults 0swaps
+
+Running systems/Linux/2/check_single
+0.25user 0.20system 0:00.44elapsed 101%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (4751major+5037minor)pagefaults 0swaps

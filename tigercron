@@ -1,0 +1,245 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# tigercron - 06/13/93
+#
+# 12/02/2001 jfs Fixed script to properly send out mails with valid
+#                headers and content
+#
+# 12/26/2001 jfs Modified to provide new ways to compare against previous
+#                runs: per policy (template) or per run.
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='/usr/lib/tiger'
+
+[ "$1" != "" ] && {
+  case "$1" in
+    -*);;
+    *) ctrlfile=$1; shift;;
+  esac
+}
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+CONFIGDIR="/etc/tiger"
+TEMPLATEDIR="$CONFIGDIR/templates"
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds DATE SED EXPR DIFF MAILER GREP BASENAME || exit 1
+  haveallfiles BASEDIR SCRIPTDIR LSCRIPTDIR WORKDIR LOGDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+haveallcmds DATE SED EXPR DIFF MAILER GREP BASENAME || exit 1
+haveallfiles BASEDIR SCRIPTDIR LSCRIPTDIR WORKDIR LOGDIR || exit 1
+
+umask 077
+
+[ -n "$Tiger_CRON_Output_Width" ] && {
+  Tiger_Output_Width="$Tiger_CRON_Output_Width"
+}
+
+[ ! -n "$ctrlfile" ] && ctrlfile=$CONFIGDIR/cronrc
+
+saveifs=$IFS
+
+set X `$DATE`
+dow=$2
+dom=$4
+time=$5
+IFS=:
+set X $time
+IFS=$saveifs
+hour=$2
+min=$3
+
+[ $min -gt 50 ] && {
+  if [ $hour -eq 23 ]; then
+    hour=0
+  else
+    hour=`$EXPR $hour + 1`
+  fi
+}
+
+
+$SED -e 's/#.*$//' -e '/^$/d' $ctrlfile |
+while read times doms days scripts
+do
+  
+  hourok=0
+
+  if [ "$times" != '*' ]; then
+    IFS=,
+    set X $times
+    IFS=$saveifs
+    shift
+    for t
+    do
+      [ "$t" -eq "$hour" ] && {
+	hourok=1
+	break;
+      }
+    done
+  else
+    hourok=1
+  fi
+
+  domok=0
+  [ $hourok -eq 1 ] && {
+    if [ "$doms" != '*' ]; then
+      IFS=,
+      set X $doms
+      IFS=$saveifs
+      shift
+      
+      for d
+      do
+	[ "$d" = "$dom" ] && {
+	  domok=1
+	  break
+	}
+      done
+    else
+      domok=1
+    fi
+  }
+
+  [ $hourok -eq 1 -a $domok -eq 1 ] && {
+    dayok=0
+
+    if [ "$days" != '*' ]; then
+      IFS=,
+      set X $days
+      IFS=$saveifs
+      shift
+
+      for d
+      do
+	[ "$d" = "$dow" ] && {
+	  dayok=1
+	  break;
+	}
+      done
+    else
+      dayok=1
+    fi
+    
+    [ $dayok -eq 1 ] && {
+      for script in $scripts
+      do
+	outprefix="$LOGDIR`$BASENAME $script`.out"
+	suffix=${TigerCron_Log_Keep_Max:=10}
+	{
+	  if [ -f $SCRIPTDIR/$script ]; then
+	    $SCRIPTDIR/$script
+	  elif [ -f $LSCRIPTDIR/$script ]; then
+	    $LSCRIPTDIR/$script
+	  elif [ -f $script ]; then
+	    $script
+	  else
+	    message ERROR tigxxxx "" "$script in tigercron file \`$ctrlfile' not executable."
+	  fi
+	} > $outprefix.tmp
+	if [ -s $outprefix.tmp ]; then
+	  next=`$EXPR $suffix - 1`
+	  while [ "$next" -ge 1 ]
+	  do
+	    [ -f "$outprefix.$next" ] && {
+	      $MV $outprefix.$next $outprefix.$suffix
+	    }
+	    suffix=$next
+	    next=`$EXPR $next - 1`
+	  done
+	  $MV $outprefix.tmp $outprefix.1
+	  echo $outprefix
+	fi
+      done
+    }
+  }
+done |
+while read filename
+do
+  newfile=$filename.1
+  previousfile=$filename.2
+  templatefile=$filename.template
+#  etctemplatefile=`echo $templatefile | $SED 's/\/var\/log\/tiger\///'`
+  etctemplatefile=`$BASENAME $templatefile`
+
+  if [ "$Tiger_Cron_Template" = "Y" -a -s "$TEMPLATEDIR/$etctemplatefile" ]; then 
+    $BASEDIR/util/difflogs $TEMPLATEDIR/$etctemplatefile $newfile
+  elif [ "$Tiger_Cron_Template" = "Y" -a -s "$templatefile" ]; then 
+    $BASEDIR/util/difflogs $templatefile $newfile
+  elif [ "$Tiger_Cron_CheckPrev" = "Y" -a -s "$previousfile" ]; then 
+    $BASEDIR/util/difflogs $previousfile $newfile
+  else
+    $CAT $newfile
+  fi
+done >> $WORKDIR/tigcron.diff.$$
+
+[ ! -n "$Tiger_Mail_RCPT" ] && Tiger_Mail_RCPT="root"
+  
+[ -s "$WORKDIR/tigcron.diff.$$" ] && {
+  send="Y"
+  [ "$Tiger_Cron_SendOKReports" = "N" ] &&
+  [  -z "`grep ERR $WORKDIR/tigcron.diff.$$`" ] &&
+  [ -z "`grep WARN $WORKDIR/tigcron.diff.$$`" ] && { 
+  	send="N"
+  }
+  haveallcmds MAILER && [ "$send" = "Y" ] &&  {
+	# Mail header (so it does not just say it's root
+	echo "From: Tiger automatic auditor at $HOSTNAME <root@$HOSTNAME>" 
+	echo "Subject: Tiger Auditing Report for $HOSTNAME"
+	echo 
+	cat  $WORKDIR/tigcron.diff.$$ 
+    } | $MAILER $Tiger_Mail_RCPT 
+}
+
+delete $WORKDIR/tigcron.diff.$$

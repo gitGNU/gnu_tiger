@@ -1,0 +1,99 @@
+%ftp001i
+There doesn't appear to be an anonymous ftp setup on this machine,
+and hence there is nothing to check.
+%ftp002a
+There is a .rhosts file in the top level of the anonymous ftp
+directories.  This can allow unauthorized 'rlogin's or 'rsh's to
+occur to the ftp account. This indicates a possible intrusion.
+The contents of the file are listed immediately following the message.
+The machine should be checked for other signs of intrusion and should
+be cleaned up.  The .rhosts file should be removed.
+%ftp003w
+The etc/passwd file in the anonymous ftp directories appears to
+contain valid entries in the password field.  If these are valid,
+then the file can be retrieved and a password cracking program
+run against it.  The etc/passwd file in the anonymous ftp directories
+should simply have a '*' in the password field, and should only
+include entries for the 'ftp' and 'root' accounts.
+
+See CERT advisory CA-93:10 for information on setting up an anonymous
+FTP server.
+%ftp004w
+Anonymous ftp appears to be setup on this machine, but the directory
+field in the password field is empty.  This exposes the entire machine
+to anonymous users, allowing them to browse looking for security
+problems.  A specific (not /) directory should be specified.
+
+See CERT advisory CA-93:10 for information on setting up an anonymous
+FTP server.
+%ftp005f
+The anonymous ftp directory is set to the root directory (/).  This
+exposes the entire machine to anonymous users, allowing them to browse
+looking for security problems.  The directory should be set to a
+hierarchy that doesn't allow access to system or user files.
+
+See CERT advisory CA-93:10 for information on setting up an anonymous
+FTP server.
+%ftp006w
+Anonymous ftp appears to be setup, but the directory indicated as
+the ftp directory does not exist.  This indicates either a misconfiguration
+or an old setup.  This should be corrected by either correcting the
+directory name, or deleting the ftp account.
+
+See CERT advisory CA-93:10 for information on setting up an anonymous
+FTP server.
+%ftp007f
+The indicated file is owned by the 'ftp' account and is writable.  This
+may allow unauthorized access to the machine.  The indicated file should
+be owned by 'root' and not writable by group or world.
+
+See CERT advisory CA-93:10 for information on setting up an anonymous
+FTP server.
+%ftp007w
+The indicated file is owned by the 'ftp' account and is writable.  This
+allows anonymous ftp users to modify this file, possibly compromising
+the system.  The indicated file should be owned by 'root' and not writable
+by group or world.
+
+See CERT advisory CA-93:10 for information on setting up an anonymous
+FTP server.
+%ftp008f
+The indicated file is owned by the 'ftp' account, but is not currently
+writable.  Since it is often possible to change the permissions through
+ftp, it may still be possible to modify the file, possibly allowing
+an intruder to gain unauthorized access.  The indicated file should
+be owned by 'root' and not writable by group or world.
+
+See CERT advisory CA-93:10 for information on setting up an anonymous
+FTP server.
+%ftp008w
+The indicated file is owned by the 'ftp' account, but is not currently
+writable.  Since it is often possible to change the permissions through
+ftp, it may still be possible to modify the file, possibly compromising
+the system.  The indicated file should be owned by 'root' and not writable
+by group or world.
+
+See CERT advisory CA-93:10 for information on setting up an anonymous
+FTP server.
+%ftp009w
+The indicated file is not owned by root.  This may allow unauthorized
+access to the system.  The owner of the file should be root and the
+group and write permissions removed.
+
+See CERT advisory CA-93:10 for information on setting up an anonymous
+FTP server.
+%ftp010f
+The indicated file is writable by the 'ftp' account.  This may allow
+an intruder to gain unauthorized access.  The group and write permissions
+should be removed.
+
+See CERT advisory CA-93:10 for information on setting up an anonymous
+FTP server.
+%ftp010w
+The indicated file is writable by the 'ftp' account.  This may allow
+the system to be compromised.  The group and write permissions should be
+removed.
+
+See CERT advisory CA-93:10 for information on setting up an anonymous
+FTP server.
+

@@ -1,0 +1,101 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_symlink  - 04/22/93
+#
+#-----------------------------------------------------------------------------
+
+basedir=${TIGERHOMEDIR:=.}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+haveallof()
+{
+  retval=0
+  what=$1
+  shift
+  for file
+  do
+    eval cmd=\$$file
+    [ ! -n "$cmd" ] && {
+      echo "--ERROR-- [init001e] Don't have all required $what (missing $file)"
+      retval=1
+    }
+  done
+  return $retval
+}
+
+echo
+echo "# Attempting to perform miscellaneous checks..."
+
+haveallof commands AWK CHMOD CHOWN LN LS RM|| exit 1
+haveallof variables WORKDIR || exit 1
+
+
+getpermit()
+{
+   $LS $LSLINK -ld $1 |
+   $AWK '{
+      for(i=2;i<11;i++){
+	 c = substr($1, i, 1);
+         if(c == "-" || c == "S")
+	     printf("0 ");
+         else
+             printf("1 ");
+      }
+      printf("\n");
+   }'
+}
+
+#
+# See if chown/chmod chase symbolic links...
+#
+> $WORKDIR/file.$$
+$CHMOD 644 $WORKDIR/file.$$
+$LN -s $WORKDIR/file.$$ $WORKDIR/link.$$
+$CHMOD 666 $WORKDIR/link.$$
+
+getpermit $WORKDIR/file.$$ | {
+  read ur uw ux gr gw gx or ow ox
+  [ "$gw" = "1" ] && {
+    echo "--INFO-- This systems chmod follows symbolic links."
+  }
+}
+
+$CHOWN bin $WORKDIR/link.$$
+$LS -l $LSGROUP $WORKDIR/file.$$ | {
+  read p l owner rest
+  [ "$owner" != "root" ] && {
+    echo "--INFO-- This systems chown follows symbolic links."
+  }
+}
+
+  
+
+

@@ -1,0 +1,50 @@
+#
+# Thanks to William McVey and the rest of the staff at the Purdue CC
+# for the NeXT 3.1 signature file....
+#
+# Signature file for NeXT 3.1 m68k, generated Thu Jul 29 21:47:26 GMT-0500 1993
+#
+#@DEST=NeXT/3/3.1
+#@CONFIG=NeXT/3
+Y .       /bin/sh 2fac976a bbd73102 bc5152c4 ad81c280 41f2cf39 cd6c90f0 6a5ade63 b743ad46 NeXT 3.1
+Y .       /bin/csh 5873876b 08de93ab bcf2b3e8 3947e9b6 e58b9b1e 6eb6a84b 9fa0bee4 bc4c31b6 NeXT 3.1
+Y .       /bin/ksh fb670d8a d8281dd8 b7021f3f 0ba3f957 7109786a b9e82e1b 7b65b18d d36b86ae NeXT 3.1
+Y .       /bin/login e291d104 ba4fa47c 32339f8c fad89212 04f9a5f9 5bc37487 8b176d97 aefe897d NeXT 3.1
+# su not found.
+Y .       /bin/passwd 88d278a1 1c8306bb 6b16774a af1d8466 51a8dca5 e13cdbe7 35f3a266 b05d56b7 NeXT 3.1
+# in.fingerd not found.
+Y .       /usr/etc/fingerd d085c805 d1c43e72 49033d2d 19ea2c11 b4b6d3fc 9eb747ba cdfcbf75 53167501 NeXT 3.1
+# in.ftpd not found.
+Y .       /usr/etc/ftpd 8c8abc1c 034570dc ddd62108 a697b4a8 054bced5 6dd47440 c0201b07 0b60ddd2 NeXT 3.1
+# in.rexecd not found.
+Y .       /usr/etc/rexecd 30c39be2 743afc95 8af7c618 41e4b5ea e0001f18 b852338b c33b3f8d cb440ed6 NeXT 3.1
+# in.rlogind not found.
+Y .       /usr/etc/rlogind 5db126a0 acbd9ec2 e35d3349 30d28893 6dd44f51 afa33ad6 d3b9707b 57ebbd47 NeXT 3.1
+# in.rshd not found.
+Y .       /usr/etc/rshd e188f023 e9cc2a32 933fb6a4 931a2734 a32f8b54 ac224840 4a350782 7dc52f69 NeXT 3.1
+# in.telnetd not found.
+Y .       /usr/etc/telnetd 2efa4b9d 705af04f 55c1206b c8aa5fee fb8a9e82 22f68377 20edf08e 00473af1 NeXT 3.1
+# in.tftpd not found.
+Y .       /usr/etc/tftpd 1f834f1f 4254a4bc f2bae48b b4ee144a eb8c07ec 293aa141 6391e8b4 e8aa6bcb NeXT 3.1
+# in.uucpd not found.
+# uucpd not found.
+Y .       /usr/etc/rpc.yppasswdd d4e11aeb e005b81a 43214fe8 211a744b 919724e2 7b0f17dc 736cde6a 94763aec NeXT 3.1
+# rpc.passwd not found.
+Y .       /usr/etc/portmap ab6040e1 a6a71269 c9656b63 67d48651 8ef32c8b bb95162c 54ce2634 ba7f1972 NeXT 3.1
+Y .       /usr/etc/ypserv 784e3091 0c0d72f9 4d72a054 74d4f74f 0b66d7de baa6976c 6b1a1461 2eaeaf64 NeXT 3.1
+# ypxfrd not found.
+Y .       /usr/etc/ypbind 0af5e129 7b08fcd8 e068defc 95f5c5ca 2ba939db bba21264 ef3ca692 0021db26 NeXT 3.1
+Y .       /usr/lib/sendmail a8854396 ff43740b 92f44522 94441d2a d04e5a49 d396d14e 4ddd801e 06322e11 NeXT 3.1
+# sendmail.mx not found.
+Y .       /usr/ucb/rdist ff914374 ccb27b60 bf1e4015 cbe27e61 2c793517 2f311fd5 0a4aafde 068bbb69 NeXT 3.1
+Y .       /usr/ucb/rlogin b27451bf 927e49ba 3b9b5657 19df5144 0cee2f4c 42f5e925 31e0847f c882c873 NeXT 3.1
+Y .       /usr/ucb/rsh 01d76113 f0edeca0 5b4263c9 5fdc6623 c28816a3 b86f8cb6 67ed811f ada99b7a NeXT 3.1
+Y .       /usr/ucb/telnet a47c630a d6333977 6d0a0c17 bd7c9e81 e4254a78 ca35dc1e cdd31fb7 e424de70 NeXT 3.1
+# lpstat not found.
+Y .       /usr/etc/lpc 06226582 4ef16c3b 87636fd6 55974336 6d161812 a418737f fa895202 6ed7b8a3 NeXT 3.1
+Y .       /usr/lib/lpd d0cb1734 6f529454 56d90c64 9283fd15 dc594348 ec5ebe6b 0c28ee57 d9be89d5 NeXT 3.1
+Y .       /usr/ucb/lpr 23806735 0595076d 10e5501e ae6a3692 ae3ea960 5f64f793 2d323219 b062a969 NeXT 3.1
+Y .       /usr/ucb/lprm 89693e40 b68f2942 d2390054 5ccc2f65 cb45e363 1786f72a 77da24a7 d9019ae0 NeXT 3.1
+Y .       /usr/lib/lpd d0cb1734 6f529454 56d90c64 9283fd15 dc594348 ec5ebe6b 0c28ee57 d9be89d5 NeXT 3.1
+Y .       /usr/etc/rpc.mountd 21c8d0ed a07456db 613e2784 6b274c4e b0dfbfbd 411903a4 8b6e9977 35d7f979 NeXT 3.1
+# expreserve not found.

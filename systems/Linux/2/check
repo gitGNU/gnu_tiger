@@ -1,0 +1,108 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/4/check - 06/14/93
+# This file can be used as a template file for creating system checks
+# In any case, it is used by scripts/check_system to run all the checks for a given
+# system
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds CAT CC GREP RM SGREP STRINGS || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+haveallcmds CAT CC GREP RM SGREP STRINGS || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+SYSTEMDIR=$BASEDIR/systems/Linux/2
+#
+# The following scripts have been added to provide new checks 
+# for any Linux system, written by Paul Telford
+# 
+# Note: cannot echo TIMECMD since we lose the handle to the tmplog
+[ "$Tiger_Check_OS" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for correct OS version..."
+  $SYSTEMDIR/check_release 
+}
+
+[ "$Tiger_Check_PATCH" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for up-to-date patches..."
+  $SYSTEMDIR/check_patches 
+}
+
+[ "$Tiger_Check_SINGLE" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for single user mode password..."
+  $SYSTEMDIR/check_single 
+}
+
+[ "$Tiger_Check_BOOT" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking boot loader file permissions..."
+  $SYSTEMDIR/check_lilo 
+}
+
+[ "$Tiger_Check_INITTAB" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking inittab definitions..."
+  $SYSTEMDIR/check_inittab
+}
+
+[ "$Tiger_Check_RCUMASK" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking umask definitions..."
+  $SYSTEMDIR/check_rcumask
+}
+

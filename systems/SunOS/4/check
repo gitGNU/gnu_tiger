@@ -1,0 +1,161 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/4/check - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds CAT CC GREP RM SGREP STRINGS || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+haveallcmds CAT CC GREP RM SGREP STRINGS || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+$GREP -v '^#' /etc/ttytab |
+$GREP console |
+$SGREP secure && echo "--WARN-- [misc001w] CONSOLE is marked as secure."
+
+$GREP -v '^#' /etc/ttytab |
+$GREP -v console |
+$SGREP secure && echo "--WARN-- [misc002w] TTY's are marked as secure."
+#
+# YPSERVER && not using securenets?
+#
+[ "$YPSERVER" = "YES" -a ! -f /var/yp/securenets ] && {
+  echo "--FAIL-- [misc003f] No /var/yp/securenets file."
+}
+
+status=`/usr/etc/eeprom |
+        $GREP '^secur.*=' |
+        $GREP -v 'badlogins' |
+	$SED -e 's/^secur.*=\(.*\)$/\1/'`
+
+[ ! -n "$status" -o "$status" = "none" ] && {
+  echo "--WARN-- [misc004w] The PROM monitor is not in secure mode."
+}
+
+#[ -u /usr/etc/restore ] && {
+#  echo "--WARN-- /usr/etc/restore is setuid but should not be."
+#}
+
+rsig=" 5e62adcc ac948154 e45237db 33b9153d 0e0ccad8 2de71646 84486f31 1b32eda8"
+
+
+if haveallcmds SNEFRU; then
+  if [ -x /usr/openwin/bin/loadmodule ]; then
+    sig="`$SNEFRU < /usr/openwin/bin/loadmodule`"
+    if [ "$sig" = "$rsig" ]; then
+      echo "--WARN-- [ca9122f] /usr/openwin/bin/loadmodule is insecure."
+    else
+      $STRINGS /usr/openwin/bin/loadmodule | $SGREP IFS || {
+	echo "--WARN-- [ca9122w] /usr/openwin/bin/loadmodule may be insecure."
+      }
+    fi
+  elif [ -x $OPENWINHOME/bin/loadmodule ]; then
+    sig="`$SNEFRU < $OPENWINHOME/bin/loadmodule`"
+    if [ "$sig" = "$rsig" ]; then
+      echo "--WARN-- [ca9122f] $OPENWINHOME/bin/loadmodule is insecure."
+    else
+      $STRINGS /usr/openwin/bin/loadmodule | $SGREP IFS || {
+	echo "--WARN-- [ca9122w] /usr/openwin/bin/loadmodule may be insecure."
+      }
+    fi
+  else
+    echo "--INFO-- [ca9122i] Can not locate OpenWindows on this machine."
+  fi
+fi
+
+haveallcmds CC && {
+  $CAT <<EOF >$WORKDIR/inv.c
+#include <stdio.h>
+main(){int c; while((c=getchar()) != EOF)putchar(~c);}
+EOF
+  (cd $WORKDIR; $CC inv.c -o inv)
+  [ -x $WORKDIR/inv ] && {
+    $WORKDIR/inv < /usr/bin/login > $WORKDIR/login.tmp.$$
+    $STRINGS $WORKDIR/login.tmp.$$ > $WORKDIR/strings.$$
+    delete $WORKDIR/login.tmp.$$
+    [ -s $WORKDIR/strings.$$ ] && {
+      echo "--ALERT-- /usr/bin/login contains these strings in 1's complement form:"
+      $CAT $WORKDIR/strings.$$
+    }
+    delete $WORKDIR/strings.$$
+  }
+  delete $WORKDIR/inv $WORKDIR/inv.c
+}  
+
+$PS -auxww > $WORKDIR/ps.out.$$
+
+$SGREP "rpc.mountd *-n" $WORKDIR/ps.out.$$ && {
+  echo "--WARN-- [misc006w] NFS rpc.mountd running with '-n' option"
+}
+
+$SGREP "ypbind *-ypset" $WORKDIR/ps.out.$$ && {
+  echo "--WARN-- [misc007w] NIS ypbind running with a -ypset option."
+}
+
+nfsmon=`echo "nfs_portmon/" |
+         /usr/bin/adb /vmunix /dev/kmem |
+         $AWK '/_nfs_portmon:/ {print $2}'`
+
+[ "$nfsmon" = '0' ] && {
+  echo "--WARN-- [misc008w] NFS port checking disabled in kernel."
+}
+
+delete $WORKDIR/ps.out.$$

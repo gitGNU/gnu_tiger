@@ -1,0 +1,164 @@
+Tiger for Debian
+----------------------
+
+PLEASE NOTE:
+
+Some of the checks do not apply completely to Debian systems
+or Debian's defaults are somewhat different. This might lead to
+somethings being reported as a security issue when they really 
+aren't (known in the security field as 'false positives')
+In some cases this might be Tiger's problem (of it being an old UNIX
+auditing program) or it might be Debian's. If you feel a security report
+is not appropiate to your system discuss it in the
+debian-security@lists.debian.org mailing list.
+
+If you really think it's a BUG of Tiger, then send a bug-report
+for the package (using either the 'bug' or 'reportbug' programs).
+Please make sure you look at current (open) bugs at 
+http://bugs.debian.org/tiger
+
+Also, Debian might not ship the most up-to-date system signatures
+for other OS (_not_ Debian GNU/Linux), please retrieve them from
+http://www.net.tamu.edu/ftp/security/TAMU/tiger-sigs/
+
+Changes in behavior:
+--------------------
+
+First of all make sure to read, understand and customize
+/etc/tiger/tigerrc and /etc/tiger/cronrc to adapt to your local security
+policy, as the warning on installation says "You cannot expect to tiger to work 
+fully to your needs without adapting it". Bugs regarding false positives
+which can be fixed by the proper configuration and/or use of templates (see below)
+will be set to "wishlist", even if the bug submitter thinks they are
+"serious".
+
+All and all, Debian's Tiger works quite fine out-of-the box, even if there's
+still room for improvement.
+
+Using Templates
+...............
+
+Tiger in Debian can compare against "templates" when running through
+a cron job. That is, you can take a given log from a previous run
+(at /var/log/tiger) rename it with a ".template" instead of a ".[number]"
+and place it under /etc/tiger/templates.
+
+Tiger checks will compare against it. That way Tiger will only report issues
+when they changed from the template (if configured in /etc/tiger/tigerrc).
+NOTE: Previous to 2.2.4-20 templates could be placed in /var/log/tiger,
+this behaviour is preserved but templates at /etc/tiger/ are used
+first if available.
+
+Another (less secure) method is to have Tiger only report changes from previous
+runs, please note that in this setup problems will only be reported *once*
+in cron jobs, regardless of importance. This is the default behavior, that
+is, this will (should, at least from version 2.2.4-22 and above)  work 
+just after installation.
+
+KNOWN ISSUES 
+-------------
+(these are *not* BUGS)
+
+- shells on Debian default users. PENDING discussion on debian-security, in
+any case it should check if the services are enabled (i.e. the user is useful
+here). Maybe Debian policy could ask for ids in /etc/passwd disabled
+with /dev/null as shell and enable them when services are installed? (CHANGE
+script/check_accounts)
+
+
+- Debian specific checks take quite some time to finish, I have changed the
+Cron job to do this only once in a day, and you can optimize the check by
+changing the $Tiger_DPKG_Optimize variable in /etc/tiger. In any case
+finding packages in Debian takes quite some time... (due to the *very*
+large package list)
+
+Known BUGS in Debian systems:
+----------------------------
+(please check bugs.debian.org/tiger also)
+
+- Debian's /etc/services definition leads to false positives due
+to ports being repeated in there. In order to remove them see
+the "Using templates" above. This cannot be completely fixed without
+extensive revision of the check_services file ("the a3fs vs ircd bug").
+
+- signature files are replaced with installed md5sums in /var/lib/
+Tiger could be distributed with predefined signatures (BTW, signatures 
+should depend on distribution and not on kernel, oh well...)
+
+- Tiger does not seem to look for CRACK before doing password testing
+(this package should Depend: on some password cracker, but note that
+the 'john' package already can do password testing run by cron). The
+test is disabled from cronrc but it will still give some erros when
+the full report is run (using 'tiger')
+
+- incorrect reports for /etc/cron.hourly (does not exist)
+
+- should not check /proc dir when checking for tests (this is a virtual dir)
+
+TODO
+----
+
+- Possible new checks:
+  . check all files and see if they are of the same user/group as their root dir
+  . look for files with no uid in /etc/passwd and gid in /etc/group
+
+- The Debian security group could update signature files for binaries which
+  are in the Debian stable release and have been found vulnerable (packages
+  in stable-updates) so that Tiger can (if not online) check a Debian system
+  and tell the administrator he *must* upgrade them from security.debian.org
+  For an example look at information on doc/signatures. Tigexp is very useful
+  here and could be very informative.
+
+- (Nice feature) Provide internationalisation support.
+
+- Compare against checks introduces in TITAN an re-code those that are 
+  appropriate for Tiger (almost all)
+  (NOTE: I have added some checks, however TITAN seems to not that much
+  good work - Linux version - after all)
+
+
+TESTING
+-------
+
+  . Check for files not in /usr/local and /home 
+    not owned by any package (easy with dpkg -S) (Note: Currently looks only
+    in binary paths /bin /usr/bin... not in all the filesystem)
+  . Check for md5sums of files installed by packages by looking into
+   /var/lib/dpkg/info/*md5sums. The check currently does not include
+   /usr/share/doc. Should it check /usr/share/locale, and /etc or should they
+   be removed too?
+   BTW, I coded it after knowing about debsums which seems to run a bit faster.
+   (maybe debsums code should be included here or used if it exists)
+   . users in Debian are assigned to a group and are umask 022 by default
+   (should not warn due to some files in home having group read if no other
+   user is in the group). CHANGED script/check_accounts
+
+DONE
+----
+
+  . Check for non-running processes (a simple software watchdog)
+  . Check for open TCP/IP sockets and warn when user running the socket is
+    not root, otherwise inform on open sockets. Works with lsof and netstat
+    (since its not Debian specific it has been renamed to deb_)
+  . Check of security advisories taken from the WWW webml sources. The
+  package version is checked against the one in the advisory. Some checks are
+  very redundant since users should not have packages older than the released
+  ones, oh well...
+  . Understand Linux NFS exports file
+
+
+Known FIXED BUGS:
+----------------
+- md5.c is corrupted by default the Tiger binaries will not be recompiled
+each time (BTW, IMHO this is not a good idea anyway). Fetched original sources
+and replaced them. 
+
+- rhosts # accepted (FIXED scripts/check_rhosts)
+
+- Tiger now understands and will not give false warnings when "localepurge" has 
+been installed and a lot of files removed (FIXED scripts/Linux/2/deb_checkmd5sums)
+
+-- Javier Fernandez-Sanguino Peña <jfs@computer.org>
+Last updated: Wed, 12 Jun 2002 00:08:59 +0200
+
+

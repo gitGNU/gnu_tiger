@@ -1,0 +1,81 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/4/gen_passwd_sets - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+
+local=0
+for parm
+do
+  case "$parm" in
+    -p) ;;
+    -l) local=1;;
+    *)	outfile="$parm";;
+  esac
+done
+
+$GREP -v '^[-+]' /etc/passwd |
+$SORT |
+$AWK -F: '
+BEGIN {OFS=":"}
+{
+   if(length($2) > 13)
+     $2 = substr($2, 1, 13);
+   print;
+}' >  $WORKDIR/etc_passwd.$$
+   
+echo "/etc/passwd" > $WORKDIR/etc_passwd.$$.src
+echo $WORKDIR/etc_passwd.$$ >> $outfile
+
+[ $local -eq 1 ] && exit
+
+[ -n "$YP" ] && {
+  $YPCAT passwd |
+  $SORT |
+  $AWK -F: '
+  BEGIN {OFS=":"}
+    {
+      if(length($2) > 13)
+       $2 = substr($2, 1, 13);
+     print;
+  }' |
+  $COMM -23 - $WORKDIR/etc_passwd.$$ > $WORKDIR/nis_passwd.$$
+  echo "NIS" > $WORKDIR/nis_passwd.$$.src
+  echo $WORKDIR/nis_passwd.$$ >> $outfile
+}
+
+[ "$SERVERCHECK" = "Y" ] && {
+  $GETCLIENTDIRS |
+  while read client dir
+  do
+    [ -f "$dir/etc/passwd" ] && {
+      $GREP -v '^[-+]' $dir/etc/passwd |
+      $SORT |
+      $AWK -F: '
+      BEGIN {OFS=":"}
+	{
+	  if(length($2) > 13)
+	  $2 = substr($2, 1, 13);
+	  print;
+      }' > $WORKDIR/passwd.$$.$client
+      echo "$client:/etc/passwd" > $WORKDIR/passwd.$$.$client.src
+      echo $WORKDIR/passwd.$$.$client >> $outfile
+    }
+  done
+}

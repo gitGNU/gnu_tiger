@@ -1,0 +1,108 @@
+%con001c
+The configuration file listed was not read in because it was
+a directory.
+%con002c
+The configuration file listed was not read in because it is
+not owned by `root'.  This is to prevent someone from
+modifying the configuration file.
+%con003c
+The configuration file listed was not read in because it is
+writable by non-root users.  This is to prevent someone from
+modifying the configuration file.
+%con004c
+Informational message describing which configuration files are
+being used during the checks.
+%con005c
+Configuration files, specific to the type of system that `tiger' is being
+run on, do not exist.  It may not be possible to perform all of the checks
+due to the lack of certain files.  Some checks that are performed may
+also generate incorrect or incomplete information.
+%con006e
+The indicated option was not recognized.  The valid options are:
+
+   -B tiger_home     Specify tiger home directory
+
+   -d directory      Specify directory to create security logs in
+
+   -w directory      Specify directory to use for scratch files
+
+   -e                Insert explanations into output
+
+   -E                Generate separate explanation report
+
+   -S                Perform partial checks of disk-less client
+
+                     configuration files on server.
+%con007c
+Generic configuration files for this system do not exist.  The
+checking system will continue on, attempting to locate items it
+needs, and using default configuration files.  Many checks will
+not be performed, and many that are attempted may function
+incorrectly, generating incorrect output.
+%con008e
+Generic configuration files for this system do not exist.  The
+checking system attempted to continue on, but could not locate
+the default configuration files either.  This is an installation
+problem.  It may be necessary to indicate the location of the
+tiger files using the '-B' option.
+%con009e
+There doesn't exist a configuration variable or it is not properly
+defined. Since the variable is needed for the module to run, it
+will probably exit. This is a configuration problem. It is 
+necessary to add the variable to the tigerrc configuration file.
+%init001e
+The indicated variable, which should specifies the pathname to a command,
+does not have a value. This message should not appear on platforms
+for which support is listed.  If it does appear, then for the missing
+commands, if you know the name of the command, then simply place it
+into the environment and rerun the checking system.
+
+setenv AWK /usr/bin/awk
+
+./tiger
+
+Or alternately, create a 'site' configuration file and insert an
+assignment statement in there of the form:
+
+AWK=/usr/bin/awk
+
+%init002e
+The required configuration script was not found in the listed directory.
+The programs can not run without this script.  The '-B' switch can
+be used to specify the directory containing the configuration script.
+
+./tiger -B path_to_tiger_home
+
+%init003c
+Output when run in `self-test' mode indicating that everything appears
+to be OK as far as having all commands and files.
+%init004e
+The indicated command does not exist or is not executable.  This
+indicates a configuration error.
+%init005e
+The indicated variable, which should contain the pathname to an
+input file or work directory does not have a value.  This indicates
+that either full support is not available for this platform,
+or that there is a configuration error.
+%init006e
+An input file required for performing a test is not available.  This
+indicates that there is a configuration error.
+%init007e
+A required variable does not have a value.  This indicates either
+incomplete support this platform or a configuration error.
+%init008e
+An attempt was made to run one of the support scripts directly.
+These scripts can only be invoked by the top level scripts.
+%util001e
+The attempt to compile the signature checking program (SNEFRU) failed.
+This will prevent the tests of the integrity of system binaries from
+being performed.
+%util002e
+The attempt to compile the program for resolving symbolic links failed.
+This will prevent the checks of symbolic links from being performed.
+%post001e
+The listed file was not deleted because it was not in the scratch
+directory.  This indicates an internal error.
+%read001i
+The indicated file exists, but can not be read.  This usually happens
+if you do not run the scripts from an account with super-user privileges.

@@ -1,0 +1,28 @@
+bootps       dgram  udp wait   root /etc/bootpd   bootpd
+chargen      dgram  udp nowait root internal
+chargen      stream tcp nowait root internal
+daytime      dgram  udp nowait root internal
+daytime      stream tcp nowait root internal
+discard      dgram  udp nowait root internal
+discard      stream tcp nowait root internal
+echo         dgram  udp nowait root internal
+echo         stream tcp nowait root internal
+exec         stream tcp nowait root /etc/rexecd   rexecd
+finger       stream tcp nowait bin /etc/fingerd  fingerd
+ftp          stream tcp nowait root /etc/ftpd	  ftpd -l
+lanmgrx.osB  stream tcp nowait root /usr/lib/lm/lmsess.osB  lmsess.osB
+login        stream tcp nowait root /etc/rlogind  rlogind
+printer     stream tcp nowait root /usr/lib/rlpdaemon  rlpdaemon -i
+rpc  dgram  udp  wait    root  /usr/etc/rpc.mountd   100005  1    rpc.mountd
+rpc  dgram  udp  wait    root  /usr/etc/rpc.rquotad  100011  1    rpc.rquotad
+rpc  dgram  udp  wait    root  /usr/etc/rpc.rstatd   100001  1-3  rpc.rstatd
+rpc  dgram  udp  wait    root  /usr/etc/rpc.rusersd  100002  1-2  rpc.rusersd
+rpc  dgram  udp  wait    root  /usr/etc/rpc.rwalld   100008  1    rpc.rwalld
+rpc  dgram  udp  wait    root  /usr/etc/rpc.sprayd   100012  1    rpc.sprayd
+rpc  stream tcp  nowait  root  /usr/etc/rpc.rexd     100017  1    rpc.rexd
+shell        stream tcp nowait root /etc/remshd   remshd
+telnet       stream tcp nowait root /etc/telnetd  telnetd 
+tftp         dgram  udp wait   root /etc/tftpd    tftpd
+time         dgram  udp nowait root internal
+time         stream tcp nowait root internal
+spc     stream tcp  nowait  root  /usr/softbench/bin/softspcd  /usr/softbench/bin/softspcd

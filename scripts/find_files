@@ -1,0 +1,372 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# find_files - 06/14/93
+#
+# 04/29/93 dls Added support for 'tigerrc' file variable FS_FILES
+#
+# 04/28/93 dls Added search for device files...
+#
+# 04/27/93 dls Fixed it so that filenames are stored in a
+#              variable, separated by '/'.  Also, while added
+#              some new filename patterns to search for.
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT EXPR FIND GETDISKS GREP RM SORT || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars WAIT
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+haveallcmds AWK CAT EXPR FIND GREP RM SORT || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+haveallvars WAIT
+
+simple_wait()
+{
+  loop=1
+  while [ "$loop" = '1' ]
+  do
+    loop=0
+    sleep 5
+    for pid
+    do
+        kill -0 $pid > /dev/null 2>&1 && loop=1
+    done
+  done
+}
+
+trap cleanup 0
+
+cleanup()
+{
+  [ -n "$pid" ] && kill -1 $pid >/dev/null 2>&1
+  [ -n "$pidlist" -a -s "$pidlist" ] && {
+    kill -1 `$CAT $pidlist 2>/dev/null` >/dev/null 2>&1
+  }
+  delete $pidlist $mountlist ${outfile}* >/dev/null 2>&1
+  [ "$_TIGER_RUN" != 'Y' -a -n "$TigerCleanup" ] && {
+    for file in $TigerCleanup
+    do
+      eval "case \$file in
+	$WORKDIR/*) $RM -f \$file;;
+	*) echo \"--ERROR-- [post001e] File \\\`\$file' not removed during cleanup.\";;
+	esac"
+    done
+  }  
+}
+
+parse_bootparam()
+{
+  $AWK '
+       BEGIN {LINE="";}
+       $0 ~ /\\$/ {printf("%s ", substr($0, 1, length($0)-1));}
+       $0 !~ /\\$/ {printf("%s\n", $0);}
+       END {printf("\n");}
+   ' |
+  $AWK '{
+           for(i=2;i<=NF;i++)
+             if(substr($i, 1,5) == "root="){
+	       x=substr($i, 6, length($i));
+               split(x, ar, ":");
+               print $1, ar[1], ar[2];
+   	     }
+        }'
+}
+
+trap 'cleanup;exit 1' 1
+trap 'cleanup;exit 1' 2
+trap 'cleanup;exit 1' 3
+trap 'cleanup;exit 1' 15
+
+saveifs="$IFS"
+
+[ "$Tiger_FSScan_ofNote" != 'N' ] && {
+  otheropt='\( \( -name ...'
+  #
+  # List of '/' separated filename globs (NOT pathnames) to look for
+  # Set 'FS_FILES' in 'tigerrc' to specify the list of files.  The
+  # ones here are just defaults in case FS_FILES isn't set.
+  #
+  filespecs='..[!.]*/.* */.[!.]/.log/.FSP*'
+  [ -n "$Tiger_Files_of_Note" ] && filespecs="$Tiger_Files_of_Note"
+  
+  IFS=/
+
+  for fspec in $filespecs
+  do
+    otheropt="$otheropt -o -name \"$fspec\""
+  done
+  IFS=$saveifs
+
+  logit=$BASEDIR/util/logit
+
+  otheropt="$otheropt \) -exec $logit \$otherfile {} \; \)"
+}
+#
+# Options to find for finding suid files and logging them
+#
+[ "x$Tiger_FSScan_Setuid" != 'xN' ] && {
+  suidopt='\( -perm -004000 -a ! -type d  \)'
+}
+#
+# Options to find for finding sgid files and logging them
+#
+[ "x$Tiger_FSScan_Setgid" != 'xN' ] && {
+  sgidopt='\( -perm -002000 -a ! -type d  \)'
+}
+#
+# Options to find for finding device files and logging them
+#
+[ "x$Tiger_FSScan_Devs" != 'xN' ] && {
+  devopt='\( -type b -o -type c \)'
+}
+#
+# Options for finding symbolic links and logging them
+#
+[ "x$Tiger_FSScan_SymLinks" != 'xN' ] && {
+  linkopt='-type l'
+}
+#
+# Options for finding writable directories
+#
+[ "x$Tiger_FSScan_WDIR" != 'xN' ] && {
+  wdiropt='\( -type d -a -perm -000002 \)'
+}
+
+[ "x$Tiger_FSScan_Unowned" != 'xN' ] && {
+  #
+  # Options for finding files with noowner
+  #
+  nownopt='-nouser'
+  #
+  # Options for finding files with nogroup
+  #
+  nogrpopt='-nogroup'
+}
+#
+# Make a find command!
+#
+# otheropt should be first.  We'd rather have unusual filenames
+# of a writable directory logged as an unusual name, rather than
+# a writable directory, etc.
+#
+findopt=
+
+[ -n "$otheropt" ] && {
+  findopt="$findopt $otheropt"
+  [ -n "$suidopt$sgidopt$devopt$linkopt$wdiropt$nownopt$nogrpopt" ] &&
+  findopt="$findopt -o"
+}
+
+[ -n "$suidopt$sgidopt$devopt$linkopt$wdiropt$nownopt$nogrpopt" ] &&
+findopt="$findopt \("
+
+prevopt=
+for xopt in "$suidopt" "$sgidopt" "$devopt" "$linkopt" "$wdiropt" "$nownopt" "$nogrpopt"
+do
+  [ -n "$prevopt" ] &&
+  findopt="$findopt -o"
+  [ -n "$xopt" ] &&
+  findopt="$findopt $xopt"
+
+  prevopt="$xopt"
+done
+
+[ -n "$suidopt$sgidopt$devopt$linkopt$wdiropt$nownopt$nogrpopt" ] &&
+findopt="$findopt \)"
+
+pidlist=$WORKDIR/pid.list$$
+mountlist=$WORKDIR/mount.list$$
+outfile=$WORKDIR/find.out.$$
+
+> $pidlist
+counter=1
+
+rw=rw
+[ "x$Tiger_FSScan_ReadOnly" = 'xY' ] && rw=
+
+{
+  if [ ! -n "$FINDXDEV" ]; then
+    echo "$FINDPRUNE"
+    echo "/"
+  elif haveallcmds GETDISKS; then
+    echo "$FINDXDEV"
+    $GETDISKS
+  elif haveallcmds GET_MOUNTS; then
+    #
+    # This will do each file system in series... slower,
+    # but better than banging the heads around.
+    #
+    echo "$FINDXDEV"
+    echo "`$GETMOUNTS`"
+  else
+    echo "$FINDPRUNE"
+    echo "/"
+  fi
+} |
+{
+  read findpruneopt
+  while read disklist
+  do
+    {
+      output="$BASEDIR/util/flogit"
+      # Do not change the order of these words
+      for what in suid dev link wdir nouser nogroup test sgid
+      do
+	output="$output ${outfile}.${what}.$counter"
+      done
+
+      # Do not change these variable names
+      otherfile="${outfile}.other.$counter"	
+
+#     echo "$FIND x $findpruneopt $findopt -print" 1>&2
+      for mountpt in $disklist
+      do
+        # Not sure why we're cd'ing to /, but it breaks all relative paths
+	#     being used in the find options.  Commented out --mlk
+        #     cd /
+	eval nice -5 $FIND $mountpt $findpruneopt $findopt -print 2>/dev/null
+      done | nice -6 $output
+    } &
+    echo $! >> $pidlist
+    counter=`$EXPR $counter + 1`
+  done
+
+  $WAIT `[ "$WAIT" != 'wait' ] && $CAT $pidlist`
+  pidlist=
+
+  for what in suid sgid other dev link wdir nouser nogroup
+  do
+    count=1
+    while [ $count -lt $counter ]
+    do
+      [ -r ${outfile}.${what}.$count ] &&
+      $CAT ${outfile}.${what}.$count 2>/dev/null
+      delete ${outfile}.${what}.$count
+      count=`$EXPR $count + 1`
+    done |
+    $SORT > $outfile.${what}
+  done
+} &
+
+pid=$!
+
+$WAIT $pid
+
+{
+  pidlist=
+  [ "x$Tiger_FSScan_Setuid" != 'xN' ] && {
+    $SCRIPTDIR/sub/check_suid $outfile.suid > $WORKDIR/suid.msgs.$$ &
+    pidlist="$pidlist $!"
+  }
+  [ "x$Tiger_FSScan_Setgid" != 'xN' ] && {
+    $SCRIPTDIR/sub/check_sgid $outfile.sgid > $WORKDIR/sgid.msgs.$$ &
+    pidlist="$pidlist $!"
+  }
+
+  [ "x$Tiger_FSScan_ofNote" != 'xN' ] && {
+    $SCRIPTDIR/sub/check_names $outfile.other > $WORKDIR/other.msgs.$$ &
+    pidlist="$pidlist $!"
+  }
+
+  [ "x$Tiger_FSScan_Devs" != 'xN' ] && {
+    $SCRIPTDIR/sub/check_devs $outfile.dev > $WORKDIR/devs.msgs.$$ &
+    pidlist="$pidlist $!"
+  }
+
+  [ "x$Tiger_FSScan_Links" != 'xN' ] && {
+    $SCRIPTDIR/sub/check_links $outfile.link > $WORKDIR/link.msgs.$$ &
+    pidlist="$pidlist $!"
+  }
+
+  [ "x$Tiger_FSScan_WDIR" != 'xN' ] && {
+    $SCRIPTDIR/sub/check_wdir $outfile.wdir > $WORKDIR/wdir.msgs.$$ &
+    pidlist="$pidlist $!"
+  }
+
+  [ "x$Tiger_FSScan_Unowned" != 'xN' ] && {
+    $SCRIPTDIR/sub/check_nousrgrp $outfile.nouser $outfile.nogroup \
+    > $WORKDIR/noowner.msgs.$$ &
+    pidlist="$pidlist $!"
+  }
+
+  [ -n "$pidlist" ] && {
+    $WAIT `[ "x$WAIT" != 'xwait' ] && echo $pidlist`
+  }
+  pidlist=
+} &
+
+pid=$!
+$WAIT $pid
+
+for file in $WORKDIR/suid.msgs.$$ $WORKDIR/sgid.msgs.$$ \
+	$WORKDIR/other.msgs.$$ \
+	$WORKDIR/devs.msgs.$$ $WORKDIR/link.msgs.$$ \
+	$WORKDIR/wdir.msgs.$$ $WORKDIR/noowner.msgs.$$
+do
+  [ -s "$file" ] && $CAT $file
+done
+
+delete $pidlist ${outfile}*
+delete $WORKDIR/suid.msgs.$$ $WORKDIR/sgid.msgs.$$ \
+	$WORKDIR/other.msgs.$$ $WORKDIR/devs.msgs.$$ \
+       $WORKDIR/link.msgs.$$ $WORKDIR/wdir.msgs.$$ $WORKDIR/noowner.msgs.$$
+
+#
+exit 0

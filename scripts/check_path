@@ -1,0 +1,377 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_path  - 06/14/93
+# ARC check_path - 05/10/99  Fixed problem with parse_csh
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir="."
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK GEN_PASSWD_SETS GREP JOIN RM RM SED TR || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars HOSTNAME || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+echo
+echo "# Performing check of PATH components..."
+
+haveallcmds AWK GREP JOIN RM SED TR || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+checkcmds()
+{
+  _user="$1"
+  _dir="$2"
+  _srcfile="$3"
+
+  okown=$Tiger_ROOT_PATH_OK_Owners
+  [ "$_user" != 'root' ] && okown=$Tiger_PATH_OK_Owners
+  [ ! -n "$okown" ] && okown='root'
+
+  okgroup=$Tiger_ROOT_PATH_OK_Group_Write
+  [ "$_user" != 'root' ] && okgroup=$Tiger_PATH_OK_Group_Write
+
+  [ -d $_dir ] &&
+  $LS -d $_dir/* |
+  getpermit |
+  while read _execfile _owner _group ur uw ux gr gw gx or ow ox suid sgid stk
+  do
+    [ "$ux$gx$ox" != '000' ] && {
+      [ -n "$TigerCheckEmbedded" -a "$_user" = 'root' ] && {
+	echo "$_execfile /$_srcfile(PATH)" >> $TigerCheckEmbedded
+      }
+      
+      [ "$gw" = '1' -a -n "$okgroup" ] && {
+	eval "case $_group in
+	  $okgroup) gw=0;;
+	esac"
+      }
+      
+      case "$gw$ow" in
+	00) _msg='';;
+	01) _msg='world'; __newmode='o-w';;
+	10) _msg="group \`$_group'"; __newmode='g-w';;
+	11) _msg="group \`$_group' and world";__newmode='go-w';;
+	*) _msg='';;
+      esac
+      [ -n "$_msg" ] && {
+	message WARN path001w "" "$_execfile in $_user's PATH from $_srcfile is $_msg writable."
+	changelog "WARN : chmod : $__newmode : $_execfile"
+      }
+      if [ "$suid" = '0' ]; then
+	eval "case \$_owner in
+	  $okown);;
+	  *) message WARN path002w \"\" \"$_execfile in $_user's PATH from $_srcfile is not owned by root (owned by $_owner).\"
+	  changelog \"WARN : chown : root : $_execfile\"
+	  ;;
+	esac"
+      else
+	eval "case $_owner in
+	  $okown);;
+	  *) message INFO path008i \"\" \"Setuid program $_execfile in $_user's PATH from $_srcfile is not owned by root (owned by $_owner).\";;
+	esac"
+      fi
+    }
+  done
+}
+
+parse_path()
+{
+  user="$1"
+  file="$2"
+  pth="$3"
+  saveifs=$IFS
+
+  [ ! -n "$pth" -a "$user" = 'root' ] && {
+    message INFO path003i "" "Unable to ascertain PATH from $user's $file."
+    return
+  }
+
+  case "$pth" in
+    *:) pth="${pth}.";;
+  esac
+  
+  IFS=:
+  set X $pth
+  IFS=$saveifs
+  shift
+  
+  dotinpath=
+  
+  for pcomp
+  do
+    comp="${pcomp:=.}"
+    if [ "$comp" = '.' ]; then
+      dotinpath=Y
+      [ "$user" = 'root' ] && {
+	message WARN path004w "" "PATH in $user's $file contains '.'"
+      }
+    elif [ -d "$comp" ]; then
+      lgetpermit "$comp" |
+      pathmsg path006 path007 "$comp" "$user" "The PATH set in $user's $file contains"
+    fi
+    [ "$user" = 'root' -a "$comp" != '.' ] && checkcmds $user "$comp" "$file"
+  done
+  [ "$lastcomp" != '.' -a -n "$dotinpath" ] && {
+    message WARN path005w "" "'.' in PATH from $user's $file is not last."
+  }
+}
+
+#
+# Parse Bourne SHell style file (sh, ksh, bash)
+#
+# This creates a file which all contains variable assignments in
+# it.  We try to strip out command substitions or anything else
+# that might execute a command, but...
+#
+parse_bsh()
+{
+  user="$1"
+  dir="$2"
+  file="$3"
+
+  
+  $AWK '
+  BEGIN {LINE="";}
+  $0 ~ /\\$/ {printf("%s ", substr($0, 1, length($0)-1));}
+  $0 !~ /\\$/ {printf("%s\n", $0);}
+  END {printf("\n");}
+  ' $dir/$file |
+  $GREP -v '".*;.*"' |
+  $TR ';' '\012' |
+  $SED -e 's/#.*$//' \
+       -e '/^$/d' \
+       -e 's/^[ 	]*//' \
+       -e 's/export[ 	][ 	]*//' \
+       -e 's/^setenv[ 	]*\([a-zA-Z_][a-zA-Z0-9_]*\)[ 	]*\(.*\)$/XXX_\1=\2/g' \
+       -e 's/^\([a-zA-Z_][a-zA-Z0-9_]*=.*\)$/XXX_\1/g' \
+       -e 's/\$\([a-zA-Z_][a-zA-Z0-9_]*[^a-zA-Z0-9_]\)/$XXX_\1/g' \
+       -e 's/\$\([a-zA-Z_][a-zA-Z0-9_]*\)$/$XXX_\1/g' \
+       -e 's/\$([^)]*)//g' \
+       -e 's/`[^`]*`//g' |
+  $GREP -v '`' |
+  $GREP -v '\$(' |
+  $GREP -v '^.*=[^ 	]*[ 	]' |
+  $GREP -v 'DISPLAY' |
+  $GREP '^XXX_[a-zA-Z_][a-zA-Z0-9]*=' > $WORKDIR/pth.$$
+  #
+  # Now, source the file to get variable values.
+  # Use a subshell so we don't contaminate.  Everything
+  # should start with XXX_, but take no chances if IFS.
+  #
+  (
+    XXX_USER="$user"
+    XXX_LOGNAME="$user"
+    XXX_HOME="$dir"
+    saveifs=$IFS
+    . $WORKDIR/pth.$$
+    IFS=$saveifs
+    delete $WORKDIR/pth.$$
+    parse_path $user $file "$XXX_PATH"
+  )
+}
+
+#
+# Parse C SHell style file (csh, tcsh)
+#
+# This creates a file which contains all variable assignments (sh style)
+# in it.  We try to strip out command substitions or anything else
+# that might execute a command, but...
+#
+parse_csh()
+{
+  user="$1"
+  dir="$2"
+  file="$3"
+
+  if [ ! -f $3 ]; then
+    exit
+  fi
+  
+  $AWK '
+  $0 ~ /\\$/ {printf("%s ", substr($0, 1, length($0)-1));}
+  $0 !~ /\\$/ {print}
+  END {printf("\n");}
+  ' $dir/$file |
+  $GREP -v '".*;.*"' |
+  $TR ';' '\012' |
+  $SED -e 's/#.*$//' \
+       -e '/^$/d' \
+       -e 's/^[ 	]*//' \
+       -e 's/[()]//g' \
+       -e 's/^set \([a-zA-Z_][a-zA-Z0-9_]*\)[ 	]*=[ 	]*\(.*\)$/XXX_\1=\2/g' \
+       -e 's/^setenv[ 	]*\([a-zA-Z_][a-zA-Z0-9_]*\)[ 	]*\(.*\)$/XXX_\1=\2/g' \
+       -e 's/[ 	]$//' \
+       -e 's/[ 	]/:/g' \
+       -e 's%~%'"$dir"'%g' \
+       -e 's/\$\([a-zA-Z_][a-zA-Z0-9_]*[^a-zA-Z0-9_]\)/$XXX_\1/g' \
+       -e 's/\$\([a-zA-Z_][a-zA-Z0-9_]*\)$/$XXX_\1/g' \
+       -e 's/XXX_path/XXX_PATH/g' \
+       -e 's/`[^`]*`//g' \
+       -e '/\$</d' |
+  $GREP -v '`' |
+  $GREP -v 'DISPLAY' |
+  $GREP -v '^.*=[^ 	]*[ 	]' |
+  $GREP '^XXX_[a-zA-Z_][a-zA-Z0-9]*=' > $WORKDIR/pth.$$
+  #
+  # Now, source the file to collect variable values.  Use
+  # a subshell so we don't contaminate.  Everything should
+  # start with XXX_, but take no chances with IFS.
+  #
+  (
+    XXX_USER="$user"
+    XXX_LOGNAME="$user"
+    XXX_HOME="$dir"
+    saveifs=$IFS
+    . $WORKDIR/pth.$$
+    IFS=$saveifs
+    delete $WORKDIR/pth.$$
+    parse_path $user $file "$XXX_PATH"
+  )
+}
+
+check_user()
+{
+  user="$1"
+  dir="$2"
+
+  [ -s $dir/.profile ] && parse_bsh $user $dir .profile
+  [ -s $dir/.cshrc ] && parse_csh $user $dir .cshrc
+  [ -s $dir/.login ] && parse_csh $user $dir .login
+  [ -s $dir/.tcshrc ] && parse_csh $user $dir .tcshrc
+  [ -s $dir/.bashrc ] && parse_bsh $user $dir .bashrc
+  [ "$user" = 'root' -a ! -f $dir/.profile ] && {
+    parse_path $user default $SYSDEFAULTPATH
+  }
+  # Only do this if no /bin/csh config files, but there IS a /bin/sh config
+  [ "$user" = 'root' -a ! -f $dir/.cshrc -a ! -f $dir/.login -a -f $dir/.profile ] && {
+    parse_path $user default $SYSDEFAULTPATH
+  }
+}
+
+realpath="$REALPATH -d"
+
+[ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath="echo"
+
+[ ! -n "$SYSDEFAULTPATH" ] && {
+  SYSDEFAULTPATH="/bin:/usr/bin:/usr/sbin"
+}
+[ -n "$Tiger_Global_PATH" ] && {
+  for file in $Tiger_Global_PATH
+    do
+      [ -r $file ] && {
+        case $file in
+          /etc/profile|/etc/bashrc)
+            if ! $GREP -v '#' $file | $GREP PATH | $GREP export >/dev/null 2>&1
+              then
+                message WARN path009w "" "$file does not export an initial setting for PATH."
+            fi
+            ;;
+          /etc/csh.login)
+            if ! $GREP -v '#' $file | $GREP PATH | $GREP setenv >/dev/null 2>&1
+              then
+                message WARN path009w "" "$file does not setenv an initial setting for PATH."
+            fi
+            ;;
+         *)
+            if ! $GREP -v '#' $file | $GREP PATH >/dev/null 2>&1
+              then
+                message WARN path009w "" "$file does not have an initial setting for PATH."
+            fi
+            ;;
+       esac
+      }
+    done
+}
+
+{
+  if [ "$TIGER_Check_PATHALL" = 'Y' ]; then
+    haveallcmds GEN_PASSWD_SETS &&
+    haveallvars HOSTNAME && {
+      {
+	if [ -n "$Tiger_PasswdFiles" ]; then
+	  $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+	else
+	  $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
+	fi
+      }
+      while read passwd_set
+      do
+	echo
+	echo "# Checking accounts from `$CAT $passwd_set.src`..."
+  
+	$AWK -F: '{print $1, $6}' $passwd_set |
+	$BASEDIR/util/${GETFSHOST:=getfs-std} > $WORKDIR/home.hosts.$$
+      
+	$AWK -F: '{ printf("%s %s\n", $1, $6); }' $passwd_set |
+	$JOIN -o 1.1 1.2 2.3 - $WORKDIR/home.hosts.$$ |
+	while read user homedir host
+	do
+	  [ "$host" = "$HOSTNAME" ] && {
+	    check_user $user $homedir
+	  }
+	done
+	[ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
+	delete $WORKDIR/home.hosts.$$
+      done < $WORKDIR/pass.list.$$
+	delete $WORKDIR/pass.list.$$
+    }
+  else
+    echo "# Only checking user 'root'"
+    check_user root /
+  fi
+} |
+$OUTPUTMETHOD

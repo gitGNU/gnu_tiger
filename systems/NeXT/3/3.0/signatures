@@ -1,0 +1,40 @@
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+#  NeXT/3.0/signatures - 04/22/93
+#
+#-----------------------------------------------------------------------------
+#@DEST=NeXT/3/3.0
+#@CONFIG=NeXT/3
+#
+Y .       /usr/ucb/rdist 3bd39dd5 20f3775a 51a46270 41d848c2 37f74014 7fef1fa8 aad97e6c 9c00fc01 NeXTSTEP 3.0
+Y .       /usr/etc/portmap 52c69fdf 645c567b 1ee09ebe 1f7e1593 d83d4342 3e2418ae cd0b147b fead4561 NeXTSTEP 3.0
+Y .       /usr/etc/ypserv 4f34da2f 610e764c a589b568 700cb6ab b2953ecb f99ea48d 2f0bb25d 700f9554 NeXTSTEP 3.0
+Y .       /bin/login 7be2f89a bd6eaf5e b4fb3b8d 923eca97 f02f4302 ad448831 a91e1468 432a16e5 NeXTSTEP 3.0
+Y .       /bin/su.wheel 860d2953 11fa88df e82a6218 0663a657 e679aa2c 326e2ed3 25144d98 5b668850 NeXTSTEP 3.0
+Y .       /bin/su.nowheel b2638e50 027e2fc3 fc03cb8a 2d5bfa72 f0d8ef49 1555534a b4c5a772 76b7f608 NeXTSTEP 3.0
+Y .       /usr/etc/telnetd f6064198 deeacafa 80d2a54c 43cd7f66 3020d7dd dc8a1562 1806afaf 61d34c88 NeXTSTEP 3.0
+Y .       /usr/etc/uucpd 4959ec03 f2f7700a 92f0a530 bc679f18 ffba6a62 299eb209 1b34a557 4120902f NeXTSTEP 3.0
+Y .       /usr/etc/rshd 16da51f5 f0baa673 2b6a64e6 e4d30922 b2362fc6 9bc313d1 fbc1706d 2421340c NeXTSTEP 3.0
+Y .       /usr/etc/rlogind 71dcb1bf b59b9185 9c4607b0 8730c413 58370491 f34098a2 ca647f60 0b8fec90 NeXTSTEP 3.0
+Y .       /usr/etc/rexecd a39acf2c 192a05e7 9a8768b4 317385a1 6ad0463f f9ff10db 5e1a7bbe c6efa53f NeXTSTEP 3.0
+Y .       /usr/etc/fingerd 1fb6010e d63fb6d3 52568d35 89420b17 737aa960 b00525e4 3bd41e91 79f91751 NeXTSTEP 3.0
+Y .       /usr/etc/ftpd d7cf7fee ce7a8bff 369d28c0 fb6e2960 f723bcc1 27e7a090 d3e5a648 6b827bf4 NeXTSTEP 3.0
+Y .       /usr/etc/tftpd 70a7133d d3879295 d28f6c3f 0a537323 d9e351c2 d11eeae9 ad49f7ba 720ba865 NeXTSTEP 3.0
+Y .       /usr/ucb/telnet c7b1bf27 524b1654 56441538 809f8d48 5082b062 3369cc50 18931383 c3befedd NeXTSTEP 3.0
+Y .       /usr/ucb/rsh 5ca5decc b4013426 5638e989 03b9716b 8eb6eac6 1fa402e6 fc6726ed 5611ccbc NeXTSTEP 3.0
+Y .       /usr/ucb/rlogin 0a292dbf af888364 d86637c0 52ff582e 6418fc2b e504d10b 5b60fb25 ba48f611 NeXTSTEP 3.0
+Y .       /bin/passwd a0313085 e18569eb 254e7889 d8df3d3a dbbb118e 991e6169 73b31261 3e9fb1b5 NeXTSTEP 3.0

@@ -1,0 +1,60 @@
+#
+# Debian default 'tigercron' cronrc file...
+#
+# You can run the different checks in stages, without having to
+# clutter up the crontab for root. You can do all the checks in one
+# step or (like this file does) separate all the checks in different
+# stages.
+#
+#------------------------------------------------------------------------
+#
+# Field 1:  Comma separated list of hours (0-23) or '*' when this should
+#           be run.
+#
+# Field 2:  Comma separated list of days of month or '*' when this should
+#           be run.
+#
+# Field 3:  Comma separated list of days of week or '*' when this should
+#           be run.  Days of week must be exactly as 'date' prints.
+#
+# Remaining fields:  Scripts to execute (no newlines or \ allowed)
+#
+# ----------------------------------------------------------------------
+#
+# The following are the default settings for Debian if you do not want
+# to separate checks change this as needed (and suited to your security
+# policy). 
+# 
+# ----------------------------------------------------------------------
+# Check for known intrusion signs every 8 hours
+#
+0,8,16 * *	check_known
+#
+# Check for Debian security measures every day at 1 am
+#
+1 * *	deb_checkmd5sums deb_nopackfiles deb_checkadvisories
+#
+# Get a list of listening processes every day at different hours
+#
+0,4,6,10,14,18,20 * *		check_listeningprocs
+#
+# Check for usual account information every day at 2 am.
+#
+2 * *		check_accounts check_rhosts check_netrc check_group check_passwd
+#
+# Check for file permissions every day at 5 am
+#
+5 * *		check_perms check_group check_passwd
+#
+# Check for network configuration every Monday
+#
+3 * Mon		check_inetd check_exports check_aliases check_path check_cron check_anonftp check_printcap
+#
+# Check for strange file ownerships once a month
+#
+2 1 *         find_files 
+#
+# Run a password cracker against the local passwords once a month
+# This is removed since a) it does not work and b) the functionality is
+# provided by the 'john' package
+#2 2 *           crack_run

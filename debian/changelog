@@ -1,0 +1,424 @@
+tiger (2.2.4p2-5) unstable; urgency=low
+
+  * Added a GPL header to all the important scripts/files used by the
+    program (this means /, /scripts and /systems/{default,Linux}.
+    This was a requirement for adding tiger as a new project to the
+    savannah site.
+    (probably next upstream version and Debian diff file will be 
+    reduced since I intend to make the current Debian codebase 
+    upstream's 2.2.4p3)
+  * Added a new check scripts/check_runprocs (not currently configured to
+    run since it needs sysadmin to configure tigerrc properly to determine
+    which processes should be checked for)
+  * Added some more information to the README.Debian file and rewrote
+    some paragraphs.
+  * Written some notes on how to use Tiger as a host IDS.
+  * Chmod'ed many scripts in order to avoid lintian warnings.
+  * Changed tiger so it first reads tigerrc in the local directory 
+  (useful for testing the package without installing or to use the tar.gz
+  in other environments)
+  * Fixed the scripts/check_anon in order to test if ftphome/etc/passwd
+  exists before grep'ing it.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Tue, 11 Jun 2002 23:02:12 +0200
+
+tiger (2.2.4p2-4) unstable; urgency=low
+
+  * Incorporated TARA changes including:
+    - Changed acc006 from FAIL to WARN (scripts/check_accounts).
+    - Added -H option for HTML output.
+    - Fixed scripts/check_cron for problems in entries.
+    - Fixed scripts/check_exports to avoid false positives.
+    - Fixed scripts/check_path due to problems with parse_csh.
+    - Change scripts/check_perm to not warn when owner is bin and 
+      changed calls of echo to message().
+    - Made some of the changes provided by ARC in scripts/check_inetd
+     (save for the SORT and JOIN changes which do not seem to work)
+    - Changed scripts/sub/check_devs to work with IRIX 6.5
+    - Changed GROUPS to GROUPSS as ARC team does since it (might)
+      be a readonly variable in some shells (see bash(1)). Even though
+     it is not used in any script.
+     
+  * Created a new package to provide all the scripts for other operating
+    systems (Warning: you still need to compile the C programs: getpermit,
+    md5, realpath, snefru and testsuid in those platforms for tiger to work
+    fully).
+  * Added Tiger_Check_SYSTEM to the distributed tigerrc
+  * Added some Linux specific checks (gdm, xdm) in scripts/check_root
+  * Created (new) systems/Linux/2/check_inittab script (for ctraltdel issue
+    from Bastille).
+  * Created (new) systems/Linux/2/check_rcumask script to check umask settings
+    for the RC boot scripts.
+  * Created (new) scripts/check_ftpusers script to check for administrative
+    users that are allowed access in the FTP server.
+  * Created (new) scripts/check_tcpd script to check for changes in the
+    way inetd services are being protected through the use of tcp_wrappers.
+    This script has been written based on check_inetd.
+  * Modified scripts/check_sendmail to check for sendmail.cf's banner
+  * Note. This new scripts have not been added to the cron entry. They will 
+    only be run when running the 'tiger' script.
+
+  * Written some README files: howto write modules (README.writemodules),.
+    how much time does it take for scripts to run (README.time), and
+    information on making signatures (README.signatures)
+  
+  * Changed tigexp to work if issued -F with no second argument
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun, 26 May 2002 01:58:53 +0200
+
+tiger (2.2.4p2-3) unstable; urgency=low
+
+  * Fixed typo in spanish template description.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Tue, 14 May 2002 13:49:33 +0200
+
+tiger (2.2.4p2-2) unstable; urgency=low
+
+  * Fixed filesystem permissions (execution bit) for Linux specific
+    scripts
+  * Changed scripts/check_anon to avoid error when checking for
+    $ftphome/etc/passwd.
+  * Updated security advisories.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri, 10 May 2002 09:55:41 +0200
+
+tiger (2.2.4p2-1) unstable; urgency=low
+
+  * This is the "I finally merged with Bryan Gartner's tarball" release
+  * Cosmetic upgrade in version number due to too many changes in the
+    sytem specific checks (AIX, Solaris et al.) derivated from tara sources.
+    (thus this release might be labeled "new upstream", avoid 2.2.4p1 since
+    it is used in TAMU's distribution)
+  * Updated to latest debian DSAs.
+  * Next release will have a new package to provide all the scripts for 
+    other Operating systems so that a central Debian server can be used 
+    with network filesystems as a single point of script distribution.
+  * Included tara's new check and scripts checks: devices, issue, 
+    lilo, logfiles, network, patches, release, root, rootdir, single and
+    tripwire_run (this last one is deactivated in Debian since 
+    the package, if installed, will do the checks)
+  * Included the following systems without changes: AIX-4, IRIX-{4,5,6},
+    Linux-1, Next-3, UNICOS, UNICOSMK
+  * Instead of cp'ing all the SunOS files I ln -s all directories that
+    were equal in order to reduce space in the source package (and diff)
+  * Included the two new utils to convert into HTML
+  * Changed realpath.c, snefru.c as described in CHANGES.ARSC
+  * Merged patches from ASCR in files: check_accounts, check_cron, check_group,
+    check_inetd, check_passwd, check_sendmail, systems/Linux/2/gen_mounts,
+    tiger.
+  * Updated scripts (not changed in Debian): check_path
+  * Fixed Linux's gen_cron to include CRONSPOOL and fixed 
+    systems/Linux/2/config to properly configure it (was set to /usr
+    instead of /var) since it was not used this was not detected until now.
+  * Updated the tiger configuration file (tigerrc)
+  * Updated the manpage tiger.8
+  * Moved check_listening from Linux-specific to all the generic location
+    (since it will work in any UNIX system with NETSAT). 
+    Changed tigerrc accordingly adding Tiger_Check_LISTENING variable
+    and renaming the previous variables for this check.
+  * De-activated RedHat's specific (and written in Perl) check_network
+    script. TODO: rewrite it in shell script and remove RedHat-specific
+    stuff.
+  * Moved the Linux specific checks provided by Paul Telford to
+    systems/Linux/2/ since they are not appropiate to other systems
+    (for consistency)
+  * Fixed check_release as provided by Paul Telford (some typos and not
+    correctly programmed)
+  * Applied some of the changes described in the Changes.ARSC. It seems these
+    were not included in the TARA distribution (for some reason).
+    REMINDER: ask for these to the ARSC team.
+  * Fixed check_sendmail's pattern matching (wrong reports on dates) and made
+    it properly Y2k.
+  * Fixed (again) the postinst... let's see if I get it right this time...
+  * Moved the FQDN check from 'tiger' to 'config' (since it is used by both
+    tiger and tigercron)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Tue, 30 Apr 2002 16:16:31 +0200
+
+tiger (2.2.4-22) unstable; urgency=low
+
+  * This is the "Yes, I was on vacation fixing bugs release (I)"
+  * Applied patch Marcel that fixes some long-standing issues, did not change
+    BASEDIR to basedir since it should work that way but *did* change typo
+    which made diff's against previous run not to work (Closes: #139221)
+  * Fixed Linux/2/gen_export_sets tpo (Closes: #139667)
+  * Modified Linux/2/config so that findcmd() looks first for binaries generated
+    by Tiger, including realpath (Closes: #139669)
+  * Modified deb_checkmd5sum to "understand" locale.nopurge configuration.
+    Currently experimental, but seems to work fine. Admins that fixed this
+    through templates will, however, have to remake them (Closes: #123891)
+  * Since realpath's Linux does not work as tiger's realpath -d, removed it
+    from the Recommends: (use tiger's instead)
+  * Added -u option in gen_listeningprocs (UDP sockets are not shown if using
+    netstat, this was an unreported bug)
+  * Added warning to the tigerrc regarding user's Tiger_ListeningProc (will
+    not work if using NETSTAT and not LSOF)
+  * Added the Tiger_Check_EVERYLISTENING option which will report if a
+    service is listening on *all* interfaces, default is Y, if set to 'N'
+    only processes run by users different from Tiger_ListeningProcs will be
+    reported. Changed gen_listeningprocs for this to work (Closes: #138855)
+  * Changed the name of gen_listeningprocs to check_listeningprocs (more
+    proper and consistent)
+  * Provided some more documentation in the tiger.8 manpage detailing which
+    modules are available
+  * Check_listeningprocs has been modified to allow it to not warn on
+    processes when using the Tiger_Listening_ValidProc variable in 
+    /etc/tigerrc this allows admins to remove processes which can dynamically
+    change TCP/IP port (Closes: #134085)
+  * Changed Tiger_Listening_Proc to Tiger_Listening_ValidUser (more precise).
+    WARNING: Postinst will not change this from the config file! 
+  * The changes introduced in check_listeningprocs as well as the 
+    check-against-template behavior configuration will (hopefully) reduce greatly 
+    false positives if properly configured (Closes: #126635)
+  * Set Tiger_Check_CRACK to 'N' by default and removed cron job since this 
+    feature does not work. Added 'john' Recommends: since the Debian package
+    does provide that feature by itself.
+  * Added check_sendmail to SCRIPTS in the Makefile (it was not being
+    installed, unreported bug)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 27 Mar 2002 14:31:14 +0100
+
+tiger (2.2.4-21) unstable; urgency=low
+
+  * Changed deb_nopackfile so it also checks the diversions file
+  (Closes: #129343)
+  * Fixed deb_md5sums to work with files with namespaces by using 
+  quotes properly (Closes: #129339)
+  * Updated Debian Advisories (cvs, xsane...)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Mon,  4 Mar 2002 21:15:25 +0100
+
+tiger (2.2.4-20) unstable; urgency=low
+
+  * Fixed check_known's grep which did not work on Solaris boxes...
+  * Fixed systems/SunOS/ so that it can find the CUT command too
+  * Changed scripts/check_known to use HEAD instead of TAIL in the
+  mail spool checks (Closes: #135202)
+  * Changed scripts/check_anon to check if the ftp user is in the
+  system's passwords (Closes: #135205)
+  * Added proper dependecies (based on systems/Linux/2/config) 
+  (Closes: #128796)
+  * Added an Tiger_Output_FQDN option so that it uses hostname -f
+  as the system name for reports (Closes: #129526)
+  * Added version.h to the package in order for tiger to determine
+  the current Tiger version.
+  * Fixed debconf note (Closes: #136298)
+  * Added an alternative (and better) template location: /etc/tiger/templates
+  * Updated Debian DSA's
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri,  1 Mar 2002 09:50:19 +0100
+
+tiger (2.2.4-19) unstable; urgency=medium
+
+  * Fixed gen_listeningprocs typo and added SORT to reduce output
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed,  9 Jan 2002 19:20:19 +0100
+
+tiger (2.2.4-18) unstable; urgency=low
+
+  * Fixed the deb_nopackfiles so it uses -x -F and will not be confused by
+  strange file names (i.e. [) this also avoids filenames being interpreted
+  as regular expressions (Closes: #126569)
+  * Fixed deb_md5sums so it does not follow symlinks (sometimes they get
+  followed to unexistant files)
+  * Modified check_accounts so that it does not give warnings for accounts
+  of uid < 999 (system accounts in Debian GNU/Linux) by introducing a new
+  tigerrc variable (Tiger_Accounts_Trust)
+  * Added tiger-2.2.3p1-patch from TAMU
+  * Added some more info to the debian/copyright file
+  * Added the fix_tiger_GROUPS.sh script to a "contrib" area
+  * Added -p option to netstat and reduced output with grep -v STREAM :)
+  * Improved gen_listeningprocs so only uniq processes are shown listening
+  to the same socket, also, UDP sockets are now listed too with lsof and
+  netstat
+  * Fixed check_inetd so it does not do a 'set' when an empty line is found
+  * Modified difflogs intensively since it was not working properly, added
+  a new feature and varialbes in tigerrc so that cron jobs can be compared
+  against "template" (policy-compliant?) runs. This can reduce false positives
+  even if they cannot be reduced in a given module.
+  * Added configurable Tiger_Listening_Procs for gen_listeningprocs to 
+  customize for local security policy (Closes: #126635)
+  * Added debconf note (borrowed from snort) to configure mails receiver
+  (Closes: #122256)
+  * Added debconf note to warn the user to adapt to security policy
+  * Fixed lintian errors.
+  * Update DSAs
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 26 Dec 2001 13:48:13 +0100
+
+tiger (2.2.4-17) unstable; urgency=high
+
+  * Fixed typo in systems/Linux/2/gen_passwds_setgs (aggggh!! introduced
+  when nisplus was commented out)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 26 Dec 2001 10:18:53 +0100
+
+tiger (2.2.4-16) unstable; urgency=medium
+
+  * Added -rf to prerm script when purging.
+  * Commented nisplus from the gen_passwd_sets since there is no NISCAT in
+   Linux
+  * Fixed scripts/check_known so it works properly in NIS environments. 
+  now uses the passwd_set properly instead of passwd_source
+      
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri, 21 Dec 2001 09:57:28 +0100
+
+tiger (2.2.4-15) unstable; urgency=low
+
+  * Changed gen_passwd_sets for Linux so it now recognises NIS/NISPLUS and
+  does not depend on shadow passwords being installed (Closes: #113132,
+  #125792)
+  * /etc/cron.d/tiger now listed in conffiles (Closes: #124142)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 20 Dec 2001 10:33:16 +0100
+
+tiger (2.2.4-14) unstable; urgency=high
+
+  * Updated the services file and modified the check_inetd scripts so now it
+  only warns if several services share port numbers (the check was
+  originally made to only handle one service per port) (Closes: #123730)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 13 Dec 2001 10:36:37 +0100
+
+tiger (2.2.4-13) unstable; urgency=low
+
+  * Fixed tigercron shell problem which made it not work properly 
+  (Closes: #123116)
+  * Setup tigerrrc so that Tiger_DPKG_Optimize defaults to 'Y'
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Mon, 10 Dec 2001 11:34:06 +0100
+
+tiger (2.2.4-12) unstable; urgency=high
+
+  * Fixed cronrc so CPU consuming tasks are run once a day 
+  (Closes: #122378)
+  * Fixed check_passwd so that uids and usernames are looked for correctly
+  (Closes: #122391)
+  * Updated services file (Closes: #122338)
+  * Fixed file control list (Closes: #122337)
+  * Updated Debian Security Advisories
+  * Provided new (untested) method to bypass DPKG in some tests through
+  the $Tiger_DPKG_Optimize variable in tigerrc (default N)  (Closes: #122678)
+  * Changed deb_nopackfiles and deb_checkadvisories to work in optimize and
+  non-optimize method (using grep, cut, et al in the /var/lib/dpkg area)
+  * Fixed Debian specific scripts (==)
+  * Fixed Linux's gen_export_sets (nobody yelled yet, but it did not work
+  in the previous release)
+  * Fixed deb_checkadvisories so it correctly located the list of packages
+  (Note: takes too much time currently to finish)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri,  7 Dec 2001 10:12:36 +0100
+
+tiger (2.2.4-11) unstable; urgency=medium
+
+  * Changed file_access_list for Linux so /etc/aliases can be world readable (Closes: #112159)
+  * Fixed getuserhome command so it does not return directories beginning 
+  with ~. This fixes tiger from incorrectly guessing the ftp directory 
+  (Closes: #121800, #114008)
+  * Fixed /var/run/utmp file permissions to follow Debian standards (Closes: #121501, #112217)
+  * Fixed config.tbl since Debian-specific scripts were not being run.
+  * Fixed gen_passwd_sets so it now understands MD5 passwds (Closes: #112170, #117342)
+  * Fixed disk device checks in check_perm so that it does not complain
+  for /dev/hd* which belong to group 'disk' (Closes: #112218)
+  * Changed the postrm script so all files are removed on purge (Closes: #116267)
+  * Changed MAILER from mail to sendmail so we can send 'Subject' and 'From' 
+  (Closes: #120679, #121681)
+  * Fixed tigercron so mails get sent properly with a From line, since the
+  information is now sent to the mailer and not to the Tiger log no 
+  mails should be sent out if they do not include useful information 
+  (tiger takes care of diffing out reports) (Closes: #114334, #113588)
+  * Added Recommends on mail transport agent since it's used for cron reporting.
+  * Fixed gen_export_sets for Linux so it properly warns when using
+  Linux's /etc/exports
+  * Added a tag in tigerrc to disable reporting when nothing important
+  happens (Closes: #113588)
+  * Changed check_passwd so it now says how many times uids or usernames
+  appear repeated (Closes: #117117)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun,  2 Dec 2001 16:21:16 +0100
+
+tiger (2.2.4-10) unstable; urgency=low
+
+  * Updated the Debian Security Advisories checked for.
+  * Removed non-Linux systems (Closes: #111038)
+  * SCRH line of findcmd is now fixed (Closes: #112216)
+  * Fixed services file for Linux (Closes: #115031, #114033)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun,  2 Dec 2001 16:21:16 +0100
+
+tiger (2.2.4-9) unstable; urgency=low
+
+  * Added From: header to the tiger cron output
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 26 Sep 2001 01:11:06 +0200
+
+tiger (2.2.4-8) unstable; urgency=low
+
+  * Fixed tigercron so that it includes the hostname in the mail subject (Closes: #113462)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Tue, 25 Sep 2001 15:19:30 +0200
+
+tiger (2.2.4-7) unstable; urgency=low
+
+  * Fixed script/check_rhosts so it does not warn about comments
+  * Added some new issues in Debian systems which tiger does not
+  check properly
+  * Really fixed SRCH line (Closes: #112870)
+  * Added some more info regarding false positives in Debian in the README.Debian file
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun, 23 Sep 2001 00:55:42 +0200
+
+tiger (2.2.4-6) unstable; urgency=low
+
+  * Fixed Linux/2/config not being able to find SNEFRU, by adding 
+   /usr/lib/tiger/bin to the SRCH line (Closes: #112870)
+  * Fixed Linux/2/config not finding CUT since it was not exported (Closes: #112871)
+  * Updated data from Debian Advisories from the WML sources
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 20 Sep 2001 10:46:58 +0200
+
+tiger (2.2.4-5) unstable; urgency=low
+
+  * Fixed debian/control file (Closes: #112532)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Mon, 17 Sep 2001 18:09:35 +0200
+
+tiger (2.2.4-4) unstable; urgency=low
+
+  * Added subjet to tiger's cron report (Closes: #112222, #112161)
+  * Fixed mail check in order to compare against uid and not username
+  (hopefully it will work with Debian and other Unices but I'm not sure
+  ls -n is available there) (Closes: #112162)
+  * Binaries now get compiled at build time
+  * Removed ./c from Makefile 
+  * Subsituted corrupted .c files on c/ (md5.c and snefru.c) (Closes: #112216)
+  * Modified scripts/check_know so it checks on uids and not on names (Closes: #112162) 
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri, 14 Sep 2001 20:34:30 +0200
+
+tiger (2.2.4-3) unstable; urgency=high
+
+  * Fixed cron entry (Closes: #111795)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Mon, 10 Sep 2001 18:27:21 +0200
+
+tiger (2.2.4-2) unstable; urgency=low
+
+  * Removed tigerrc(8) reference in manpage (Closes: #110528)
+  * Installed tigexp in sbin (Closes: #110535)
+  * Updated the services file for Linux with a new script that updates it
+  from the system /etc/services. Should close some of the false positives
+  regarding #110531
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 29 Aug 2001 16:03:29 +0200
+
+tiger (2.2.4-1) unstable; urgency=low
+
+  * Initial Release.
+  * Changed GROUPS variable to GROUPC since it seems to conflict with bash
+  * Modified Makefile so it installs correctly
+  * Provided a new check for open sockets and Debian specific checks for
+  md5sums of installed files and package associatons of installed files.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 23 Aug 2001 15:07:16 +0200
+

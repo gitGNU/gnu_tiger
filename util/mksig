@@ -1,0 +1,213 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# util/mksig - 04/22/93
+#
+#-----------------------------------------------------------------------------
+#
+
+basedir=${TIGERHOMEDIR:=.}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+haveallof()
+{
+  retval=0
+  what=$1
+  shift
+  for file
+  do
+    eval cmd=\$$file
+    [ ! -n "$cmd"  ] && {
+      echo "--ERROR-- [init001e] Don't have all required $what (missing $file)"
+      retval=1
+    }
+  done
+  return $retval
+}
+
+haveallof commands CAT CC || exit 1
+haveallof variables BASEDIR TESTLINK WORKDIR
+
+[ ! $TESTEXEC $MD5 ] && {
+  echo "Don't see MD5... exiting..."
+}
+
+comment="$OS $REV"
+DIRLIST="/usr/bin /bin /usr/local/bin /usr/sbin /etc /usr/lib /sbin /lib /usr/libexec /usr/local/sbin /usr/X11/bin /usr/games /usr/lib/emacs/20.2/i386-redhat-linux /usr/lib/news/bin /var/lib/games"
+
+outfile="signatures.$OS-$REV-$ARCH"
+
+echo "Working..."
+
+{
+  echo "#"
+  echo "# Signature file for $OS $REV $ARCH, generated `date`"
+  echo "#"
+
+  while read file
+  do
+    indir=
+    for dir in $DIRLIST
+    do
+      [ ! $TESTLINK $dir ] && {
+	[ -f $dir/$file -a ! $TESTLINK $dir/$file -a $TESTEXEC $dir/$file ] && {
+	  indir=$dir
+	  if [ -r $indir/$file ]; then
+	    sig=`$MD5 < $indir/$file`
+	    echo "Y .       $indir/${file} ${sig} $comment"
+	  else
+	    echo "# $indir/$file not readable."
+	  fi
+	}
+      }
+    done
+    
+    if [ ! -n "$indir" ]; then
+      echo "# $file not found."
+    fi
+  done <<EOL
+XConsole
+Xwrapper
+at
+atc
+bash
+battlestar
+canfield
+cardctl
+chage
+chfn
+chsh
+cribbage
+crontab
+ct
+cu
+dm
+dos
+dump
+dumpreg
+gpasswd
+in.fingerd
+in.ftpd
+in.rexecd
+in.rlogind
+in.rshd
+in.telnetd
+in.tftpd
+inc
+inetd
+inndstart
+ksh
+lockfile
+login
+lpc
+lpd
+lpq
+lpr
+lprm
+man
+minicom
+mount
+movemail
+mutt
+named
+netreport
+newgrp
+ntpdate
+nwsfind
+nxterm
+passwd
+phantasia
+ping
+portmap
+procmail
+pwdb_chkpwd
+rcp
+rdist
+restore
+restorefont
+restorepalette
+restoretextmode
+rlogin
+robots
+rpc.mountd
+rpc.yppasswdd
+rsh
+rxvt
+sail
+screen
+sendmail
+seyon
+snake
+sperl5.00404
+ssh
+sshd
+startinnfeed
+su
+suidperl
+tcpd
+tcsh
+telnet
+tetris-bsd
+traceroute
+trojka.scores
+umount
+userhelper
+usernetctl
+uucico
+uucp
+uuname
+uustat
+uux
+uuxqt
+vga_connectN
+vga_klondike
+vga_mines
+vga_ohhell
+vga_othello
+vga_solitaire
+vga_spider
+wall
+write
+xbill
+xhextris
+xlock
+xscreensaver
+xterm
+xtrojka.score
+ypbind
+ypserv
+zgv
+zsh
+EOL
+} > $outfile
+
+$RM -f $WORKDIR/snefru
+
+echo "Signatures stored in $outfile."

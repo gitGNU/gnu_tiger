@@ -1,0 +1,189 @@
+
+HOWTO write modules for Tiger
+-----------------------------
+
+If you want to make a new module for the Tiger intrusion detection
+system you have to take into account the current layout of the system.
+All the scripts provided, either in the general directory (scripts/)
+or in the directories reserved for operating system-dependant scripts
+(systems/OperatingSystem/Release/) use a common layout.
+
+All the scripts run the configuration script (config), which runs both
+the common configuration script and system-dependant configuration
+scripts. This configuration script will define all the commands'
+locations. That way scripts do not (and should not) need to use
+commands based on their absolute pathnames, they should just call 
+to aliases.
+Eg. $RM=/bin/rm
+
+All the script must use this aliases, since this is previously known
+in advance, this is usually done once the core of the script is
+written. The script must start with the following:
+  haveallcmds CAT JOIN LS RM || exit 1
+
+Where the commands after the call to 'haveallcmds' (Tiger functions are
+defined in the initdefs and config files) are *only* those used in the
+scripts.
+
+After this check the core of the script is written. The core includes
+all the commands necessary to check the system or configuration files
+and output appropiate messages when a security test fails. Reports
+should not be sent to standard output via 'echo' or similar methods.
+They should be sent with the 'message' function. This function takes
+four parameters: kind of report, codeword of message, trailer, and description
+of the report (which should include information specific to the audited
+system). Eg: message FAIL XXXX0??f "" "MESSAGE TO WRITE IN REPORT"
+
+Each and everyone of the messages should be included under 
+appropiate files in doc/. If you add new messages to the module (which
+you should always do since you are reporting someting after all) you
+must include the message verbose description of the issue into the files
+(shown below). User's will be able to retrieve this information if
+they execute 'tigexp codeword'. Codewords are usually three letters followed
+by a number (different numbers for each of the messages in a file)
+and the letter 'f' if the problem is a 'failure' (a relevant security issue)
+or 'w' if the problem is a 'warning' (a problem that might be an issue or
+not depending on your policy).
+
+accounts.txt - acc - Security issues on system accounts
+aliases.txt  - ali - Security issues in mail aliases
+anonftp.txt  - ftp - Anonymous security issues due to anonymous FTP access
+config.txt   - con, init, post, read, util - Problems in Tiger configuration
+cron.txt     - cron - Issues related to the cron program
+debian.txt   - deb - Debian GNU/Linux specific security issues
+embed.txt    - embed  - Security issues in embedded references
+filesys.txt  - fsys - Filesystem problems (device files, setuid, setgid)
+group.txt    - grp - Problems in UNIX groups
+inetd.txt    - inet - Security issues related to Internet services (inetd)
+issue.txt    - issue - Issues related to /etc/issue
+known.txt    - kis - Known Intrussion Signs
+linux.txt    - lin - Linux specific security issues 
+logfiles.txt - logf - Issues on logfiles
+misc.txt     - ca, misc - Cert Advisories (CA) and other miscelanea
+netrc.txt    - nrc - Issues due to .netrc files
+network.txt  - netw - Issues due to network services
+nfs.txt      - nfs - Security issues in the NFS server
+passwd.txt   - pass - Security issues related to passwords
+paths.txt    - path - Issues related to PATHs
+pcap.txt     - pcap - Security issues related to printers
+permissions.txt - init, perm - Problems due to permissions in files
+pxt.txt      - boot, dev, osv, ptch, sum, trip - Some miscelanea messages
+rhosts.txt   - rcmd - Remote comand execution issues
+root.txt     - root - Problems related to the UNIX root superuser
+signatures.txt - sig - Issues detected through signatures
+
+
+You can see below a sample module with no code, that is, it does not
+check for any security problem. The layout is the same for all of the 
+scripts.
+
+If, once made, the script is portable to any UNIX system where Tiger
+can run, the script should go under the scripts/ directory. Otherwise,
+it should be placed in the directory of its architecture.
+
+PORTABLE scripts
+----------------
+
+Just a brief note here: scripts are difficult to make portable. In order
+to be portable a script has to:
+
+- use a command available in any standard UNIX (awk, sed, cut...). All
+these commands should be defined in the 'config' scripts for all
+architectures.
+
+- use command line switches common to all implementations. Some
+implementations can use different arguments. For example, GNU's diff
+has many options that Solaris' does not use.
+
+- do not suppose that a given configuration file exists and is always
+available. Check always if it's available before using it in any
+way (eg., grep'ing or cat'ing it)
+
+In any case, it has to verify that these commands are available even
+if they are properly defined.
+
+-- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>
+Sat, 18 May 2002 20:35:26 +0200
+
+---------------------- SAMPLE module --------------------------------
+
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) YEAR AUTHOR
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# MODULE_NAME - date 
+#
+# DATE 	NAME 	DESCRIPTION_OF_CHANGES
+#
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir="/usr/lib/tiger"
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK GREP CAT JOIN LS RM || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing DESCRIPTION OF WHAT DOES IT DO..."
+
+haveallcmds AWK GREP CAT JOIN LS RM || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+haveallvars TESTLINK HOSTNAME || exit 1
+
+{ ......... Commands for the test ................... }
+ message FAIL XXXX0??f "" "MESSAGE TO WRITE IN REPORT"
+
+
+exit 0

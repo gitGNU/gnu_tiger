@@ -1,0 +1,190 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_passwd  - 06/14/93
+#
+#-----------------------------------------------------------------------------
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT GEN_PASSWD_SETS GREP RM SORT JOIN UNIQ MV || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+echo
+echo "# Performing check of passwd files..."
+
+haveallcmds AWK CAT GEN_PASSWD_SETS GREP RM SORT JOIN UNIQ MV || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+{
+  if [ -n "$Tiger_PasswdFiles" ]; then
+    $CAT $Tiger_PasswdFiles > $WORKDIR/pass.list.$$
+  else
+    $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
+  fi
+}
+
+saveifs=$IFS
+
+$CAT $WORKDIR/pass.list.$$ > $WORKDIR/pass2.$$
+newfile=$WORKDIR/pass2new.$$
+
+while read passwd1
+do
+  src1=`$CAT $passwd1.src`
+  $SORT $passwd1 > $WORKDIR/p1name.$$
+  $SORT -t: +2 -3 $passwd1 > $WORKDIR/p1uid.$$
+
+  $AWK -F: '{print $1}' $WORKDIR/p1name.$$ |
+  $SORT |
+  $UNIQ -c |
+  while read times username
+  do
+# Previous fix for Debian bug #117117, ARSC's fix is much better (jfs)
+#    times=`$GREP "$username:" $WORKDIR/p1name.$$ | $AWK 'END { print NR }'`
+    [ $times -gt 1 ] && {
+    message WARN pass001w "" "Username \`$username' exists multiple times ($times) in $src1."
+    }
+  done
+
+  $AWK -F: '{print $3}' $WORKDIR/p1uid.$$ |
+  $SORT |
+  $UNIQ -c |
+  while read times uid
+  do
+# Previous fix for Debian bug #117117, ARSC's fix is much better (jfs)
+#    times=`$GREP ":$uid:" $WORKDIR/p1uid.$$ | $AWK 'END { print NR }'`
+    [ $times -gt 1 ] && {
+    message WARN pass002w "" "UID $uid exists multiple times ($times) in $src1."
+    }
+  done
+
+  $AWK -F: 'NF != 7 {print}' $WORKDIR/p1uid.$$ |
+  while read entry
+  do
+    message WARN pass003w "$entry" "Malformed entry in $src1:"
+  done
+  
+  $GREP -v "^$passwd1\$" $WORKDIR/pass2.$$ |
+  while read passwd2
+  do
+    src2=`$CAT $passwd2.src`
+
+    $SORT $passwd2 > $WORKDIR/p2name.$$
+    $SORT -t: +2 -3 $passwd2 > $WORKDIR/p2uid.$$
+    $JOIN -t: -o 1.1 1.3 2.3 $WORKDIR/p1name.$$ $WORKDIR/p2name.$$ |
+    {
+      IFS=:
+      while read username uid1 uid2
+      do
+	IFS=$saveifs
+	[ "$uid1" != "$uid2" ] && {
+	  message WARN pass004w "" "UID conflict for login ID \`$username' between $src1 (uid = $uid1) and $src2 (uid = $uid2)."
+	}
+	IFS=:
+      done
+    }
+    
+    $JOIN -t: -j1 3 -j2 3 -o 1.3 1.1 2.1 $WORKDIR/p1uid.$$ $WORKDIR/p2uid.$$ |
+    $AWK -F: '$1 != 0 {print}' |
+    {
+      IFS=:
+      while read uid name1 name2
+      do
+	IFS=$saveifs
+	[ "$name1" != "$name2" ] && {
+	  message WARN pass005w "" "Username conflict for uid $uid between $src1 (login ID $name1) and $src2 (login ID $name2)."
+	}
+	IFS=:
+      done
+    }
+    echo "$passwd2" >> $newfile
+    delete $WORKDIR/p2uid.$$ $WORKDIR/p2name.$$
+  done
+  delete $WORKDIR/p1uid.$$ $WORKDIR/p1name.$$ $WORKDIR/pass2.$$
+  [ -s $newfile ] && $MV $newfile $WORKDIR/pass2.$$
+done < $WORKDIR/pass.list.$$ |
+$OUTPUTMETHOD
+
+[ "$Tiger_Check_PASSWD_SHADOW" != 'N' ] && {
+  [ -s /etc/passwd ] && [ -s /etc/shadow ] || {
+    message WARN pass007w "" "System is not properly configured for shadow passwords."
+  }
+}
+
+[ -n "$PWCK" ] && {
+  if ! $PWCK /etc/passwd /etc/shadow >/dev/null 2>&1 ; then
+    message WARN pass006w "" "Integrity of password files questionable (pwck -r)."
+  fi
+}
+
+[ -r "$LOGINDEF" ] && [ -n "$Tiger_Passwd_Constraints" ]  && {
+  for param in $Tiger_Passwd_Constraints
+    do
+    if ! $GREP -v '#' $LOGINDEF | $GREP $param >/dev/null 2>&1
+      then
+        message WARN pass007w "" "Password control $param missing from $LOGINDEF."
+    fi
+  done
+}
+
+[ ! -n "$Tiger_PasswdFiles" ] && {
+  while read file
+  do
+    delete $file $file.src
+  done < $WORKDIR/pass.list.$$
+}
+
+delete $WORKDIR/pass.list.$$ $WORKDIR/pass2new.$$

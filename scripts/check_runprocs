@@ -1,0 +1,102 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2002 Javier Fernandez-Sanguino Peña
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_procs jfs 12/06/2002
+#        This module will check if the processes configured in tigerrc
+#        are running currently in the system. If any of the processes
+#        is not running  a FAIL: will be issued. 
+#        This is a lightweight software watchdog, I know :)
+#
+#-----------------------------------------------------------------------------
+TigerInstallDir='.'
+
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds CUT GREP || exit 1
+# Just ps is needed here
+  haveallcmds PS || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  message CONFIG init003c "" "$0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Checking running processes "
+
+haveallcmds GREP CUT AWK SORT UNIQ || exit 1
+haveallcmds PS || exit 1
+
+processes=$Tiger_Running_Procs
+[ -z "$processes" ] && {
+	message FAIL con009e "" "There are no running process configured. Please add the Tiger_Running_Procs variable to tigerrc."
+	exit 1
+}
+
+# TODO: Check if this is portable, 'ps' options tend to vary 
+# amongst UNIX systems (see the ps(1) manpage)
+for proc in $processes
+do
+	$PS -eo pid,user,fname,state |
+# TODO: I dislike spawning a 'ps' process per configured process
+# maybe this could be rewritten more optimally? (jfs)
+	$GREP $proc | {
+		found="no"
+		while read pid user fname state
+		do
+		   [ "$proc" = "$fname" -a "$state" != "T" -a "$state" != "Z" ] && found="yes"
+		done
+		[ "$found" = "no" ] && message FAIL misc020f "" "The process '$proc' has not been found in the processes table."
+	}
+done
+
+exit 0 

@@ -1,0 +1,27 @@
+bootps	dgram	udp	wait	root	/usr/etc/bootpd
+chargen	dgram	udp	wait	root	internal
+chargen	stream	tcp	nowait	root	internal
+daytime	dgram	udp	wait	root	internal
+daytime	stream	tcp	nowait	root	internal
+discard	dgram	udp	wait	root	internal
+discard	stream	tcp	nowait	root	internal
+echo	dgram	udp	wait	root	internal
+echo	stream	tcp	nowait	root	internal
+exec	stream	tcp	nowait	root	/usr/etc/rexecd
+finger	stream	tcp	nowait	root	/usr/etc/fingerd
+ftp	stream	tcp	nowait	root	/usr/etc/ftpd	ftpd
+login	stream	tcp	nowait	root	/usr/etc/rlogind
+netstat	stream	tcp	nowait	guest	/bin/netstat	-f inet
+nntp	stream	tcp	nowait	root	/usr/etc/nntpd
+ntalk	dgram	udp	wait	root	/usr/etc/ntalkd
+pop-2	stream	tcp	nowait	root	/usr/etc/popd
+pop-3	stream	tcp	nowait	root	/usr/etc/popd
+shell	stream	tcp	nowait	root	/usr/etc/rshd
+smtp	stream  tcp     nowait  root    /usr/lib/umail/umail	-bS
+systat	stream	tcp	nowait	guest	/usr/bin/ps	-auwwx
+talk	dgram	udp	wait	root	/usr/etc/ntalkd
+telnet	stream  tcp     nowait  root    /usr/etc/telnetd telnetd
+tftp	dgram	udp	wait	root	/usr/etc/tftpd
+time	dgram	udp	wait	root	/usr/etc/timed
+time	stream	tcp	nowait	root	/usr/etc/timed
+uucp	stream	tcp	nowait	uucp	/usr/lib/uucp/uucico	-l

@@ -1,0 +1,177 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+#  check_aliases - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds GEN_ALIAS_SETS CAT AWK SED RM OUTPUTMETHOD || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+trap cleanup 0
+#------------------------------------------------------------------------
+echo
+echo "# Performing checks of mail aliases..."
+
+haveallcmds GEN_ALIAS_SETS CAT AWK SED OUTPUTMETHOD LS || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+progalias()
+{
+  rcpt="$1"
+  file="$2"
+
+  fmsg=
+  [ -n "$file" ] && fmsg=" (from included file $file)"
+
+  prog="`echo \"$rcpt\" | $SED -e 's/^[ 	|\"]*\([^\" ]*\).*$/\1/'`"
+
+  if [ ! -f "$prog" ]; then
+    message INFO ali001i "$rcpt" "Program alias \`$alias' executable does not exist$fmsg"
+  else
+    [ -n "$TigerCheckEmbedded" ] && {
+      echo "$prog $source" >> $TigerCheckEmbedded
+    }
+    message INFO ali005w "$rcpt" "Alias \`$alias' contains a program entry${fmsg}:"
+    case "$prog" in 
+      *uudecode) message FAIL ali002f "" "Program alias \`$alias' executes $prog.";;
+    esac
+  fi
+
+  lgetpermit "$prog" |
+  pathmsg ali003 ali004 "$prog" root "Program alias \`$alias' uses$fmsg executable" "Alias: $rcpt"
+}
+
+filealias()
+{
+  alias="$1"
+  file="`echo \"$2\" | $SED -e 's/[ 	]*:include://'`"
+
+  [ ! -f "$file" ] && {
+    message INFO ali006i "" "Alias \`$alias' included file \`$file' does not exist$fmsg"
+  }
+  
+  lgetpermit "$file" |
+  pathmsg ali007 ali008 "$file" root "Alias \`$alias' includes${fmsg} file"
+
+  [ -r "$file" ] && {
+    while read names
+    do
+      checkalias "$alias" "$names" "$file"
+    done < "$file"
+  }
+}
+
+checkalias()
+{
+  alias="$1"
+  rcptlist="$2"
+  file="$3"
+  
+  IFS=","
+  set X $rcptlist
+  IFS=$saveifs
+  shift
+  for rcpt
+  do
+    case $rcpt in
+      *:include:*) # Include file
+           filealias "$alias" "$rcpt" "$file"
+           ;;
+      ' '*\|*|\|*) # Program alias
+           progalias "$rcpt" "$file"
+           ;;
+      ' '*'"|'*|'"|'*) # Program alias
+           progalias "$rcpt" "$file"
+           ;;  
+    esac
+  done
+}
+
+saveifs=$IFS
+
+realpath="$REALPATH -d"
+
+[ ! -n "$REALPATH" -o ! -f "$REALPATH" ] && realpath="echo"
+
+$GEN_ALIAS_SETS |
+while read alias_set
+do
+  source="`$CAT $alias_set.src`"
+  echo "# Checking aliases from $source."
+
+  $AWK '{
+           if(substr($0, 1, 1) != " ")
+	      printf("\n");
+	   printf("%s", $0);
+	}   
+	END {printf("\n");}
+  ' < $alias_set |
+  $SED -e '/^$/d' |
+  {
+    IFS=:
+    while read alias rcptlist
+    do
+      IFS=$saveifs
+      checkalias "$alias" "$rcptlist" ""
+      IFS=:
+    done
+  }
+  
+  delete $alias_set $alias_set.src
+done |
+$OUTPUTMETHOD

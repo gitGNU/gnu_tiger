@@ -1,0 +1,200 @@
+<HR><PRE>
+
+
+
+
+
+
+
+
+</PRE><HR>
+<CENTER><H2> Documents for filesys</H2></CENTER>
+<A NAME="fsys001f"><P><B>Code [fsys001f]</B><P>
+The listed file is a setuid script. On most UNIX machines, it is not
+possible to write a secure setuid script, due to a race condition in
+the Operating System. Even on systems where this is corrected, the
+difficulties in writing a truly secure setuid script make them very
+undesirable. The setuid bits should be turned off of this file.
+<P>
+If you must run a script under another id, then perhaps the best
+solution is to write a wrapper program in C which creates a safe
+environment for the script, then exec()'s it.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="fsys002w"><P><B>Code [fsys002w]</B><P>
+The listed program is a setuid executable, and it appears to contain
+relative pathnames (do not start with a '/'). This often represents
+a security hole in the program. These relative pathnames can be caused
+by system()* or popen()* calls which do not use full pathnames to the
+executable, or, on systems which support dynamic linking, relative
+pathnames indicating the directories containing the libraries. In any
+case, these need to be checked.
+<P>
+*Note: system() and popen() should *never* be used from a program
+which is executing with privileges.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="fsys003c"><P><B>Code [fsys003c]</B><P>
+The database of setuid programs for this platform does not exist, thus
+all setuid programs will be listed. When fully configured for a
+platform, only those setuid programs that do not appear in the
+distribution will be listed.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="fsys004i"><P><B>Code [fsys004i]</B><P>
+The listed programs are setuid, but are not in the database of
+setuid programs which appear in the OS distribution.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="fsys005a"><P><B>Code [fsys005a]</B><P>
+The listed file has an unusual filenames. These include files with
+multiple leading '.', filenames with spaces, etc. The variable
+FS_FILES can be set in the 'tigerrc' file to specify the filename
+patterns which are reported.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="fsys006a"><P><B>Code [fsys006a]</B><P>
+The listed files are device files that are located in non-standard
+locations. These should be checked. The variable FS_DEVDIRS can
+be set in the 'tigerrc' file to specify other directories which can
+contain device files.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="fsys007i"><P><B>Code [fsys007i]</B><P>
+The indicated file is a symbolic link to a system file which is
+related to system security. In itself, the link is not dangerous,
+but you should be aware of its presence, as it can cause unexpected
+results with the 'chown' and 'chmod' commands. On many systems, the
+'chown' command does not change the owner of the link itself, but
+instead, changes the ownership of the file the link resolves to.
+The same type of problem exists for 'chmod' on most systems. Thus,
+the simple act of performing a
+<P>
+chown -R joeuser /home/joeuser
+<P>
+could potentially change the owner of a system file to 'joeuser'.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="fsys008i"><P><B>Code [fsys008i]</B><P>
+The listed directories are world writable. These provide a location
+for intruders to store files. They should be checked for unusual
+files.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="fsys009w"><P><B>Code [fsys009w]</B><P>
+An FSP server control file has been located. This indicates that
+an FSP server may be running, or have been running, using the
+directory containing the listed file as its base.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="fsys010w"><P><B>Code [fsys010w]</B><P>
+The listed file is a setgid script. On most UNIX machines, it is not
+possible to write a secure setgid script, due to a race condition in
+the Operating System. Even on systems where this is corrected, the
+difficulties in writing a truly secure setgid script make them very
+undesirable.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="fsys011i"><P><B>Code [fsys011i]</B><P>
+The listed programs are setgid, but are not in the database of
+setgid programs which appear in the OS distribution.

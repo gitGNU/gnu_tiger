@@ -1,0 +1,32 @@
+%ali001i
+The indicated alias is a program alias, but the indicated program doesn't
+appear to exist.  This indicates either a configuration error or an old
+entry which should be removed.  This is just an informatory message.
+%ali002f
+The 'uudecode' alias is a known security problem and should be disabled.
+It allows files to be created/overwritten on the machine.
+%ali003
+The indicated alias is a program alias, but the executable is not owned
+by root.  This may allow the owner of the executable (or anyone gaining
+access to that login ID) to gain unauthorized privileges.
+%ali004
+The indicated alias is a program alias, but the executable has group
+write permission, world write permission or both.  This allows others
+to replace/modify the executable, possibly allowing them to gain
+unauthorized privileges.
+%ali005w
+The indicated alias is a program alias.  Program aliases should be
+used with care, as they can provide unauthorized entry into the
+system.
+%ali006i
+The indicated alias attempts to include a file, but the file does
+not exist.  This is indicates either a misconfiguration, or an
+old entry which should be removed.  This is just an informatory message.
+%ali007
+The indicated alias includes a file which is not owned by root.
+This may allow the owner of the included file (or anyone gaining
+access to that login ID) to gain unauthorized privileges.
+%ali008
+The indicated alias includes a file which has group write permission,
+world write permission or both.  This allows others to add or modify
+entries in the file, possibly gaining unauthorized privileges.

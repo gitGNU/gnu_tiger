@@ -1,0 +1,261 @@
+<HR><PRE>
+
+
+
+
+
+
+
+
+</PRE><HR>
+<CENTER><H2> Documents for inetd</H2></CENTER>
+<A NAME="inet001e"><P><B>Code [inet001e]</B><P>
+One or the other of the two listed files are unavailable. These
+files are required for the checks to proceed. This either indicates
+an incorrect configuration, or that a port to this machine has not
+been completed.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet002f"><P><B>Code [inet002f]</B><P>
+The indicated service is assigned to the wrong port. This indicates
+either a misconfiguration in the services database, or a possible
+sign of an intrusion. This should be checked and corrected. If it
+is not apparent why it is like this, the system should be checked
+for other signs of intrusion.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet003f"><P><B>Code [inet003f]</B><P>
+The indicated port number is assigned to the wrong service. This
+indicates either a misconfiguration in the services database, or a
+possible sign of an intrusion. This should be checked and corrected.
+If it is not apparent why it is like this, the system should be
+checked for other signs of intrusion.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet004i"><P><B>Code [inet004i]</B><P>
+The indicated service has been added to the services database
+as distributed. These are normal output, but you should be
+familiar with what is there, and note any changes.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet005w"><P><B>Code [inet005w]</B><P>
+'inetd' is using the indicated binary for the listed service instead
+of what is normally expected there. Unexpected differences should
+be checked, and if anything unusual is found, the system should
+be checked for other signs of intrusion.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet006f"><P><B>Code [inet006f]</B><P>
+The 'rexd' service is very insecure and should never be enabled.
+It should be disabled immediately by editing the inetd.conf file
+and removing the 'rexd' entry, and sending a HUP signal to the
+'inetd' process.
+<P>
+For AIX systems, CERT Advisory CA-92:05 is applicable.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet007w"><P><B>Code [inet007w]</B><P>
+'inetd' is using the indicated executable for a port other than
+what would normally be expected for this port. This may indicate
+a backdoor into the system and should be checked. If anything
+unusual is found, the system should be checked for other signs
+of intrusion.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet008"><P><B>Code [inet008]</B><P>
+The owner of the indicated executable is not 'root'. The owner
+of the executable should be root in order to reduce the possibility
+of it being altered or replaced.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet009"><P><B>Code [inet009]</B><P>
+The indicated executable is group writable, world writable or both.
+The executable should be owned by root and writable only by the
+owner. This reduces the possibility of it being altered or replaced.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet010i"><P><B>Code [inet010i]</B><P>
+The program listed in the `inetd' configuration file does not
+exist or is not executable.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet011i"><P><B>Code [inet011i]</B><P>
+The listed entry is a local addition to the `inetd.conf' file.
+This should be checked to see if it is a valid addition. If it
+is not, it should be removed.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet012w"><P><B>Code [inet012w]</B><P>
+sysstat enabled
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet013w"><P><B>Code [inet013w]</B><P>
+netstat enabled
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet014i"><P><B>Code [inet014i]</B><P>
+The listed entry was protected by tcp wrappers by the default installation
+and is currently protected this way too. This is a good thing!
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet015i"><P><B>Code [inet015i]</B><P>
+The listed entry has been modified in order for it to be protected
+by using tcp wrappers. This has been changed from default installation
+(which did not provide it) but is probably a better setup.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="inet016f"><P><B>Code [inet016f]</B><P>
+The listed entry was protected by tcp wrappers by the systema but has,
+for some unknown reason, changed to no longer be protected by them. Make
+sure that the service is secured since, if not using tcp wrappers,
+access control for it might be disabled.

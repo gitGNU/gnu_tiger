@@ -1,0 +1,142 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# sub/check_sgid - 11/12/93
+# ARC check_sgid - 04/27/99
+#
+#-----------------------------------------------------------------------------
+# This script is not runnable directly.
+# 
+inputfile="$1"
+
+[ "$CONFIGURED_ALREADY" != "YES" ] && {
+  echo "--ERROR-- [init008e] This script can not be run directly."
+  exit 1
+}
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds RM FILECMD SGREP LS STRINGS SORT COMM CAT AWK || exit 1
+  haveallfiles BASEDIR WORKDIR SUID_LIST || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Checking setgid executables..."
+
+haveallfiles BASEDIR WORKDIR || exit 1
+
+#[ -n "$TigerCheckEmbedded" -a "x$Tiger_Embed_Check_SGID" = 'xY' ] && {
+#  while read file
+#  do
+#    $LS -lLd "$file" 2>/dev/null | {
+#      read p l owner rest
+#      [ "$owner" = root ] && echo "$file" >> $TigerCheckEmbedded
+#    }
+#  done
+#}
+
+haveallcmds FILECMD LS SGREP STRINGS && {
+  while read file
+  do
+    $FILECMD "$file" 2>/dev/null | $SGREP script 2>/dev/null && {
+      message WARN fsys010w "" "File $file is a setgid script:"
+      $LS $LSGROUP -ld "$file"
+    }
+  
+#    $STRINGS - "$file" 2>/dev/null |
+#   $SGREP '\.\./' 2>/dev/null && {
+#      $SGREP "$file" $REL_FILE_EXCP 2>/dev/null || {
+#	message WARN fsys002w "" "setuid program $file has relative pathnames."
+#      }
+#    }
+  done < $inputfile
+  
+  echo
+}
+
+haveallcmds SORT COMM CAT && {
+  if [ -n "$SGID_LIST" -a -s "$SGID_LIST" ]; then
+    $SORT $SGID_LIST |
+    $COMM -23 $inputfile - > $WORKDIR/sgid.list.$$
+  else
+    message CONFIG fsys003c "" 'No setgid list... listing all setgid files'
+    $CAT $inputfile > $WORKDIR/sgid.list.$$
+  fi
+}
+
+haveallcmds LS AWK && {
+  [ -s $WORKDIR/sgid.list.$$ ] && {
+    message INFO fsys011i "" 'The following setgid programs are non-standard:'
+    while read file
+    do
+      $LS $LSGROUP -ld "$file"
+    done < $WORKDIR/sgid.list.$$ |
+    $AWK '{printf("%10s %-8s %-8s %s\n", $1, $3, $4, $NF);}' |
+    $SORT
+    echo
+  }
+}
+
+#
+# Try to locate setuid copies of any executables we have signatures
+# for.
+#
+if [ "$Tiger_Check_SIGNATURES" != 'N' ]; then  
+haveallcmds SORT AWK COMM GREP LS SNEFRU &&
+haveallfiles SIGNATURE_FILE && {
+  $SORT $inputfile > $WORKDIR/sgid.$$
+  $AWK '{print $3}' $SIGNATURE_FILE |
+  $SORT |
+  $COMM -13 - $WORKDIR/sgid.$$ |
+  while read file
+  do
+    loc_signature=
+    case "$p1$p2$p3$p4$p5$p6$p7$p8" in
+      *[!0-9a-f]*) {
+	std_signature="$p1"
+	comment="$p2 $p3 $p4 $p5 $p6 $p7 $p8 $comment"
+	[ -n "$MD5" ] && loc_signature="`$MD5 < $file`"
+      }
+      ;;
+      *) {
+	std_signature=" $p1 $p2 $p3 $p4 $p5 $p6 $p7 $p8"
+	[ -n "$SNEFRU" ] && loc_signature="`$SNEFRU < $file`"
+      }
+      ;;
+    esac
+    [ -n "$loc_signature" ] && {
+      $GREP "$loc_signature" $SIGNATURE_FILE | {
+	read flag msgid rfile p1 p2 p3 p4 p5 p6 p7 p8 comment
+	[ -n "$rfile" -a "$file" != "$rfile" ] && {
+	  message ALERT sgid001a "" "\`$file' is a setgid copy of $rfile [$comment]."
+	  $LS -ld $LSGROUP $file
+	}
+      }
+    }
+  done
+}
+fi
+delete $WORKDIR/sgid.list.$$ $WORKDIR/sgid.$$

@@ -1,0 +1,512 @@
+ARSC Changes to tiger from tiger-2.2.3 distribution
+1998-06-16
+
+lof=lforbes@arsc.edu (Liam Forbes)
+nlb=bills@arsc.edu (Nathan Bills)
+mlk=mkienenb@arsc.edu (Mike Kienenberger)
+
+tiger-2.2.3/tiger.cron.arsc
+    mlk: modified tiger to run post-processing script
+
+tigerrc
+    lof,nlb,mlk: customized to ARSC
+    
+site.indigo13
+site.weinhard
+    lof: created
+
+Makefile
+    nlb: added
+	    ./scripts/check_sendmail \
+    at line 57.  The installer was not copying over the check_sendmail
+    script over to the install directory.
+    
+    mlk: Updated Makefile paths:
+	TIGERHOME=/usr/local/adm/pkg/tiger/tiger-2.2.3/production
+	TIGERWORK=/var/local/scratch/tiger
+	TIGERLOGS=/var/local/logs/tiger
+
+    nlb: added
+
+        if [ ! -d $(TIGERLOGS) ]; then \
+          mkdir -p $(TIGERLOGS); \
+          chmod 755 $(TIGERLOGS); \
+        fi; \
+        if [ ! -d $(TIGERWORK) ]; then \
+          mkdir -p $(TIGERWORK); \
+          chmod 755 $(TIGERWORK); \
+        fi; \
+        if [ ! -d $(TIGERBIN) ]; then \
+          mkdir -p $(TIGERBIN); \
+          chmod 755 $(TIGERWORK); \
+        fi; \
+
+c/realpath.c
+    mlk: added after includes
+	#ifndef MAXPATHLEN
+	#  ifdef	PATH_MAX
+	#    define MAXPATHLEN PATH_MAX
+	#  else	/* PATH_MAX */
+	#    define MAXPATHLEN 1024
+	#  endif	/* PATH_MAX */
+	#endif	/* MAXPATHLEN */
+
+c/snefru.c
+    nlb: Removed semicolons on lines 1274 and 1381.
+
+config
+    mlk: Updated paths
+	TigerLogDir='/var/local/logs/tiger'
+	TigerWorkDir='/var/local/scratch/tiger'
+
+doc/accounts.txt
+    mlk: added acc014i message
+	%acc014i
+	The listed login ID has no password.  However, NIS is enabled and the entry
+	begins with a '+' so it's likely that the entry is an NIS entry.
+	These can usually be safely ignored.
+
+doc/explain.idx
+    mlk: rebuilt using "sudo ./util/genmsgidx doc/*.txt"
+    
+doc/inetd.txt
+    mlk: added %inet014i message
+	%inet014i
+	The program listed in the `inetd' configuration file does not
+	exist or is not executable.  This is an expected possible state for
+	the IRIX OS as this daemon's binary has been prefixed with a '?'
+	in inetd.conf.
+	
+doc/rhosts.txt
+    mlk: added %rcmd014w message
+	%rcmd014w
+	A plus sign (+) in the host field of a .rhosts file followed by a minus
+	sign (-) preceeding the user field means that remote access has been removed for
+	the named user for all systems.  However, if this feature isn't supported for
+	your implementation of hosts.equiv, this opens your site to a dangerous
+	vulnerability.   See rcmd002f for details.
+
+scripts/check_accounts
+    mlk: added check for + entries for NIS
+	elif [ "X$YP" = "XYES" -a "X`echo $user | $GREP '^+'" != "X" ]; then
+	    message INFO acc014i$msgid "$cmsg" "NIS Login ID $user does not have a password."
+
+scripts/check_cron
+    mlk: fixed incorrect check of $2 not being set
+
+diff -cw tiger-2.2.3.dist/scripts/check_cron tiger-2.2.3/scripts/check_cron
+*** tiger-2.2.3.dist/scripts/check_cron Fri Jan  7 06:34:00 1994
+--- tiger-2.2.3/scripts/check_cron      Tue Jun 16 14:22:41 1998
+***************
+*** 83,88 ****
+      cmd="`echo \"$com\" | $AWK '{print $1}'`"
+    
+      base=`$BASENAME "$cmd"`
+      case "$base" in
+        sh|csh|ksh|tcsh|zsh|bash)
+!       [ "$2" != "-c" ] && cmd=$2;;
+--- 83,89 ----
+      cmd="`echo \"$com\" | $AWK '{print $1}'`"
++     cmdarg2="`echo \"$com\" | $AWK '{print $2}'`"
+    
+      base=`$BASENAME "$cmd"`
+      case "$base" in
+        sh|csh|ksh|tcsh|zsh|bash)
+!       [ "$cmdarg2" != "-c" ] && cmd=$cmdarg2;;
+
+scripts/check_exports
+    mlk: added check for existance of export_set
+
+scripts/check_inetd
+    mlk: improved matching and comparing of services entries
+	 added SGI-specific ?binary format detection and reporting
+
+diff -cw tiger-2.2.3.dist/scripts/check_inetd tiger-2.2.3/scripts/check_inetd
+*** tiger-2.2.3.dist/scripts/check_inetd        Fri Nov 19 05:10:04 1993
+--- tiger-2.2.3/scripts/check_inetd     Tue Jun 16 14:28:09 1998
+***************
+*** 56,62 ****
+  echo
+  echo "# Performing check of 'services' and 'inetd'..."
+  
+! haveallcmds CAT AWK LS SORT GREP COMM JOIN || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  saveifs=$IFS
+--- 56,62 ----
+  echo
+  echo "# Performing check of 'services' and 'inetd'..."
+  
+! haveallcmds SED CAT AWK LS SORT GREP COMM JOIN || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  saveifs=$IFS
+***************
+*** 94,100 ****
+    # Check that these services are not set for any other services.
+    while read currservice currport
+    do 
+!     matches=`$GREP " $currport$" $services | $AWK '{ print $1 }'`
+      for service in $matches
+      do
+        if [ $service != $currservice ]; then
+--- 94,100 ----
+    # Check that these services are not set for any other services.
+    while read currservice currport
+    do 
+!     matches=`$AWK '{ print $1 " " $2 }' $services | $GREP " $currport$" | $AWK '{ print $1 }'`
+      for service in $matches
+      do
+        if [ $service != $currservice ]; then
+***************
+*** 104,113 ****
+    done < $SERVICESFILE
+  
+    # Print out any other entries that have been added
+!   $COMM -23 $services $SERVICESFILE |
+    while read currservice currport
+    do
+      message INFO inet004i "" "$currservice is $currport (local addition)."
+    done
+  }
+  
+--- 104,124 ----
+    done < $SERVICESFILE
+  
+    # Print out any other entries that have been added
+!   $AWK '{ print $1 " " $2 }' $services |
+!        $GREP -v '^#' | $GREP -v '^ $' | $SORT |
+    while read currservice currport
+    do
++     matchescount=""
++     matches=`$AWK '{ print $1 " " $2 }' $SERVICESFILE | $GREP " $currport$" | $AWK '{ print $1 }'`
++     for service in $matches
++     do
++       if [ $service = $currservice ]; then
++           matchescount="$matchescount."
++       fi
++     done
++     if [ "x$matchescount" = "x" ]; then
+        message INFO inet004i "" "$currservice is $currport (local addition)."
++     fi
+    done
+  }
+  
+***************
+*** 132,137 ****
+--- 143,149 ----
+  
+    [ "$count" -lt 2 ] && tcpdpath=
+      
++   $GREP -v '^#' $infile | grep -v '^$' |
+    while read currservice s p t user currbinary parm1 parms
+    do
+      if [ "$currservice" = 'rexd' ]; then
+***************
+*** 142,159 ****
+        message WARN inet013w "" "'netstat' service is enabled."
+      fi
+      
+!     [ $currbinary = 'internal' ] && continue
+  
+      if [ -f "$currbinary" ]; then
+        [ -n "$TigerCheckEmbedded" -a "$user" = 'root' ] && {
+        echo "$currbinary $inetdsrc" >> $TigerCheckEmbedded
+        }
+      else
+        message INFO inet010i "" "$currbinary for $currservice does not exist."
+      fi
+      
+      lgetpermit "$currbinary" |
+      pathmsg inet008 inet009 "$currbinary" root "inetd entry for $currservice service uses"
+  
+      if [ "$currbinary" = "$tcpdpath" ]; then
+        if [ -f "$parm1" ]; then
+--- 154,186 ----
+        message WARN inet013w "" "'netstat' service is enabled."
+      fi
+      
+!     [ "$currbinary" = 'internal' ] && continue
+  
+      if [ -f "$currbinary" ]; then
+        [ -n "$TigerCheckEmbedded" -a "$user" = 'root' ] && {
+        echo "$currbinary $inetdsrc" >> $TigerCheckEmbedded
+        }
++ # SGI IRIX currbinary paths can be prefixed with '?' to indicate
++ # optional existance of the binary
++     elif [ "X$OS" = "XIRIX" -a "X`echo $currbinary | $SED 's:[?]::'`" != "X$currbinary" ]; then
++       if [ -f "`echo $currbinary | $SED 's:[?]::'`" ]; then
++         [ -n "$TigerCheckEmbedded" -a "$user" = 'root' ] && {
++           echo "`echo $currbinary | $SED 's:[?]::'` $inetdsrc" >> $TigerCheckEmbedded
++         }
++       else
++         message INFO inet014i "" "`echo $currbinary | $SED 's:[?]::'` for $currservice does not exist (flagged as optional)."
++       fi
+      else
+        message INFO inet010i "" "$currbinary for $currservice does not exist."
+      fi
+      
++     if [ "X$OS" = "XIRIX" -a "X`echo $currbinary | $SED 's:[?]::'`" != "X$currbinary" ]; then
++       lgetpermit "`echo $currbinary | $SED 's:[?]::'`" |
++       pathmsg inet008 inet009 "`echo $currbinary | $SED 's:[?]::'`" root "inetd entry for $currservice service uses"
++     else
+        lgetpermit "$currbinary" |
+        pathmsg inet008 inet009 "$currbinary" root "inetd entry for $currservice service uses"
++     fi
+  
+      if [ "$currbinary" = "$tcpdpath" ]; then
+        if [ -f "$parm1" ]; then
+***************
+*** 167,173 ****
+        lgetpermit "$parm1" |
+        pathmsg inet008 inet009 "$parm1" root "inetd entry for $currservice service uses"
+      fi
+!   done < $infile
+  
+    while read service exppath currpath parm1 parms
+    do
+--- 194,200 ----
+        lgetpermit "$parm1" |
+        pathmsg inet008 inet009 "$parm1" root "inetd entry for $currservice service uses"
+      fi
+!   done
+  
+    while read service exppath currpath parm1 parms
+    do
+***************
+*** 195,209 ****
+    done
+    delete $WORKDIR/inet1.$$
+  
+!   $AWK '{printf("%s %s\n",$1,$3)}' $infile > $WORKDIR/f1.$$
+!   $AWK '{printf("%s %s\n",$1,$3)}' $INETDFILE |
+!   $COMM -23 $WORKDIR/f1.$$ - |
+    while read service protocol
+    do
+!     x="`$GREP \"^$service[    ]\" $infile`"
+      message INFO inet011i "$x" "Locally added entry \`$service'in inetd.conf:"
+    done
+-   delete $WORKDIR/f1.$$
+  }
+  
+  realpath="$REALPATH -d"
+--- 222,246 ----
+    done
+    delete $WORKDIR/inet1.$$
+  
+!   # Print out any other entries that have been added
+!   $AWK '{ print $1 " " $3 }' $infile |
+!        $GREP -v '^#' | $GREP -v '^ $' | $SORT |
+    while read service protocol
+    do
+!     matchescount=""
+!     matches=`$AWK '{ print $1 " " $3 }' $INETDFILE | $GREP " $protocol$" | \
+!       $AWK '{ print $1 }'`
+!     for currservice in $matches
+!     do
+!         if [ "X$service" = "X$currservice" ]; then
+!             matchescount="$matchescount."
+!         fi
+!     done
+!     if [ "X$matchescount" = "X" ]; then
+!       x="`$EGREP \"^$service[     ]\" $infile`"
+        message INFO inet011i "$x" "Locally added entry \`$service' in inetd.conf:"
++     fi
+    done
+  }
+  
+  realpath="$REALPATH -d"
+
+scripts/check_known
+    nlb: changed typo of $file_LIST to $file_list at line 72
+	 changed '$CAT "$file"' to '$LS -l "$file"' at line 81 to better show
+	   non-zero size.
+    mlk: removed - from strings option list at line 132
+	 filtered out known UNICOS "back" strings from "back" /bin/login check
+	   and noted that this was an ill-defined check.
+	 Added check for .$owner.pop files '-a ".$owner.pop" != "$file"' to
+	   valid mail spool file check
+	   
+scripts/check_path
+    mlk: Now only removing comments that start at column 1.  "#"s elsewhere
+	 might be contained inside quoted strings.
+	 (No good way to handle this case.) line 184,236
+
+scripts/check_printcap 
+    mlk: put main loop inside check for $infile -- infile may not exist!
+
+scripts/check_rhosts
+    mlk: added warning check for rcmd014w
+	 verbosed error for rcmd009f.
+	 
+scripts/config
+    mlk: Updated paths
+	TigerLogDir='/var/local/logs/tiger'
+	TigerWorkDir='/var/local/scratch/tiger'
+
+scripts/crack_run
+    mlk: added missing "|| exit 1" action after haveallcmds on line 60
+
+scripts/find_files:
+    nlb: Changed typo of x$Tiger_FSSCan_Unowned to x$Tiger_FSScan_Unowned
+	 Changed typo of GETMOUNTS to GET_MOUNTS
+	 Changed typo of suid to sgid on comment on line 158
+    mlk: added missing last (9th) element sgid to file stat reading loop at
+           line 260
+	 Put echo of find commands inside loop and uncommented it on line
+	   268 -> 272
+    
+scripts/sub/check_devs 
+    net.tamu.edu patch (replacement) installed to fix two typos
+    
+scripts/sub/check_embed 
+    mlk: removed - from strings option list at line 163
+
+scripts/sub/check_suid
+scripts/sub/check_sgid
+    nlb: added check for "commands text" in addition to searching for "script"
+    mlk: filtered out program names when doing searches for set[ug]id scripts
+    mlk: removed - from strings option list at line 58 and 65
+    
+systems/AIX/3/3.2/config
+systems/AIX/3/config
+systems/HPUX/config
+systems/IRIX/4/config
+systems/NeXT/3/3.0/config
+systems/NeXT/3/3.1/config
+systems/NeXT/3/config
+systems/SunOS/4/config 
+systems/SunOS/5/5.3/config 
+systems/SunOS/5/config 
+systems/UNICOS/7/7.0.0/config 
+systems/UNICOS/7/config 
+systems/UNICOS/config
+    mlk: added check to search default directory last before giving up
+    mlk: config needs rewriting so that every single config file doesn't have to
+    	be updated for every program change
+    
+    elif [ -f "$CDIR/default/$file" ]; then
+      loc="$CDIR/default"
+
+systems/IRIX/4/gen_mounts
+    mlk: renamed print to PRINT (to avoid conflict with reserved word?)
+    
+systems/IRIX/6
+systems/IRIX/config
+systems/IRIX/gen_mounts
+systems/IRIX/getdisks
+    mlk: Created IRIX 6 configuration
+    
+systems/NeXT/3/3.0/inetd
+systems/NeXT/3/3.0/services
+systems/NeXT/3/3.1/inetd
+systems/NeXT/3/3.1/services
+    mlk: Moved systems/NeXT/3/[inetd,services] to 3.0,3.1 
+    
+systems/NeXT/3/3.3
+    mlk: Created NextStep 3.3 configuration
+
+systems/NeXT/3/check_cron
+    mlk: removed comments from cronfiles before processing
+    
+systems/NeXT/3/gen_cron
+    mlk: removed comments from cronfiles before processing
+
+systems/NeXT/3/gen_export_sets 
+    mlk: tossed output from nidump to /dev/null
+
+systems/NeXT/gen_mounts
+    mlk: created from systems/NeXT/3/gen_mounts (which was deleted)
+         fixed readonly detection
+	 added bsd 4.3 local filesystem detection
+
+systems/UNICOS/7/gen_mounts
+    mlk: Moved systems/UNICOS/gen_mounts 7
+
+systems/UNICOS/10
+    mlk: created UNICOS 10 configuration
+
+systems/UNICOS/config
+    nlb: corrected STRINGS=/usr/ucb/strings
+    mlk: added CC=/opt/ctl/bin/cc as first default
+
+systems/UNICOS/gen_export_sets
+    mlk: added support for undocumented UNICOS exports format that allows
+	   line continuation and defaults to "-access="  (translates back into
+	   standard /etc/exports format)
+
+systems/UNICOS/gen_mounts
+    mlk: Created new gen_mounts
+
+systems/UNICOS/getdisks
+    mlk: Created new getdisks
+
+systems/default/config
+    mlk: added missing "SGID_LIST sgid_list" line
+    mlk: sent ps output to /dev/null during yp checks
+
+systems/default/file_access_list 
+    mlk: added missing suid and sgid fields
+
+systems/default/gen_alias_sets 
+    ?: alias names changed to be self-explanatory (full-path)
+    
+systems/default/gen_cron
+    ?: created from "generic SYSV/gen_cron"
+
+tiger
+    mlk: sent stderr from "/bin/kill -0 $crackpid" to /dev/null at line 254
+
+util/flogit
+    nlb: added 'sgidfile="$7"' at line 18
+	 added code to append found sgid files to $sgidfile at line 42
+	 
+    elif [ "x$Tiger_FSScan_Setgid" != 'xN' -a \( -g "$file" -a -f "$file" \) ]; then
+      echo "$file" >> $sgidfile
+
+util/gethostinfo
+    mlk: added distinction between UNICOS and UNICOSMK
+	   if($5 == "CRAY"){
+		if($6 == "T3E")
+		{
+		    printf("UNICOSMK %s %s.%s\n", $3, $5, $6);
+		}
+		else
+		{
+		    printf("UNICOS %s %s.%s\n", $3, $5, $6);
+		}
+	   }
+
+tigerrc-TAMU
+tigerrc-all
+tigerrc-dist
+    nlb: Added .kshrc and .less to USERDOTFILES
+	 Added Tiger_FSScan_Setgid to all tigerrc files
+	Tiger_FSScan_Setgid=Y           # Setgid executables
+
+1998-07-30 mlk  Changed Tiger_Embed_Check_SUID=Y to =N as the check isn't
+        real useful (except maybe after an attack or an operating system
+        upgrade), takes great deals of cpu time, and isn't easily filtered
+        out of the logs.   (And by the time we have trojan binaries on
+        the system, we're probably already in too much trouble.)
+
+1998-08-28 13:28 mlk
+    ./systems/IRIX/4/gen_passwd_sets
+    ./systems/NeXT/3/gen_passwd_sets
+    ./systems/default/gen_passwd_sets
+                Added missing "| $SORT" pipe before writing password entries
+                into a file (needed for join in check_accounts)
+
+    ./util/gethostinfo
+                Added "IRIX64" to be the same as IRIX in uname
+
+1998-09-03 mlk  Removed "cd /" command before find command in find_files
+        # Not sure why we're cd'ing to /, but it breaks all relative paths
+        #     being used in the find options.  Commented out --mlk
+        #     cd /
+
+1998-10-07 mlk
+    ./util/getfs-nfs
+		Ran home directories through $REALPATH before comparing to
+		mountpoints to resolve links before comparing to mounted
+		filesystems.

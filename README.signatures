@@ -1,0 +1,22 @@
+
+NOTES on signatures
+-------------------
+
+Tiger has two generic checks to test in UNIX systems: check_perms,
+and check_signatures. 'Check_perms' can check if the filesystem
+permissions correspond to those after installation. 'Check_signatures'
+checks if the MD5 sums of a list of files correspond to those 
+known to be vulnerable in a given operating system.
+
+However, notice that for this checks to properly work the system
+signatures have to be up to date. The two files involved in this
+are 'signatures' and 'file_access_list' under the directories of the
+operating systems (systems/).
+
+Note that this files might not be as up to date as it would be desired for
+some operating systems. 
+
+
+--- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
+Sat, 18 May 2002 22:15:49 +0200
+

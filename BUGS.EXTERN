@@ -1,0 +1,116 @@
+This is a list of problems encountered on various platforms while working
+on 'Tiger'.  All have been worked around, but for the record:
+
+
+------------------------------------------------------------------------
+AIX 3.2
+
+awk computes incorrect field counts with null trailing field:
+
+echo "a:b:c" | awk -F: '{print NF}'
+3
+echo "a:b:" | awk -F: '{print NF}'
+2
+
+Work around:  run through sed and tack a space on the end of the problem
+lines:
+
+sed -e 's/:$/: /' | awk....
+------------------------------------------------------------------------
+AIX 3.2
+
+/bin/test -L is broken.
+
+/bin/test -L somelink
+Argument expected
+
+Work around:  Didn't use /bin/test.  This was encountered while trying
+to write some code to dynamically determine what the 'test' operator
+was for testing for a symbolic link.  Needless to say, this eliminated
+the checking of /bin/test's return code.
+------------------------------------------------------------------------
+NeXT 3.0
+
+shift doesn't always work
+
+set a b c d
+while [ $# != 0 ]
+do
+   echo $1
+   shift
+done
+
+doesn't always work (you get infinite list of 'a's).
+
+Rewrote affected code using a for loop.  Not always possible though.
+------------------------------------------------------------------------
+NeXT 3.0
+
+Globbing string with quotes doesn't always work:
+
+$ dir=/usr/bin
+$ echo "$dir/"*
+/usr/bin/*
+
+$ echo "$dir"/*
+/usr/bin/*
+
+$ echo $dir/*
+...list of files in /usr/bin
+
+Apparently the quotes prevent the globbing from occurring.
+
+Work around:  Remove the quotes.  Not particularly desirable though since
+'dir' may have spaces or other meta-characters in it.
+------------------------------------------------------------------------
+SunOS 4.x
+
+wait and signals
+
+'wait' will only return on a SIGINT.  Any other (non-fatal) signals
+are, for all practical purposes, ignored (wait just loops back to the
+wait()).  Normally not a problem, but if the script is run in the
+background from the Bourne Shell, SIGINT is ignored, thus you can't
+interrupt the wait.
+
+Work around:  None really... see simple_wait() in find_files.
+------------------------------------------------------------------------
+SunOS 4.x
+
+comm breaks lines at 256 byte intervals.  Note, that it doesn't
+truncate the lines.  It breaks them, creating an awful mess
+to attempt to process.
+
+This may exist on other systems as well.  I do know that it exists
+in SunOS 4.x.
+
+Work around:  If feasible, truncate lines at 255 characters.
+------------------------------------------------------------------------
+SunOS 5.x
+
+File descriptor manipulation
+
+Manipulating file descriptors via 'exec' doesn't work reliably in the
+SunOS 5.x Bourne Shell.
+
+Work around:  Eliminated most file descriptor manipulation.
+------------------------------------------------------------------------
+SunOS 5.x
+
+/usr/bin/find core dumps if you start nesting parenthesis too much.
+Work around was to remove excess parenthesis.
+
+------------------------------------------------------------------------
+Linux 0.99pl12 (TAMU)
+
+Manipulating file descriptors doesn't appear to work (with or without
+using 'exec') in 'bash'.  Workaround was to eliminate all file
+descriptor manipulation.
+
+------------------------------------------------------------------------
+SunOS 5.x (possibly only 5.3)
+
+/usr/bin/find tries to open(./..) (and probably ./../.., etc).  If
+it can't it gets confused and exits saying it can't open the directory
+that was the target of the find.  Workaround was to 'cd /' before trying
+to do a 'find'.

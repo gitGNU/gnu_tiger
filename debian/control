@@ -1,0 +1,37 @@
+Source: tiger
+Section: admin
+Priority: optional
+Maintainer: Javier Fernandez-Sanguino Pen~a <jfs@computer.org>
+Build-Depends: debhelper
+Standards-Version: 3.0.1
+
+Package: tiger
+Architecture: any
+Depends: diff (>=2.0), net-tools, shellutils (>=1.1.14-1), fileutils (>=3.14-1), textutils (>=1.20-1), debconf, ${shlibs:Depends}
+Recommends: binutils, sendmail | mail-transport-agent, john
+Suggests: lsof
+Description: Report system security vulnerabilities
+ TIGER, or the 'tiger' scripts, is a set of Bourne shell 
+ scripts, C programs and data files which are used to perform
+ a security audit of UNIX systems.  TIGER has one primary goal:
+ report ways 'root' can be compromised.
+ . 
+ Debian's TIGER incorporates new checks primarily oriented towards
+ Debian distribution including: md5sums checks of installed files,
+ location of files not belonging to packages, check of security
+ advisories and analysis of local listening processes.
+
+Package: tiger-otheros
+Architecture: any
+Depends: tiger
+Description: Scripts to run Tiger in other operating systems
+ TIGER, or the 'tiger' scripts, is a set of Bourne shell 
+ scripts, C programs and data files which are used to perform
+ a security audit of UNIX systems.  TIGER has one primary goal:
+ report ways 'root' can be compromised.
+ . 
+ This package provides all the scripts for operating systems other
+ than Linux provided for in the Tiger distribution. It is provided
+ in the hope it will be useful for admins that wish to run tiger
+ in a distributed environment sharing this files through the network
+ (e.g. NFS).

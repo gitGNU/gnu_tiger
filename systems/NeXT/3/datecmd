@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# NeXT/3/datecmd - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+# Kludged date stamp for NeXT.
+$DATE |
+$AWK '{
+	printf(substr($6,3,2));
+	if ($2 == "Jan") printf "01"
+	if ($2 == "Feb") printf "02"
+	if ($2 == "Mar") printf "03"
+	if ($2 == "Apr") printf "04"
+	if ($2 == "May") printf "05"
+	if ($2 == "Jun") printf "06"
+	if ($2 == "Jul") printf "07"
+	if ($2 == "Aug") printf "08"
+	if ($2 == "Sep") printf "09"
+	if ($2 == "Oct") printf "10"
+	if ($2 == "Nov") printf "11"
+	if ($2 == "Dec") printf "12"
+	printf("%02d\n",$3);
+}'

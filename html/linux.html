@@ -1,0 +1,120 @@
+<HR><PRE>
+
+
+
+
+
+
+
+
+</PRE><HR>
+<CENTER><H2> Documents for linux</H2></CENTER>
+<A NAME="lin001w"><P><B>Code [lin001w]</B><P>
+A program installed in your system has probably been not installed
+by a package of your Linux packaging system. If this binary has
+been installed by the administrator note that /usr/local/ is the
+place for this files.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin002i"><P><B>Code [lin002i]</B><P>
+Installed processes listening on Internet interfaces must be
+tightly controlled since they are the "open doors" to the
+outside.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin003w"><P><B>Code [lin003w]</B><P>
+Processes that have not been run by root are listening on
+interfaces open to the outside. This processes might have been
+run by root and changed uids or might be rogue processes.
+Confirm if their presence is necessary.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin004i"><P><B>Code [lin004i]</B><P>
+Netstat can be used instead of lsof in order to provide information
+on listening processes, however it will provide less info since it
+cannot determine the process (or PID) associated with the open socket
+or the user that runs it.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin005e"><P><B>Code [lin005e]</B><P>
+In Debian systems, checksums are stored in /var/lib/dpkg/info/
+if the md5sum of a file differs from the checksum of installed packages
+it might be due to changes made by the system administrator (for
+example, files in /etc) by everyday use of by a possible intruder
+(who might have placed a trojan instead of the checked file)
+Be forewarned, an attacker might have modified this info files
+(they are not protected against this)
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin006w"><P><B>Code [lin006w]</B><P>
+A file installed by a package no longer exists in the system and
+cannot be checked for. An administrator should not remove files from
+the system, they should be removed uninstalling the packages that
+provided them. This is an unusual behavior.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="lin007w"><P><B>Code [lin007w]</B><P>
+In the default configuration of many GNU/Linux distributions users can
+reboot the machine pressing Ctrl+Alt+Delete while in console mode. This can
+be considered a security risk if an attacker can easily taken down the
+server from console.

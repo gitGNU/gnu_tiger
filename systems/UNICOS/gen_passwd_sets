@@ -1,0 +1,69 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# UNICOS/gen_passwd_sets - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+
+local=0
+for parm
+do
+  case "$parm" in
+    -p) passwdflag=Y;;
+    -l) local=1;;
+    *)	outfile="$parm";;
+  esac
+done
+
+zappasswd()
+{
+  IFS=:
+  while read user1 passwd rest1
+  do
+    IFS=$SAVEIFS
+    case $passwd in
+      [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./])
+      passwd="xxxxxxxxxxxxx";;
+      *)
+      passwd="*";;
+    esac
+    echo "$user1:$passwd:$rest1"
+    IFS=:
+  done
+}
+
+catpasswd()
+{
+  /bin/udbsee -a -f update,passwd,uid,gids,comment,dir,shell 2>/dev/null |
+  $AWK -F: '{
+     split($8, gids, ",");
+     printf("%s:%s:%s:%s:%s:%s:%s\n", $2, $4, $6, gids[1], $10, $12, $14);
+  }' |
+  $SORT |
+  {
+    if [ "$passwordflag" = 'Y' ]; then
+      $CAT
+    else
+      zappasswd
+    fi
+  }
+}
+
+catpasswd > $WORKDIR/etc_udb.$$
+echo "UDB" > $WORKDIR/etc_udb.$$.src
+echo $WORKDIR/etc_udb.$$ >> $outfile

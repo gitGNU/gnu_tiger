@@ -1,0 +1,88 @@
+
+Notes on using Tiger as a host-IDS
+..................................
+
+Tiger is a two-sided tool for a security-conscious system 
+administrator, it can be used both as an auditing tool (to
+determine which security issues are there) and it can also be
+used as a host-based intrusion detection system (HIDS for shorts).
+
+The overall procedure is:
+1.- Tiger runs a given module on a configured time
+2.- it checks if there is a policy template or a previous run
+to check against, if there is one the output is compared against
+it (only changes are reported).
+3.- The report (wether full or differential) is sent through e-mail
+to the address configured at 'Tiger_Mail_RCPT'
+
+Tiger can be configured so that it is run as a cron job hourly. 
+The cron job that is run is 'tigercron' which reads the cronrc file
+(which should be installed under /etc/tiger or /usr/local/etc/tiger
+depending on our installation). This file tells Tiger which checks
+should be run on any given hour (format is similar to a cron file).
+
+When a module is run, the 'tigercron' program checks:
+
+- if 'Tiger_Cron_Template' is set to Y in tigerrc, it checks
+if there is a template stating which are the expected results, 
+
+- if 'Tiger_Cron_CheckPrev' is set to Y in tigerrc, it checks
+if there is a previous run of the module it can check against.
+
+This differential reports provide an easy way to detect intrusions
+(which works even if no configuration is done, as a matter of fact).
+If there is a new intrusion Tiger should detect something running
+amok (file changes, new processes, new users...) and would just send
+the (new) security issue detected.
+
+However, Tiger, as a host IDS , is better completed with some other tools:
+
+- an integrity checker such as Tripwire (or a replacement like Aide). 
+- a logchecker (like logcheck) to look for security information in the
+  log files.
+- (maybe) a Network IDS such as Snort.
+- (maybe) a portscanner detection such as portsentry, scanlogd, 
+  scandetd or psad (provided by Bastille)
+
+There is a module (tripwire_run) which can be used to run tripwire 
+through Tiger, and a sysadmin could easily fit any other security checks
+into similar modules.
+
+Deficiencies of using Tiger as a host IDS
+-----------------------------------------
+
+Besides the deficiencies (i.e. checks not available for some security
+issues, known as 'false negatives'), there are some issues security
+administrators must be aware of before deploying Tiger as a security tool:
+
+1.- the channel between the Tiger 'agents' and where the reports are
+received is not secure (it's just e-mail after all). If you want encrypted
+communications to avoid tampering or snooping it has to be enabled through
+other methods. Some ideas:
+	a) just use GPG/PGP to sign or encrypt the e-mails. You need however
+	to place a private key in the agent (and it could be compromised)
+	b) use a VPN tunnel between agents and the mailserver. This could
+	be done either using a permament SSH tunnel, an Ipsec VPN...
+
+2.- there is no such thing (currently) as a Tiger Server, unlike other 
+HIDS (If anyone wants to write one please say so :) so there's no way to:
+
+3.- Tiger reports are not protected in anyway save for standard UNIX 
+permissions. This means that if the server Tiger is running in is 
+compromised:
+	a) an attacker is able to retrieve sensitive information from the
+	logs (but if he's already compromised the system he can use other
+	methods)
+	b) an attacker can tamper with the logs, this means that he can 
+	tamper with how (and what) Tiger reports in the next run 
+	(if using differentiated reports against either templates or 
+	previous runs)
+
+Not that any other host-based IDS does not have any of these issues,
+after all, if an IDS is running in a compromised host then those
+IDS alarms and reports cannot be trusted anyway.
+
+
+-- Javier Fernández-Sanguino Peña <jfs@computer.org>
+Wed, 12 Jun 2002 00:56:39 +0200
+

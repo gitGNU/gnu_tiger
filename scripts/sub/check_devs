@@ -1,0 +1,82 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# sub/check_devs - 06/14/93
+#
+#-----------------------------------------------------------------------------
+# This script is not runnable directly.
+# 
+
+file="$1"
+
+[ "$CONFIGURED_ALREADY" != "YES" ] && {
+  echo "--ERROR-- [init008e] This script can not be run directly."
+  exit 1
+}
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds GETCLIENTDIRS AWK GREP LS RM || exit 1
+  haveallfiles WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Looking for unusual device files..."
+
+haveallcmds AWK GREP LS || exit 1
+haveallvars WORKDIR || exit 1
+
+dldevdirs=
+
+[ -n "$HOSTNAMESLIST" ] && haveallcmds GETCLIENTDIRS && {
+  dldevdirs="`$GETCLIENTDIRS | $AWK '{printf(\"%s/dev %s/devices \", $2, $2);}'`"
+}
+
+[ ! -n "$DEVDIRSYS" ] && DEVDIRSYS="/dev/"
+
+set $DEVDIRSYS $FS_DEVDIRS $dldevdirs
+greps="$GREP -v '^'$1 $file"
+shift
+for dir
+do
+  greps="$greps | $GREP -v '^'$dir"
+done
+
+# The "hw" hack is due to SGI renaming devices in IRIX 6.5
+eval $greps | $GREP -v '^'/hw> $WORKDIR/dev.list.$$
+
+[ -s $WORKDIR/dev.list.$$ ] && {
+  message WARN fsys006a "" "Unexpected device files found:"
+  $SORT $WORKDIR/dev.list.$$ |
+  while read file
+  do
+    $LS $LSGROUP -ld "$file"
+  done
+  echo
+}
+
+delete $WORKDIR/dev.list.$$
+

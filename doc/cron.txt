@@ -1,0 +1,28 @@
+%cron001w
+The listed cron entry does not use a full pathname for the listed command
+(or if a shell is specified, the name of the shell script).  Full pathnames
+should be used for cron entries.
+%cron002
+The listed cron entry uses an executable or file which is not owned
+by the owner of the cron entry, and is also not owned by a system
+account (root or bin, etc).  For root cron entries, these are especially
+dangerous.  Note that the actual problem may be with a directory in
+the path to the file, not the file itself.
+%cron003
+The listed cron entry uses a file or executable which has group write
+permissions, world write permissions or both.  This can allow the
+system to be compromised.  For root cron entries, this is especially
+dangerous.  Note that the actual problem may be with a directory in
+the path to the file, not the file itself.
+%cron004w
+There is no crontab for the superuser account this is not in itself
+an error since many systems might ship without one and use other 
+methods (/etc/cron* files) to run programs as root. However, if there
+is no method for root to run scripts some system checking scripts
+(like tiger) might not get executed at all.
+%cron005w
+Cron allows users to submit jobs for the system to do at a
+particular, possibly recurring time.  It can be very useful, but also 
+has a very real potential for abuse by either users or system crackers.
+Users can be restricted to use cron by creating a /etc/cron.allow
+file holding only system administrators.

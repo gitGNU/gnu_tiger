@@ -1,0 +1,44 @@
+%kis001a
+The indicated file is a directory.  The file is a known location used
+by intruders.  This should be considered a sign that this system
+has been compromised.  The system should be checked for other signs
+of intrusion and cleaned up.
+%kis002a
+The indicated file is a known location used by intruders.  This should
+be considered a sign that this system has been compromised.  The system
+should be checked for other signs of intrusion and cleaned up.
+%kis003a
+The indicated window server directory contains files other than UNIX
+data-gram sockets.  This should be considered a sign that this system
+has been compromised.  The system should be checked for other signs
+of intrusion and cleaned up.
+%kis004w
+The 'lost+found' directory (one exists for each file system) is used
+by the `fsck' program as a directory for re-linking "dangling" files
+during the file system check.  These directories should be checked when
+a file system check is not clean and files recovered from here.  This
+directory is also used by intruders to store files, as it is often
+ignored.  The files found here should be checked.  If any unusual files
+are found, the system should be checked for other signs of intrusion.
+In any event, the 'lost+found' directories should be kept clean.
+%kis005a
+The /bin/login program appears to have a back-door installed.  The
+program should be compared against distribution media and replaced
+if it has been altered.  The system should be checked for other
+signs of intrusion and cleaned.
+%kis006e
+The attempt to compile the program to check the setuid() system
+call failed for some reason.  This will prevent the test from
+occurring.
+%kis007a
+The setuid() system call succeeded even though the user was not
+root.  This most likely indicates that the system has been compromised
+and the OS altered.  A new kernel should be installed and the machine
+rebooted.
+%kis008w
+The indicated file in the system mail spool does not have a name which
+matches the owner.  This indicates either an attempt to create a mailbox
+for another user (allowing someone else to read that persons mail),
+or that the mail spool is being used to store files.  These files should
+be checked, and if unusual, the system should be examined for other signs
+of intrusion.

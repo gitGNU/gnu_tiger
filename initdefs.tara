@@ -1,0 +1,393 @@
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# initdefs - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+# Routines for verifying environment
+#
+# haveallcmds - verify command variables
+# haveallfiles - verify files
+# haveallvars - verify variables
+#
+haveallcmds()
+{
+  __retval=0
+
+  for __file
+  do
+    eval __cmdstr=\$$__file
+    set X $__cmdstr
+    __cmd=$2
+    if [ ! -n "$__cmdstr" ]; then
+      echo "--ERROR-- [init001e] Don't have required command $__file."
+      __retval=1
+    elif [ ! -f "$__cmd" ]; then
+      echo "--ERROR-- [init004e] \`$__cmd' is not executable (command $__file)."
+      __retval=1
+    fi
+  done
+  return $__retval
+}
+
+haveallfiles()
+{
+  __retval=0
+
+  for __var
+  do
+    eval __file=\$$__var
+    if [ ! -n "$__file" ]; then
+      echo "--ERROR-- [init005e] Don't have required file $__var."
+      __retval=1
+    elif [ ! -f "$__file" -a ! -d "$__file" ]; then
+      echo "--ERROR-- [init006e] \`$__file' does not exist (file $__var)."
+      __retval=1
+    fi
+  done
+
+  return $__retval
+}
+
+haveallvars()
+{
+  __retval=0
+
+  for __var
+  do
+    eval __val=\$$__var
+    if [ ! -n "$__val" ]; then
+      echo "--ERROR-- [init007e] Don't have required variable $__var."
+      __retval=1
+    fi
+  done
+
+  return $__retval
+}
+
+#
+# Safe delete... will only delete files in $WORKDIR
+#
+delete()
+{
+  for __file
+  do
+    eval "case \"\$__file\" in
+      $WORKDIR/*) $RM -f \"\$__file\";;
+      *) echo \"--ERROR-- [post001e] File \\\`\$__file' not removed.\";;
+    esac"
+  done 2>/dev/null
+}
+#
+# Format a message...
+#
+message()
+{
+  _level="$1"
+  _msgid="$2"
+  _trail="$3"
+  _mesg="$4"  
+  __len=${Tiger_Output_Width:=79}
+  [ "$HTML" = "N" ] && {
+  [ "$_level" = "INFO" -a "x$Tiger_Show_INFO_Msgs" = 'xN' ] && return
+  {
+    echo "$_mesg"
+    [ -n "$_trail" ] && echo "$_trail"
+  } |
+  $AWK '
+  BEGIN {
+      printf("--%s-- [%s] ", "'"$_level"'", "'"$_msgid"'");
+    vl = length("'"$_level"'") + 5;
+    spaces="";
+    for(i=0;i<vl;i++)
+       spaces=spaces " ";
+    ll = vl + length("'"$_msgid"'") + 3;
+  }
+  {
+    if(ll==0){
+      printf("%s", spaces);
+      ll=vl;
+    }
+    for(i=1;i<=NF;i++){
+      wl = length($i)+1;
+      if('$__len' != 0 && (wl + ll) > '$__len'){
+        printf("\n%s", spaces);
+        ll = vl;
+      }
+      printf("%s ", $i);
+      ll += wl;
+    }
+      printf("\n");
+    ll=0;
+  }
+  '
+}
+}
+[ "$HTML" = "Y" ] && {
+
+ [ "$_level" = "INFO" -a "x$Tiger_Show_INFO_Msgs" = 'xN' ] && return
+  {
+    echo "$_mesg"
+    [ -n "$_trail" ] && echo "$_trail"
+  } |
+  $AWK '
+  BEGIN {
+      printf("<BR>--%s-- <A HREF=\"#%s\">[%s]</A>", "'"$_level"'", "'"$_msgid"'", "'"$_msgid"'");
+    vl = length("'"$_level"'") + 5;
+    spaces="";
+    for(i=0;i<vl;i++)
+       spaces=spaces " ";
+    ll = vl + length("'"$_msgid"'") + 3;
+  }
+  {
+    if(ll==0){
+      printf("%s", spaces);
+      ll=vl;
+    }
+    for(i=1;i<=NF;i++){
+      wl = length($i)+1;
+      if('$__len' != 0 && (wl + ll) > '$__len'){
+        printf("\n%s", spaces);
+        ll = vl;
+      }
+      printf("%s ", $i);
+      ll += wl;
+    }
+    printf("<BR>\n");
+    ll=0;
+  }
+ '
+}
+}
+#
+#  Output messages about a file... reads the output of lgetpermit()
+#
+pathmsg()
+{
+  __omsgid="$1"
+  __amsgid="$2"
+  __path="$3"
+  __owner="$4"
+  __msgtxt="$5"
+  __trailer="$6"
+
+  __dir=0
+  [ -d "$__path" ] && __dir=1
+  
+  __exec=0
+  [ -f "$__path" ] && {	
+    set X `getpermit "$__path"`
+    shift 4
+
+    [ "$3$6$9" != '000' ] && __exec=1
+  }
+  
+  while read __comp __rowner __group ur uw ux gr gw gx or ow ox suid sgid stk
+  do
+    __omsg=''
+    [ "$__owner" != '.' ] && {
+      case "$__owner" in
+	root) {
+	  [ "$__owner" != "$__rowner" ] && {
+	    __omsg="not owned by $__owner (owned by $__rowner)."
+	    __olvl='WARN'
+	    [ $__dir -eq 1 -o $__exec -eq 0 ] && __olvl='INFO'
+	  }
+	}
+        ;;
+	*) {
+	  [ "$__owner" != "$__rowner" ] && {
+	    __omsg="not owned by $__owner (owned by $__rowner)."
+	    __olvl='WARN'
+	    case "$__rowner" in
+	      root|bin) __omsg='';;
+	    esac
+	  }
+	}
+        ;;
+      esac
+    }
+
+    __file="\`$__path'"
+    [ "$__path" != "$__comp" ] && {
+      __file="\`$__path' which contains \`$__comp'"
+    }
+    
+    case "$gw$ow" in
+      00) __access='';;
+      01) {
+	__access='world'
+	__alvl='FAIL'
+	[ $__dir -eq 1 -o $__exec -eq 0 ] && __alvl='INFO'
+	__newmode='o-w'
+      }
+      ;;
+      10) {
+	__access="group \`$__group'"
+	__alvl='WARN'
+	[ $__dir -eq 1 -o $__exec -eq 0 ] && {
+	  case "$__owner" in
+	    root) __alvl='INFO';;
+	    *) __access='';;
+	  esac
+	}
+	__newmode='g-w'
+      }
+      ;;
+      11) {
+	__access="group \`$__group' and world"
+	__alvl='FAIL'
+	[ $__dir -eq 1 -o $__exec -eq 0 ] && __alvl='INFO'
+	__newmode='go-w'
+      }
+      ;;
+      *) __access='';;
+    esac
+    
+    [ -n "$__omsg" ] && {
+      message "$__olvl" "$__omsgid" "$__trailer" "$__msgtxt $__file which is $__omsg"
+      echo
+      changelog "$__olvl : chown : $__owner : $__comp"
+    }
+    
+    [ -n "$__access" ] && {
+      message "$__alvl" "$__amsgid" "$__trailer" "$__msgtxt $__file which is $__access writable."
+      echo
+      changelog "$__alvl : chmod : $__newmode : $__comp"
+    }
+  done
+}
+#
+# Generate 0's and 1's to indicate the user, group and other read, write,
+# and execute permissions on a given file.
+#
+__getpermit()
+{
+  (
+    if [ -n "$1" ]; then
+      for file
+      do
+	$LS $LSLINK $LSGROUP -ld "$file" 2> /dev/null
+      done
+    else
+      while read file
+      do
+	$LS $LSLINK $LSGROUP -ld "$file" 2> /dev/null
+      done
+    fi
+  ) |
+   $AWK '
+    {
+      printf("%s %s %s ", $NF, $3, $4);
+      for(i=2;i<11;i++){
+        c = substr($1, i, 1);
+        if(c != "-" && c != "S" && c != "T"){
+	   printf("1 ");
+	}
+        else {
+	   printf("0 ");
+        }
+      }
+      if(substr($1, 4, 1) == "s" || substr($1, 4, 1) == "S")
+        printf("1 ");
+      else
+        printf("0 ");
+      if(substr($1, 7, 1) == "s" || substr($1, 4, 1) == "S")
+        printf("1 ");
+      else
+        printf("0 ");
+      if(substr($1, 10, 1) == "t" || substr($1, 10, 1) == "T")
+        printf("1 ");
+      else
+        printf("0 ");
+      printf("\n");
+   }'
+}
+
+getpermit()
+{
+  gp="$GETPERMIT"
+  [ ! -n "$gp" ] && gp="__getpermit"
+  if [ -n "$1" ]; then
+    $gp "$1" 2>/dev/null
+  else
+    $gp 2>/dev/null
+  fi
+}
+
+#
+# Generate output lines of the form:
+#
+# pathname owner group ur uw ux gr gw gx or ow ox sticky suid sgid
+#
+# for every component of a filename.  If 'realpath' is "active",
+# then symbolic links will be resolved and all components of the
+# target will also be included in the output.
+#
+#---
+# This definition should be overridden in the scripts including
+# this file.  This is just for safety.
+[ ! -n "$realpath" ] && realpath=echo
+#
+lgetpermit()
+{
+  _file="$1"
+  _saveifs=$IFS
+  __decomp="`$realpath \"$_file\"`"
+
+  for __acomp in $__decomp
+  do
+    if [ "$__acomp" != '/' ]; then
+      IFS=/
+      set $__acomp
+      IFS=$_saveifs
+      _path=
+    else
+      _path=/
+      set ""
+    fi
+
+    for _comp
+    do
+      [ -n "$_comp" ] && {
+	_path="$_path/$_comp"
+	echo "$_path"
+      }
+    done
+  done |
+  getpermit
+}
+#
+# Write entry to change log
+#
+changelog()
+{
+  _msgtxt="$*"
+  [ -n "$TigerChangeLog" ] && echo "$_msgtxt" >> $TigerChangeLog
+}
+
+#
+# Generic cleanup routine...
+#
+cleanup()
+{
+  [ "$_TIGER_RUN" != 'Y' -a -n "$TigerCleanup" ] && {
+    delete $TigerCleanup
+  }
+}
+
+trap cleanup 0

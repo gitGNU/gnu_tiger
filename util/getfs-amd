@@ -1,0 +1,85 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# util/getfs-amd - 04/27/93
+#
+# 04/27/93 dls Support map files in files or in NIS.
+#
+#-----------------------------------------------------------------------------
+#
+
+haveallof()
+{
+  retval=0
+  what=$1
+  shift
+  for file
+  do
+    eval cmd=\$$file
+    [ ! -n "$cmd" ] && {
+      echo "--CONFIG-- Don't have all required $what (missing $file)"
+      retval=1
+    }
+  done
+  return $retval
+}
+
+$AWK '{
+       if($2 == "/")
+	  print $2, $0;
+       else {
+          n=split($2, path, "/");
+          print path[n], $0;
+       }
+      }' |
+$SORT > $WORKDIR/gfsa1.$$
+
+{
+  if [ -f "$AUTOHOMEMAP" ]; then
+    $AWK 'BEGIN {LINE=""; }
+     /\\$/ {LINE=LINE " " substr($0, 1, length($0)-1); }
+     !/\\$/ {print LINE $0; LINE=""; }
+     END { if(LINE != "") print LINE; }
+    ' $AUTOHOMEMAP
+  else
+    $YPCAT -k $AUTOHOMEMAP 2>/dev/null
+  fi
+} |
+$SED -e 's/^\([^ 	]*\).*rhost:=\([^;]*\).*$/\1 \2/' |
+$SORT > $WORKDIR/gfsa2.$$
+
+if [ -s $WORKDIR/gfsa2.$$ ]; then
+  $JOIN -a1 -j 1 -o 1.2 1.3 2.2 $WORKDIR/gfsa1.$$ $WORKDIR/gfsa2.$$ |
+  while read user dir location
+  do
+    echo $user $dir ${location:=$HOSTNAME}
+  done |
+  $SORT
+else
+  #
+  # Something went wrong... nothing in the map, so
+  # we'll just use the standard method.
+  $BASEDIR/util/getfs-std
+fi
+
+$RM -f $WORKDIR/gfsa1.$$ $WORKDIR/gfsa2.$$
+#
+exit 0
+#
+exit 0
+#
+exit 0

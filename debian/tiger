@@ -1,0 +1,4 @@
+#!/bin/sh
+# Wrapper script for tiger
+
+cd /usr/lib/tiger && ./tiger $*

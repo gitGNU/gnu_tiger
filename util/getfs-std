@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# util/getfs-std - 04/22/93
+#
+#-----------------------------------------------------------------------------
+#
+
+haveallof()
+{
+  retval=0
+  what=$1
+  shift
+  for file
+  do
+    eval cmd=\$$file
+    [ ! -n "$cmd" ] && {
+      echo "--CONFIG-- Don't have all required $what (missing $file)"
+      retval=1
+    }
+  done
+  return $retval
+}
+
+haveallof commands SED || exit 1
+haveallof variables HOSTNAME || exit 1
+
+
+$SED -e 's/$/ '$HOSTNAME'/'
+
+#
+exit 0
+#
+exit 0
+#
+exit 0

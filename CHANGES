@@ -1,0 +1,240 @@
+NOTE: To read changes made to the Debian package (since
+August 23rd 2001) see the changelog.Debian file
+
+Changes    09/07/99
+-------
+
+Fixed to work with SUSE and TurboLinux
+
+Changes    06/02/99
+-------
+
+Developed a new tigerrc to support customer's security checklist.
+More extensive tigerrc is in tigerrc-dist.
+
+Fixed bug in check_root for Linux boxes.
+ 
+Updated systems service file.
+
+Changes    05/30/99
+-------
+
+Developed HTML output capability (tiger -H).
+Fixed systems files for SunOS and IRIX
+
+Changes    04/20/99
+-------
+
+Corrected numerous small bugs in scripts.
+
+Updated the systems directories to reflect current OS 
+configurations for Linux, SunOS, and IRIX and default.
+
+Cleaned up the output a bit.
+
+	--- Advanced Research Corporation
+
+Changes   03/09/94
+-------
+
+Fix to ./scripts/sub/check_embed.  This was disabling the
+check_embedded script.
+
+New Stuff  01/06/94
+---------
+
+Updated signature files for SunOS 4.x and SunOS 5.x.
+
+Bug fixes...
+
+If the current directory is a descendant of a directory for which the
+user does not have 'read' permissions (i.e., search only), then csh
+and find do not always work.  Workaround is to 'cd /' where necessary.
+Not sure this has been completely implemented.
+
+typo in scripts/sub/check_devs (Multiple people)
+
+scripts/sub/check_devs exited if GENCLIENTDIRS undefined (Sally Noonan).
+
+-x 'test' switch is not portable. (Sally Noonan)
+
+AIX doesn't need '-g' (Dorian Deane)
+
+IRIX test doesn't shortcircuit (Steve Rikli)
+
+IRIX config had wrong definition for DATECMD and TIMECMD (Steve Rikli)
+
+Crude 'smrsh' check performing poorly (Patrick Nolan & Mohamed el Lozy)
+
+Changes for performance and robustness, as suggested by Goran
+Larsson.  A C program is used to get file ownership and permissions
+instead of 'ls | awk'.  (If the C program won't compile, we fall
+back to 'ls | awk'.
+
+Changes to check_anonftp for performance.
+
+Added -c switch to allow specifying alternate 'tigerrc' script (John Reynolds)
+
+'tigexp' loses command line parameters on NeXT 3.0 (Kelly Cunningham)
+
+Added ethernet device files to check list for SunOS 5 (was already there
+in SunOS 4).  Also inspects /var/sadm/install/contents to check the
+perms there so that they don't get accidentally changed back.
+
+New Stuff  10/31/93
+---------
+
+Mailling list available.  See the README file for more information.
+
+Support for TAMU Linux distribution, may work on other Linux' as well.
+
+Updated signatures for SunOS 4.x & SunOS 5.x for security patches.
+
+'installsig' script for installing new signature files (util/installsig).
+We will try to maintain up to date security patch signature files in
+the directory net.tamu.edu:/pub/security/TAMU/tiger-sigs.  Note that
+at present, only SunOS 4.x and SunOS 5.x are being actively maintained
+(not that there is a bias here, it is just easier for me to get information
+on these... contributions will be welcomed).
+
+Various minor bug fixes relating to various platforms.
+
+Fixed check_suid to handle MD5 signatures.
+
+check_embedded now will optionally wait for the file system scans to
+complete and will check all setuid executables found for "bad"
+embedded pathnames.  See 'tigerrc' for configuring details.
+
+New Stuff  08/17/93
+---------
+
+Script for checking embedded pathnames.  The other scripts collect
+filenames which are then fed into the check_embedded script.  This
+checks the ownership and permissions of all of these embedded pathnames.
+Be warned... this can generate *lots* of output.
+
+Pathname checking is now much more complete.  Every "problem" is
+reported in detail, instead of saying "Hey, there's a problem with
+this pathname".
+
+'tigercron' should work a lot better now.
+
+Script for checking BSD printcap printer control file.
+
+Signatures for IRIX 4.0.5*, thanks to Steve Rikli.
+Signatures for NeXTOS 3.1, thanks to William McVey, et al.
+
+Cleaned up output... much of the output now gets formatted to (default)
+80 columns.
+
+Digital signature checking now works with SNEFRU or MD5.  Automagically
+detects which signature to generate.
+
+Signature checking is a lot faster now, especially if you have a
+clean system (the signature database is ordered such that the
+"good" signatures are first).
+
+Interface to 'password' generator scripts changed so that the 
+generator scripts can do sanity checking on the base files.  Interfaces
+to all of the other generator scripts will be changed in next release.
+
+Makefile for installing everything.  I'm not happy with the installation
+process this time either... if anyone wants to contribute a snazzy
+installation script I'll be happy to include it... 
+
+
+New Stuff  06/17/93
+---------
+
+First off, there are some man pages in the 'man' directory.  They are
+definitely lacking.  If I ever stop adding stuff to the package, maybe
+I will be able to write better documentation.
+
+********
+Explain facility.  All messages (should) have a message ID associated
+with them in square brackets [].  The script 'tigexp' can be used to
+get an explanation of the message.  Some (many?) of the explanations
+are lacking.  You can also insert the explanations into the output
+of 'tiger' by using the '-e' flag.  If anyone has suggestions or
+improved explanations, don't hesitate to send them to me.
+
+********
+Crack 4.1 interface.  'tiger' will now run Alec Muffett's password
+cracker 'Crack'.  See the 'tigerrc' file and 'site-sample' file for
+information on enabling it (it is disabled by default).
+
+********
+Systems:
+
+SunOS 4.1.1 sun3, 4.1.1 sun4, 4.1.2, 4.1.3, 5.1, 5.2 sun4
+NeXT 3.0
+
+There, but untested (and I do mean untested).  You can try them,
+but they have *never* been used, so I have no idea what to expect.
+Some parts are missing (i.e., no signature files).
+
+AIX 3.x (if this one works... any idea why so many setuid's on AIX 3?)
+HPUX (probably anything up to 9.x)
+IRIX 4.x
+UNICOS 6.x 7.x (if those pesky users didn't use the machine so much...)
+
+********
+More checks.  A few of the additions since the last release are:
+
+check_aliases:  Check mail aliases for problems.
+check_cron:  Check 'cron' entries for problems.
+check_group:  Cross reference 'group' files for problems.
+check_passwd:  Cross reference 'passwd' files for problems.
+check_path:  Check 'root' (and optionally all users) PATH for problems.
+
+In addition all previous scripts have been beefed up with many more
+checks.  File Permission databases have been improved (though they
+still need more work).  Scripts which check the path to executables
+and files now check the pathname thoroughly, even in the face of
+symbolic links.
+
+The file system scans now report device files, world writable
+directories, symbolic links to system files, in addition to setuid
+executables.  Also the setuid checks now attempt to determine if a
+setuid program is an old version of a binary for which a security
+patch was released (i.e., it was moved out of the way, but never
+deleted or chmod'd, and hence may still be a security problem).
+
+For servers of diskless or dataless clients, some "quick" checks of
+the clients can be performed on the server (see man/tiger.man).  Not
+everything can be checked.  Plus, support is not complete.
+
+It is possible to install 'tiger' now so that you don't have to
+feed it all the names of the directories on each invocation.
+Just run 'Install'... it will prompt for names.
+
+'tigercron' provides a simple-cron facility with report differencing
+capability and mailing of reports.  This is just started and needs
+more work to be really useful.  See the 'cronrc' file for a sample
+input to it.
+
+Checks for the availability of a utility commands have been moved
+nearer to where they are actually needed (as opposed to having them
+at the top of each script).  This enables more checks to be performed
+when only a few commands are missing.
+
+All cleanup of scratch files goes through the 'delete' routine which
+won't delete a file that isn't in the scratch work directory.  This
+is to prevent programmer errors from zapping the wrong file [what?
+programmer errors?  Never... :)]
+
+Some more C code added.  Handling of obtaining a compilation of the
+source improved.  For casual use, nothing need be done.  The C code
+will be compiled and installed in the Bindir (TIGERHOME/bin by default).
+For regular use, or use in a large group of systems, sharing the
+tiger directories, the binaries can be compiled and stored in the
+respective system directories.  The scripts will use the binary
+directly from that directory.  The Solaris 2.x (SunOS 5) directory
+provides precompiled binaries (no C compiler by default).
+
+Finally, if you try to run this on a system with an old or broken
+Bourne shell, or one without functions, have a peek at util/setsh.
+This will change all the '#!' headers to some other shell (i.e. ksh or
+bash).  Note that 'tiger' has never been run under either of these,
+but it might be worth a shot.
+

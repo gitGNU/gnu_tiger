@@ -1,0 +1,144 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_cron  - 06/14/93
+#
+# Ideas from Dan Farmer's 'cron.chk' from COPS 1.04.
+# 
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK BASENAME CAT GEN_CRON_FILES LS RM TR SED || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing check of \`cron' entries..."
+
+haveallcmds AWK BASENAME LS GEN_CRON_FILES LS SED RM TR || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+realpath="$REALPATH -d"
+[ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath=echo
+
+lowner=
+
+{
+  $GEN_CRON_FILES $WORKDIR/cron.in.$$
+
+  #
+  # Be careful if you muck around in this loop.  Since we are reading
+  # commands from these cron entries, they can have shell meta-characters
+  # in them.  We try to eliminate some of them, but there is no guarantee.
+  #                                                   dls
+  #
+  while read owner command
+  do
+    
+    com="`echo \"$command\" | $SED -e 's/[0-9]*>//g' | $TR -d '()\;\`&!|'`"
+
+    # Can't 'set' this because of shell meta-characters.
+    cmd="`echo \"$com\" | $AWK '{print $1}'`"
+  
+    base=`$BASENAME "$cmd"`
+    case "$base" in
+      sh|csh|ksh|tcsh|zsh|bash)
+      [ "$2" != "-c" ] && cmd=$2;;
+    esac
+
+    [ -n "$TigerCheckEmbedded" -a -f "$cmd" -a "$owner" = 'root' ] && {
+      echo "$cmd root.crontab" >> $TigerCheckEmbedded
+    }
+    case "$cmd" in
+      /*|cd|echo|if|else|then) ;;
+      *) message WARN cron001w "$command" "cron entry for $owner does not use full pathname:";;
+    esac
+
+    [ "$owner" != "$lowner" ] && {
+      curdir=/
+      [ -n "$GETUSERHOME" ] && curdir=`$GETUSERHOME $owner"`
+      lowner=$owner
+    }
+
+    setcurdir=0
+    for comp in $com
+    do
+      [ $setcurdir -eq 1 ] && {
+	curdir="$comp"
+	setcurdir=0
+      }
+      
+      case "$comp" in
+	*/*) {
+
+	  case "$comp" in
+	    /*) ;;
+	    *) comp="$curdir/$comp";;
+	  esac
+
+	  [ ! -c "$comp" -a ! -b "$comp" ] && {
+	    lgetpermit "$comp" |
+	    pathmsg cron002 cron003 "$comp" $owner "cron entry for $owner uses" "$command"
+	  }
+	}
+	;;
+	cd) setcurdir=1;;
+      esac
+    done
+  done < $WORKDIR/cron.in.$$
+} |
+$OUTPUTMETHOD
+
+delete $WORKDIR/cron.in.$$

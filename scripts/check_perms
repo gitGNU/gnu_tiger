@@ -1,0 +1,256 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_perms - 06/14/93
+#
+# 04/28/93 dls  Added '-L' option to 'ls' so we get permissions from
+#               file instead of symbolic link.
+# ??/??/99 ARC  Changed echo to message and limited giving warnings if owner
+#               of files is 'bin'
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK GET_MOUNTS GREP LS RM SGREP 
+  haveallfiles FILE_ACL BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+echo
+echo "# Performing check of system file permissions..."
+
+haveallcmds AWK GREP LS SGREP || exit 1
+haveallfiles FILE_ACL WORKDIR BASEDIR ||
+haveallvars TESTLINK || exit 1
+
+[ ! -f "$FILE_ACL" ] && {
+  message CONFIG perm004c "" "No file permission database."
+  exit 1
+}
+
+display_what_access()
+{
+  file=$1
+  onoff=$2
+  who=$3
+  what=$4
+
+  access=$what
+
+  if [ "$access" = 'X' ]; then
+    access='execute'
+    [ -d "$file" ] && access='search'
+  fi
+
+  [ "$onoff" = '0' ] && {
+    message $level perm001w "" "$file should not have $who $access."
+  }
+}
+           
+check_file()
+{
+  [ "$suid" != "$rsuid" -a "$rsuid" = '1' ] && {
+    message ALERT perm023a "" "$filename is setuid to \`$rowner'."
+    changelog "ALERT : chmod : u-s : $filename"
+  }
+  [ "$sgid" != "$rsgid" -a "$rsgid" = '1' ] && {
+    message ALERT perm024a "" "$filename is setgid to \`$rgroup'."
+    changelog "ALERT : chmod : g-s : $filename"
+  }
+  [ "$owner" != '.' -a "$owner" != "$rowner"  -a "$rowner" != "bin" ] && {
+    message $level perm$ownmid$m "" "The owner of $filename should be $owner (owned by $rowner)."
+    changelog "$level : chown : $owner : $filename"
+  }
+
+  [ "$group" != '.' -a "$group" != "$rgroup" ] && {
+    message $level perm$grpmid$m "" "The group owner of $filename should be $group."
+    changelog "$level : chgrp : $group : $filename"
+  }
+
+  [ "$ur" != '.' -a "$ur" != "$rur" ] && {
+    display_what_access $filename $ur owner read
+    changelog "$level : chmod : u-r : $filename"
+  }
+  [ "$uw" != '.' -a "$uw" != "$ruw" ] && {
+    display_what_access $filename $uw owner write
+    changelog "$level : chmod : u-w : $filename"
+  }
+  [ "$ux" != '.' -a "$ux" != "$rux" ] && {
+    display_what_access $filename $ux owner X
+    changelog "$level : chmod : u-x : $filename"
+  }
+    
+  [ "$gr" != '.' -a "$gr" != "$rgr" ] && {
+    display_what_access $filename $gr group read
+    changelog "$level : chmod : g-r : $filename"
+  }
+  [ "$gw" != '.' -a "$gw" != "$rgw" ] && {
+    display_what_access $filename $gw group write
+    changelog "$level : chmod : g-w : $filename"
+  }
+  [ "$gx" != '.' -a "$gx" != "$rgx" ] && {
+    display_what_access $filename $gx group X
+    changelog "$level : chmod : g-x : $filename"
+  }
+    
+  [ "$or" != '.' -a "$or" != "$ror" ] && {
+    display_what_access $filename $or world read
+    changelog "$level : chmod : o-r : $filename"
+  }
+  [ "$ow" != '.' -a "$ow" != "$row" ] && {
+    display_what_access $filename $ow world write
+    changelog "$level : chmod : o-w : $filename"
+  }
+  [ "$ox" != '.' -a "$ox" != "$rox" ] && {
+    display_what_access $filename $ox world X
+    changelog "$level : chmod : o-x : $filename"
+  }
+}
+
+{
+  $GREP -v '^#' $FILE_ACL |
+  while read file owner group suid sgid ur uw ux gr gw gx or ow ox lvl ownmid grpmid prmmid
+  do
+    if [ "$lvl" = 'A' ]; then
+      level='ALERT'
+      m='a'
+    elif [ "$lvl" = 'F' ]; then
+      level='FAIL'
+      m='f'
+    else
+      level='WARN'
+      m='w'
+    fi
+    
+    getpermit $file |
+    while read filename rowner rgroup rur ruw rux rgr rgw rgx ror row rox rsuid rsgid rstk
+    do
+      [ ! $TESTLINK $filename ] && [ -f $filename -o -d $filename ] &&
+      if [ "$file" = "$filename" ]; then
+	check_file "$filename"
+      else
+	$SGREP "^$filename[ 	]" $FILE_ACL 2>/dev/null || 
+	check_file "$filename" 
+      fi
+    done
+  done
+
+  saveifs=$IFS
+
+  haveallcmds GET_MOUNTS && {  
+    $GET_MOUNTS local all |
+    while read mtpoint fstype fsdevice rdevice
+    do
+      for fsdev in $fsdevice $rdevice
+      do
+	[ -n "$fsdev" -a \( -b $fsdev -o -c $fsdev \) ] && {
+	  getpermit $fsdev |
+	  {
+	    read _f owner group ur uw ux gr gw gx or ow ox suid sgid stk
+
+	    [ "$owner" != 'root' ] && {
+	      message WARN perm022w "" "Disk device $fsdev not owned by root (owned by $owner)."
+	      changelog "WARN : chown : root : $fsdev "
+	    }
+	
+	    [ "$or$ow" != '00' ] && {
+	      perm=
+	      [ "$or" = '1' ] && {
+		perm='read'
+		change='o-r'
+	      }
+	      [ "$ow" = '1' ] && {
+		perm='write'
+		change='o-w'
+	      }
+	      [ "$or$ow" = '11' ] && {
+		perm='read/write'
+		change='o-rw'
+	      }
+	      message WARN perm020w "" "Disk device $fsdev has world $perm access."
+	      changelog "WARN : chmod : $change : $fsdev"
+	    }
+#TODO: In Debian GNU/Linux disk group is created to access /dev/hd*
+	    [ "$gr$gw" != '00' ] && [ "$group" != "disk" ] && {
+	      perm=
+	      [ "$gr" = '1' ] && {
+		perm='read'
+		change='g-r'
+	      }
+	      [ "$gw" = '1' ] && {
+		perm='write'
+		change='g-w'
+	      }
+	      [ "$gr$gw" = '11' ] && {
+		perm='read/write'
+		change='g-rw'
+	      }
+	      message WARN perm021w "" "Disk device $fsdev has $perm access for group $group."
+	      changelog "WARN : chmod : $change : $fsdev"
+	    }
+	  }
+	}
+      done
+    done
+  }
+} |
+$OUTPUTMETHOD
+#
+exit 0
+#
+exit 0
+#
+exit 0

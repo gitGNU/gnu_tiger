@@ -1,0 +1,213 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_known - 06/14/93
+#
+# 04/27/93 dls "1's complement" check of /bin/login added
+# 06/06/93 dls Moved 1's complement check to SunOS 4.x specific
+# 14/09/01 jfs Changed to ls -lan so ti cah check user's id (otherwise it
+#              does not work for long user names) affects only SPOOL check
+# 28/03/02 jfs Applied some of the changes described by CHANGES.ARSC from 
+#              mlk.
+# 18/05/02 jfs Changed cat to $CAT in some calls
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT CC EGREP FIND GET_MOUNTS LS RM SED SGREP STRINGS TR TAIL HEAD CUT || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Checking for known intrusion signs..."
+
+haveallcmds LS CAT || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+{
+  file_list="/usr/spool/uucppublic/.hushlogin /usr/spool/secretmail/.l /tmp/a
+/usr/spool/secretmail/.log /usr/spool/secretmail/.tty
+/usr/spool/secretmail/.lock /usr/tmp/.log /usr/spool/uucp/.sys
+/usr/uucp/.sys /var/crash/... /usr/etc/.getwd /var/crash/.getwd /usr/kvm/... /dev/.tty /dev/.test"
+
+  for file in $file_list
+  do
+    [ -s "$file" ] && {
+      if [ -d "$file" ]; then
+	message ALERT kis001a "" "$file is a directory."
+	$LS -AlR "$file"
+	echo
+      else 
+	message ALERT kis002a "" "$file is not zero-length."
+	$LS -l "$file"
+	echo
+      fi
+    }
+  done
+
+  haveallcmds EGREP FIND && {
+    for serverdir in /tmp/.X11-unix /tmp/.NeWS-unix
+    do
+      [ -d "$serverdir" ] && {
+	nonsocket=`$FIND $serverdir/ ! -type s -a ! -type p -print |
+	$EGREP -v '^'"$serverdir"'/$'`
+
+	[ -n "$nonsocket" ] && {
+	  message ALERT kis003a "" "$serverdir contains files other than window server sockets:"
+	  $LS -alR "$serverdir"
+  	  echo
+	}
+      }
+    done
+  }
+  
+  haveallcmds GET_MOUNTS AWK FIND SED TR && {
+    $GET_MOUNTS local |
+    $AWK '{
+      if($1 == "/")
+        print "/lost+found";
+      else
+        print $1 "/lost+found";
+    }' |
+    while read dir
+    do
+      [ -d "$dir" ] && {
+	cd "$dir"
+	files=`$FIND . -print | $SED -e 's%^./%%' -e '/^.$/d' -e '/^..$/d'`
+	alertfiles=`echo "$files" |
+	            $TR ' ' '\012' |
+	            $SED -e 's%^#\{1\}[0-9][0-9.]*$%%g'
+	`
+	if [ -n "$alertfiles" ]; then
+	  message WARN kis004w "" "$dir contains possible non-fsck files:"
+	  $LS -alR $alertfiles
+	  echo
+	elif [ -n "$files" ]; then
+	  message WARN kis004w "Files: $alertfiles" "$dir is not empty:"
+	fi
+      }
+    done
+  }
+
+  haveallcmds STRINGS SGREP && {
+    $STRINGS - /bin/login > $WORKDIR/login.str.$$
+    $SGREP 'back' $WORKDIR/login.str.$$ && {
+      message ALERT kis005a "" "/bin/login may contain backdoor login"
+    }
+    $SGREP 'BACK' $WORKDIR/login.str.$$ && {
+      message ALERT kis005a "" "/bin/login may contain backdoor login"
+    }
+    delete $WORKDIR/login.str.$$
+  }
+
+  [ -n "$TESTSUID" -a $TESTEXEC "$TESTSUID" ] && {
+    $TESTSUID ||
+    message ALERT kis007a "" "The setuid(2) system call is compromised."
+  }
+
+  haveallcmds GEN_PASSWD_SETS GREP CUT AWK LS TAIL HEAD &&
+  haveallfiles BASEDIR MAILSPOOL WORKDIR && (
+    echo
+    echo "# Performing check of files in system mail spool..."
+
+
+     if [ -n "$Tiger_PasswdFiles" ]; then
+      $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+     else
+      $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
+     fi
+
+# Added -n for numeric uids, jfs
+    cd $MAILSPOOL
+    $LS -anl |
+    $TAIL +2 |
+    $AWK '{print $3, $NF}' |
+    while read uid file
+    do
+    
+    # TODO: the current scheme does not work correctly  in all cases 
+    # if there is more that one user with the same UID 
+    # (the ^+ is there to prevent confusing
+    # NIS records) and the $HEAD -1 just takes the first one...
+    # (this errors are introduced due to the numeric checks instead of name
+    # checks.... oh well...)
+     owner=""
+     for passwd_set in `$CAT $WORKDIR/pass.list.$$`
+     do
+      [ -z "$owner" ] && 
+#	 owner=`$GREP :$uid: $passwd_set | $GREP -v "^+" | $CUT -f 1 -d : |$HEAD -1`
+	 owner=`$AWK -F: '$3 ~ /^'$uid'$/ { print $1 }' $passwd_source | $HEAD -1`
+     done 
+
+     # Just in case the user is not found
+     [ -z "$owner" ] && owner=$uid
+
+      [ "$file" != '.' -a "$file" != '..' -a "$file" != ':saved' -a "$owner" != "$file" ] &&
+      message WARN kis008w "" "File \"$file\" in the mail spool, owned by \`$owner'."
+    done
+
+    if [ -f $WORKDIR/pass.list.$$ ] ; then
+     	for passwd_set in `$CAT $WORKDIR/pass.list.$$`; do
+      		delete $passwd_set.src 
+      	done
+	delete $WORKDIR/pass.list.$$
+    fi
+  )
+} |
+$OUTPUTMETHOD
+#
+exit 0

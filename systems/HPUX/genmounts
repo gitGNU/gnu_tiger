@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# HPUX/genmounts - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+
+
+LOCAL_ONLY=$1
+CHKRO=$2
+
+ronly()
+{
+  RO=1
+  case "$1" in
+    *,ro,*|ro,*|ro|*,ro) RO=0
+      ;;
+  esac
+  return $RO
+}
+
+localfs()
+{
+  LOCAL=1
+  [ "$1" = "ufs" ] && LOCAL=0
+
+  return $LOCAL
+}
+
+/bin/cat /etc/mnttab |
+while read fs mtpoint fstype opts time
+do
+  PRINT=1
+  [ "$CHKRO" = "rw" ] && { ronly "$opts" && PRINT=0; }
+  [ "$LOCAL_ONLY" = "local" ] && { localfs "$fstype" || PRINT=0; }
+  [ "$PRINT" = "1" ] && echo "$mtpoint $fstype $fs"
+done
+

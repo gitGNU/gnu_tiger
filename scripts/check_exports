@@ -1,0 +1,288 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+#  check_exports - 06/14/93
+#
+# 04/28/93 dls  Add '-L' to 'ls' so we get the permissions from the file
+#               instead of a symbolic link.
+# 05/30/99 ARC  Fixed problems with IRIX and other false alarms
+#
+#-----------------------------------------------------------------------------
+#
+#
+# Check NFS exports file for:
+#
+#       Anonymous ID = 0 and write access (fail)
+#       Anonymous ID = 0 and readonly access (warn)
+#       Exporting the root filesystem (warn)
+#       Exporting the root filesystem to "world" (fail)
+#       Exporting the root filesystem with "root" access (fail)
+#       Exporting a filesystem to "world" with write (fail)
+#       Exporting a filesystem to "world" (warn)
+#       Exporting a filesystem with "root" access, the host
+#                 is a diskless client, but the path is "safe" (info)
+#       Exporting a filesystem with "root" access, the host
+#                 is a diskless client, but the path is "unsafe" (warn)
+#       Exporting a filesystem with "root" access, the host
+#                 is not a diskless client, and the path is "unsafe" (warn)
+#
+#------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK GEN_BOOTPARAM_SETS GEN_EXPORT_SETS LS RM SED SORT 
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars HOSTNAME
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing NFS exports check..."
+
+haveallcmds GEN_EXPORT_SETS SED AWK || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+haveallvars HOSTNAMESLIST || exit 1
+
+is_safe_path()
+{
+  saveifs=$IFS
+  IFS=/
+  set $1
+  IFS=$saveifs
+  path=
+  open=1
+
+  for name
+  do
+    set `getpermit ${path}/$name` X
+    shift
+    shift
+    shift
+    [ -n "$9" ] &&
+    [ "$4" = 0 -a "$5" = 0 -a "$6" = 0 -a \
+       "$7" = 0 -a "$8" = 0 -a "$9" = 0 ] && { open=0; break; }
+    path=${path}/$name
+  done
+  return $open
+}
+
+check_entry()
+{
+  dir=$1
+  shift
+
+  # Do not assume first a good setup
+  world=1
+  root=0
+  readonly=0
+  anonid=-1
+  readmost=0
+  roothosts=
+
+# TODO: Does not recognise new /etc/exports format
+# directory	serverA (options) domainB (options)
+# Needs to be rewritten or gen_exports modified
+  for acl
+  do
+    case $acl in
+      -access=*|access=*)  world=0;;
+      -root=*|root=*)      root=1;roothosts=`echo $acl|$AWK -F= '{print $2}'`;;
+      -ro=*|ro=*)          readonly=1; world=0;;
+      -ro|ro)              readonly=1;;
+      -anon=*|anon=*)      anonid=`echo $acl | $AWK -F= '{print $2}'`;;
+      -rw=*|rw=*)          readmost=1;world=0;;
+      -rw|rw)              readmost=1;;
+      *)                   world=0;;
+    esac
+  done
+
+  [ "$anonid" = "0" -a "$readonly" = "0" ] &&
+	message FAIL nfs001f "" "Anonymous ID == 0, for R/W filesystem $dir"
+  [ "$anonid" = "0" -a "$readonly" = "1" ] &&
+	message WARN nfs002w "" "Anonymous ID == 0 for R/O filesystem $dir"
+  [ "$dir" = "/" ] && 
+	message WARN nfs003w "" "Exporting the root filesystem (/)."
+  [ "$dir" = '/usr' -a "$readonly" = '0' ] &&
+        message WARN nfs014w "" "Exporting the /usr filesystem R/W."
+
+  [ $world = 1 ] && {
+    if [ "$dir" = "/" ]; then
+      if [ "$readonly" = "0" ]; then
+	message FAIL nfs004f "" "Exporting the root filesystem (/) R/W to everyone."
+      else
+	message FAIL nfs005f "" "Exporting the root filesystem (/) R/O to everyone."
+      fi
+    else
+      if [ "$readonly" = "0" ]; then
+	message FAIL nfs006f "" "Directory $dir exported R/W to everyone."
+      else
+	message WARN nfs007w "" "Directory $dir exported R/O to everyone."
+      fi
+    fi
+  }
+  [ $root = 1 -a -d $dir ] && {
+    [ "$dir" = "/" ] && {
+      if [ "$readonly" = "1" ]; then
+	message FAIL nfs008f "" "Exporting the root filesystem (/) R/O with root access."
+      else
+	message FAIL nfs009f "" "Exporting the root filesystem (/) R/W with root access."
+      fi
+    }
+    IFS=:
+    set X $roothosts
+    IFS="$saveifs"
+    shift
+    dlclient=1
+    # roothost is a magic variable name... don't change it.
+    for roothost
+    do
+      eval "case $dir in $casediskless esac"
+    done
+
+    roothosts=`
+      echo $roothosts |
+      $SED -e 's/:/, /g' -e 's/,\([^,]*\)$/, and\1/'`
+
+    if [ $dlclient = 0 ]; then
+      if is_safe_path $dir ; then
+	message INFO nfs010i "" "Directory $dir is exported with root access to host(s) $roothosts."
+      else
+	message WARN nfs011w "" "Unprotected directory $dir is exported with root access to host(s) $roothosts."
+      fi
+    else
+      if is_safe_path $dir ; then
+	:
+      else
+	message WARN nfs012w "" "Unprotected directory $dir is exported with root access for diskless client $roothosts."
+     fi
+   fi
+ }
+}
+
+parse_bootparam()
+{
+  $AWK '
+       BEGIN {LINE="";}
+       $0 ~ /\\$/ {printf("%s ", substr($0, 1, length($0)-1));}
+       $0 !~ /\\$/ {printf("%s\n", $0);}
+       END {printf("\n");}
+   ' |
+  $AWK '{
+           for(i=2;i<=NF;i++)
+             if(substr($i, 1,5) == "root="){
+	       x=substr($i, 6, length($i));
+               split(x, ar, ":");
+               print $1, ar[1], ar[2];
+   	     }
+        }'
+}
+
+casediskless='*) dlclient=0;;'
+
+haveallcmds GEN_BOOTPARAM_SETS && {
+  casediskless=`
+  {
+    $GEN_BOOTPARAM_SETS | 
+    while read bootparam_set
+    do
+      parse_bootparam < $bootparam_set
+      
+      delete $bootparam_set $bootparam_set.src
+    done
+  } |
+  $SORT -u |
+  while read client server filesys
+  do
+    eval "case $server in
+      $HOSTNAMESLIST)
+      echo $filesys') 
+      case \\$roothost in
+	'$client'*) ;;
+      *) dlclient=0;;
+      esac;;' ;;
+    esac"
+  done
+  echo '*) dlclient=0;;'
+  `
+}
+
+saveifs="$IFS"
+
+$GEN_EXPORT_SETS | 
+while read export_set
+do
+  $SED -e 's/#.*$//' $export_set |
+  $SED -e '/^[ \t]*$/d' |
+  $AWK '
+        BEGIN  { LINE=""; }
+        /\\$/  { LINE=LINE " " substr($0,1,length($0)-1); }
+        !/\\$/ { print LINE $0; LINE="";}
+        END    { if(LINE != "") print LINE; }
+      ' |
+  $SED -e 's/,/ /g' |
+  while read dir acl
+  do
+    check_entry $dir $acl
+  done
+
+  delete $export_set $export_set.src
+done |
+$OUTPUTMETHOD
+
+exit 0
+#
+exit 0
+#
+exit 0
+#

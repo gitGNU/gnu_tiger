@@ -1,0 +1,132 @@
+
+
+
+TIGER(8)             Administrator Commands              TIGER(8)
+
+
+
+NNNNAAAAMMMMEEEE
+     tiger - UNIX Security Checker
+
+SSSSYYYYNNNNOOOONNNNPPPPSSSSIIIISSSS
+     ttttiiiiggggeeeerrrr [[[[----BBBB ttttiiiiggggeeeerrrrddddiiiirrrr]]]] [[[[----llll llllooooggggddddiiiirrrr]]]] [[[[----wwww wwwwoooorrrrkkkkddddiiiirrrr]]]] [[[[----bbbb bbbbiiiinnnnddddiiiirrrr]]]]  [[[[----
+     eeee||||----EEEE]]]] [[[[----SSSS]]]] [[[[----cccc ttttiiiiggggeeeerrrrrrrrcccc]]]]
+
+DDDDEEEESSSSCCCCRRRRIIIIPPPPTTTTIIIIOOOONNNN
+     Tiger is a package consisting of  Bourne  Shell  scripts,  C
+     code  and data files which is used for checking for security
+     problems on a UNIX system.  It  scans  system  configuration
+     files, file systems, and user configuration files for possi-
+     ble  security  problems  and  reports  them.   The   command
+     ttttiiiiggggeeeexxxxpppp((((8888)))) can be used to obtain explanations of the problems
+     reported by _t_i_g_e_r.
+
+  OOOOPPPPTTTTIIIIOOOONNNNSSSS
+     -_B    Specify the directory where _t_i_g_e_r  is  installed.   If
+          not specified, the current directory is used.
+
+     -_d    Specify the name of the  directory  where  _t_i_g_e_r  will
+          write  the  security  report.   This  defaults  to  the
+          current directory.  The filename of the report will  be
+          of the form 'security.report._h_o_s_t_n_a_m_e._d_a_t_e._t_i_m_e.'
+
+     -_w    Specify a directory to use for creating scratch files.
+          This defaults to /_t_m_p.
+
+     -_b    Specify the directory which contains (or will contain)
+          the binaries generated from the C modules.  If the sys-
+          tems directories contain all the binaries, they will be
+          used  directly  from there.  If not, then if the _b_i_n_d_i_r
+          contains the binaries, these will be used.  If none are
+          found  in either place, then an attempt will be made to
+          compile the C code and install the executables into the
+          _b_i_n_d_i_r.
+
+     -_c    Specify an alternate  name  for  the  _t_i_g_e_r_r_c  control
+          file.  The default is 'tigerrc'.
+
+     -_e    This option will cause  explanations  to  be  inserted
+          into  the security report following each message.  This
+          can greatly increase the size of the report, as  expla-
+          nations may appear repeatedly.
+
+     -_E    This option  indicates  that  a  separate  explanation
+          report  should  be  created, with explanations for each
+          type of message only appearing once.  The  filename  of
+          the   explanation   report   will   be   of   the  form
+          'explain.report._h_o_s_t_n_a_m_e._d_a_t_e._t_i_m_e.'
+
+     -_S    This option indicates that a surface  level  check  of
+
+
+
+Security            Last change: 04 Jun 1993                    1
+
+
+
+
+
+
+TIGER(8)             Administrator Commands              TIGER(8)
+
+
+
+          the  configuration files of any diskless clients served
+          by this machine should be checked  at  the  same  time.
+          The  checks will not be as in depth as they would be if
+          run on the client itself.
+
+SSSSEEEEEEEE AAAALLLLSSSSOOOO
+     tigexp(8), tigerrc(8)
+
+BBBBUUUUGGGGSSSS
+     There are a lot more things to check.
+
+     Some places in the package are not shell  meta-character  or
+     white-space safe.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Security            Last change: 04 Jun 1993                    2
+
+
+

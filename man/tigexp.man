@@ -1,0 +1,66 @@
+
+
+
+TIGEXP(8)            Administrator Commands             TIGEXP(8)
+
+
+
+NNNNAAAAMMMMEEEE
+     tigexp - UNIX Security Checker Explanation Generator
+
+SSSSYYYYNNNNOOOONNNNPPPPSSSSIIIISSSS
+     ttttiiiiggggeeeexxxxpppp mmmmssssggggiiiidddd [[[[mmmmssssggggiiiidddd [[[[mmmmssssggggiiiidddd............]]]]]]]]
+
+     ttttiiiiggggeeeexxxxpppp [[[[----ffff||||----FFFF]]]] [[[[sssseeeeccccuuuurrrriiiittttyyyy____rrrreeeeppppoooorrrrtttt]]]]
+
+DDDDEEEESSSSCCCCRRRRIIIIPPPPTTTTIIIIOOOONNNN
+     Tigexp is used to generate explanations of the  output  from
+     the  Tiger  security  checking  package.  In the first form,
+     _t_i_g_e_x_p will generate an explanation of each of  the  message
+     ids  listed.  In the second form, the security report speci-
+     fied will be scanned and explanations generated.   The   - _f
+     option will generate one explanation for each unique message
+     id in the security report, whereas the -_F option will output
+     the  security  report  with explanations inserted after each
+     entry in the report.
+
+  OOOOPPPPTTTTIIIIOOOONNNNSSSS
+     -_f    Scan the indicated security report and generate expla-
+          nations  of  it.  One explanation will be generated for
+          each unique message id in the security report.  If  the
+          name of a security report is not given, then the report
+          is read from stdin.
+
+     -_F    Output the indicated security report with explanations
+          inserted  after  each entry in the report.  If the name
+          of a security report is not given, then the  report  is
+          read from stdin.
+
+FFFFIIIILLLLEEEESSSS
+     $TIGERHOMEDIR/doc/explain.idx
+
+SSSSEEEEEEEE AAAALLLLSSSSOOOO
+     tiger(8)
+
+BBBBUUUUGGGGSSSS
+     If the explanation index is out of date, it  doesn't  recog-
+     nize it and generates junk.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Security            Last change: 04 Jun 1993                    1
+
+
+

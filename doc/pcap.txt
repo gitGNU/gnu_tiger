@@ -1,0 +1,19 @@
+%pcap001i
+The file indicated for a printer control does not exist.  This is just
+an informational message, though it probably means something in the
+print system isn't configured correctly.
+%pcap002i
+The indicated file or directory associated with a printer control does not
+have secure ownership.  This may represent a security vulnerability.
+%pcap002w
+The indicated executable associated with a printer control does not have
+secure ownership.  This may represent a security vulnerability, as it
+may be possible to replace the executable.
+%pcap003i
+The indicated file or directory associated with a printer control has
+group or world write permissions.  This may represent a security
+vulnerability.
+%pcap003w
+The indicated executable associsated with a printer control has
+group or world write permissions.  This may represent a security
+vulnerability, as it may be possible to replace the executable.

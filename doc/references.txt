@@ -1,0 +1,8 @@
+%curry
+David A. Curry,
+UNIX System Security - A Guide for Users and System Administrators,
+Addison-Wesley, 1992, ISBN 0-201-56327-4
+%garfinkel
+Simson Garfinkel and Gene Spafford,
+Practical UNIX Security
+O'Reilly & Associates, Inc., 1991, ISBN 0-937175-72-2

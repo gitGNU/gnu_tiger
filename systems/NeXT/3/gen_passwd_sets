@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# NeXT/3/gen_passwd_sets - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+
+local=0
+for parm
+do
+  case "$parm" in
+    -p) ;;
+    -l) local=1;;
+    *)	outfile="$parm";;
+  esac
+done
+
+
+PASSWD_SET=$WORKDIR/passwd.set.etc.$$
+$GREP -v '^[#+-]' /etc/passwd > $PASSWD_SET
+echo "/etc/passwd" > $PASSWD_SET.src
+echo $PASSWD_SET >> $outfile
+
+[ -n "$YPCAT" ] && {
+    PASSWD_SET=$WORKDIR/passwd.set.nis.$$
+    $YPCAT passwd > $PASSWD_SET
+    echo "NIS" > $PASSWD_SET.src
+    echo $PASSWD_SET >> $outfile
+}
+
+COUNT=1
+
+/usr/etc/nidomain -l | 
+$AWK '{ print substr($1,5,length($1) - 4) }' | (
+    while read NETINFO_TAG
+    do
+	PASSWD_SET=$WORKDIR/passwd.set$COUNT.$$
+	/usr/bin/nidump -t passwd localhost/$NETINFO_TAG > $PASSWD_SET
+	echo "NetInfo($NETINFO_TAG)" > $PASSWD_SET.src
+	echo $PASSWD_SET >> $outfile
+	COUNT=`$EXPR $COUNT + 1`
+    done
+    exit $COUNT
+)
+

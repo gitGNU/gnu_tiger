@@ -1,0 +1,532 @@
+<HR><PRE>
+
+
+
+
+
+
+
+
+</PRE><HR>
+<CENTER><H2> Documents for misc</H2></CENTER>
+<A NAME="ca9122f"><P><B>Code [ca9122f]</B><P>
+CERT Advisory CA-91:22
+<P>
+The `loadmodule' executable from OpenWindows 3.0 contains a security
+vulnerability that can allow a local user to gain root access.
+<P>
+Sun Patch 100448-01 provides a fix for this.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="ca9122w"><P><B>Code [ca9122w]</B><P>
+CERT Advisory CA-91:22
+<P>
+The `loadmodule' executable installed on this machine may contain a
+security vulnerability that can allow a local user to gain root
+access. This applies to OpenWindows 3.0.
+<P>
+Sun Patch 100448-01 provides a fix for this.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="ca9122i"><P><B>Code [ca9122i]</B><P>
+The OpenWindows binary `loadmodule' could not be located in order
+to check it for vulnerabilities. If you have OpenWindows 3.0 installed,
+then you should set the environment variable OPENWINHOME to point to
+the OpenWindows installation directory and rerun the security checking
+system. For example:
+<P>
+setenv OPENWINHOME /usr/local/openwin
+<P>
+./tiger
+<P>
+Other versions of OpenWindows do not exhibit this vulnerability.
+<P>
+See message-id ca9122f for information on the vulnerability.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc001w"><P><B>Code [misc001w]</B><P>
+If the console on a Sun workstation is marked as secured, then it is
+possible for someone with physical access to the console to
+reboot the machine in single-user mode, thus giving them root
+access to the machine. This can be corrected by editing the
+file /etc/ttytab and removing the word 'secure' from the
+entry for the console. By doing this, the root password must
+be entered when booting in single-user mode. Thus, if you forget
+the root password, you will have to boot from some other media
+in order to get back in. This will *also* prevent root logins
+on the console. It will be necessary to login as a normal user,
+then 'su' to the root account (this is a preferred method as it
+provides accountability).
+<P>
+If your system's console is in a physically secure location, then
+it is fairly safe to leave this as it is.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc002w"><P><B>Code [misc002w]</B><P>
+If the tty's and pseudo-tty's on a Sun workstation are marked
+as secured, then it is possible to login as 'root' on any of
+these tty's. This does not provide any accountability as
+to who is using the 'root' account. This can be corrected by
+editing the file /etc/ttytab and removing the word 'secure' from
+the tty and pseudo-tty lines. By doing this, it will not be
+possible to login directly as 'root' via telnet, rlogin, or on
+a hardwired terminal. It will be necessary to login as a normal
+user, then 'su' to the root account, thereby providing accountability.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc003f"><P><B>Code [misc003f]</B><P>
+Without the /var/yp/securenets file, an NIS server will hand out
+its map files to any client that asks. Since the password file
+is one of the maps maintained by the NIS server, anyone on the
+Internet is capable of retrieving your password file. The `securenets'
+file allows you to specify networks and hosts which are allowed to
+retrieve information from the server.
+<P>
+This requires that Sun Patch ID 100482 be installed.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc004w"><P><B>Code [misc004w]</B><P>
+If the PROM monitor is not in secure mode, then someone with
+physical access to the console can enter the PROM monitor and
+execute commands which allow them to read and modify memory, boot
+alternate OS's etc. See the 'eeprom' man page for information
+on securing the PROM monitor.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc005w"><P><B>Code [misc005w]</B><P>
+The listed security check file from a check.tbl file does not
+exist.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc006w"><P><B>Code [misc006w]</B><P>
+The NFS mount daemon is running with port checking disabled.
+This means that any user on an authorized client can obtain
+a file handle for an exported file-system. If port checking
+is also disabled in the kernel, this file handle can be used
+to gain unauthorized access to files, and possibly to gain
+unauthorized privileges. On SunOS 4.x machines, the '-n'
+switch is used to disable port checking. This is the default
+when C2 security is not enabled. Port checking can be enabled
+by editing the /etc/rc.local file and removing the '-n' switch
+from the rpc.mountd command.
+<P>
+NOTE: Doing this may break certain older NFS implementations which
+do not use a privileged port. You should verify that any clients
+do not have this problem.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc007w"><P><B>Code [misc007w]</B><P>
+The `ypbind' on this machine is running with a `ypset' option (either
+-ypset or -ypsetme). These options can allow an intruder to redirect
+NIS lookups to a server set up by them, allowing them to gain privileged
+access. These options should not be used.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc008w"><P><B>Code [misc008w]</B><P>
+The running kernel is not checking to see if the source
+port for NFS requests is a privileged port. If the machine
+is not doing NFS serving, this is not a problem. If it is,
+this means that any user on an authorized client that can obtain
+a file handle for an exported file-system can gain unauthorized
+access to files, and possibly gain unauthorized privileges.
+If port checking is also disabled for the NFS mount daemon [misc006w],
+this becomes very easy to do. To enable port checking, the
+kernel variable 'nfs_portmon' should be set to a non-zero value.
+<P>
+On SunOS 4.x systems, an 'adb' command exists in the /etc/rc.local
+script to set this variable during boot up. This command is normally
+only executed for systems which have enabled Sun's C2 security.
+Removing the command from the surrounding 'if' block will enable it
+for non-C2 systems.
+<P>
+For SunOS 5.x systems, add the line
+<P>
+set nfs:nfs_portmon = 1
+<P>
+to the /etc/system file and reboot.
+<P>
+NOTE: Enabling NFS port checking may break certain older NFS
+implementations which do not use a privileged port. You should verify
+that any clients do not have this problem.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc009w"><P><B>Code [misc009w]</B><P>
+The -hosts option is being used with the automounter. This may
+allow unauthorized access or privileges to be gained. The -hosts
+option allows filesystems to be automounted from any host on
+the network. If the machine is attached to the Internet, any
+host on the Internet is a candidate.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="ca9302a"><P><B>Code [ca9302a]</B><P>
+CERT Advisory CA-93:02a
+<P>
+A vulnerability exists in the distributed printing facility of all
+releases of NeXTSTEP software though NeXTSTEP 3.0. The "_writers"
+property on the "/printers" and "/fax_modems" should be removed.
+<P>
+See the CERT advisory for more details.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc010w"><P><B>Code [misc010w]</B><P>
+CERT Advisory CA-93:15
+<P>
+CERT Advisory CA-93:16
+<P>
+A serious vulnerability exists in most versions of sendmail
+distributed prior to late October, or early November 1993. This
+vulnerability allows remote users to execute arbitrary programs.
+The vulnerability affects the final destination host, therefore
+firewalled machines are vulnerable. The CERT advisory CA-93:16
+provides three approaches for the problem. If feasible, the
+best approach is to disable the program mailer (Mprog) in the
+`sendmail.cf' file. If not feasible, then a version of sendmail
+(such as sendmail 8.6.4 or later from ftp.cs.berkeley.edu) should
+be installed. Vendor provided fixes are
+<P>
+HP-UX 8.x, series 300/400 PHNE_3369
+<P>
+HP-UX 9.x, series 300/400 PHNE_3370
+<P>
+HP-UX 8.x, series 700/800 PHNE_3371
+<P>
+HP-UX 9.x, series 700/800 PHNE_3372
+<P>
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc011w"><P><B>Code [misc011w]</B><P>
+The local sendmail.cf is using the sendmail restricted shell (smrsh)
+for program delivery, but it appears to use a program which allows
+the vulnerabilities discussed in `misc010w' to be exploited.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc012e"><P><B>Code [misc012e]</B><P>
+The indicated file could not be read. This generally indicates that
+the check was attempted from a userid with insufficient privileges.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc013w"><P><B>Code [misc013w]</B><P>
+CERT Advisory CA-93:17
+<P>
+The xterm utility contains a vulnerability which allows any file to
+be overwritten, or the ownership of the file changed. Consult vendors
+for patches for supported versions of xterm. MIT Patch 26 for X11R5
+contains a patch for the MIT distribution.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc014w"><P><B>Code [misc014w]</B><P>
+<P>
+The file `/etc/rcS' is executed during the switch to single user
+mode (part of booting and shutting down). If file system checks
+fail, then this script will start a root shell on the console.
+To force a password to be entered, locate the line that reads
+<P>
+/sbin/sh < /dev/console
+<P>
+and change this to
+<P>
+/sbin/sulogin
+<P>
+This will force the root password to be entered should the
+file system checks fail.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc015w"><P><B>Code [misc015w]</B><P>
+<P>
+The `xload' utility, when built with the standard (unpatched) MIT
+X11R5 distribution on systems with dynamic linking, contains a
+security vulnerability. The link step links against libraries
+using relative pathnames (../../..). To correct the problem,
+the `xload' utility should be relinked without these pathnames
+(the absolute pathname to your X11 libraries should be used).
+<P>
+Another alternative is to disable the `xload' utility by turning
+off the setuid and/or setgid bits.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc016w"><P><B>Code [misc016w]</B><P>
+<P>
+The `ie', `le', and `qe' device files can be used to snoop packets
+from the network (ethernet in these cases). This ability should be
+restricted. The permissions on the listed files should be 0600. The
+Solaris package facility will occasionally reset these permissions to
+what they are defined to be in in the /var/sadm/install/contents file.
+Therefore, they must be changed there as well. The file is an ascii
+file and can be edited with any editor.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc017w"><P><B>Code [misc017w]</B><P>
+<P>
+The `ie', `le', and `qe' device files can be used to snoop packets
+from the network (ethernet in these cases). This ability should be
+restricted. The listed device files should be owned by root and only
+readable/writable by root in order to restrict access. The Solaris
+package facility will occasionally reset the ownership and permissions to
+what they are defined to be in in the /var/sadm/install/contents file.
+Therefore, they must be changed there as well. The file is an ascii
+file and can be edited with any editor.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc017f"><P><B>Code [misc017f]</B><P>
+The umask settings used in the boot scripts is insecure.
+This means that probably the boot scripts will create files
+(if any) with permissions that make them subject to attack. Recommended
+permissions are 022 or 022.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc018w"><P><B>Code [misc018w]</B><P>
+There are two umask settings in the boot scripts, this probably means
+that only one of them will be valid. Check the appropiate file to
+fix this issue.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc019w"><P><B>Code [misc019w]</B><P>
+Tiger was unable to found any umask settings to be used in the boot
+scripts. This means that probably the boot scripts will create files
+(if any) with vulnerable permissions.
+Tiger was unable
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="misc020f"><P><B>Code [misc020f]</B><P>
+Tiger checked the process table and was not able to find a process
+which it was configured to look for.

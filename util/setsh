@@ -1,0 +1,76 @@
+#!/bin/sh
+#
+# Convert everything over to another shell.
+#
+# This of course only useful for converting to Bourne Shell-line
+# shells such as Korn Shell or Bourne Again SHell.  Can also
+# be used to add options to the scripts.
+#
+# Usage: setsh path_to_shell shell_arguments
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+
+shell=$1
+shellx="$*"
+
+[ ! -n "$shell" ] && {
+  echo "--ERROR-- Usage: $0 shellname"
+  exit 1
+}
+
+[ ! -x $shell ] && {
+  echo "--ERROR-- $shell does not exist or not executable"
+  exit 1
+}
+
+case $shell in
+  *csh)
+     echo "--ERROR-- C-shell style shells are not acceptable"
+     exit 1
+     ;;
+  *zsh)
+     echo "--ERROR-- zsh is not acceptable"
+     exit 1
+     ;;
+esac
+   
+findcmd()
+{
+  CMD=$1
+
+  SRCH=/usr/ucb:/usr/bin:/bin:/etc:/usr/etc
+  
+  SAVEIFS=$IFS
+  IFS=:
+  set $SRCH
+  IFS=$SAVEIFS
+  for dir
+  do
+    [ -x $dir/$CMD ] && {
+      echo $dir/$CMD
+      return
+    }
+  done
+}
+
+FIND=`findcmd find`
+ED=`findcmd ed`
+
+$FIND . ! -type d -print |
+while read filename
+do
+  $ED -s $filename <<EDCMD
+1,1s%#!.*\$%#!$shellx%
+w
+q
+EDCMD
+done

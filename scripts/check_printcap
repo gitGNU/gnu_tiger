@@ -1,0 +1,167 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_printcap - 06/28/93
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT SED LS RM || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+echo
+echo "# Checking printer configuration files..."
+
+haveallcmds AWK CAT LS SED || exit 1
+
+saveifs=$IFS
+realpath="$REALPATH -d"
+[ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath=echo
+
+dirname()
+{
+  _path="$1"
+  echo "$_path" |
+  $SED -e 's%/[^/][^/]*/*$%/%'
+}
+
+check_filter()
+{
+  __pr="$1"
+  __f="$2"
+  __fcmd="$3"
+  __source="$4"
+
+  set X $__fcmd
+  shift
+  pass=1
+  for __comp
+  do
+    case "$__comp" in
+      /*/*) {
+	if [ ! -f "$__comp" -a ! -d "$__comp" ]; then
+	  [ $pass -eq 1 ] && {
+	    message INFO xxxx "" "Printer control $__f's file \`$__comp' for printer \`$__pr' does not exist."
+	    echo
+	  }
+	  
+	  while [ -n "$__comp" -a \( ! -f "$__comp" -a ! -d "$__comp" \) ]
+	  do
+	    __comp="`dirname \"$__comp\"`"
+	  done
+	fi
+
+	[ -n "$__comp" ] && {
+	  lgetpermit "$__comp" |
+	  pathmsg pcap002w pcap003w "$__comp" root "Print control \`$__f' for printer \`$__pr' uses" ""
+
+	  [ ! -d "$__comp" -a "$ux" = '1' ] && {
+	    [ -n "$TigerCheckEmbedded" ] && {
+	      echo "$__comp $__source" >> $TigerCheckEmbedded
+	    }
+	  }
+	}
+      }
+      ;;
+    esac
+    pass=2
+  done
+}
+
+src=/etc/printcap
+infile=/etc/printcap
+
+$SED -e 's/^#.*$//' -e '/^$/d' $infile |
+$AWK '
+/\\$/ {printf("%s", substr($0, 1, length($0)-1));}
+!/\\$/
+' |
+$SED -e 's/[ 	]*=[ 	]*/=/g' |
+while read entry
+do
+  IFS=:
+  set X $entry
+  IFS=$saveifs
+  shift
+  pnames="$1"
+  shift
+  printer="`echo \"$pnames\" | $SED -e 's/^\([^|]*\)|.*$/\1/'`"
+  for setting
+  do
+    case "$setting" in
+      *=*) {
+	IFS="="
+	set X $setting
+	IFS=$saveifs
+	shift
+	keyword=$1
+	shift
+	value="$*"
+	case "$keyword" in
+	  ff|sf) ;;
+          lp);;
+          ?f) check_filter "$printer" "$keyword" "$value" "$src";;
+           *) case "$value" in
+	        /*/*) check_filter "$printer" "$keyword" "$value" "$src";;
+              esac;;
+        esac
+      };;
+    esac
+  done
+done

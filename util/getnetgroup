@@ -1,0 +1,85 @@
+#!/bin/sh
+#
+# Extract all host entries from a netgroup(s), recursively expanding
+# any sub-netgroups...  if multiple netgroups are given, everything
+# gets mixed together...
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+targets="$*"
+
+expandgrp()
+{
+  for sub
+  do
+    eval "for host in \$grphosts$sub; do echo \$host; done"
+    eval expandgrp \$grpsubs$sub
+  done
+}
+
+[ "$YP" = "" ] && {
+   echo "$targets"
+   exit 0
+}
+
+$YPCAT -k netgroup |
+$AWK '{
+   grpname=$1;
+   hosts="";
+   grps="";
+   sep="";
+   for(i=2;i<=NF;i++){
+     if($i ~ /^\(/){
+         split($i, entry, ",");
+         if(entry[1] != ""){
+           s = substr(entry[1], 2, length(entry[1])-1);
+           hosts=hosts sep s;
+           sep=" ";
+         }
+         else if(entry[2] = "" && entry[3] == ""){
+           hosts=hosts sep "*";
+           sep=" ";
+         }
+     }
+     else {
+         grps=grps " " $i;
+     }
+   }
+   if(hosts != "" || grps != ""){
+     printf("%s %s\n%s\n", grpname, grps, hosts);
+   }
+}' |
+{
+  while read netgroup subgroups
+  do
+    read hosts
+    match=0
+    for target in $targets
+    do
+      [ "$netgroup" = "$target" ] && match=1
+    done
+    if [ $match -eq 1 ]; then
+      targhosts="$targhosts $hosts"
+      targgroups="$targgroups $subgroups"
+    else
+      eval grphosts$netgroup=\"$hosts\"
+      eval grpsubs$netgroup=\"$subgroups\"
+    fi
+  done
+
+  for host in $targhosts
+  do
+    echo $host
+  done
+  expandgrp $targgroups
+} |
+$SORT -u
+

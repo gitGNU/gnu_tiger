@@ -1,0 +1,131 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# util/gethostinfo - 04/22/93
+#
+#-----------------------------------------------------------------------------
+#
+
+findcmd()
+{
+  CMD=$1
+
+  SRCH=/bin:/usr/bin:/etc:/usr/etc:/usr/ucb
+  
+  SAVEIFS=$IFS
+  IFS=:
+  set $SRCH
+  IFS=$SAVEIFS
+  for dir
+  do
+    [ $TESTEXEC $dir/$CMD ] && {
+      echo $dir/$CMD
+      return
+    }
+  done
+}
+
+TESTEXEC=-x
+( [ $TESTEXEC /bin/sh ] ) 2> $WORKDIR/te.$$
+[ -s $WORKDIR/te.$$ ] && TESTEXEC=-f
+export TESTEXEC
+
+RM=`findcmd rm`
+[ -n "$RM" ] && $RM $WORKDIR/te.$$
+AWK=`findcmd awk`
+
+#------------------------------------------------------------------------
+# This should get:
+#
+#    Sun, Cray, AIX, HP-UX, IRIX
+#
+UNAME=`findcmd uname`
+
+[ -n "$UNAME" ] && {
+  $UNAME -a |
+  $AWK '
+         {
+	   if($5 == "CRAY"){
+		if($6 == "T3E")
+		{
+			printf("UNICOSMK %s %s.%s\n", $3, $5, $6);
+		}
+		else
+		{
+			printf("UNICOS %s %s.%s\n", $3, $5, $6);
+		}
+	   }
+	   if($1 == "SunOS"){
+   	        printf("%s %s %s\n", $1, $3, $5);
+	   }
+	   else if($1 == "AIX"){
+	        printf("%s %s.%s RS6000\n", $1, $4, $3);
+	   }
+	   else if($1 == "HP-UX"){
+                printf("HPUX %s %s\n", $3, $5);
+           }
+           else if($1 == "IRIX"){
+                printf("IRIX %s %s\n", $3, $5);
+           }
+           else if($1 == "IRIX64"){
+                printf("IRIX %s %s\n", $3, $5);
+           }
+	   else if($1 == "Linux"){
+		printf("Linux %s %s\n",$3, $11);
+	   }
+	 }
+  '
+  exit
+}
+
+#------------------------------------------------------------------------
+# This should get:
+#
+#    NeXT
+#
+HOSTINFO=`findcmd hostinfo`
+
+[ -n "$HOSTINFO" ] && {
+  $HOSTINFO |
+  $AWK '
+        BEGIN {
+	  OS="";
+	  REV="";
+	  ARCH="";
+	}
+	NR == 2 {
+          OS=$1
+	  REV=substr($3,1,length($3)-1);
+	}
+	NR == 6 && NF == 4 {
+	  ARCH=substr($4,2,length($4)-2);
+   	}
+	NR == 6 && NF == 3 {
+	  ARCH=$3
+	}
+	END {
+	  printf("%s %s %s\n", OS, REV, ARCH);
+	}
+  '
+  exit
+}
+#
+exit 0
+#
+exit 0
+#
+exit 0

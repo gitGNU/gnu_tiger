@@ -1,0 +1,91 @@
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# HPUX/file_access_list - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+#                           owner group r w x   r w x   r w xLVL MessageIDs
+#--------------------------------------------------------------------------
+/                           root  root  1 . 1   1 0 1   1 0 1 W 018 018 018
+/etc                        root  root  1 . 1   1 0 1   1 0 1 W 019 019 019
+/bin                        root  root  1 . 1   1 0 1   1 0 1 W 001 002 003
+/usr                        root  root  1 . 1   1 0 1   1 0 1 W 001 002 003
+/usr/news		    .     .     . . .   . . .   . . . . 001 002 003
+/usr/mail                   .     .     . . .   . . .   . . . . 001 002 003
+/usr/bin                    root  root  1 . 1   1 0 1   1 0 1 A 001 002 003
+/usr/lib                    root  root  1 . 1   1 0 1   1 0 1 . 001 002 003
+/usr/ucb                    root  root  1 . 1   1 0 1   1 0 1 A 001 002 003
+/usr/*                      .     .     . . .   . 0 .   . 0 . . 001 002 003
+/dev                        root  .     . . .   1 0 1   1 0 1 . 001 002 003
+#
+/hp-ux                      root  .     1 . 1   1 0 0   1 0 0 . 001 002 003
+/.cshrc                     root  .     1 . .   . 0 .   . 0 . W 006 006 006
+/.login                     root  .     1 . .   . 0 .   . 0 . W 006 006 006
+/.profile                   root  .     1 . .   . 0 .   . 0 . W 006 006 006
+/.forward                   root  .     1 . .   . 0 .   . 0 . W 006 006 006
+/.rhosts                    root  .     1 . 0   0 0 0   0 0 0 W 006 006 006
+#
+/usr/lib/aliases            root  .     1 . 0   1 0 0   1 0 0 F 007 007 007
+/usr/lib/aliases.dir        root  .     1 . 0   1 0 0   1 0 0 F 007 007 007
+/usr/lib/aliases.pag        root  .     1 . 0   1 0 0   1 0 0 F 007 007 007
+/etc/inittab		    root  .     1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/exports                root  .     1 . 0   . 0 0   . 0 0 W 008 008 008
+/etc/forward		    root  .     1 . 0   . 0 0   . 0 0 W 007 007 007
+/etc/checklist              root  .     1 . 0   . 0 0   . 0 0 W 001 002 003
+/etc/bootptab		    root  .     1 . 0   . 0 0   . 0 0 W 001 002 003
+/etc/group                  root  .     1 . 0   1 0 0   1 0 0 F 009 009 009
+/etc/hosts	            root  .     1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/hosts.allow            root  .     1 . 0   . 0 0   . 0 0 W 010 010 010
+/etc/hosts.deny		    root  .     1 . 0   . 0 0   . 0 0 W 010 010 010
+/etc/hosts.equiv            root  .     1 . 0   0 0 0   0 0 0 W 011 011 011
+/etc/hosts.lpd              root  .     1 . 0   . 0 0   . 0 0 W 011 011 011
+/etc/inetd.conf             root  .     1 . 0   . 0 0   . 0 0 W 012 012 012
+/etc/motd                   root  .     1 . 0   1 . 0   1 . 0 W 001 002 003
+/etc/mnttab                 root  .     1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/netgroup               root  .     1 . 0   0 0 0   0 0 0 F 013 013 013
+/etc/passwd                 root  .     1 . 0   1 0 0   1 0 0 A 014 014 014
+/etc/*rc                    root  .     1 . 0   . 0 .   . 0 . F 015 015 015
+/etc/resolv.conf            root  .     1 . 0   1 0 0   1 0 0 W 016 016 016
+/etc/rpc                    root  .     1 . 0   1 0 0   1 0 0 W 001 002 003
+/usr/lib/sendmail.cf        root  .     1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/services               root  .     1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/syslog.conf            root  .     1 . 0   1 0 0   1 0 0 W 001 002 003
+/etc/syslog.pid             root  .     1 . 0   . 0 0   . 0 0 W 001 002 003
+/etc/utmp                   root  .     1 . 0   1 0 0   1 0 0 W 017 017 017
+/etc/*                      .     .     . . .   . 0 .   . 0 . W 001 002 003
+/usr/etc/*		    .     .     . . .   . 0 .   . 0 . W 001 002 003
+/usr/lib/*		    .     .     . . .   . 0 .   . 0 . W 001 002 003
+/lib/*                      .     .     . . .   . 0 .   . 0 . W 001 002 003
+#
+#
+/usr/bin/uulog              .     .     . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/uuto               .     .     . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/uupick             .     .     . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/cu                 root  .     . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/uucp               uucp  .     . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/uux                uucp  .     . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/uuname             uucp  .     . 0 1   . 0 1   . 0 . . 001 002 003
+/usr/bin/uustat             uucp  .     . 0 1   . 0 1   . 0 . . 001 002 003
+/bin/write                  root  .     . . 1   . 0 .   . 0 . . 001 002 003
+/etc/wall                   root  .     . . 1   . 0 .   . 0 . . 001 002 003
+#
+/bin/login                  root  .     1 . 1   1 0 1   1 0 1 F 001 002 003
+/bin/su                     root  .     1 . 1   . 0 .   . 0 . F 001 002 003
+/usr/bin/*                  .     .     . . .   . 0 .   . 0 . W 001 002 003
+/bin/*                      .     .     . . .   . 0 .   . 0 . W 001 002 003
+
+

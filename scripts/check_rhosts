@@ -1,0 +1,319 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_rhosts - 06/14/93
+#
+# 04/28/93 dls  Added '-L' option to 'ls' to get the permissions from the
+#               file instead of the symbolic link.
+#
+#               Complain if the .rhosts is a symbolic link or directory.
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r "$basedir/config" ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT EXPR GEN_PASSWD_SETS JOIN LS RM SED || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing check of /etc/hosts.equiv and .rhosts files..."
+
+haveallcmds AWK CAT EXPR GEN_PASSWD_SETS JOIN LS RM SED || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+haveallvars HOSTNAME TESTLINK || exit 1
+
+check_entry()
+{
+  user="$1"
+  rhost="$2"
+  ruser="$3"
+  plus=0
+
+  if [ "$rhost" = '+' ]; then
+    if [ "$user" = '+' ]; then
+      message FAIL rcmd001f "" "User $user's .rhosts file has a '+ +' entry."
+    else
+      message FAIL rcmd002f "" "User $user's .rhosts file has a '+' for host field."
+    fi
+  elif [ -n "$RHOST_SITES" ]; then
+    note=1
+    eval case $rhost in $rhostcase esac
+    [ $note = 1 ] && {
+      message WARN rcmd003w "" "User $user's .rhosts file has host \`$rhost'."
+    }
+  fi
+
+  if [ "$rhost" != '+' -a "$ruser" = '+' ]; then
+    message WARN rcmd004w "" "User $user's .rhosts file has a '+' for user (host $rhost)."
+  elif [ ! -n "$ruser" ]; then
+    message INFO rcmd005i "" "User $user's .rhosts file has empty user field for host \`$rhost'."
+  fi
+# Linux allows comments in rhosts files
+  [ "$OS" != "Linux" ] &&
+  case "$rhost" in
+    '#'*) {
+      message WARN rcmd013w "" "User $user's .rhosts file contains an attempted comment line"
+    }
+    ;;
+  esac
+}
+
+scan_file()
+{
+  user="$1"
+  file="$2"
+     
+  # added #+@_ which should be valid characters.
+  $AWK '/^[#\+@_a-zA-Z0-9\.\-\t ]*$/ {print}' < "$file" | 
+        {
+          while read rhost ruser
+          do
+            check_entry "$user" "$rhost" "$ruser"
+          done
+        }
+    
+  # added #+@_ which should be valid characters.
+  $AWK 'BEGIN {count = 0} !/^[#\+@_a-zA-Z0-9\.\-\t ]*$/ {count += 1} 
+  END {print count}' < "$file" |
+          {
+            read count
+            if [ "$count" -ne 0 ];then
+              message WARN rcmd015w "" "$count lines of user $user's .rhosts file were not checked because of invalid characters."
+            fi
+          }
+
+}
+
+check_file()
+{
+  user=$1
+  file=$2
+  getpermit $file | {
+    read _f owner group ur uw ux gr gw gx or ow ox suid sgid stk
+
+    rtxt=
+    wtxt=
+    case "$gr$or" in
+      00) rtxt='';;
+      01) rtxt='world';;
+      10) rtxt="group \`$group'";;
+      11) rtxt="group \`$group' and world";;
+      *) rtxt='???';;
+    esac
+
+    case "$gw$ow" in
+      00) wtxt='';;
+      01) wtxt='world';;
+      10) wtxt="group \`$group'";;
+      11) wtxt="group \`$group' and world";;
+      *) wtxt='???';;
+    esac
+
+    [ -n "$rtxt$wtxt" ] && {
+      [ -n "$rtxt" ] && rtxt="$rtxt read"
+      [ -n "$wtxt" ] && wtxt="$wtxt write"
+      sep=
+      [ -n "$rtxt" -a -n "$wtxt" ] && sep='and'
+      message WARN rcmd006w "" "User $user's .rhosts file has $rtxt$sep$wtxt access."
+    }
+  }
+}
+
+process_passwd()
+{
+  while read user homedir host
+  do
+    [ "$homedir" = '/' -a "$user" != 'root' ] && continue
+    
+    [ "$host" = "$HOSTNAME" ] && {
+      if [ $TESTLINK $homedir/.rhosts ]; then
+	message WARN rcmd007w "" "User $user's .rhosts file is a symbolic link:"
+	$LS -l $homedir/.rhosts
+	$LS $LSGROUP $LSLINK $homedir/.rhosts
+	[ -s $homedir/.rhosts ] && {
+	  check_file $user $homedir/.rhosts
+	  if [ -r $homedir/.rhosts ]; then
+	    scan_file $user $homedir/.rhosts
+	  else
+	    message INFO read001i "" "Can not open $user's .rhosts file."
+	  fi
+	}
+      elif [ -d $homedir/.rhosts ]; then
+	message ALERT rcmd008a "" "User $user's .rhosts file is a directory:"
+	$LS $LSGROUP -Rla $homedir/.rhosts
+	echo " "
+      elif [ -s $homedir/.rhosts ]; then
+	check_file $user $homedir/.rhosts
+	if [ -r $homedir/.rhosts ]; then
+	  scan_file $user $homedir/.rhosts
+	else
+	  message INFO read001i "" "Can not open $user's .rhosts file."
+	fi
+      fi
+    }
+  done
+}
+
+saveifs="$IFS"
+
+rhostcase='*) NOTE=0;;'
+
+[ -n "$RHOST_SITES" ] && {
+  rhostcase=
+  set -f
+  for site in $RHOST_SITES
+  do
+    rhostcase="$rhostcase ${site}) note=0;;"
+  done
+  set +f
+}
+
+{
+  [ -s /etc/hosts.equiv ] && {
+    {
+      hosts=
+      netgroup=
+      line=1
+      while read entry
+      do
+	case $entry in
+	  +@*) netgroup="${netgroup}`echo $entry | $SED -e 's/^+@//'` ";;
+	  +|'+ '*) message FAIL rcmd009f "" "/etc/hosts.equiv contains '+'.";;
+	  -*) [ $line -eq 1 -a "$HASHOSTEQUIVBUG" != 'N' ] && {
+	    message FAIL rcmd011f "" "First line of hosts.equiv has leading '-'."
+	    }
+	  ;;
+	  '#'*) {
+	    # Linux allows comments in rhosts files
+	    [ "$OS" != "Linux" ] && {
+	    message WARN rcmd013w "" "/etc/hosts.equiv contains an attempted comment line"
+	    hosts="$hosts
+$entry"
+	    }
+	  }
+	  ;;
+	  *) hosts="$hosts
+$entry";;
+	esac
+	line=`$EXPR $line + 1`
+      done
+      
+      [ -n "$netgroup" ] && {
+	hosts="$hosts `$BASEDIR/util/getnetgroup $netgroup`"
+      }
+      [ -n "$hosts" ] && {
+	message INFO rcmd010i "" "/etc/hosts.equiv contents:"
+	wildcard=0
+	saveifs=$IFS
+	IFS="
+"
+	for host in $hosts
+	do
+	  IFS=$saveifs
+	  if [ ! -n "$host" ]; then
+	    :
+	  elif [ "$host" = '*' ]; then
+	    wildcard=1
+	    echo " (netgroup wildcard)"
+	  else
+	    case "$host" in
+	      ' '*) echo "$host";;
+	      *) echo " $host";;
+	    esac
+	  fi
+	  IFS="
+"
+        done
+        IFS=$saveifs
+	[ $wildcard -eq 1 ] &&
+	  message FAIL rcmd012f "" "Wildcard netgroup member (,,)."
+      }
+    } < /etc/hosts.equiv
+  }
+
+  {
+    if [ -n "$Tiger_PasswdFiles" ]; then
+      $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+    else
+      $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
+    fi
+  }
+  while read passwd_set
+  do
+    echo
+    echo "# Checking accounts from `$CAT $passwd_set.src`..."
+  
+    $AWK -F: '{print $1, $6}' $passwd_set |
+    $BASEDIR/util/${GETFSHOST:=getfs-std} > $WORKDIR/home.hosts.$$
+
+    $AWK -F: '{ printf("%s %s\n", $1, $6); }' $passwd_set |
+    $JOIN -o 1.1 1.2 2.3 - $WORKDIR/home.hosts.$$ |
+    process_passwd
+
+    [ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
+    delete $WORKDIR/home.hosts.$$
+  done < $WORKDIR/pass.list.$$
+
+  delete $WORKDIR/pass.list.$$
+} |
+$OUTPUTMETHOD
+#
+exit 0
+#
+exit 0
+#
+exit 0

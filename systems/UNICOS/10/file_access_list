@@ -1,0 +1,71 @@
+#                           owner group s g r w x   r w x   r w xLVL MSGIDS
+#-----------------------------------------------------------------------------
+/                           root  root  . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/etc                        bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/bin                        bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/usr                        bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/lib                        bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/usr/adm                    adm   adm   . . 1 . 1   1 . 1   1 0 1 . 001 002 003
+/usr/bin                    bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/usr/gen                    bin   bin   . . 1 . 1   1 0 1   0 0 0 . 001 002 003
+/usr/lib                    bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/usr/mail                   bin   mail  . . 1 . 1   1 . 1   1 0 1 . 001 002 003
+/usr/spool                  bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/usr/ucb                    bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/etc/config                 bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/etc/nulib                  bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/etc/uidmaps                bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/dev                        bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+#
+/unicos                     root  .     0 0 1 . .   1 0 0   1 0 0 . 001 002 003
+/.cshrc                     root  .     0 0 1 . .   . 0 .   . 0 . . 001 002 003
+/.tcshrc                    root  .     0 0 1 . .   . 0 .   . 0 . . 001 002 003
+/.login                     root  .     0 0 1 . .   . 0 .   . 0 . . 001 002 003
+/.profile                   root  .     0 0 1 . .   . 0 .   . 0 . . 001 002 003
+/.forward                   root  .     0 0 1 . .   . 0 .   . 0 . . 001 002 003
+/.rhosts                    root  .     0 0 1 . 0   0 0 0   0 0 0 . 001 002 003
+#
+/etc/mail                   root  .     . . . . .   . 0 .   . 0 . . 001 002 003
+/etc/mail/aliases           root  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/mail/aliases.dir       root  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/mail/aliases.pag       root  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/exports		    root  .     . . 1 . 0   . 0 0   . 0 0 . 001 002 003
+/etc/checklist              root  .     . . 1 . 0   . 0 0   . 0 0 . 001 002 003
+/etc/group                  root  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/services               bin   bin   . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/syslog.conf            bin   bin   . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/suid_exec              root  .     1 . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/etc/hosts.allow            root  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/hosts.deny		    root  .     . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/hosts.equiv            root  .     . . 1 . 0   0 0 0   0 0 0 . 001 002 003
+/etc/hosts.lpd              root  .     . . 1 . 0   . 0 0   . 0 0 . 001 002 003
+/etc/hosts                  root  .     . . 1 . 0   . 0 0   . 0 0 . 001 002 003
+/etc/hosts.bin              root  .     . . 1 . 0   . 0 0   . 0 0 . 001 002 003
+/etc/udb		    root  bin   . . 1 . 0   0 0 0   0 0 0 . 001 002 003
+/etc/udb.public             root  bin   . . 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/cshrc		    root  .     0 0 1 . .   1 0 0   1 0 0 . 001 002 003
+/etc/profile                root  .     0 0 1 . .   1 0 0   1 0 0 . 001 002 003
+/etc/inetd.conf             root  .     . . 1 . 0   . 0 0   . 0 0 . 001 002 003
+/etc/rc.mid		    root  .     0 0 1 . 1   . 0 0   . 0 0 . 001 002 003
+/etc/rc.pst                 root  .     0 0 1 . 1   . 0 0   . 0 0 . 001 002 003
+/etc/rc                     root  .     0 0 1 . 1   . 0 0   . 0 0 . 001 002 003
+/etc/brc                    root  .     0 0 1 . 1   . 0 0   . 0 0 . 001 002 003
+/etc/motd                   root  motd  0 0 1 . 0   1 1 0   1 0 0 . 001 002 003
+/etc/mnttab                 root  .     0 0 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/passwd                 root  .     0 0 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/remote                 root  .     0 0 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/resolv.conf            root  .     0 0 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/rpc                    bin   .     0 0 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/mail/sendmail.cf       root  .     0 0 1 . 0   1 0 0   1 0 0 . 001 002 003
+/etc/syslog.pid             root  .     . . 1 . 0   . 0 0   . 0 0 . 001 002 003
+/etc/wtmp                   adm   adm   . . 1 . 0   1 . 0   . 0 0 . 001 002 003
+/etc/utmp                   root  .     . . 1 . 0   1 . 0   1 0 0 . 001 002 003
+/etc/acid		    root  .     . . 1 . 0   1 . 0   1 0 0 . 001 002 003
+#
+/bin/login                  bin   bin   . . 1 . 1   1 0 1   1 0 1 . 001 002 003
+/bin/su                     root  .     1 . 1 . 1   . 0 .   . 0 . . 001 002 003
+/usr/bin/uscpblock          uscp  .     . . 1 . 1   . 0 1   . 0 1 . 001 002 003
+/usr/bin/uscpping           uscp  .     1 1 . . 1   . . 1   . . 1 . 001 002 003
+# This should be owner root!!!
+/usr/bin/*                  .     .     . . 1 . 1   . 0 .   . 0 . . 001 002 003
+/bin/*                      .     .     . . 1 . 1   . 0 .   . 0 . . 001 002 003

@@ -1,0 +1,8 @@
+# Example watch control file for uscan
+# Rename this file to "watch" and then you can run the "uscan" command
+# to check for upstream updates and more.
+# Site		Directory		Pattern			Version	Script
+ftp://www.net.tamu.edu	/pub/security/TAMU/	tiger-(.*)\.tar\.gz	debian	uupdate
+# Other archives
+#ftp://coast.cs.purdue.edu	/pub/tools/unix/tiger/TAMU/	tiger-(.*)\.tar\.gz	debian	uupdate
+#ftp://sunsite.unc.edu	/pub/Linux/system/security	tiger-(.*)\.tar\.gz	debian	uupdate

@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+db_input medium tiger/mail_rcpt || true
+db_input medium tiger/policy_adapt || true
+db_go
+

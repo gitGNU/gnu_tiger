@@ -1,0 +1,252 @@
+<HR><PRE>
+
+
+
+
+
+
+
+
+</PRE><HR>
+<CENTER><H2> Documents for rhosts</H2></CENTER>
+<A NAME="rcmd001f"><P><B>Code [rcmd001f]</B><P>
+An entry of the form '+ +' in a .rhosts file means that any one on the
+the Internet can login as the indicated user without a password. This
+should be removed *immediately* and the system checked for signs of an
+intrusion.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd002f"><P><B>Code [rcmd002f]</B><P>
+A plus sign (+) in the host field of a .rhosts file means that anyone
+with the same login ID as the indicated login ID, anywhere on the Internet,
+can login as that user, without a password. Note that all an intruder
+has to do is create that login ID on a remote machine that they have
+privileged access to. This should be removed *immediately* and the
+system checked for signs of an intrusion.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd003w"><P><B>Code [rcmd003w]</B><P>
+The .rhosts file for the indicated user contains an entry for a
+host which does not match any of the hosts listed in the RHOST_SITES
+variable, defined in the 'tigerrc' file.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd004w"><P><B>Code [rcmd004w]</B><P>
+The .rhosts file for the indicated user contains a '+' in the user
+field. This allows any user on the indicated machine to access the
+indicated login ID without providing a password. If this is not
+a captured account, this should be removed immediately and the
+system checked for signs of an intrusion.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd005i"><P><B>Code [rcmd005i]</B><P>
+The .rhosts file for the indicated user contains an entry which contains
+a host name, but no username. The user name will default to the login ID
+of the owner of the .rhosts file. The problem with this is that people
+often carry around a .rhosts file from host to host, and entries in it
+become out dated. By allowing the username to default, access to the
+account can be granted which is not obvious. Entries should be complete
+with host name and username. They should also be checked and cleaned out
+regularly.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd006w"><P><B>Code [rcmd006w]</B><P>
+The indicated .rhosts file has permissions other than read and write
+for the owner of the file. Allowing others to read the .rhosts file
+provides information about other "trusted" hosts which may allow them
+to compromise this host, the trusted hosts, or both. The permissions
+should be at most read and write for the owner of the file. Note that
+on some systems, because of network file systems, it is necessary to
+have world read access to the .rhosts file so that client machines can
+access the .rhosts file. Most systems correctly handle this situation
+without the need for the world read access. If yours does not, you
+should bring it to the attention of your vendor.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd007w"><P><B>Code [rcmd007w]</B><P>
+The indicated .rhosts file is a symbolic link. This is not normal
+and should be looked at to see why it is like this.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd008a"><P><B>Code [rcmd008a]</B><P>
+The indicated .rhosts file is a directory. This may indicate that
+an intrusion has occurred and the .rhosts directory is being used
+as a place to store files. This should be examined. The system
+should also be checked for signs of intrusion if the contents
+of the directory are unusual. The directory should be removed.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd009f"><P><B>Code [rcmd009f]</B><P>
+The /etc/hosts.equiv file contains a '+' entry. This is a major
+security hole. It allows anyone to login to the machine as any
+user except `root'. This needs to be removed immediately. Note
+that SunOS 4.x systems ship with the '+' entry.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd010i"><P><B>Code [rcmd010i]</B><P>
+The contents of the /etc/hosts.equiv file is listed. The hosts
+listed here should be examined for correctness.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd011f"><P><B>Code [rcmd011f]</B><P>
+CERT Advisory CA-91:12
+<P>
+A vulnerability exists in the trusted host facility such that
+the presence of a '-' as the first character of the /etc/hosts.equiv,
+/etc/hosts.lpd or .rhosts file may allow unauthorized access to the
+system.
+<P>
+Rearranging the entries such that the entry with the leading '-'
+is not the first line, or deleting it if it is the only line
+will solve this problem.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd012f"><P><B>Code [rcmd012f]</B><P>
+The /etc/hosts.equiv file provides access using a netgroup which
+includes a member of the form (,,). This is a wild card entry
+which matches any host. This should be corrected immediately.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd013w"><P><B>Code [rcmd013w]</B><P>
+The /etc/hosts.equiv file and $HOME/.rhosts files do not support
+comments. A commented entry is still valid. It simply indicates
+a host with the character '#' as the first letter. Since an attempt
+to comment out an entry indicates that it is no longer needed, it
+scould simply be deleted.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="rcmd015w"><P><B>Code [rcmd015w]</B><P>
+The indicated .rhosts file contains invalid characters, not expected
+to be found in a .rhosts file. This file should be examined and the
+invalid characters removed, as it may contain a typo or possibly a
+command.

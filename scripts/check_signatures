@@ -1,0 +1,146 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_signatures - 06/14/93
+#
+# 04/28/93 dls  Added '-L' option to 'ls' so that we get the permissions
+#               from the file instead of the symbolic link.
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT FMT GREP LS RM SED SORT || exit 1
+  haveallfiles BASEDIR WORKDIR SIGNATURE_FILE || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+echo
+echo "# Performing signature check of system binaries..."
+
+haveallcmds AWK CAT FMT GREP LS RM SED SORT SNEFRU || exit 1
+haveallfiles BASEDIR SIGNATURE_FILE WORKDIR || exit 1
+
+$SED -e '/^#/d' -e '/^[ 	]*$/d' $SIGNATURE_FILE |
+$AWK '{print $3}' |
+$SORT -u |
+while read file
+do
+  if [ -r $file ]; then
+    $GREP -v '^#' $SIGNATURE_FILE |
+    $GREP "[ 	]$file[ 	]" | {
+      located=0
+      versions=""
+      while read flag msgid fl p1 p2 p3 p4 p5 p6 p7 p8 comment
+      do
+	loc_signature=
+	case "$p1$p2$p3$p4$p5$p6$p7$p8" in
+	  *[!0-9a-f]*) {
+	    std_signature="$p1"
+	    comment="$p2 $p3 $p4 $p5 $p6 $p7 $p8 $comment"
+	    [ -n "$MD5" ] && loc_signature="`$MD5 < $file`"
+	  }
+	  ;;
+	  *) {
+	    std_signature=" $p1 $p2 $p3 $p4 $p5 $p6 $p7 $p8"
+	    [ -n "$SNEFRU" ] && loc_signature="`$SNEFRU < $file`"
+	  }
+	  ;;
+	esac
+
+	[ -n "$loc_signature" ] && {
+	  case $flag in
+	    Y)
+	    versions="$versions>>>>>> $comment
+"
+            [ "$loc_signature" = "$std_signature" ] && located=1;;
+	    N)
+	    [ "$loc_signature" = "$std_signature" ] && {
+	      perm="`$LS $LSLINK -l $file | $AWK '{print $1}'`"
+	      message ALERT $msgid "" "Binary $file ($perm) $comment."
+	      located=1
+	    }
+	    ;;
+	    O)
+	    versions="$versions>>>>>> $comment
+"
+            perm="`$LS -l $file | $AWK '{print $1}'`"
+            [ "$loc_signature" = "$std_signature" ] && {
+	      message WARN $msgid "" "$file ($perm) is from $comment"
+	      located=1
+	    }
+	    ;;
+	  esac
+	}
+        [ "$located" = 1 ] && break
+      done
+
+      [ "$located" = "0" -a -n "$versions" ] && {
+	perm="`$LS -l $file | $AWK '{print $1}'`"
+	message WARN sig004w "$versions" "None of the following versions of $file ($perm) matched the $file on this machine."
+      }
+    }
+  elif [ -f $file ]; then
+    message ERROR sig005e "" "Unable to read binary $file.  Can not perform signature check."
+  fi
+done |
+$OUTPUTMETHOD
+
+#
+exit 0
+#
+exit 0
+#
+exit 0

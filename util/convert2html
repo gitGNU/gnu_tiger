@@ -1,0 +1,33 @@
+# A sub script to doc2html.  Not to be run independently.
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+cnt=0
+read line
+while [ TRUE ]; do
+if [ "`echo $line | grep "%"`" ]; then
+  if [ "$cnt" -eq 1 ]; then
+   echo "<PRE>"
+   echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+   echo "</PRE><HR>"
+  fi
+  cnt=1
+  line1=$line
+  line=`echo "<A NAME=\"$line1\"><P><B>Code [$line1]</B><P>"|sed -e "s/%//g"`
+fi
+if [ -z "$line" ]; then
+  echo "<P>"
+else
+  echo $line
+fi
+read line
+if [ `echo $?` -ne 0 ]; then exit; fi
+done

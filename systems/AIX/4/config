@@ -1,0 +1,184 @@
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# AIX/3/config - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+AWK=/usr/bin/awk
+export AWK
+BASENAME=/usr/bin/basename
+export BASENAME
+CAT=/usr/bin/cat
+export CAT
+CC=/usr/bin/cc
+export CC
+CHMOD=/usr/bin/chmod
+export CHMOD
+CHOWN=/usr/bin/chown
+export CHOWN
+COMM=/usr/bin/comm
+export COMM
+DATE=/usr/bin/date
+export DATE
+EGREP=/usr/bin/egrep
+export EGREP
+EXPR=/usr/bin/expr
+export EXPR
+FILECMD=/usr/bin/file
+export FILECMD
+FIND=/usr/bin/find
+export FIND
+FINDXDEV=-xdev
+export FINDXDEV
+FINDPRUNE='! -fstype jfs -prune'
+export FINDPRUNE
+FMT=/usr/ucb/fmt
+export FMT
+GETHOSTNAME=/usr/bin/hostname
+export GETHOSTNAME
+GREP=/usr/ucb/grep
+export GREP
+GROUPSS=/usr/ucb/groups
+export GROUPSS
+JOIN=/usr/bin/join
+export JOIN
+LN=/usr/bin/ln
+export LN
+LS=/usr/bin/ls
+export LS
+MV=/usr/bin/mv
+export MV
+PS=/usr/bin/ps
+export PS
+RM=/usr/bin/rm
+export RM
+SED=/usr/bin/sed
+export SED
+SORT=/usr/bin/sort
+export SORT
+STRINGS=/usr/ucb/strings
+export STRINGS
+TAIL=/usr/ucb/tail
+export TAIL
+TR=/usr/ucb/tr
+export TR
+UNAME=/usr/bin/uname
+export UNAME
+UNIQ=/usr/bin/uniq
+export UNIQ
+BASENAME=/usr/bin/basename
+export BASENAME
+CHMOD=/usr/bin/chmod
+export CHMOD
+CHOWN=/usr/bin/chown
+export CHOWN
+LN=/usr/bin/ln
+export LN
+PASTE=/usr/bin/paste
+export PASTE
+YPCAT=/usr/bin/ypcat
+export YPCAT
+WAIT=wait
+export WAIT
+DIFF=/usr/bin/diff
+export DIFF
+MAILER=/usr/bin/mail
+export MAILER
+SENDMAILS="/usr/sbin/sendmail"
+SENDMAILCF="/etc/sendmail.cf"
+export SENDMAILS SENDMAILCF
+#
+# How to get different effects
+#
+DATECMD="$DATE +%D"
+TIMECMD="$DATE +%H:%M"
+export DATECMD TIMECMD
+SGREP="$EGREP -s"
+export SGREP
+LSGROUP=
+export LSGROUP
+LSLINK=-L
+export LSLINK
+TESTLINK=-L
+export TESTLINK
+TESTEXEC=-x
+export TESTEXEC
+#
+# Where are system directories/files?
+#
+MAILSPOOL=/usr/mail
+export MAILSPOOL
+CRONTAB=/usr/spool/cron/crontabs
+export CRONTAB
+
+#
+# Segment of code to find system specific tiger parts
+#
+
+CDIR="$BASEDIR/systems"
+eval `
+  while read var file
+  do
+    if [ -f "$CONFIG_DIR/$file" ]; then
+      loc="$CONFIG_DIR"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$ARCH/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV/$ARCH"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV"
+    elif [ -f "$CDIR/$OS/$REL/$file" ]; then
+      loc="$CDIR/$OS/$REL"
+    elif [ -f "$CDIR/$OS/$file" ]; then
+      loc="$CDIR/$OS"
+    else
+      loc=""
+    fi
+    if [ "$loc" != "" ]; then
+      echo $var="$loc/$file;"
+    else
+      echo "$var=;"
+    fi
+    echo "export $var;"
+  done << EOL
+GETFS gen_mounts
+GEN_PASSWD_SETS gen_passwd_sets
+GEN_GROUP_SETS gen_group_sets
+GEN_ALIAS_SETS gen_alias_sets
+CHECK_CRON check_cron
+GEN_BOOTPARAM_SETS gen_bootparam_sets
+GEN_EXPORT_SETS gen_export_sets
+GEN_SERVICES_SETS gen_services
+GET_MOUNTS gen_mounts
+SIGNATURE_FILE signatures
+SERVICESFILE services
+INETDFILE inetd
+FILE_ACL file_access_list
+SUID_LIST suid_list
+REL_FILE_EXCP rel_file_exp_list
+MKSHELLS mkshells
+GEN_INETD_SETS gen_inetd
+GETDISKS getdisks
+EMBEDDEDLIST embedlist
+GETUSERHOME getuserhome
+EOL
+`
+
+[ -n "$MKSHELLS" ] && {
+  ETCSHELLS=$WORKDIR/shells.$$
+  $MKSHELLS $ETCSHELLS
+  TigerCleanup="$TigerCleanup $WORKDIR/shells.$$"
+  export ETCSHELLS
+}

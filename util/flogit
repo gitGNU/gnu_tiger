@@ -1,0 +1,86 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# util/flogit - 06/14/93
+#
+#-----------------------------------------------------------------------------
+
+suidfile="$1"
+devfile="$2"
+linkfile="$3"
+wdirfile="$4"
+nouserfile="$5"
+nogroupfile="$6"
+
+getpermit()
+{
+  $LS $LSLINK $LSGROUP -ld "$1" |
+  $AWK '{
+       printf("%s %s ", $3, $4);
+       for(i=2;i<11;i++)
+         if(substr($1, i, 1) == "-")
+	     printf("0 ");
+         else
+             printf("1 ");
+      printf("\n");
+  }'
+}
+
+while read file
+do
+  if [ "x$Tiger_FSScan_Devs" != 'xN' -a \( -b "$file" -o -c "$file" \) ]; then
+    echo "$file" >> $devfile
+  elif [ "x$Tiger_FSScan_Links" != 'xN' -a -h "$file" ]; then
+    echo "$file" >> $linkfile
+  elif [ "x$Tiger_FSScan_Setuid" != 'xN' -a \( -u "$file" -a -f "$file" \) ]; then
+    echo "$file" >> $suidfile
+  fi
+
+  if [ "x$Tiger_FSScan_WDIR" != 'xN' ]; then
+    if [ "x$Tiger_FSScan_Unowned" != 'xN' ]; then
+      getpermit "$file" | {
+	read owner group ur uw ux gr gw gx or ow ox
+	[ ! -h "$file" -a -d "$file" -a "$ow" = '1' ] && {
+	  echo "$file" >> $wdirfile
+	}
+	case "$owner" in
+	  [0-9]*) echo "$file" >> $nouserfile
+	esac
+	case "$group" in
+	  [0-9]*) echo "$file" >> $nogroupfile
+	esac
+      }
+    elif [ -d "$file" ]; then
+      getpermit "$file" | {
+	read owner group ur uw ux gr gw gx or ow ox
+	[ ! -h "$file" -a -d "$file" -a "$ow" = '1' ] && {
+	  echo "$file" >> $wdirfile
+	}
+      }
+    fi
+  elif [ "x$Tiger_FSScan_Unowned" != 'xN' ]; then
+    getpermit "$file" | {
+      read owner group ur uw ux gr gw gx or ow ox
+      case "$owner" in
+	[0-9]*) echo "$file" >> $nouserfile
+      esac
+      case "$group" in
+	[0-9]*) echo "$file" >> $nogroupfile
+      esac
+    }
+  fi
+done

@@ -1,0 +1,44 @@
+bootp	dgram	udp	wait	root	/usr/etc/bootp		bootp -f
+bootparam/1 dgram   rpc/udp wait    root    /usr/etc/rpc.bootparamd bootparam
+chargen	dgram	udp	wait	root	internal
+chargen	stream	tcp	nowait	root	internal
+daytime	dgram	udp	wait	root	internal
+daytime	stream	tcp	nowait	root	internal
+discard	dgram	udp	wait	root	internal
+discard	stream	tcp	nowait	root	internal
+echo	dgram	udp	wait	root	internal
+echo	stream	tcp	nowait	root	internal
+exec	stream	tcp	nowait	root	/usr/etc/rexecd		rexecd
+finger	stream	tcp	nowait	guest	/usr/etc/fingerd	fingerd
+ftp	stream	tcp	nowait	root	/usr/etc/ftpd		ftpd
+login	stream	tcp	nowait	root	/usr/etc/rlogind	rlogind
+mountd/1    dgram   rpc/udp wait    root    /usr/etc/rpc.mountd     mountd
+mountd/1    stream  rpc/tcp wait    root    /usr/etc/rpc.mountd     mountd
+ntalk	dgram	udp	wait	root	/usr/etc/talkd		talkd
+rexd/1     stream  rpc/tcp wait    root    /usr/etc/rpc.rexd       rexd
+rquotad/1   dgram   rpc/udp wait    root    /usr/etc/rpc.rquotad    rquotad
+rstatd/1-3  dgram   rpc/udp wait    root    /usr/etc/rpc.rstatd     rstatd
+rusersd/1   dgram   rpc/udp wait    root    /usr/etc/rpc.rusersd    rusersd
+sgi-dgl stream	tcp	nowait	root	/usr/etc/dgld	dgld -IM -tDGLTSOCKET
+sgi_fam/1   stream  rpc/tcp wait    root    /usr/etc/fam            famd  -t 180
+sgi_mountd/1 dgram  rpc/udp wait    root    /usr/etc/rpc.mountd     mountd
+sgi_mountd/1 stream rpc/tcp wait    root    /usr/etc/rpc.mountd     mountd
+sgi_pcsd/1  dgram   rpc/udp wait    root    /usr/etc/cvpcsd	    pcsd
+sgi_pod/1   stream  rpc/tcp wait    root    /usr/etc/podd           podd
+sgi_snoopd/1 stream rpc/tcp wait    root    /usr/etc/rpc.snoopd     snoopd
+sgi_toolkitbus/1 stream rpc/tcp wait root   /usr/etc/rpc.toolkitbus toolkitbusd
+sgi_videod/1 stream rpc/tcp wait    root    ?/usr/etc/videod         videod
+sgi_xfsmd/1 stream  rpc/tcp wait    root    ?/usr/etc/xfsmd     xfsmd
+shell	stream	tcp	nowait	root	/usr/etc/rshd		rshd
+sprayd/1    dgram   rpc/udp wait    root    /usr/etc/rpc.sprayd     sprayd
+tcpmux	stream	tcp	nowait	root	internal
+tcpmux/sgi_printer stream tcp nowait root   ?/usr/lib/print/printerd printerd
+tcpmux/sgi_scanner stream tcp nowait root   ?/usr/lib/scan/net/scannerd scannerd
+telnet	stream	tcp	nowait	root	/usr/etc/telnetd	telnetd
+tftp	dgram	udp	wait	guest	/usr/etc/tftpd	tftpd -s /usr/local/boot
+time	dgram	udp	wait	root	internal
+time	stream	tcp	nowait	root	internal
+ttdbserverd/1   stream  rpc/tcp wait root ?/usr/etc/rpc.ttdbserverd rpc.ttdbserverd
+walld/1     dgram   rpc/udp wait    root    /usr/etc/rpc.rwalld     rwalld
+ypupdated/1 stream  rpc/tcp wait    root    /usr/etc/rpc.ypupdated  ypupdated
+

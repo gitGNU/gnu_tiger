@@ -1,0 +1,186 @@
+<HR><PRE>
+
+
+
+
+
+
+
+
+</PRE><HR>
+<CENTER><H2> Documents for embed</H2></CENTER>
+<A NAME="embed"><P><B>Code [embed]</B><P>
+The embedded references are formatted as
+<P>
+pathname_1->pathname_2->pathname_3...
+<P>
+which indicates that pathname_1 is a string embedded in the
+binary pointed to by pathname_2, which in turn is a string
+embedded in pathname_3. Or, to read it the other way around,
+pathname_3 refers to pathname_2 which refers to pathname_1.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="embed001w"><P><B>Code [embed001w]</B><P>
+See the 'embed' explanation for an explanation of the format of the
+embedded references.
+<P>
+The indicated pathname to an executable contains a component which is not
+owned by root. This can enable an intruder to gain unauthorized privileges
+if they are able to replace the binary. See the 'rationale' explanation
+for a discussion of the reasons that executables run by root should be
+owned by root.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="embed001i"><P><B>Code [embed001i]</B><P>
+See the 'embed' explanation for an explanation of the format of the
+embedded references.
+<P>
+The indicated pathname to a file or directory contains a component which
+is not owned by root. This may indicate a vulnerability in the system.
+It will be necessary to study the programs in which the pathname was
+found to determine whether there is a problem.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="embed002w"><P><B>Code [embed002w]</B><P>
+See the 'embed' explanation for an explanation of the format of the
+embedded references.
+<P>
+The indicated executable is not owned by owned by root. This can
+enable an intruder to gain unauthorized privileges if they are able to
+overwrite the executable. See the 'rationale' explanation for a
+discussion of the reasons that executables run by root should be owned
+by root.
+<P>
+Note that if the executable is setuid to a non-root ID, then the
+ownershop should *NOT* be changed to root unless the setuid bit
+is also removed.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="embed002i"><P><B>Code [embed002i]</B><P>
+See the 'embed' explanation for an explanation of the format of the
+embedded references.
+<P>
+The indicated file or directory is not owned by root. This may
+indicate a vulnerability in the system. It will be necessary to study
+the programs in which the pathname was found to determine whether
+there is a problem.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="embed003w"><P><B>Code [embed003w]</B><P>
+See the 'embed' explanation for an explanation of the format of the
+embedded references.
+<P>
+The indicated pathname to an executable contains a component which
+is group writable, world writable or both. This can enable an intruder
+to gain unauthorized privileges if they are able to replace the
+executable.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="embed003i"><P><B>Code [embed003i]</B><P>
+See the 'embed' explanation for an explanation of the format of the
+embedded references.
+<P>
+The indicated pathname to a file or directory contains a component
+which is group writable, world writable or both. This may indicate a
+vulnerability in the system. It will be necessary to study the file
+and programs in which the pathname was found to determine whether
+there is a problem.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="embed004w"><P><B>Code [embed004w]</B><P>
+See the 'embed' explanation for an explanation of the format of the
+embedded references.
+<P>
+The executable is group writable, world writable or both. This can
+enable an intruder to gain unauthorized privileges if they are able to
+overwrite the executable.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="embed003i"><P><B>Code [embed003i]</B><P>
+See the 'embed' explanation for an explanation of the format of the
+embedded references.
+<P>
+The file or directory is group writable, world writable or both. This
+may indicate a vulnerability in the system. It will be necessary to
+study the file and programs in which the pathname was found to
+determine whether there

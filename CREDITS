@@ -1,0 +1,84 @@
+Produced by
+	Texas A&M University Supercomputer Center
+	(as of 09/93, development done via the
+        Network Group, Computing & Information Services)
+
+Written by
+	Douglas Lee Schales
+	Dave Hess
+	Khalid Warraich
+	Dave Safford
+
+Editor
+	Douglas Lee Schales
+
+Updated by
+       Advanced Research Corporation (as of 04/99)
+       Bob Todd, toddr@arc.com
+
+       Debian GNU/Linux (as of 04/2002)
+       Javier Fernandez-Sanguino, jfs@debian.org
+
+On Location - SunOS 4.x
+	Director: Douglas Lee Schales
+	Writer:   Douglas Lee Schales
+                  Dave Hess
+                  Dave Safford
+	
+On Location - NeXT
+	Director: Dave Hess
+	Writer:   Dave Hess
+
+On Location - UNICOS
+        Director: Dave Hess
+        Writer:   Dave Hess
+ Post Production: Douglas Lee Schales
+
+On Location - Solaris 2.x and SysVR4
+	Director: Khalid Warraich
+	Writer:   Khalid Warraich
+ Post Production: Douglas Lee Schales
+
+------------------------------------------------------------------------
+Xerox Secure Hash Function (snefru) (c) Xerox Corporation 1989
+
+RSA Data Security, Inc. MD5 Message-Digest Algorithm, (c) RSA
+Data Security, Inc. 1991-92
+
+------------------------------------------------------------------------
+
+Several ideas and checks (i.e. check_cron, check_path) are derived
+from Dan Farmer's COPS package.  Thanks for letting me rummage
+around in COPS Dan!
+
+Several checks are derived from Dave Safford's 'secure_sun' script.
+
+------------------------------------------------------------------------
+Thanks to
+
+Art Ferruzzi for pointing out that 'tiger' would check the permissions
+on a symbolic link instead of what it was pointing to.
+
+Dave Duchscher for repeatedly pointing out my inability to get the
+signatures right for SunOS 4.1.3
+
+Steve Rikli for also pointing out discrepancies in the signatures
+file and advice on IRIX.
+
+Dan Farmer for suggestions and allowing me to browse COPS for ideas.
+--------------------------------------------------------------------
+William McVey et al of the Purdue CC provided the signatures for
+     NeXT 3.1.
+
+Steve Rikli of the College of Architecture, Texas A&M, provided
+     the signatures for IRIX 4.0.5.
+------------------------------------------------------------------------
+
+Goran Larsson (hoh@lorelei.approve.se) for suggesting a way of
+improving performance of 'tiger' as well as making it more robust.
+The use of 'ls ... | awk' to get file ownership and permissions is
+slow and unreliable (fields occasionally bump up against one another).
+Though I wasn't able to use Goran's program (stat) without butchering
+the code, I was able to use the suggeston.  Anyone starting from
+scratch might want to look at 'stat' (contact Goran for availability).
+

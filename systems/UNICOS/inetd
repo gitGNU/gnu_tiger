@@ -1,0 +1,21 @@
+chargen	dgram	udp	wait	root	internal
+chargen	stream	tcp	nowait	root	internal
+comsat	dgram	udp	wait	root	/etc/comsat	comsat
+daytime	dgram	udp	wait	root	internal
+daytime	stream	tcp	nowait	root	internal
+discard	dgram	udp	wait	root	internal
+discard	stream	tcp	nowait	root	internal
+echo	dgram	udp	wait	root	internal
+echo	stream	tcp	nowait	root	internal
+exec	stream	tcp	nowait	root	/etc/rexecd rexecd
+finger	stream	tcp	nowait	nobody	/etc/fingerd fingerd
+ftp	stream	tcp	nowait	root	/etc/ftpd ftpd
+login	stream	tcp	nowait	root	/etc/rlogind rlogind
+ntalk	dgram	udp	wait	root	/etc/ntalkd	ntalkd
+shell	stream	tcp	nowait	root	/etc/rshd rshd
+talk	dgram	udp	wait	root	/etc/talkd	talkd
+telnet	stream	tcp	nowait	root	/etc/telnetd telnetd
+tftp	dgram	udp	wait	nobody	/etc/tftpd	tftpd
+time	dgram	udp	wait	root	internal
+time	stream	tcp	nowait	root	internal
+uucp	stream	tcp	nowait	root	/etc/uucpd	uucpd

@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# gen_cron - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+
+outfile=$1
+> $outfile
+
+(
+  cd $CRONSPOOL
+  $LS -l $LSGROUP *
+) |
+while read x y owner a b c d e file
+do
+  [ "$owner" != "root" ] && {
+    echo "--WARN-- CRON file \`$file' is owned by $owner."
+  }
+  case $file in
+    *[!a-zA-Z0-9]*)
+      echo "--WARN-- Unusual cron file \`$file' found."
+      ;;
+    *)
+      /bin/csh -c "echo ~$file" >/dev/null 2>/dev/null
+      
+      if [ $? = 0 ]; then
+	$SED -e 's/#.*$//' -e '/^$/d' $CRONSPOOL/$file |
+	while read a b c d e command
+	do
+	  echo "$file $command"
+	done >> $outfile
+      else
+	echo "--WARN-- Found cron file for unknown user $file."
+      fi
+      ;;
+    esac
+done
+  

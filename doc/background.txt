@@ -1,0 +1,39 @@
+%rationale
+
+The primary rationale behind many of the checks performed by `Tiger'
+is to protect the super-user account.  The assumption made is that any
+other account or any group can be accessed.  The goal is to protect
+`root' from all accounts, even system accounts.
+
+The reasons for these assumptions are varied, but they all fall back
+to one thing.  The `root' (uid=0) account is the only account that is
+normally given special protection by services.  Examples:
+
+(In the following discussion, a network is considered to be a set of
+machines, networked together, with trusted host facilities such as
+/etc/hosts.equiv or NFS.)
+
+o The Berkeley r-cmds (rlogin, rsh) will not honor /etc/hosts.equiv
+for the super-user account.  This protects a network of trusted
+machines should one of them be compromised.
+
+o NFS (Network File System, SMI) translates requests from super-user
+accounts to requests from `nobody' (although this can be overridden).
+As before, this attempts to protect a network of NFS'd machines should
+one of them be compromised.
+
+Other accounts are not protected in this way, including system
+accounts such as `bin' and `daemon'.  Once one of the accounts is
+compromised on one machine on a network, the account is compromised on
+all of the machines in the network.  Often these system accounts are
+considered safe and are trusted to own system executables, directories
+and files.  This is not true in a networked environment.  Note that
+simply disabling the account, or even deleting the account will not
+remove the problem.
+
+Hence, `Tiger' will report anything not owned by `root' which root
+accesses, especially executables.  One of the problems with this is
+setuid executables which are setuid to a userid other than root.  The
+ownership can not be changed (if it is, it will no doubt create worse
+security problems).  A solution to this problem will be provided in
+the future.

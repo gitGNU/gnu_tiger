@@ -1,0 +1,29 @@
+echo	stream	tcp	nowait	root	internal
+echo	dgram	udp	wait	root	internal
+discard	stream	tcp	nowait	root	internal
+discard	dgram	udp	wait	root	internal
+daytime	stream	tcp	nowait	root	internal
+daytime	dgram	udp	wait	root	internal
+chargen	stream	tcp	nowait	root	internal
+chargen	dgram	udp	wait	root	internal
+ftp	stream	tcp	nowait	root	/usr/sbin/tcpd	in.ftpd -l -a -i -o
+telnet	stream  tcp     nowait  root    /usr/sbin/tcpd	in.telnetd
+nntp	stream	tcp	nowait	root	/usr/sbin/tcpd	in.nntpd
+shell	stream	tcp	nowait	root	/usr/sbin/tcpd	in.rshd
+login	stream	tcp	nowait	root	/usr/sbin/tcpd	in.rlogind
+exec	stream	tcp	nowait	root	/usr/sbin/tcpd	in.rexecd
+talk	dgram	udp	wait	root	/usr/sbin/tcpd	in.talkd
+ntalk	dgram	udp	wait	root	/usr/sbin/tcpd	in.ntalkd
+pop-2	stream	tcp	nowait	root	/usr/sbin/tcpd	ipop2d
+pop-3	stream	tcp	nowait	root	/usr/sbin/tcpd	ipop3d
+imap	stream	tcp	nowait	root	/usr/sbin/tcpd	imapd
+uucp	stream	tcp	nowait	uucp	/usr/sbin/tcpd	/usr/lib/uucp/uucico	-l
+tftp	dgram	udp	wait	root	/usr/sbin/tcpd	in.tftpd
+bootps	dgram	udp	wait	root	/usr/sbin/tcpd	bootpd
+finger	stream	tcp	nowait	root	/usr/sbin/tcpd	in.fingerd
+systat	stream	tcp	nowait	guest	/usr/sbin/tcpd	/bin/ps auwwx
+netstat	stream	tcp	nowait	guest	/usr/sbin/tcpd	/bin/netstat	-f inet
+time	stream	tcp	nowait	nobody	/usr/sbin/tcpd	in.timed
+time	dgram	udp	wait	nobody	/usr/sbin/tcpd	timed
+auth   stream  tcp     wait    nobody    /usr/sbin/tcpd in.identd -w -l -e -o -t120
+linuxconf stream tcp wait root /usr/sbin/tcpd  linuxconf --http

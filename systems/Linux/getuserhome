@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#
+# cd to / in case we are down in a directory we don't have read
+# access to.  /bin/csh will barf if that is the case.
+#
+cd /
+
+user="$1"
+
+/bin/bash -c "echo ~$user" 2> /dev/null
+
+

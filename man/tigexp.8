@@ -1,0 +1,45 @@
+.\" @(#)tigexp.8 1.00 93/06/04 TAMUSCC;
+.TH TIGEXP 8 "04 Jun 1993" "Security" "Administrator Commands"
+.SH NAME
+tigexp \- UNIX Security Checker Explanation Generator
+.SH SYNONPSIS
+.B "tigexp msgid [msgid [msgid...]]"
+.LP
+.B "tigexp [-f|-F] [security_report]"
+.LP
+.SH DESCRIPTION
+.LP
+Tigexp is used to generate explanations of the output from the
+Tiger security checking package.  In the first form,
+.I tigexp
+will generate an explanation of each of the message ids listed.
+In the second form, the security report specified will be scanned
+and explanations generated.  The
+.I "\-f"
+option will generate one explanation for each unique message id
+in the security report, whereas the
+.I "\-F"
+option will output the security report with explanations inserted
+after each entry in the report.
+.SS OPTIONS
+.TP
+.I "\-f"
+Scan the indicated security report and generate explanations of
+it.  One explanation will be generated for each unique message
+id in the security report.  If the name of a security report is not
+given, then the report is read from stdin.
+.TP
+.I "\-F"
+Output the indicated security report with explanations inserted
+after each entry in the report.  If the name of a security report
+is not given, then the report is read from stdin.
+.LP
+.SH FILES
+$TIGERHOMEDIR/doc/explain.idx
+.LP
+.SH SEE ALSO
+tiger(8)
+.LP
+.SH BUGS
+If the explanation index is out of date, it doesn't recognize it
+and generates junk.

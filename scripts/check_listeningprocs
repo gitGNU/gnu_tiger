@@ -1,0 +1,142 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2000, 2001 Javier Fernandez-Sanguino Peña
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_listeningprocs - 23/08/2001
+#
+#-----------------------------------------------------------------------------
+TigerInstallDir='.'
+
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds CUT GREP || exit 1
+# Just netstat is needed to run this program, lsof is an addon
+  haveallcmds NETSTAT || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  message CONFIG init003c "" "$0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Checking listening processes "
+
+haveallcmds GREP CUT AWK SORT UNIQ || exit 1
+haveallcmds LSOF || haveallcmds NETSTAT || exit 1
+
+okprocessusers=$Tiger_Listening_ValidUsers
+okprocess=$Tiger_Listening_ValidProcs
+[ ! -n "$okprocessusers" ] && okprocessusers="root"
+[ ! -n "$okprocess" ] && okprocess=""
+
+if [ ! -z "$LSOF" ] 
+then
+$LSOF -nPi | $GREP "IPv" | $GREP -v "\->" | 
+$AWK '{printf("%s %s %s %s\n", $1, $3, $7, $8)}' | $SORT | $UNIQ |
+while read proc user type asocket 
+do
+	socket=`echo $asocket |  $CUT -f 2 -d :`
+	address=`echo $asocket | $CUT -f 1 -d :`
+	[ "$address" = "127.0.0.1" ] && address="loopback"
+	[ "$address" = "0.0.0.0" -o "$address" = "*" ] && address="every"
+# Should address = 127.0.0.1 be considered harmful?
+# TODO: This could be an option
+	case $proc in
+	$okprocess)
+	;;
+	*)
+		case $user in
+		$okprocessuser) 
+		[ "$address" = "every" -a "$Tiger_Listening_Every" != "N" ] && \
+		message WARN lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." || \
+		message INFO lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." 
+		;;
+		*) 
+		[ "$address" != "127.0.0.1" ]  && {
+			message WARN lin003w "" "The process \`$proc' is listening on socket $socket ($type on $address interface) is run by $user."
+		} 
+		;;
+		esac
+	;;
+	esac
+
+done 
+else
+# Note: This is not that true due to the -p option  (jfs)
+message INFO lin004i "" "Using $NETSTAT instead of lsof, information regarding processes will be more limited"
+$NETSTAT -ptuan | $GREP -v STREAM |
+while read type x y local remote listen proc
+do
+	[ "$type" = "udp" ] && { 
+		proc=$listen
+		listen=""
+	} 
+	[ ! -z "`echo $listen |$GREP LISTEN`" -o "$type" = "udp" ] &&  {
+	pid=`echo $proc | $CUT -f 1 -d /`
+	proc=`echo $proc | $CUT -f 2 -d /`
+	socket=`echo $local | $CUT -f 2 -d : `
+	address=`echo $local | $CUT -f 1 -d : `
+	[ "$address" = "127.0.0.1" ] && address="loopback"
+	case $proc in
+	$okprocess)
+	;;
+	*)
+		[ "$address" = "0.0.0.0" -o "$address" = "*" ] && address="every"
+		[ "$address" = "every" ] && \
+		message WARN lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." || \
+		message INFO lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface."
+	;;
+	esac
+	}
+done
+fi
+
+exit 0 

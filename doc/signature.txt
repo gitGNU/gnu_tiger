@@ -1,0 +1,175 @@
+%sig001e
+No signature database was found.  This likely indicates that a complete
+port of the security checking system has not been done for this system.
+It may also indicate an incorrect configuration of the security checking
+system.
+
+Because the signature database does not exist, it will not be possible
+to perform the checks for altered binaries and installed security
+patches.
+%sig002a
+The signature for the indicated file matches a signature obtained
+from a binary known to have been altered.  This indicates that the
+system has been compromised.  The system should be checked for other
+signs of intrusion and cleaned up.  The indicated binary should be
+replaced from distribution media.
+%sig003w
+The signature for the indicated file is recognized as the signature
+from a binary for which either a security patch exists, or a newer
+version of the security patch exists.  The file is out of date and
+should be replaced with one from the indicated patch.
+%sig004w
+No match was found for the signature of the indicated file.  This
+indicates either a local modification has been performed, replacing
+the binary, or that the file has been altered by an intruder.  If
+you are not aware of any local modifications, you should check this
+carefully.
+%sig005e
+Something prevented the system from reading the indicated file.  This
+should not occur if the security system is run from the root account
+on a non-MLS system.
+%sig006w
+CERT Advisory CA-92:11
+
+A vulnerability exists with regard to certain environment variables
+used in SunOS 4.x systems.  These vulnerabilities can occur in other
+setuid executables than the ones checked here (including third party
+software).   The following patches are available to fix Sun supplied
+software.
+
+Sun Patch ID 100630 /bin/login, /bin/su, /usr/5bin/su (international)
+
+Sun Patch ID 100631 /bin/login, /bin/su, /usr/5bin/su (domestic)
+
+Sun Patch ID 100633 /bin/login, /bin/su, /usr/5bin/su (ARM)
+%sig007a
+The signature for the indicated file matches a signature obtained
+from a binary known to have been altered.  This indicates that the
+system has been compromised.  The system should be checked for other
+signs of intrusion and cleaned up.  The indicated binary should be
+replaced from distribution media.
+%sig008w
+CERT Advisory CA-92:13
+
+A vulnerability exists in the NIS system for SunOS 4.x systems which
+may allow NIS maps, including the passwd maps, to be obtained by any
+host.  Sun Patch ID 100482 provides a fix for this.
+%sig009w
+CERT Advisory CA-92:11
+
+A vulnerability exists with regard to certain environment variables
+used in SunOS 4.x systems.  These vulnerabilities can occur in other
+setuid executables than the ones checked here (including third party
+software).  The following patch is available to fix Sun supplied
+software.
+
+Sun Patch ID 100377  /usr/lib/sendmail, /usr/lib/sendmail.mx
+%sig010w
+CERT Advisory CA-91:20
+
+A vulnerability exists in the 'rdist' command which can be exploited
+to gain unauthorized privileges.  This vulnerability exists in most
+versions of 'rdist' distributed before 1992.  Sun Patch ID 100383
+provides a fix for this.
+
+%sig011w
+CERT Advisory CA-91:10a
+
+A vulnerability exists in the print system (lpr, lpc, lpd, etc) on
+SunOS 4.x systems which can allow a user to delete files they do
+not own.  A fix for this vulnerability is provided in Sun Patch ID
+100305.
+%sig012w
+CERT Advisory CA-91:09
+
+A vulnerability exists in the rpc.mountd program which can allow
+any host to access NFS exported file systems.  This occurs when the
+length of the host access list for an entry exceeds 256 characters.
+Sun Patch ID 100296 provides a fix for this.
+%sig013w
+A vulnerability exists in the expreserve utility for SunOS 4.1.1
+systems which can be used to gain unauthorized privileges.  Expreserve
+is used by the 'ex' and 'vi' editors for preserving files when the
+editors terminate abnormally.  Sun Patch ID 100251 provides a fix
+for this.  (obsoleted by by Sun Patch ID 101080, [sig014w])
+%sig014w
+CERT Advisory CA-93:09a
+
+CIAC Advisory D-16
+
+A vulnerability exists in the expreserve utility for SunOS 4.1.1,
+4.1.2, 4.1.3, 5.0, 5.1, and 5.2 systems which can be used to gain
+unauthorized privileges.  Expreserve is used by the 'ex' and 'vi'
+editors for preserving files when the editors terminate abnormally.
+Fixes for this for SunOS 4.x and 5.x are:
+
+Sun Patch ID 101080 -- SunOS 4.x
+
+Sun Patch ID 101119 -- SunOS 5.0
+
+Sun Patch ID 101089 -- SunOS 5.1
+
+Sun Patch ID 101090 -- SunOS 5.2
+%sig015w
+CERT Advisory CA-91:01a
+
+A vulnerability exists in the /bin/mail and /bin/rmail utility for
+SunOS 4.x systems which can be used to gain unauthorized privileges.
+These programs are responsible for performing local mail delivery.
+Sun Patch ID 100224 provides a fix for this.
+%sig016w
+CERT Advisory CA-93:15
+
+A vulnerability exists in /usr/lib/sendmail which allows a remote
+user to gain access to the system.
+
+Sun Patch ID 100377-07 provides a fix for SunOS 4.x.
+
+Sun Patch ID 100840-03 provides a fix for Solaris 2.1.
+
+Sun Patch ID 101077-03 provides a fix for Solaris 2.2.
+
+(you should obtain the latest revision of the patch).
+%sig017w
+CERT Advisory CA-93:15
+
+A vulnerability exists in the 'tar' utility which causes it to
+place information from the passwd file in the archive set.  Archives
+created with this version of 'tar' should not be distributed.
+
+Sun Patch ID 100975-02 provides a fix for Solaris 2.1.
+
+Sun Patch ID 101301-01 provides a fix for Solaris 2.2.
+
+(you should obtain the latest revision of the patch)
+%sig018w
+The /usr/kvm/modload program can be used to gain super-user
+privileges.  Sun Patch ID 101200 provides a fix for this.  The
+documentation for the patch indicates that it is for SunOS 4.1.3, but
+examination of the SunOS 4.1.2 /usr/kvm/modload indicates it suffers
+from the same problem.  I do not know whether the modload binary in
+101200 will work with SunOS 4.1.2.
+%sig019w
+This is an additional fix to /usr/5bin/su.  See 'sig006w' for
+information on the initial fixes.
+
+/usr/5bin/su sets the default path with '.' as the first search
+directory.  This opens the system up to trojan programs.  Sun
+Patch Id 100630-02 provides a fix for this, in addition to those
+discussed in 'sig006w'.  Refer to the README provided with the
+patch for additional information concerning international sites.
+
+Sun Patch ID 100630 /usr/5bin/su
+%sig020w
+On SunOS 5.2, the FTP daemon does not correctly verify that the user's
+shell is valid.  As a result restricted accounts can login via FTP.
+
+Sun Patch ID 101037 provides a fix for this.
+%sig021w
+The remote shell daemon on Linux 0.99.12 from TAMU (and other distributions)
+does not understand shadow passwords.  If an entry in /etc/passwd (not
+/etc/shadow) has a null password field, a remote shell will succeed from
+any where to that account.  The 'passwd' command does *not* sanity check this
+field when changing the password.  As a result, the 'root' account has a
+null password field, allowing anyone to remote shell in as root.  To fix
+this problem, place a '*' in the password field in /etc/passwd.

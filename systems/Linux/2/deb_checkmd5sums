@@ -1,0 +1,121 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2000, 2001 Javier Fernandez-Sanguino Peña
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# Linux/deb_checkmd5sums - 24/08/2001
+#
+#-----------------------------------------------------------------------------
+TigerInstallDir='.'
+
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds MD5SUM CAT CUT SED GREP BASENAME || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  message CONFIG init003c "" "$0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Checking md5sums of installed files"
+
+haveallcmds MD5SUM CAT CUT SED GREP BASENAME || exit 1
+
+# From the localepurge binary:
+LOCALEDIR=/usr/share/locale
+MANDIR=/usr/share/man
+LOCALEPURGE=/etc/locale.nopurge
+[ -f "$LOCALEPURGE" ] && LOCALENOPURGED=`$GREP ^[a-z] $LOCALEPURGE`  
+
+if [ -d /var/lib/dpkg/info ] 
+then
+for file in /var/lib/dpkg/info/fileutils*md5sums
+do
+[ -f $file ] && [ ! -L $file  ] && {
+# Note: We  do not check things in  /usr/share/doc
+# to speed things up
+# TODO: add a configuration option to tiger so directories
+# can be removed easily from being checked
+	package=`echo "$file" | $CUT -f 1 -d "."`
+	package=`$BASENAME $package`
+	$CAT "$file" | $GREP -v /share/doc | {
+		while read md5pck installed
+		do
+			installed=/$installed
+			[ -f "$installed" ]  && [ ! -L "$installed" ] && {
+				md5sum=`$MD5SUM "/$installed" | $CUT -f 1 -d " "`
+				[ "$md5pck" = "$md5sum" ] ||  
+				message ERROR lin005e "" "Installed file \`$installed\' checksum differs from installed packages."
+			}
+			[ ! -f "$installed" ] &&  {
+			# Check for locales purged by locale-purge
+				purged="N"
+			# Check if the file belongs to purged directory
+				[ ! -z "`echo $installed |$GREP $LOCALEDIR`" -o ! -z "`echo $installed | $GREP $MANDIR`" ] && {
+					purged="Y"
+			# recover the locale
+					locale=`echo $installed |$CUT -d / -f 5` 
+			# and check against those configured in /etc/locale.nopurge
+					for localenopurged in $LOCALENOPURGED
+					do
+						[ "$localenopurged" = "$locale" ] && purged="N"
+					done
+				}
+				[ "$purged" = "N" ] && \
+				message ERROR lin006e "" "Cannot check file \"$installed\" provided by \"$package\" since it does not exist"
+			}
+		done 
+	}
+}
+done 
+else
+	message WARN lin006w "" "This check cannot be done since we seem not to be running on a Debian GNU/Linux system"
+fi

@@ -1,0 +1,159 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# installsig - 10/22/93
+#
+#-----------------------------------------------------------------------------
+#
+#  Usage:  ./installsig sigfile [sigfile [sigfile...]]
+#
+# This script must be run from the top level of the tiger directory.
+# sigfiles must use names of the form:
+# os:major_release:release:[optional_arch][--optional_identifyinginfo]
+#
+# Example:
+#
+#     SunOS:5:5.2:sun4
+#
+# For SunOS 5.2 running on a sun4
+#
+
+findcmd()
+{
+  CMD=$1
+
+  SRCH=/usr/ucb:/usr/bin:/bin:/etc:/usr/etc:/usr/sbin
+  
+  SAVEIFS=$IFS
+  IFS=:
+  set $SRCH
+  IFS=$SAVEIFS
+  for dir
+  do
+    [ $TESTEXEC $dir/$CMD ] && {
+      echo $dir/$CMD
+      return
+    }
+  done
+}
+
+getreldiff()
+{
+  $AWK 'BEGIN {
+    start="'"$1"'";
+    dest="'"$2"'";
+    m=split(start, src, "/");
+    n=split(dest, dst, "/");
+    for(i=n;i<m;i++)
+      printf("../");
+  }' < /dev/null
+}
+
+shcat()
+{
+  while read line
+  do
+    echo "$line"
+  done < "$1"
+}
+
+catcp()
+{
+  $CAT $1 > $2
+}
+
+TESTEXEC=-x
+( [ $TESTEXEC /bin/sh ] ) 2> $WORKDIR/te.$$
+[ -s $WORKDIR/te.$$ ] && TESTEXEC=-f
+export TESTEXEC
+
+RM=`findcmd rm`
+[ -n "$RM" ] && $RM $WORKDIR/te.$$
+
+CAT="`findcmd cat`"
+SED="`findcmd sed`"
+MV="`findcmd mv`"
+CP="`findcmd cp`"
+CHMOD="`findcmd chmod`"
+GREP="`findcmd grep`"
+MKDIR="`findcmd mkdir`"
+LN="`findcmd ln`"
+AWK="`findcmd awk`"
+
+[ ! -n "$SED" ] && {
+  echo "Can't find 'sed' anywhere... sorry."
+  exit 1
+}
+
+[ ! -n "$GREP" ] && {
+  echo "Can't find 'grep' anywhere... sorry."
+  exit 1
+}
+
+[ ! -n "$AWK" ] && {
+  echo "Can't find 'awk' anywhere... sorry."
+  exit 1
+}
+
+[ ! -n "$CAT" ] && CAT=shcat
+
+[ ! -n "$CP" ] && CP="catcp"
+
+[ ! -n "$MV" ] && MV="$CP"
+
+[ ! -n "$LN" ] && LN="$CP"
+
+for sigfile
+do
+  eval `
+  $GREP '^#@' $sigfile |
+  $SED -e 's/^#@//'`
+
+  echo "Target directory: $DEST"
+  echo "Configuration: $CONFIG"
+
+  dir="systems/$DEST"
+
+  if [ -f "systems/$CONFIG/config" ]; then
+    dir="systems/$DEST"
+    target="`getreldiff $DEST $CONFIG`"
+    if [ ! -d "$dir" ]; then
+      echo "Creating directory $dir..."
+      if [ -n "$MKDIR" ]; then
+	if $MKDIR -p $dir; then
+	  echo "Configuring directory $dir..."
+	  [ -d $dir ] && $LN -s "${target}config" "$dir/config"
+	else
+	  echo "mkdir -p $dir failed... sorry."
+	fi
+      else
+	echo "Don't have 'mkdir' command... sorry."
+      fi
+    fi
+    if [ -d "$dir" ]; then
+      [ -f $dir/signatures ] && $MV "$dir/signatures" "$dir/signatures.orig"
+      $CP $sigfile "$dir/signatures"
+      [ -n "$CHMOD" ] && $CHMOD 644 "$dir/signatures"
+      echo "Installed $sigfile in $dir."
+    else
+      echo "Can't locate directory $dir for $sigfile... something went wrong."
+    fi
+  else
+    echo "Don't have required config files ($CONFIG/config) for this"
+    echo "platform.  You might need a TIGER upgrade."
+  fi
+done

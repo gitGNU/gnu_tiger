@@ -1,0 +1,104 @@
+<HR><PRE>
+
+
+
+
+
+
+
+
+</PRE><HR>
+<CENTER><H2> Documents for logfiles</H2></CENTER>
+<A NAME="logf001f"><P><B>Code [logf001f]</B><P>
+The log file "wtmp" should exist to show an audit trail of which user has
+logged into the server. This file is accessed by the command "last".
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="logf002f"><P><B>Code [logf002f]</B><P>
+The log file "btmp" should exist to log a list of bad logins.
+This file is accessed using the command "lastb".
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="logf003f"><P><B>Code [logf003f]</B><P>
+The log file "lastlog" should exist to show a user's most recent login
+session on the server. This file is accessed by the command "lastlog".
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="logf004f"><P><B>Code [logf004f]</B><P>
+The log file "utmp" should exist so that a list of current users on the
+server can be listed. This is accessed by the command "who".
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="logf005w"><P><B>Code [logf005w]</B><P>
+There are no umask entries in the configuration file
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="logf006f"><P><B>Code [logf006f]</B><P>
+The umask setting in the configuration file is insecure. Umask must be
+set as to prevent public write (ie. either 002 or 022).
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="logf007w"><P><B>Code [logf007w]</B><P>
+There are more than two umask entries in the configuration file. Please
+check if the umask settings are secure (to prevent public write, suggested
+values are either 002 or 022).

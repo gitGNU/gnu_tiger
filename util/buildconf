@@ -1,0 +1,227 @@
+#!/bin/sh
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+confile=$1
+
+findcmd()
+{
+  CMD=$1
+
+  SRCH=/usr/ucb:/usr/bin:/bin:/etc:/usr/etc
+  
+  SAVEIFS=$IFS
+  IFS=:
+  set $SRCH
+  IFS=$SAVEIFS
+  for dir
+  do
+    [ $TESTEXEC $dir/$CMD ] && {
+      echo $dir/$CMD
+      return
+    }
+  done
+}
+
+TESTEXEC=-x
+( [ $TESTEXEC /bin/sh ] ) 2> $WORKDIR/te.$$
+[ -s $WORKDIR/te.$$ ] && TESTEXEC=-f
+export TESTEXEC
+
+RM=`findcmd rm`
+[ -n "$RM" ] && $RM $WORKDIR/te.$$
+
+while read var cmds
+do
+  gotit=0
+  for cmd in $cmds
+  do
+    where=`findcmd $cmd`
+    if [ "$where" != "" ]; then
+      echo "$var=$where"
+      echo "export $var"
+      gotit=1
+      break
+    fi
+  done
+  [ $gotit = 0 ] && {
+    echo '#'
+    echo "# Could not locate $cmd"
+    echo '#'
+    echo "$var="
+    echo "export $var"
+    echo "Can not find $var as any of: $cmd" 1>&2
+  }
+done << EOL > $confile
+AWK awk
+BASENAME basename
+CAT cat
+CC cc
+CHMOD chmod
+CHOWN chown
+COMM comm
+DATE date
+EGREP egrep
+EXPR expr
+FILECMD file
+FIND find
+FMT fmt cat
+GETHOSTNAME hostname
+GREP grep
+GROUPSS groups
+JOIN join
+LN ln
+LS ls
+MV mv
+PS ps
+RM rm
+SED sed
+SORT sort
+STRINGS strings
+TAIL tail
+TR tr
+UNAME uname
+UNIQ uniq
+BASENAME basename
+CHMOD chmod
+CHOWN chown
+LN ln
+PASTE paste
+YPCAT ypcat
+DIFF diff
+MAIL mail mailx Mail sendmail
+EOL
+
+echo "WAIT=wait" >> $confile
+echo "export WAIT" >> $confile
+
+. $confile
+
+echo "#" >> $confile
+echo "# How to get different effects" >> $confile
+echo "#" >> $confile
+
+datecmd='$DATE +%D'
+timecmd='$DATE +%H:%M:%S'
+eval $datecmd 2>/dev/null > /dev/null || {
+  datecmd='echo'
+  timecmd='echo'
+}
+echo "DATECMD=\"$datecmd\"" >> $confile
+echo "TIMECMD=\"$timecmd\"" >> $confile
+echo "export DATECMD TIMECMD" >> $confile
+
+sgrep='$EGREP -s'
+X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -1`
+[ "$X" != "" ] && {
+  sgrep='$GREP -s'
+  X=`$GREP -s : /etc/passwd 2>&1 | $TAIL -1`
+  [ "$X" != "" ] && {
+    sgrep='$BASEDIR/util/sgrep'
+  }
+}
+
+echo "SGREP=\"$sgrep\"" >> $confile
+echo "export SGREP" >> $confile
+
+lsgroup="-g"
+F1=`$LS -l $lsgroup -d /etc | $AWK '{print NF}'`
+F2=`$LS -d /etc | $AWK '{print NF}'`
+[ $F1 -lt $F2 ] && lsgroup=
+
+echo "LSGROUP=$lsgroup" >> $confile
+echo "export LSGROUP" >> $confile
+
+lslink="-L"
+$LS $lslink 2>/dev/null >/dev/null || lslink=
+
+echo "LSLINK=$lslink" >> $confile
+echo "export LSLINK" >> $confile
+
+echo '#' >> $confile
+echo '# Where are system directories/files?' >> $confile
+echo '#' >> $confile
+
+if [ -d /usr/mail ]; then
+  echo "MAILSPOOL=/usr/mail" >> $confile
+elif [ -d /usr/spool/mail ]; then
+  echo "MAILSPOOL=/usr/spool/mail" >> $confile
+elif [ -d /var/spool/mail ]; then
+  echo "MAILSPOOL=/var/spool/mail" >> $confile
+else
+  echo "MAILSPOOL=" >> $confile
+fi
+
+echo "export MAILSPOOL" >> $confile
+
+if [ -d /usr/spool/cron/crontabs ]; then
+  echo "CRONTAB=/usr/spool/cron/crontabs" >> $confile
+elif [ -d /var/spool/cron/crontabs ]; then
+  echo "CRONTAB=/var/spool/cron/crontabs" >> $confile
+elif [ -d /etc/cron ]; then
+  echo "CRONTAB=/etc/cron" >> $confile
+else
+  echo "CRONTAB="
+fi
+
+echo "export CRONTAB" >> $confile
+
+echo "ETCSHELLS=/etc/shell" >> $confile
+echo "export ETCSHELLS" >> $confile
+echo >> $confile
+
+echo '#' >> $confile
+echo '# Segment of code to find system specific tiger parts' >> $confile
+echo '#' >> $confile
+
+$CAT <<'_END_OF_TEXT' >> $confile
+
+CDIR="$BASEDIR/systems"
+eval `
+  while read var file
+  do
+    if [ -f "$CONFIG_DIR/$file" ]; then
+      loc="$CONFIG_DIR"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$ARCH/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV/$ARCH"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV"
+    elif [ -f "$CDIR/$OS/$REL/$file" ]; then
+      loc="$CDIR/$OS/$REL"
+    elif [ -f "$CDIR/$OS/$file" ]; then
+      loc="$CDIR/$OS"
+    else
+      loc=""
+    fi
+    if [ "$loc" != "" ]; then
+      echo $var="$loc/$file;"
+    else
+      echo "$var=;"
+    fi
+    echo "export $var;"
+  done << EOL
+GETFS gen_mounts
+GEN_PASSWD_SETS gen_passwd_sets
+GEN_GROUP_SETS gen_group_sets
+GEN_ALIAS_SETS gen_alias_sets
+CHECK_CRON check_cron
+GEN_BOOTPARAM_SETS gen_bootparam_sets
+GEN_EXPORT_SETS gen_export_sets
+GEN_SERVICES_SETS gen_services
+GET_MOUNTS gen_mounts
+SIGNATURE_FILE signatures
+SERVICESFILE services
+INETDFILE inetd
+FILE_ACL file_access_list
+SUID_LIST suid_list
+REL_FILE_EXCP rel_file_exp_list
+EOL
+`
+_END_OF_TEXT

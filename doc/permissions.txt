@@ -1,0 +1,159 @@
+%perm001a
+The owner of the indicated file is not correct.  This is a serious security
+problem and may indicate that an intrusion has occurred.  The system should
+be checked and cleaned.  The owner of the file should be corrected.
+%perm001f
+The owner of the indicated file is not correct.  With the incorrect ownership,
+a vulnerability may exist.  The owner of the file should be corrected.
+%perm001w
+The owner of the indicated file is not what is considered best for security
+reasons.  Unless you have a specific reason for not changing the ownership,
+this should be corrected.
+%perm002a
+The group owner of the indicated file is not correct.  This is a serious
+security problem and may indicate that an intrusion has occurred.  The
+system should be checked and cleaned.  The group owner of the file should be
+corrected.
+%perm002f
+The group owner of the indicated file is not correct.  With the incorrect
+group ownership, a vulnerability may exist.  The group owner of the file
+should be corrected.
+%perm002w
+The group owner of the indicated file is not what is considered best for
+security reasons.  Unless you have a specific reason for not changing the
+ownership, this should be corrected.
+%perm003a
+The access permissions of the indicated file are incorrect.  This may
+indicate an intrusion has occurred.  In any event, it is a serious security
+problem and should be corrected immediately.  The system should also be
+checked for signs of intrusion.
+%perm003f
+The access permissions of the indicated file are incorrect.  This may
+create a vulnerability in the system.  This should be corrected immediately.
+%perm003w
+The access permissions of the indicated file are not what is considered
+best for security.  Unless you have a reason for not doing so, the permissions
+should be corrected.
+%perm004c
+No file permissions database can be found.  This will prevent the
+checks of file ownerships to be performed.  This likely indicates
+that a complete port has not been done for this platform.
+%perm005a
+The /etc/security directory contains security information that should
+not be accessible by non-root users.  The owner should be root, and group
+and world should have only search access (mode 711).  The directory
+unfortunately must be search-able because of some library routines which
+check for the existence of the security.adjunct file.  The files in the
+directory should be mode 600.
+%perm006w
+The configuration files (.login, .profile, etc) should be not be writable
+by non-root users.  In addition, the .rhosts file should not be readable
+or writable by non-root users.
+%perm007f
+The /etc/aliases, /etc/aliases.dir and /etc/aliases.pag files should not
+be writable by non-root users.  On SunOS 4 systems, these files are
+shipped world writable.  The permissions should be 644 on all three
+files.  If left writable, program aliases can be added which can
+allow unauthorized access.
+%perm008w
+The /etc/exports (or equivalent) file should not be writable by anyone
+other than root.  If a non-root user can modify the file, unauthorized
+privileges can be obtained.  There is also no reason for this file
+to be readable by anyone other than root.  Making it unreadable, reduces
+the information available to an intruder attempting to gain privileged
+access.
+%perm009f
+The /etc/group file should not be writable by anyone other than root.
+If a non-root user can modify the file, unauthorized privileges can
+be obtained.
+%perm010w
+The /etc/hosts.allow and /etc/hosts.deny files (from Wietse Venema's
+tcp_wrapper package) should not be writable by non-root users.  If
+they are writable, the protection provided by the package can be
+bypassed.  In addition, if all of the daemons protected by tcp_wrapper
+run as `root', then the file does not need to be readable by non-root
+users.  Making the permissions 600, reduces the information available
+to an intruder attempting to gain privileges.  If any daemons are
+run as non-root users though, this is not possible.
+%perm011w
+The /etc/hosts.equiv and /etc/hosts.lpd files define trusted hosts.
+The hosts.equiv file defines the trusted hosts for the Berkeley 'R'
+commands (rsh, rlogin), while the hosts.lpd file defines trusted hosts
+for the print system.  If the hosts.equiv or hosts.lpd file is writable
+by users other than root, then unauthorized privileges or access may
+be gained.  In addition, there is no reason for non-root users to be
+able to read these files.  Making them unreadable reduces the information
+available to an intruder attempting to gain privileges.
+%perm012w
+The /etc/inetd.conf file defines the network daemons controlled by
+`inetd'.  If this file is writable by non-root users, then unauthorized
+access can be obtained.  In addition, it is not necessary that this file
+be readable by non-root users.  Making the file unreadable reduces the
+information available to an intruder attempting to gain privileges.
+%perm013f
+The /etc/netgroup file defines network groups which consist of machines
+and users.  Allowing write access can allow unauthorized access or
+privileges.
+%perm014a
+If /etc/passwd is writable by non-root users, then new login id's
+can be added to the system.  Unauthorized access or privileges can
+easily be obtained.  If the file is world writable, this is a possible
+indication that the system has been compromised.  The system should
+be checked for other signs of intrusion.
+%perm015f
+The 'rc.*' scripts are executed during system startup.  If they are
+writable by non-root users, then unauthorized access or privileges can
+be obtained.  In addition, there is no need for these files to be world
+readable.  Making them unreadable reduces the information available to
+an intruder attempting to gain privileges.
+%perm016w
+The /etc/resolv.conf file is used to designate where Domain Name
+Service is to be obtained.  If this file is writable by non-root
+users, then unauthorized access or privileges may be obtained.
+This file does need to be world readable however.
+%perm017w
+The /etc/utmp file should not be writable by non-root users.  This
+is a security vulnerability.  Unfortunately, on SunOS 4 systems, the
+SunView and OpenWindows 'cmdtool' and 'shelltool' programs do not
+function correctly if it is not.  If you are not using these tools,
+then you should set the permissions to 644.
+%perm018a
+The root directory should be protected from changes by non-root users.
+If the directory is writable by non-root users, unauthorized access
+or privileges can be obtained.
+%perm019a
+The /etc directory should be owned by root and should not be writable
+by group or world.  As shipped, SunOS 4 systems have the /etc directory
+owned by the user `bin'.  This is *incorrect*.
+%perm020w
+The indicated disk device file is world readable, writable or both.  This
+allows the file access controls to be bypassed.  The world permissions
+should be removed.
+%perm021w
+The indicated disk device file is group readable, writable or both by the
+indicated group.  This allows users in this group to bypass the file
+access controls.  Many systems allow a group such as `operator' to have
+read access so that backups can be performed.  Group write access is
+*not* needed and should be removed.  If backups are performed by the
+`root' account, then group read permissions are not needed and should
+be removed.
+%perm022w
+The indicated disk device file is not owned by `root'.  This allows the
+owner of the disk device to bypass the systems file access controls.
+The owner should be changed to `root'.
+%perm023a
+The indicated file has the setuid bit set, but it should not have it.
+This should be changed by using 'chmod u-s file' where 'file' is the
+indicated file.  The system should be checked for signs of intrusion.
+%perm024a
+The indicated file has the setgid (group) bit set, but it should not
+have it.  This should be changed by using 'chmod g-s file' where 'file'
+is the indicated file.  The system should be checked for signs of
+intrusion.
+%perm025w
+If the 'arp' program is 'setgid', it can be used to read files that a user
+normally should not be able to read.  On many systems, this includes
+/dev/kmem and /dev/mem.  Turning the 'setgid' bit off will result in the
+loss of 'arp -a' functionality for a normal user account. (On SunOS 5.x
+systems, even this functionality isn't lost... there is no reason for
+'arp' to be setgid).  This is a minor loss of functionality.

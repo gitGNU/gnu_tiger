@@ -1,0 +1,31 @@
+chargen	dgram	udp	wait	root	internal
+chargen	stream	tcp	nowait	root	internal
+comsat	dgram	udp	wait	root	/usr/etc/in.comsat	in.comsat
+daytime	dgram	udp	wait	root	internal
+daytime	stream	tcp	nowait	root	internal
+discard	dgram	udp	wait	root	internal
+discard	stream	tcp	nowait	root	internal
+echo	dgram	udp	wait	root	internal
+echo	stream	tcp	nowait	root	internal
+exec	stream	tcp	nowait	root	/usr/etc/in.rexecd	in.rexecd
+finger	stream	tcp	nowait	nobody  /usr/etc/in.fingerd	in.fingerd
+ftp	stream	tcp	nowait	root	/usr/etc/in.ftpd in.ftpd
+login	stream	tcp	nowait	root	/usr/etc/in.rlogind	in.rlogind
+mountd/1	dgram	rpc/udp	wait root /usr/etc/rpc.mountd	rpc.mountd
+name	dgram	udp	wait	root	/usr/etc/in.tnamed	in.tnamed
+netstat	stream	tcp	nowait	root	/usr/ucb/netstat	netstat -f inet
+rexd/1		stream	rpc/tcp	wait root /usr/etc/rpc.rexd	rpc.rexd
+rquotad/1	dgram	rpc/udp	wait root /usr/etc/rpc.rquotad	rpc.rquotad
+rstatd/2-4	dgram	rpc/udp	wait root /usr/etc/rpc.rstatd	rpc.rstatd
+rusersd/1-2	dgram	rpc/udp	wait root /usr/etc/rpc.rusersd	rpc.rusersd
+shell	stream	tcp	nowait	root	/usr/etc/in.rshd	in.rshd
+sprayd/1	dgram	rpc/udp	wait root /usr/etc/rpc.sprayd	rpc.sprayd
+systat	stream	tcp	nowait	root	/usr/bin/ps		ps -auwwx
+talk	dgram	udp	wait	root	/usr/etc/in.talkd	in.talkd
+telnet	stream	tcp	nowait	root	/usr/etc/in.telnetd	in.telnetd
+tftp	dgram	udp	wait	root	/usr/etc/in.tftpd in.tftpd -s /tftpboot
+time	dgram	udp	wait	root	internal
+time	stream	tcp	nowait	root	internal
+uucp	stream	tcp	nowait	root	/usr/etc/in.uucpd	in.uucpd
+walld/1		dgram	rpc/udp	wait root /usr/etc/rpc.rwalld	rpc.rwalld
+ypupdated/1	stream	rpc/tcp	wait root /usr/etc/rpc.ypupdated rpc.ypupdated

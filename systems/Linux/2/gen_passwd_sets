@@ -1,0 +1,142 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# Linux/2/gen_passwd_sets - 06/14/93
+# Linux/2/gen_passwd_sets - 12/20/2001
+#      changed by jfs to provide support for both shadow and unshadowed
+#      added SunOS gen_passwd_sets so that it works with nsswitch.conf if available
+#
+#-----------------------------------------------------------------------------
+#
+
+# If run directly do this, just in case:
+[ -z "$SORT" ] && SORT=`which sort`
+[ -z "$JOIN" ] && JOIN=`which join`
+[ -z "$GREP" ] && GREP=`which grep`
+[ -z "$AWK" ] && AWK=`which awk`
+[ -z "$RM" ] && RM=`which rm`
+[ -z "$CP" ] && CP=`which cp`
+[ -z "$WORKDIR" ] && WORKDIR=/tmp
+
+local=0
+for parm
+do
+  case "$parm" in
+    -p) passwordflag=Y;;
+    -l) local=1;;
+    *)	outfile="$parm";;
+  esac
+done
+
+[ -z "$outfile" ] && {
+	echo "ERROR: Missing argument (outfile)"
+	exit 1
+}
+
+zappasswd()
+{
+  IFS=:
+  while read user passwd rest
+  do
+    case $passwd in
+# Normal UNIX passwds (13 chars)
+      [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./])
+	     passwd="xxxxxxxxxxxxx"
+	   ;;
+# For MD5 passwds (35 chars)
+      [a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/][a-zA-Z0-9\.$/])
+	     passwd="xxxxxxxxxxxxx"
+	   ;;
+      " ") passwd=""
+	   ;;
+	*|!!)
+	     passwd="*"
+	   ;;
+    esac
+    echo "$user:$passwd:$rest" 
+  done
+}
+
+if [ -f /etc/nsswitch.conf ]
+then
+    INPUTS=` $GREP '^passwd' /etc/nsswitch.conf | $AWK '{
+	for(i=2;i<=NF;i++)
+          print $i
+      }' `
+else
+    INPUTS="compat"
+fi
+
+for source in $INPUTS
+do
+  case $source in
+    files|compat)
+	if [ -f /etc/shadow ] 
+	    then
+		$SORT /etc/passwd > $WORKDIR/p.$$
+		$SORT /etc/shadow |
+		$JOIN -t: -e " " -o 2.1 1.2 2.3 2.4 2.5 2.6 2.7 - $WORKDIR/p.$$ |
+		{
+			if [ "$passwordflag" = 'Y' ]; then
+			    $CAT
+			else
+			    zappasswd
+			fi
+		} > $WORKDIR/etc_passwd.$$
+	   
+		[ -s $WORKDIR/etc_passwd.$$ ] && {
+		    echo "/etc/passwd" > $WORKDIR/etc_passwd.$$.src
+		    echo $WORKDIR/etc_passwd.$$ >> $outfile
+		}
+		$RM -f $WORKDIR/p.$$
+	    else
+		$CAT /etc/passwd > $WORKDIR/etc_passwd.$$
+		echo "/etc/passwd" > $WORKDIR/etc_passwd.$$.src
+		echo $WORKDIR/etc_passwd.$$ >> $outfile
+	    fi
+	   
+	   [ "$source" = "files" ] && $GREP '^+' $WORKDIR/etc_passwd.$$ && {
+	     echo "--WARN-- [miscxxxx] The '+' key in the /etc/passwd file should only be used in nsswitch 'compat' mode."
+	   }
+
+	    [ "$source" = compat ] && [ -n "$YP" ] && {
+		$YPCAT passwd > $WORKDIR/nis_passwd.$$
+		echo "NIS" > $WORKDIR/nis_passwd.$$.src
+		echo $WORKDIR/nis_passwd.$$ >> $outfile
+	    }
+
+	 ;;
+    nis)   [ "$local" != 1 ] && {
+             $YPCAT passwd > $WORKDIR/nis_passwd.$$
+	     echo "NIS" > $WORKDIR/nis_passwd.$$.src
+	     echo $WORKDIR/nis_passwd.$$ >> $outfile
+	   }
+	 ;;
+# This is from SunOS, what do to do for Linux?
+#    nisplus) [ "$local" != 1 ] && {
+#               $NISCAT passwd.org_dir > $WORKDIR/nisplus_passwd.$$
+#	       echo "NIS+" > $WORKDIR/nisplus_passwd.$$.src
+#	       echo "$WORKDIR/nisplus_passwd.$$" >> $outfile
+#	     }
+#         ;;
+    *)
+         ;;
+  esac
+done
+
+
+

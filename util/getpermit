@@ -1,0 +1,75 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# util/getpermit - 04/22/93
+#
+# 04/28/93 dls  Added '-L' to 'ls' to get permissions from file instead of
+#               symbolic link.
+#
+#-----------------------------------------------------------------------------
+#
+LS=/bin/ls
+AWK=/bin/awk
+LSLINK=-L
+
+
+lgetpermit()
+{
+  file="$1"
+
+  saveifs=$IFS
+  IFS=/
+  set $file
+  IFS=$saveifs
+
+  path=
+  for comp
+  do
+    [ -n "$comp" ] && {
+      path="$path/$comp"
+      $LS $LSLINK -ld "$path"
+    }
+  done |
+  $AWK '
+    BEGIN {
+      split("0 0 0 0 0 0 0 0 0", perm, " ");
+    }
+    {
+      for(i=2;i<11;i++){
+        c = substr($1, i, 1);
+        if(c != "-" && c != "S" && c != "T"){
+          perm[i-2] = "1";
+	}
+      }
+    }
+    END {
+      for(i=0;i<9;i++)
+        printf("%s ", perm[i]);
+      printf("\n"); 
+    }
+  '
+}
+
+lgetpermit $1
+#
+exit 0
+#
+exit 0
+#
+exit 0
+
+

@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# sub/check_names - 06/14/93
+#
+#-----------------------------------------------------------------------------
+# This script is not runnable directly.
+# 
+file="$1"
+
+[ "$CONFIGURED_ALREADY" != "YES" ] && {
+  echo "--ERROR-- [init008e] This script can not be run directly."
+  exit 1
+}
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds LS RM BASENAME || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Checking unusual file names..."
+
+haveallcmds LS BASENAME || exit 1
+
+[ -s $file ] && {
+  $SORT $file |
+  while read pathname
+  do
+    file="`$BASENAME \"$pathname\"`"
+    case "$file" in
+      .FSP*)
+        echo "--WARN-- [fsys009w] FSP server control file found:"
+	$LS $LSGROUP -ld "$pathname";;
+      *)
+        echo "--ALERT-- [fsys005a] Unusual filename \`$file' found:"
+	$LS $LSGROUP -ld "$pathname";;
+    esac
+  done
+  echo
+}

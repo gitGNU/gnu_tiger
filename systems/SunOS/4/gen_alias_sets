@@ -1,0 +1,48 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/4/gen_alias_sets - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+
+$GREP -v '^#' /etc/aliases |
+$SORT > $WORKDIR/etc_aliases.$$
+echo "/etc/aliases" > $WORKDIR/etc_aliases.$$.src
+echo $WORKDIR/etc_aliases.$$
+
+[ -n "$YP" ] && {
+  $YPCAT -k aliases |
+  $SED -e 's/ /:/' | 
+  $SORT |
+  $COMM -23 - $WORKDIR/etc_aliases.$$ > $WORKDIR/nis_aliases.$$
+  echo "NIS" > $WORKDIR/nis_aliases.$$.src
+  echo $WORKDIR/nis_aliases.$$
+}
+
+[ "$SERVERCHECK" = "Y" ] && {
+  $GETCLIENTDIRS |
+  while read client dir
+  do
+    [ -f "$dir/etc/aliases" ] && {
+      $GREP -v '^#' $dir/etc/aliases |
+      $SORT > $WORKDIR/aliases.$$.$client
+      echo "$client:/etc/aliases" > $WORKDIR/aliases.$$.$client.src
+      echo $WORKDIR/aliases.$$.$client
+    }
+  done
+}

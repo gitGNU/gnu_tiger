@@ -1,0 +1,290 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# sub/check_embed - 06/29/93
+#
+#-----------------------------------------------------------------------------
+#
+
+[ "$CONFIGURED_ALREADY" != "YES" ] && {
+  echo "--ERROR-- [init008e] This script can not be run directly."
+  exit 1
+}
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT FMT GEN_PASSWD_SETS JOIN LS RM || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+haveallcmds LS AWK SORT CAT STRINGS SED GREP TR COMM JOIN RM || exit 1
+haveallfiles WORKDIR || exit 1
+
+saveifs=$IFS
+realpath="$REALPATH -d"
+[ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath=echo
+
+showwhere()
+{
+  [ -n "$1" ] && {
+
+    hdr="         Embedded references in: "
+    for source in $1
+    do
+      echo "${hdr}${source}"
+      hdr="                                 "
+    done
+  }
+}
+
+check_file()
+{
+  __level="$1"
+  __owner="$2"
+  __fcmd="$3"
+  __where="$4"
+  l='w'
+  [ "x$__level" = "xINFO" ] && l='i'
+
+  okowner=$Tiger_Embedded_OK_Owners
+  [ ! -n "$okowner" ] && okowner='root'
+
+  lgetpermit "$__fcmd" |
+  while read __path fowner __group ur uw ux gr gw gx or ow ox suid sgid stk
+  do
+    eval "case \$fowner in
+      $okowner) ;;
+      *) {
+	if [ \"\$__fcmd\" != \"\$__path\" ]; then
+	  message \$__level embed001\$l \"\" \"Path \\\`\$__fcmd' contains \\\`$__path' which is not owned by \$__owner (owned by \$fowner).\"
+	else
+	  message \$__level embed002\$l \"\" \"Path \\\`\$__fcmd' is not owned by \$__owner (owned by \$fowner).\"
+	fi
+	showwhere \"\$__where\"
+      }
+      ;;
+    esac"
+
+    [ -n "$Tiger_Embedded_OK_Group_Write" -a "$gw" = '1' ] && {
+      eval "case \$__group in
+	$Tiger_Embedded_OK_Group_Write) gw=0;;
+      esac"
+    }
+      
+    case "$gw$ow" in
+      00) __what="";;
+      01) __what="world";;
+      10) __what="group \`$__group'";;
+      11) __what="group \`$__group' and world";;
+      *) __what="";;
+    esac
+    [ -n "$__what" ] && {
+      if [ "$__fcmd" != "$__path" ]; then
+	message $__level embed003$l "" "Path \`$__fcmd' contains \`$__path' which is $__what writable."
+      else
+	message $__level embed004$l "" "Path \`$__fcmd' is $__what writable."
+      fi
+      showwhere "$__where"
+    }
+  done
+}
+
+newfile=$WORKDIR/embed1.$$
+oldfile=$WORKDIR/embed2.$$
+record=$WORKDIR/embedrec.$$
+
+$SED -e '/^[ 	]*$/d' |
+$SORT -u > $oldfile
+$AWK '{print $1}' $oldfile > $record
+
+depth=1
+maxdepth=9999
+
+[ -n "$Tiger_Embed_Max_Depth" -a $Tiger_Embed_Max_Depth -gt 0 ] && {
+  maxdepth=$Tiger_Embed_Max_Depth
+}
+
+[ ! -n "$EXPR" ] && maxdepth=0
+
+info=Y
+
+[ "x$Tiger_Embed_Report_Exec_Only" = 'xY' ] && {
+  info=N
+}
+
+while [ -s $oldfile ]
+do
+  > $newfile
+  $AWK '{print $1}' $oldfile |
+  $SORT -u |
+  while read file
+  do
+    [ -r "$file" ] && {
+      $STRINGS - $file |
+      $SED -e 's/#.*$//' -e '/^$/d' |
+      $GREP '/[-a-zA-Z0-9_.][-a-zA-Z0-9_./]*' |
+      $SED -e 's/[^-a-zA-Z0-9_./]/ /g' |   
+      $AWK '{
+      for(i=1;i<=NF;i++)
+        if(substr($i,1,1) == "/")
+          print $i;
+      }' |
+      $GREP '^/[-/a-zA-Z0-9_.]*$' |
+      $AWK '{printf("%s %s\n", "'"$file"'", $1);}'
+    }
+  done 2>/dev/null |
+  $SORT -u |
+  $JOIN -o 1.2 2.1 2.2 - $oldfile |
+  $AWK '{
+      if($3 != "")
+        printf("%s %s->%s\n", $1, $2, $3);
+      else
+	printf("%s %s\n", $1, $2);
+  }' |
+  $SORT -u > $WORKDIR/scr.$$
+
+  $AWK '{print $1}' $WORKDIR/scr.$$ |
+  $SORT -u |
+  $COMM -23 - $record |
+  while read pathname
+  do
+    if [ -b "$pathname" -o -c "$pathname" -o -p "$pathname" ]; then
+      : # Don't process these
+    elif [ -d "$pathname" -a $info = 'Y' ]; then
+      echo "$pathname"
+    elif [ -f "$pathname" ]; then
+      if [ ! -s "$pathname" ]; then
+	:  # Zero length file... the only reason for this is to skip sockets
+      elif [ "x$Tiger_Embed_Check_Exec_Only" != 'xN' ]; then
+	getpermit "$pathname" | {
+	  read _f owner grp ur uw ux gr gw gx or ow ox suid sgid stk
+	  if [ "$ux$gx$ox" != '000' ]; then
+	    echo "$pathname" >> $newfile
+	    echo "$pathname"
+	  elif [ $info = 'Y' ]; then
+	    echo "$pathname"
+	  fi
+	}
+      else
+	echo "$pathname" >> $newfile
+	[ $info = 'Y' ] && echo "$pathname"
+      fi
+    fi
+  done |
+  $SORT -u |
+  $JOIN -o 2.1 2.2 - $WORKDIR/scr.$$
+  
+  > $oldfile
+  [ -s $newfile ] && {
+    $SORT -u $newfile $record > $record.new
+
+    $SORT -u $newfile |
+    $JOIN -o 2.1 2.2 - $WORKDIR/scr.$$ |
+    $SORT -u > $oldfile
+
+  }
+
+  [ -f $record.new ] && $CAT $record.new > $record
+  delete $record.new $WORKDIR/scr.$$
+
+  [ -n "$EXPR" -a $TESTEXEC "$EXPR" ] && depth="`$EXPR $depth + 1`"
+
+  [ $depth -gt $maxdepth ] && break
+  
+done |
+$SORT -u |
+$AWK '
+  BEGIN {
+          last="";
+  }
+        { 
+          if(substr($1, length($1), 1) == "/")
+             name=substr($1, 1, length($1)-1);
+          else
+             name=$1;
+
+          if(last==name){
+              printf(" %s", $2);
+          }
+	  else {
+	      if(last != "") 
+                 printf("\n");
+              last=name;
+              printf("%s %s", last, $2);
+	  }
+  }
+  END   { if(last != "")printf("\n");}
+' |
+while read pathname source
+do
+  if [ -d "$pathname" ]; then
+    check_file 'INFO' root "$pathname" "$source" 
+  elif [ -f "$pathname" ]; then
+    getpermit "$pathname" | {
+      read _f owner grp ur uw ux gr gw gx or ow ox suid sgid stk
+      if [ "$ux$gx$ox" != '000' ]; then
+	check_file 'WARN' root "$pathname" "$source"
+      else
+	check_file 'INFO' root "$pathname" "$source"
+      fi
+    }
+  fi
+done
+
+delete $newfile $oldfile $record $WORKDIR/tmp1.$$
+#
+exit 0
+#
+exit 0
+#
+exit 0

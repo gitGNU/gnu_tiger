@@ -1,0 +1,55 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# Linux/2/gen_export_sets - 12/03/2001
+# 
+# 12/03/2001 jfs  Make it export sets that can be understood by check_exports
+#                 this way it can appropiately find errors 
+#
+#-----------------------------------------------------------------------------
+#
+# For debugging purposes
+[ -z "$GREP" ] && GREP=`which grep`
+[ -z "$SED" ] && SED=`which sed`
+[ -z "$AWK" ] && AWK=`which awk`
+[ -z "$WORKDIR" ] && WORKDIR=/tmp
+
+EXPFILE=/etc/exports
+EXPFILEW=`echo $EXPFILE | $SED -e 's/^\///' | $SED -e 's/\\//\_/g'`
+
+[ -r $EXPFILE ] && {
+  $GREP -v '^#' $EXPFILE  | {
+  while read dir acl 
+  do
+    echo $acl | 
+    $AWK -F ")" '{split($0,array); for (data in array)  print $data }' | {
+	while read hostaccess
+	do
+          [ ! -z "$hostaccess" ] && {
+		domain=`echo $hostaccess | $AWK -F "(" '{print $1}'`
+		[ ! -z "$domain" ] && access="access=$domain"
+		[ -z "$domain" ] && access=""
+		options=`echo $hostaccess | $AWK -F "(" '{print $2}' | $SED -e 's/,/ /g'`
+		echo $dir $access $options 
+	}
+	done 
+     }
+  done 
+  } > $WORKDIR/$EXPFILEW.$$
+  echo "$EXPFILE" > $WORKDIR/$EXPFILEW.$$.src
+  echo $WORKDIR/$EXPFILEW.$$
+}

@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+#  Script to convert doc/*.txt to html/*.html for -H option.
+#  Must re re-run after any change to any of the *.txt files
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+#
+CNT=0
+set ../doc/*.txt
+while [ "$1" ]; do
+  OUTF=`echo $1 | sed -e "s/\.\.\/doc/..\/html/" | sed -e "s/\.txt/.html/"`
+  TITLE=`echo $1 | sed -e "s/\.\.\/doc\///" | sed -e "s/\.txt//"`
+  if [ $CNT -eq 1 ]; then
+   echo "<HR><PRE>" > $OUTF
+   echo >> $OUTF
+   echo >> $OUTF
+   echo >> $OUTF
+   echo >> $OUTF
+   echo >> $OUTF
+   echo >> $OUTF
+   echo >> $OUTF
+   echo >> $OUTF
+   echo "</PRE><HR>" >> $OUTF
+  else
+   echo "<HR>" > $OUTF
+  fi
+  echo "<CENTER><H2> Documents for $TITLE</H2></CENTER>" >> $OUTF
+  cat $1 | sh convert2html >> $OUTF
+  echo "Doing $1"
+ shift
+ CNT=1
+done

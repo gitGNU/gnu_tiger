@@ -1,0 +1,45 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# NeXT/3/gen_export_sets - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+
+COUNT=1
+
+/usr/etc/nidomain -l | 
+$AWK '{ print substr($1,5,length($1) - 4) }' | (
+    while read NETINFO_TAG
+    do
+	EXPORT_SET=$WORKDIR/export.set$COUNT.$$
+	/usr/bin/nidump -t exports localhost/$NETINFO_TAG > $EXPORT_SET
+	echo "NetInfo($NETINFO_TAG)" > $EXPORT_SET.src
+	echo $EXPORT_SET
+	COUNT=`$EXPR $COUNT + 1`
+    done
+    exit $COUNT
+)
+
+COUNT=$?
+
+[ -r /etc/exports ] && {
+	EXPORT_SET=$WORKDIR/export.set$COUNT.$$
+	$GREP -v '^#' /etc/exports > $EXPORT_SET
+	echo "/etc/exports" > $EXPORT_SET.src
+	echo $EXPORT_SET
+}

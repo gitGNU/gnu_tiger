@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# AIX/3/gen_services - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+
+$GREP -v '^#' /etc/services > $WORKDIR/etc_services.$$
+echo "/etc/services" > $WORKDIR/etc_services.$$.src
+echo $WORKDIR/etc_services.$$
+
+[ -n "$YP" ] && {
+  $YPCAT services > $WORKDIR/nis_services.$$
+  echo "NIS" > $WORKDIR/nis_services.$$.src
+  echo $WORKDIR/nis_services.$$
+}
+

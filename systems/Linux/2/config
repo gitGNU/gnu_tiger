@@ -1,0 +1,244 @@
+# -*- sh -*-
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/4/config - 06/14/93
+#     Developed by Advanced Research Corporation (R)
+#
+#-----------------------------------------------------------------------------
+# Linux/1/config - 04/20/99
+# Linux/2/config - 04/20/99
+#   UUID=`/usr/bin/id | /usr/bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
+[ "$UUID" = "" ] && UNAME=`whoami`
+
+export UNAME
+
+[ "$UNAME" != "root" ] && {
+  echo " " 1>&2
+  echo "This script should be run from a super-user account." 1>&2
+  echo " " 1>&2
+#  exit 1
+}
+
+findcmd()
+{
+  CMD=$1
+
+  SRCH=/usr/lib/tiger/bin:/usr/local/lib/tiger/bin:/bin:/usr/bin:/usr/sbin:/sbin:/usr/lib:/usr/lib/tiger/bin:/usr/local/bin:/usr/local/sbin
+
+  SAVEIFS=$IFS
+  IFS=:
+  set $SRCH
+  IFS=$SAVEIFS
+  for dir
+  do
+    [ $TESTEXEC $dir/$CMD ] && {
+      echo $dir/$CMD
+      return
+    }
+  done
+}
+
+TESTEXEC=-x
+export TESTEXEC
+
+RM=`findcmd rm`
+
+AWK=`findcmd awk`
+CAT=`findcmd cat`
+LS=`findcmd ls`
+CUT=`findcmd cut`
+WC=`findcmd wc`
+
+# -g to show group ownership
+LSGROUP="-lg"
+# -L to show file instead of symlink
+LSLINK="-L"
+GREP=`findcmd grep`
+EGREP=`findcmd egrep`
+SED=`findcmd sed`
+SORT=`findcmd sort`
+COMM=`findcmd comm`
+TAIL=`findcmd tail`
+TCPD=`findcmd tcpd`
+HEAD=`findcmd head`
+MV=`findcmd mv`
+TR=`findcmd tr`
+JOIN=`findcmd join`
+GROUPC=`findcmd groups`
+FILECMD=`findcmd file`
+UNIQ=`findcmd uniq`
+BASENAME=`findcmd basename`
+CHMOD=`findcmd chmod`
+CHOWN=`findcmd chown`
+LN=`findcmd ln`
+PASTE=`findcmd paste`
+DIFF=`findcmd diff`
+# We use sendmail better than mail since we use it to
+# send appropiate headers
+MAILER=`findcmd sendmail`
+[ -z "$MAILER" ] && MAILER=`findcmd mail`
+DPKG=`findcmd dpkg`
+NETSTAT=`findcmd netstat`
+LSOF=`findcmd lsof`
+MD5SUM=`findcmd md5sum`
+REALPATH=`findcmd realpath`
+PWD=`findcmd pwd`
+AUTORPM=`findcmd autorpm`
+APT=`findcmd apt-get`
+# Silent grep
+SGREP="$EGREP -s"
+X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -1`
+[ "$X" != "" ] && {
+  SGREP="$GREP -s"
+  X=`$GREP -s : /etc/passwd 2>&1 | $TAIL -1`
+  [ "$X" != "" ] && {
+    SGREP="$BASEDIR/util/sgrep"
+  }
+}
+SNEFRU=`findcmd snefru`
+PWCK=`findcmd pwck`
+[  -n "$PWCK" ] && PWCK="$PWCK -r"
+GRPCK=`findcmd grpck`
+[  -n "$GRPCK" ] && GRPCK="$GRPCK -r"
+CHAGE=`findcmd chage`
+MESG=`findcmd mesg`
+
+
+export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
+export SORT COMM TAIL MV TR JOIN GROUPC FILECMD UNIQ BASENAME HEAD
+export CHMOD CHOWN LN PASTE DPKG LSOF NETSTAT MD5SUM CUT 
+export SNEFRU REALPATH PWCK GRPCK CHAGE MESG DIFF WC
+export PWD AUTORPM APT
+
+
+UNAME=`findcmd uname`
+HOSTNAME=`findcmd hostname`
+GETHOSTNAME=`findcmd hostname`
+EXPR=`findcmd expr`
+STRINGS=`findcmd strings`
+FIND=`findcmd find`
+
+FINDXDEV=-xdev
+FMT=`findcmd fmt`
+GETFS=`findcmd mount`
+CC=`findcmd cc || findcmd gcc`
+PS=`findcmd ps`
+DATE=`findcmd date`
+DATECMD="$DATE +%y%m%d"
+TIMECMD="$DATE +%H:%M"
+
+TESTLINK=-L
+export TESTLINK
+
+export UNAME HOSTNAME EXPR STRINGS FIND FINDXDEV
+export FMT GETFS CC PS DATE DATECMD TIMECMD
+
+WAIT=wait
+
+SENDMAILS="/usr/sbin/sendmail"
+SENDMAILCF="/etc/sendmail.cf"
+export SENDMAILS SENDMAILCF
+
+LOGINDEF="/etc/login.defs"
+export LOGINDEF
+
+YPCAT=`findcmd ypcat`
+
+YP=
+($PS aux | $GREP ypbind | $SGREP -v $GREP) && YP=Y
+export YP
+
+YPSERVER="NO"
+($PS aux | $GREP ypserv | $SGREP -v $GREP) && YPSERVER="YES"
+export WAIT YPCAT YPSERVER 
+
+# Directories
+MAILSPOOL=/var/spool/mail
+#
+if [ -d /var/spool/cron/crontabs ]; then
+  CRONSPOOL=/var/spool/cron/crontabs
+elif [ -d /usr/spool/cron/crontabs ]; then
+  CRONSPOOL=/usr/spool/cron/crontabs
+elif [ -d /var/spool/cron ]; then
+  CRONSPOOL=/var/spool/cron
+else
+  CRONSPOOL=NULL
+fi
+#
+ETCSHELLS=/etc/shells
+#
+LSCRIPTDIR=$BASEDIR/systems/$OS/$REL
+export MAILSPOOL CRONSPOOL ETCSHELLS LSCRIPTDIR
+
+LOCFS=ext2
+export LOCFS
+
+FS_WDIRSYS="/tmp/ /var/tmp/ /var/spool/mail/"
+export FS_WDIRSYS
+#
+SYSDEFAULTPATH="/bin:/usr/bin"
+export SYSDEFAULTPATH
+
+CDIR="$BASEDIR/systems"
+eval `
+  while read var file
+  do
+    if [ -f "$CONFIG_DIR/$file" ]; then
+      loc="$CONFIG_DIR"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$ARCH/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV/$ARCH"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV"
+    elif [ -f "$CDIR/$OS/$REL/$file" ]; then
+      loc="$CDIR/$OS/$REL"
+    elif [ -f "$CDIR/$OS/$file" ]; then
+      loc="$CDIR/$OS"
+    else
+      loc=""
+    fi
+    if [ "$loc" != "" ]; then
+      echo $var="$loc/$file;"
+    else
+      echo "$var=;"
+    fi
+    echo "export $var;"
+  done << EOL
+GEN_PASSWD_SETS gen_passwd_sets
+GEN_GROUP_SETS gen_group_sets
+GEN_ALIAS_SETS gen_alias_sets
+CHECK_CRON check_cron
+GEN_BOOTPARAM_SETS gen_bootparam_sets
+GEN_EXPORT_SETS gen_export_sets
+GEN_SERVICES_SETS gen_services
+GET_MOUNTS gen_mounts
+SIGNATURE_FILE signatures
+SERVICESFILE services
+INETDFILE inetd
+ISSUEFILE issue
+ISSUENETFILE issue.net
+FILE_ACL file_access_list
+SUID_LIST suid_list
+SGID_LIST sgid_list
+REL_FILE_EXCP rel_file_exp_list
+GEN_CRON_FILES gen_cron
+GETCLIENTDIRS gendlclients
+GEN_INETD_SETS gen_inetd
+GETDISKS getdisks
+EMBEDDEDLIST embedlist
+GETUSERHOME getuserhome
+EOL
+`

@@ -1,0 +1,84 @@
+Notice of third party modifications as per the GNU GENERAL PUBLIC LICENSE.
+
+Further changes made by Javier Fernández-Sanguino Peña
+<jfs@debian.org> to comply to FSSTN and Debian policy in the Debian
+package. Made dic 30 01:06:47 CET 1998.
+
+Changes made by Javier Fernández-Sanguino to add new checks, made
+Fri Aug 24 12:20:43 CEST 2001.
+
+Modifications to support Debian 2.x were made to the following files:
+
+CHANGED:
+ Makefile
+ systems/Linux/2/check.tbl - Added checks below
+ systems/Linux/2/config    - Added binaries needed for checks below
+ README.linux              - This file
+
+NEW:
+ systems/Linux/2/check_listeningprocs  - Checks for processes listening on 
+	TCP/IP sockets and warns when user is not root
+ systems/Linux/2/deb_nopackfiles - Checks files installed in binary directories
+	not associated to any package (Debian specific, could be adapted to
+	other distributions if package manager provides this info)
+ systems/Linux/2/deb_checkmd5sums  - Checks for md5sums of installed files
+	using the database installed in /var/lib/dpkg/info/ (Debian specific)
+ systems/Linux/2/deb_checkadvisories  - Checks for installed packages vs.
+	Debian advisories in order to determine if an upgrade is needed.
+ debin/ - directory including all package related files 
+
+Debian provides a diff.gz file along with the sources of this package in
+order to inform users of the specific changes made. Please check
+http://packages.debian.org/tiger
+
+
+------------- previous notice --------------------------
+
+
+tiger-2.2.4 includes support for Redhat Linux 2.x.xx.  Modifications and
+additions are based on "Redhat Linux 2.0.35 i586", and were made on
+Septermber 14, 1998 by Robert L. Ziegler (rlz@mediaone.net).
+
+Modifications to support Redhat Linux 2.0.35 were made to the following files:
+
+CHANGED:			ORIGINAL:
+    Makefile				Makefile.org-2.2.3
+    config				config.org-2.2.3
+    scripts/check_cron			scripts/check_cron.org-2.2.3
+    scripts/check_inetd			scripts/check_inetd.org-2.2.3
+    scripts/crack_run			scripts/crack_run.org-2.2.3
+    site-sample				site-sample.org-2.2.3
+    tigerrc				tigerrc.org-2.2.3
+    util/mksig				util/mksig.org-2.2.3
+
+The original files as supplied in the tiger-2.2.3.tar.gz package are included
+with an ".org-2.2.3" suffix.
+
+Additional files to support Redhat Linux 2.0.35 include:
+
+NEW:
+    README.linux
+    systems/Linux/2/config
+    systems/Linux/2/check.tbl
+    systems/Linux/2/check_cron
+    systems/Linux/2/embedlist
+    systems/Linux/2/facl.strict
+    systems/Linux/2/file_access_list
+    systems/Linux/2/gen_alias_sets
+    systems/Linux/2/gen_bootparam_sets
+    systems/Linux/2/gen_cron
+    systems/Linux/2/gen_export_sets
+    systems/Linux/2/gen_group_sets
+    systems/Linux/2/gen_inetd
+    systems/Linux/2/gen_mounts
+    systems/Linux/2/gen_services
+    systems/Linux/2/gendlclients
+    systems/Linux/2/getdisks
+    systems/Linux/2/inetd
+    systems/Linux/2/rel_file_exp_list
+    systems/Linux/2/services
+    systems/Linux/2/suid_list
+    systems/Linux/2/check
+    systems/Linux/2/gen_passwd_sets
+    systems/Linux/2/signatures
+    systems/Linux/2/sgid_list

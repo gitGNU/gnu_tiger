@@ -1,0 +1,13 @@
+#
+#  These are files which have any embedded pathnames in them checked.
+#  It does not need to include things like /etc/inetd.conf, etc, as
+#  these will be generated during the running of the security system.
+#  They *can* be included if you want to run check_embedded without
+#  running all the other scripts.  This will not cause duplicate output.
+#
+/etc/rc
+/etc/rc?
+/etc/init.d/*
+/.profile
+/.cshrc
+/.login

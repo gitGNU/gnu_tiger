@@ -1,0 +1,318 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_inetd - 06/14/93
+#
+#     Portions corrected y Advanced Research Corporation (R)
+# check_inetd - 04/20/99
+#     Fixes to avoid false positives by Javier Fernandez-Sanguino
+# check_inetd - 12/13/01
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir="/usr/lib/tiger"
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds SED AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
+  haveallfiles BASEDIR WORKDIR INETDFILE SERVICESFILE || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing check of 'services' and 'inetd'..."
+
+haveallcmds SED CAT AWK LS SORT GREP COMM JOIN || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+saveifs=$IFS
+
+tmpservices=$WORKDIR/sec.$$ts
+delete $tmpservices
+tmpinetd=$WORKDIR/sec.$$in
+delete $tmpinetd
+
+trap 'delete $tmpservices $tmpinetd; exit 1' 1 2 3 15
+checkservices ()
+{
+  services="$1"
+
+  # Check that these services have the correct port assigned.
+  while read currservice currport
+  do
+    [ ! -z "$currport" ] && {
+    matches="`$AWK '{ print $2 \" \" $1}' $services | $GREP \"^$currport \" | $AWK '{ print $1 }'`"
+    IFS=/
+    set $currport
+    IFS=$saveifs
+    currportnum=$1
+    serviceok="N"
+# Note: The message is not sent and the serviceok variable is used
+# so that problems with repeated entries do not lead to false positives
+# (jfs, debian bug #123730)
+    for port in $matches
+    do
+      IFS=/
+      set $port
+      IFS=$saveifs
+      if [ $1 = $currportnum ]; then
+	      serviceok="Y"
+      fi
+    done
+    if [ "$serviceok" = "N" ]; then
+	message FAIL inet002f "" "Service $currservice is assigned to port $port which should be $currport."
+    fi
+    }
+  done < $SERVICESFILE
+
+  # Check that these services are not set for any other services.
+  while read currservice currport
+  do 
+    matches=`$GREP " $currport$" $services | $AWK '{ print $1 }'`
+    for service in $matches
+    do
+      if [ $service != $currservice ]; then
+	message FAIL inet003f "" "The port for service $currservice is assigned to service $service."
+      fi
+    done
+  done < $SERVICESFILE
+
+  # Print out any other entries that have been added
+  $AWK '{ print $1 " " $2 }' $services |
+  $GREP -v '^#' | $GREP -v '^ $' | $SORT |
+  while read currservice currport
+  do
+	matchescount=""
+	matches=`$AWK '{ print $1 " " $2 }' $SERVICESFILE | $GREP " $currport$" | $AWK '{ print $1 }'`
+	for service in $matches
+	do
+	if [ $service = $currservice ]; then
+		matchescount="$matchescount."
+	fi
+  done
+  if [ "x$matchescount" = "x" ]; then
+    message INFO inet004i "" "$currservice is $currport (local addition)."
+  fi
+  done
+}
+
+checkinetd ()
+{
+  infile=$1
+
+  $JOIN -o 1.1 2.6 1.6 1.7 $infile $INETDFILE > $WORKDIR/cinetd.$$
+
+  __xx="`$LS -id \`$AWK '{print $3}' $WORKDIR/cinetd.$$ |
+           $GREP -v internal
+          \` 2>/dev/null |
+         $SORT |
+         $UNIQ -c |
+         $SORT -rn |
+         $SED -e '1q'`"
+  set x $__xx
+	 
+  count="$2"
+  size="$3"
+#  tcpdpath="$4"
+  tcpdpath=$TCPD
+
+#  [ "$count" -lt 2 ] && tcpdpath=
+    
+  $GREP -v '^#' $infile | grep -v '^$' |
+  while read currservice s p t user currbinary parm1 parms
+  do
+    if [ "$currservice" = 'rexd' ]; then
+      message FAIL inet006f "" "'rexd' service is enabled."
+    elif [ "$currservice" = 'sysstat' ]; then
+      message WARN inet012w "" "'sysstat' service is enabled."
+    elif [ "$currservice" = 'netstat' ]; then
+      message WARN inet013w "" "'netstat' service is enabled."
+    fi
+    
+    [ "$currbinary" = 'internal' ] && continue
+
+    if [ "`echo $currbinary | $GREP '?'`" ] ; then
+      currbinary=`echo $currbinary | $SED -e "s/\?//"`
+    fi
+
+    if [ -f "$currbinary" ]; then
+      [ -n "$TigerCheckEmbedded" -a "$user" = 'root' ] && {
+	echo "$currbinary $inetdsrc" >> $TigerCheckEmbedded
+      }
+ # SGI IRIX currbinary paths can be prefixed with '?' to indicate
+ # optional existance of the binary
+     elif [ "X$OS" = "XIRIX" -a "X`echo $currbinary | $SED 's:[?]::'`" != "X$currbinary" ]; then
+	if [ -f "`echo $currbinary | $SED 's:[?]::'`" ]; then
+		[ -n "$TigerCheckEmbedded" -a "$user" = 'root' ] && {
+			echo "`echo $currbinary | $SED 's:[?]::'` $inetdsrc" >> $TigerCheckEmbedded
+		 }
+	else
+		message INFO inet014i "" "`echo $currbinary | $SED 's:[?]::'` for $currservice does not exist (flagged as optional)."
+	fi
+
+    else
+      message INFO inet010i "" "$currbinary for $currservice does not exist."
+    fi
+    
+    if [ "X$OS" = "XIRIX" -a "X`echo $currbinary | $SED 's:[?]::'`" != "X$currbinary" ]; then
+	lgetpermit "`echo $currbinary | $SED 's:[?]::'`" |
+	pathmsg inet008 inet009 "`echo $currbinary | $SED 's:[?]::'`" root "inetd entry for $currservice service uses"
+    else
+	lgetpermit "$currbinary" |
+	pathmsg inet008 inet009 "$currbinary" root "inetd entry for $currservice service uses"
+    fi
+
+    if [ "$currbinary" = "$tcpdpath" ]; then
+      if [ -f "$parm1" ]; then
+	[ -n "$TigerCheckEmbedded" -a "$user" = 'root' ] && {
+	  echo "$parm1 $inetdsrc" >> $TigerCheckEmbedded
+	}
+      else
+	message INFO inet010i "" "$parm1 for $currservice does not exist."
+      fi
+    
+      lgetpermit "$parm1" |
+      pathmsg inet008 inet009 "$parm1" root "inetd entry for $currservice service uses"
+    fi
+  done 
+
+  while read service exppath currpath parm1 parms
+  do
+    if [ "`echo $currpath | $GREP '?'`" ]; then
+     currpath=`echo $currpath | $SED -e "s/\?//"`
+    fi
+    if [ "`echo $exppath | $GREP '?'`" ]; then
+     exppath=`echo $exppath | $SED -e "s/\?//"`
+    fi
+    if [ "$currpath" != "$exppath" ]; then
+	message WARN inet005w "" "Service $service is using $currpath instead of $exppath."
+    fi
+  done < $WORKDIR/cinetd.$$
+  
+  delete $WORKDIR/cinetd.$$
+
+  $AWK '$6 != "internal" {print}' $infile |
+  $SORT > $WORKDIR/inet1.$$
+  $AWK '$6 != "internal" {print}' $INETDFILE |
+  $SORT |
+  $JOIN -j 1 -o 1.1 2.1 1.6 - $WORKDIR/inet1.$$ |
+  while read expservice currservice prog
+  do
+   if [ "$prog" ] ; then
+    [ $expservice != $currservice ] && {
+      message WARN inet007w "" "Binary $prog is being used for service $currservice.  Expected service is $expservice."
+    }
+   fi
+  done 
+  delete $WORKDIR/inet1.$$
+
+# Print out any other entries that have been added
+  $AWK '{ print $1 " " $3 }' $infile |
+  $GREP -v '^#' | $GREP -v '^ $' | $SORT |
+  while read service protocol
+  do
+	matchescount=""
+	matches=`$AWK '{ print $1 " " $3 }' $INETDFILE | $GREP " $protocol$" | \
+	$AWK '{ print $1 }'`
+	for currservice in $matches
+	do
+		if [ "X$service" = "X$currservice" ]; then
+			matchescount="$matchescount."
+		fi
+	done
+	if [ "X$matchescount" = "X" ]; then
+		x="`$EGREP \"^$service[     ]\" $infile`"
+		message INFO inet011i "$x" "Locally added entry \`$service' in inetd.conf:"
+	fi
+  done
+}
+
+realpath="$REALPATH -d"
+
+[ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath="echo"
+
+{
+  haveallcmds GEN_SERVICES_SETS &&
+  haveallfiles SERVICESFILE && {
+    $GEN_SERVICES_SETS |
+    while read services_set
+    do
+      echo "# Checking services from `$CAT $services_set.src`."
+
+      $AWK '!/^#/ { print $1, $2 }' $services_set |
+      $SED -e '/^$/d' |
+      $SORT -u > $tmpservices
+
+      checkservices $tmpservices
+
+      delete $services_set $services_set.src $tmpservices
+    done
+  }
+
+
+  haveallcmds GEN_INETD_SETS UNIQ TAIL &&
+  haveallfiles INETDFILE && {
+    $GEN_INETD_SETS |
+    while read inetd_set
+    do
+      inetdsrc=`$CAT $inetd_set.src`
+      echo "# Checking inetd entries from $inetdsrc"
+
+      checkinetd $inetd_set
+
+      delete $inetd_set $inetd_set.src
+    done
+  }
+} |
+$OUTPUTMETHOD
+
+exit 0
+#
+exit 0
+#
+exit 0

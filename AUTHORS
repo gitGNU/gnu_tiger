@@ -1,0 +1,18 @@
+ Douglas Lee Schales
+ Dave Hess
+ Khalid Warraich
+ Dave Safford
+[modifications for support of Redhat Linux 2.x. made by]
+ Robert L. Ziegler (rlz@mediaone.net)
+[modifications for NeXT, IRIX, SunOS 5.x, AIX 4, UNICOS systems
+ as well as a big number of bug fixes and new scripts, made by the
+ group from Advanced Research Corporation for tara, composed of:]
+ Liam Forbes <lforbes@arsc.edu>
+ Nathan Bills <bills@arsc.edu> and
+ Mike Kienenberger <mkienenb@arsc.edu>
+[new checks for RedHat and Debian GNU/Linux 2.x. made by]
+ Paul Telford <paul_telford@hp.com>
+ Bryan Gartner <bryang@soccer.fc.hp.com>
+[modifications for support of Debian GNU/Linux 2.x. made by]
+ Javier Fernandez-Sanguino Peña <jfs@computer.org>
+

@@ -1,0 +1,95 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2000, 2001 Javier Fernandez-Sanguino Peña
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# Linux/deb_checkadvisories - 24/08/2001
+#
+#-----------------------------------------------------------------------------
+TigerInstallDir='.'
+
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds DPKG CAT HEAD CUT GREP UNAME || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  message CONFIG init003c "" "$0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Checking installed packages vs Debian Security Advisories..."
+
+haveallcmds DPKG CAT HEAD CUT GREP UNAME SED || exit 1
+
+
+currentarch=`$UNAME -m | $SED -e "s/i.86/i386/"`
+$CAT $CONFIG_DIR/deb_advisories | {
+	while read package version arch advisory date 
+	do
+# TODO: only check if arch is the same otherwise we are checking more
+# than once and might give out false positives
+		[ "$currentarch" = "$arch" ] && {
+		if [ "$Tiger_DPKG_Optimize" = "N" ]
+		then
+			installed=`$DPKG --status $package | $GREP Version` 
+		else
+			installed=`$GREP -A 10 "^Package: ${i}$" /var/lib/dpkg/status | $GREP ^Version: | $HEAD -1 | $CUT -d : -f 2 `
+		fi
+		if [ "$installed" != "" ] 
+		then 
+			installed=`echo $installed | $CUT -d : -f 2`
+			[ "$version" = "$installed" ] && {
+			message ERROR deb001e "" "Installed version of package $package has a security problem as described in Debian Security Advisory of date $date: \`$advisory'. Upgrade from security.debian.org"
+		}
+		fi
+		}
+	done 
+}

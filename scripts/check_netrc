@@ -1,0 +1,193 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_netrc - 06/14/93
+#
+# 04/28/93 dls  Added '-L' option to 'ls' to get the permissions from the
+#               file instead of the symbolic link.
+#
+#               Complain if the .netrc is a symbolic link or directory.
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing check of .netrc files..."
+
+haveallcmds AWK CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+haveallvars TESTLINK HOSTNAME || exit 1
+
+
+check_file()
+{
+  user=$1
+  file=$2
+  
+  $AWK '
+   BEGIN  {
+           LINE="";
+          }
+   /[ \t]*machine/ {
+           print LINE;
+           LINE="$0";
+          }
+          {
+           LINE=LINE " " $0;
+          }
+   END    {
+           print LINE;
+          }
+   ' < $file |
+  $AWK '
+   BEGIN  {
+           BAD=0;
+          }
+          {
+           username="";
+           password="";
+           for(i=0;i<NF;i++){
+              if($i == "login"){
+                  i++;
+                  username=$i;
+              }
+              else if($i == "password"){
+                  i++;
+                  password=$i;
+              }
+           }
+           if(username != "ftp" && username != "anonymous" && username != "")
+               if(password != "")
+                    BAD=1;
+          }
+   END    {
+           if(BAD == 1)
+             exit 1;
+           else
+             exit 0;
+          }
+  ' || {
+    getpermit $file | {
+      read _f owner group ur uw ux gr gw gx or ow ox suid sgid stk
+      if [ "$gr$or" != "00" ]; then
+	message FAIL nrc001f "" "User $user's .netrc file is readable and contains passwords for non-anonymous ftp accounts."
+      else
+	message WARN nrc002w "" "User $user's .netrc file contains passwords for non-anonymous ftp accounts."
+      fi
+    }
+  }
+}
+
+process_passwd()
+{
+  while read user homedir host
+  do
+    [ "$host" = "$HOSTNAME" -a -r "$homedir/.netrc" ] && {
+      if [ $TESTLINK $homedir/.netrc ]; then
+	message WARN nrc003w "" "User $user's .netrc file is a symbolic link:"
+	$LS -l $homedir/.netrc
+	$LS $LSGROUP $LSLINK $homedir/.netrc
+	[ -s $homedir/.netrc ] && 
+	  check_file $user $homedir/.netrc
+      elif [ -d $homedir/.netrc ]; then
+	message ALERT nrc004a "" "User $user's .netrc file is a directory:"
+	$LS $LSGROUP -Rla $homedir/.netrc
+	echo
+      else
+	check_file $user $homedir/.netrc
+      fi
+    }
+  done
+}
+
+saveifs="$IFS"
+
+{
+  if [ -n "$Tiger_PasswdFiles" ]; then
+    $CAT "$Tiger_PasswdFiles" > $WORKDIR/pass.list.$$
+  else
+    $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
+  fi
+}
+
+while read passwd_set
+do
+  echo
+  echo "# Checking accounts from `$CAT $passwd_set.src`..."
+
+  $AWK -F: '{print $1, $6}' $passwd_set |
+  $BASEDIR/util/${GETFSHOST:=getfs-std} > $WORKDIR/home.hosts.$$
+
+  $AWK -F: '{printf("%s %s\n", $1, $6); }' $passwd_set |
+  $JOIN -o 1.1 1.2 2.3 - $WORKDIR/home.hosts.$$ |
+  process_passwd
+  
+  [ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
+  delete $WORKDIR/home.hosts.$$
+done < $WORKDIR/pass.list.$$ |
+$OUTPUTMETHOD
+
+delete $WORKDIR/pass.list.$$
+#
+exit 0
+#
+exit 0
+#
+exit 0

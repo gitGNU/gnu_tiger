@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# NeXT/3/gendlclients - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+
+parse_bootparam()
+{
+  $AWK '
+       BEGIN {LINE="";}
+       $0 ~ /\\$/ {printf("%s ", substr($0, 1, length($0)-1));}
+       $0 !~ /\\$/ {printf("%s\n", $0);}
+       END {printf("\n");}
+   ' |
+  $AWK '{
+           for(i=2;i<=NF;i++)
+             if(substr($i, 1,5) == "root="){
+	       x=substr($i, 6, length($i));
+               split(x, ar, ":");
+               print $1, ar[1], ar[2];
+   	     }
+        }'
+}
+
+$GEN_BOOTPARAM_SETS | 
+while read bootparam_set
+do
+  parse_bootparam < $bootparam_set
+  
+  $RM -f $bootparam_set $bootparam_set.src
+done |
+$SORT -u |
+while read client server filesys
+do
+  eval "case $server in $HOSTNAMESLIST) echo $client $filesys;; esac"
+done

@@ -1,0 +1,51 @@
+
+			    What is TIGER?
+
+     TIGER, or the 'tiger' scripts, is a set of Bourne shell scripts,
+C programs and data files which are used to perform a security audit
+of UNIX systems.  It is designed to hopefully be easy to use, easy to
+understand and easy to enhance.  Currently support for SunOS 4.x and
+SunOS 5.x is the best, followed by NeXT 3.x.  Other systems for which
+(at least partial) configuration files are provided are IRIX 4.x, AIX
+3.x, UNICOS 6.x, Linux 0.99.x and HP/UX.  These configurations are not
+tested as thoroughly as the SunOS and NeXT configurations, and in some
+cases, may barely work.  For other systems, a "best effort" check will
+be performed.
+
+     TIGER has one primary goal: report ways 'root' can be
+compromised.  While checks are performed for other purposes, most of
+the checks are directed at this goal.  The primary assumption made is
+that any uid other than 0 can be obtained (if you aren't as paranoid
+as I am, you could tell it to trust, oh, say 'bin'... but don't!) and
+that *any* gid can be obtained by unauthorized persons.
+
+     What does it do to do this?  Paths into 'root' (cron, inetd,
+setuid executables, PATH, etc, etc) are all checked to see if anyone
+other than 'root' can alter that path.  Any such instances are
+flagged.  (In reality, paths into other accounts are checked for
+vulnerability, but 'root' receives special attention).
+
+A brief run down of some of the checks (not complete):
+
+o  cron entries are checked
+o  mail aliases are checked
+o  NFS exports are checked
+o  inetd entries are checked
+o  PATH variables are checked
+o  .rhosts & .netrc files are checked
+o  Specific file & directory access permissions are checked
+o  File system scans locate unusual files
+o  Digital signatures are used to detect alterations to key
+   binaries (signatures are generated from CD-ROM) and also to
+   report binaries for which (updated) security patches exist.
+o  Pathnames embedded in any files reported by most of the other
+   checks are checked.
+
+    The amount of time required to execute TIGER varies on system size
+and the TIGER configuration settings.  On a SparcStation LX with 1GB
+of disk, less than 20 users, and a strenuous TIGER configuration, it
+takes about 90 minutes.  A less strenuous TIGER configuration can run
+in about 25 minutes on the same machine configuration.  The bulk of
+this time is used by the file system scans and check of embedded
+pathnames.  On systems with a large number of users, other checks will
+dominate.

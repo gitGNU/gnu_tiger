@@ -1,0 +1,222 @@
+# -*- sh -*-
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+#  config (top level) - 06/14/93
+#
+# 04/29/93 dls  Added support for 'tigerrc' file.
+#
+#-----------------------------------------------------------------------------
+#
+# space, tab, newline
+TigerLogDir='.'
+TigerWorkDir='/tmp'
+TigerBinDir='$BASEDIR/bin'
+
+checkfile()
+{
+  _rcfile=$1
+  _rcpath=${2:=$1}
+  _status=1
+  
+  if [ -d $_rcfile ]; then
+    echo "--CONFIG-- [con001c] Ignoring config file $_rcpath, (directory)"
+  elif [ -f $_rcfile ]; then
+    _status=0
+    _permit=`$LS $LSLINK -l $_rcfile |
+             $AWK '{printf("%s%s", substr($1,6,1), substr($1,9,1));}'`
+    [ "$_permit" != "--" ] && {
+      echo "--CONFIG-- [con003c] Ignoring config file $_rcpath, (world and/or group writable)"
+      _status=1
+    }
+  fi
+
+  return $_status
+}
+
+[ "$CONFIGURED_ALREADY" != "YES" ] && {
+
+  umask 077
+
+  CONFIGURED_ALREADY=YES
+
+  if [ -n "$TIGERHOMEDIR" -a "$TIGERHOMEDIR" != '.' ]; then
+    BASEDIR="$TIGERHOMEDIR"
+  elif [ -n "$TigerInstallDir" -a "$TigerInstallDir" != '.' ]; then
+    BASEDIR="$TigerInstallDir"
+  elif [ ! -d ./systems -a -d ../systems ]; then
+    BASEDIR='..'
+  else
+    BASEDIR='.'
+  fi
+
+  LOGDIR=${TigerLogDir:=.}
+  WORKDIR=${TigerWorkDir:=${TMPDIR:=/tmp}}
+  EXPLAINREPORT=N
+  SERVERCHECK=N
+  Tiger_TESTMODE=N
+  RCFILE=
+  export BASEDIR LOGDIR WORKDIR BINDIR EXPLAINREPORT SERVERCHECK RCFILE
+  export Tiger_TESTMODE TigerCleanup
+  doversion=0
+  
+  while [ $# != 0 ]
+  do
+    case $1 in
+     -v) doversion=1;;
+     -B) BASEDIR=$2; shift;;
+     -l) LOGDIR=$2; shift;;
+     -w) WORKDIR=$2; shift;;
+     -b) BINDIR=$2; shift;;
+     -c) RCFILE=$2; shift;;
+     -e) EXPLAINREPORT=I;;
+     -E) EXPLAINREPORT=Y;;
+     -S) SERVERCHECK=Y;;
+     -O) OS=$2; shift;;
+     -A) ARCH=$2; shift;;
+     -R) REV=$2; shift;;
+     -t) Tiger_TESTMODE=Y;;
+      *) echo "--ERROR-- [con006e] Unknown option $1";;
+    esac
+    shift;
+  done
+
+  TIGERHOMEDIR="$BASEDIR"
+  export TIGERHOMEDIR
+
+  TIGERVERSION="`/bin/cat $TIGERHOMEDIR/version.h 2>/dev/null`"
+  [ ! -n "$TIGERVERSION" ] && TIGERVERSION="undetermined"
+  export TIGERVERSION
+  
+  [ $doversion -eq 1 ] && {
+    echo "tiger, version $TIGERVERSION"
+    exit 0
+  }
+
+  echo "Configuring..."
+
+  set X `$BASEDIR/util/gethostinfo` unknown unknown unknown
+  OS=${OS:=$2}
+  REV=${REV:=$3}
+  ARCH=${ARCH:=$4}
+  saveifs=$IFS
+  IFS=.
+  set X $REV
+  IFS=$saveifs
+  shift
+  REL="$1"
+  [ ! -n "$REL" ] && REL=$REV
+
+  [ ! -n "$BINDIR" ] &&  eval BINDIR=${TigerBinDir:=$BASEDIR/bin}
+
+  SCRIPTDIR=$BASEDIR/scripts
+  export SCRIPTDIR
+  
+  echo " "
+  echo "Will try to check using config for '$ARCH' running $OS $REV..."
+
+  CONFIG_LOC=${TIGERCONF:="$BASEDIR/systems"}
+
+  if [ -f "$CONFIG_LOC/$OS/$REL/$REV/$ARCH/config" ]; then
+    echo "--CONFIG-- [con004c] Using configuration files for $OS $REV $ARCH."
+    CONFIG_DIR="$CONFIG_LOC/$OS/$REL/$REV/$ARCH"
+  elif [ -f "$CONFIG_LOC/$OS/$REL/$REV/config" ]; then
+    echo "--CONFIG-- [con004c] Using configuration files for $OS $REV."
+    CONFIG_DIR="$CONFIG_LOC/$OS/$REL/$REV"
+  elif [ -f "$CONFIG_LOC/$OS/$REL/config" ]; then
+    echo "--CONFIG-- [con005c] Using configuration files for $OS $REV. Using"
+    echo "           configuration files for generic $OS $REL."
+    echo "           Not all checks may be performed."
+    CONFIG_DIR="$CONFIG_LOC/$OS/$REL"
+  elif [ -f "$CONFIG_LOC/$OS/config" ]; then
+    echo "--CONFIG-- [con005c] No configuration files for $OS $REV.  Using"
+    echo "           configuration files for generic $OS."
+    echo "           Not all checks may be performed."
+    CONFIG_DIR="$CONFIG_LOC/$OS"
+  elif [ -f "$CONFIG_LOC/default/config" ]; then
+    echo "--CONFIG-- [con007c] No configuration files for $OS.  Using default"
+    echo "           configuration files.  Not all checks may be performed."
+    CONFIG_DIR="$CONFIG_LOC/default"
+  else
+    echo "--ERROR-- [con008e] No configuration files for $OS $REV and can't find the"
+    echo "          default configuration files.  Terminating."
+    exit 1
+  fi
+  CONFIG_FILE="$CONFIG_DIR/config"
+
+  . $CONFIG_FILE
+
+  [ ! -n "$TESTEXEC" ] && TESTEXEC="-f"
+  [ ! -n "$TESTLINK" ] && TESTLINK="-h"
+
+  OUTPUTMETHOD="$CAT"
+  [ "$EXPLAINREPORT" != "N" ] && {
+    OUTPUTMETHOD="$BASEDIR/tigexp -F"
+  }
+  export OUTPUTMETHOD
+  
+  HOSTNAME=`$GETHOSTNAME`
+
+  for file in './site-$HOSTNAME' '$BASEDIR/site-$HOSTNAME' './site' '$BASEDIR/site'
+  do
+    eval rc=$file
+    if checkfile $rc $file; then
+      SITECONFIG=$rc
+      break
+    fi
+  done
+
+  [ -n "$SITECONFIG" -a -r "$SITECONFIG" ] && . $SITECONFIG
+
+  [ -n "$RCFILE" -a ! -f "$RCFILE" ] && {
+    echo "Control file "$RCFILE" not found... exiting..."
+    exit 1
+  }
+
+  [ ! -n "$RCFILE" ] && {
+    for file in './.tigerrc' './tigerrc' '$HOME/.tigerrc' '$BASEDIR/tigerrc'
+    do
+      eval rc=$file
+      if checkfile $rc $file; then
+	RCFILE=$rc
+	break
+      fi
+    done
+  }
+
+  #
+  # Preprocess the RC file, to export variables to environment
+  #
+
+  [ -n "$RCFILE" -a -f $RCFILE ] && {
+    $GREP -v '^#' $RCFILE |
+    $SED -e 's/^\(.*\)=/export \1; \1=/' > $WORKDIR/rcfile.$$
+    . $WORKDIR/rcfile.$$
+    $RM -f $WORKDIR/rcfile.$$
+  }
+    
+  HOSTNAMESLIST=${HOSTNAMESLIST:=$HOSTNAME}
+
+  export CONFIGURED_ALREADY OS REL REV ARCH HOSTNAME
+  export CONFIG_DIR CONFIG_FILE HOSTNAMESLIST CRACK
+
+  [ "$TigerNoBuild" != 'Y' ] && {
+    > $WORKDIR/tigercmds.$$
+    $BASEDIR/util/buildbins $WORKDIR/tigercmds.$$
+    . $WORKDIR/tigercmds.$$
+    $RM -f $WORKDIR/tigercmds.$$
+  }
+}

@@ -1,0 +1,668 @@
+#!/usr/bin/perl
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#   
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#  
+use strict;
+
+# BUG - UID/GID still wrong
+# Utilities...
+
+unless ( -f "/etc/redhat-release" ) {
+  &Info ('netw000i','network_check has only been tested on RedHat');
+}
+open(IN,"/etc/redhat-release");
+my ($r,$h,$re,$ver,$code) = split(' ',<IN>);
+close(IN);
+unless ($ver gt '6.2') {
+  &Info ('netw001i','network_check has only been tested on RedHat release 6.2 and greater');
+}
+
+# %ps{name} = pid;
+my %ps = &do_ps;
+# %ports{proto}{port} = 1;  e.g. if ( $ports{'tcp'}{'79'} ) { fingerd is listening }
+my %ports = &do_netstat;
+# Make an @array of valid shells
+my @real_shells = &get_shells;
+# %portmap{name}{proto}{ver} = port
+my %portmap = &get_portmap;
+# @adminids = just an @array of valid UID's for admin accounts
+my @adminids = split('\|',$ENV{'Tiger_Admin_Accounts'});
+
+# Start the checks....
+
+&check_inetd;
+&check_syslog;
+&check_omniback;
+&check_fingerd;
+&check_indetd;
+&check_inetd_internals;
+&check_routing;
+&check_securetty;
+&check_ip_fwd;
+&check_dns;  # BUG - Zone transfers????
+&check_ftpd;
+&check_ftpusers;
+&check_ntp;  # BUG - Not done
+&check_rcmd;
+&check_rexd;
+&check_sshd;
+&check_issue;
+&check_X;
+&check_tftpd;
+&check_nis;
+&check_uucp;
+&check_nfs;
+&check_smtp;
+
+
+# Da Checks...
+
+sub check_inetd {
+
+# Inetd's configuration files need correct permissions
+
+  my @bad;
+  if ( -d "/etc/xinetd.d" ) {
+# It's xinetd based...
+     opendir(DIR,"/etc/xinetd.d") || die "cannot open xinetd.d : $!\n";
+     my @files = (sort(readdir(DIR)));
+     closedir(DIR);
+     # Drop . & .., add the top dir
+     shift(@files); shift(@files);
+     my $mode = (stat("/etc/xinetd.d"))[2];
+     my $writeable = $mode & 002;
+     push(@bad,"/etc/xinetd.d") if $writeable;
+     $mode = (stat("/etc/xinetd.conf"))[2];
+     $writeable = $mode & 002;
+     push(@bad,"/etc/xinetd.conf") if $writeable;
+     foreach my $file (@files) {
+       my $mode = (stat("/etc/xinetd.d/$file"))[2];
+       my $writeable = $mode & 002;
+       push(@bad,"/etc/xinetd.d/$file") if $writeable;
+     }
+  } else {
+    my @files = qw (hosts.allow hosts.deny hosts.equiv inetd.conf);
+     foreach my $file (@files) {
+       my $mode = (stat("/etc/$file"))[2];
+       my $writeable = $mode & 002;
+       push(@bad,"File /etc/$file") if $writeable;
+     }
+  }
+  foreach my $bad ( @bad ) { &Fail('netw001f',"$bad is publicly writeable") }
+
+# Inetd's configuration files need proper ownersip
+
+  undef(@bad);
+  if ( -d "/etc/xinetd" ) {
+# It's xinetd based...
+     opendir(DIR,"/etc/xinetd.d") || die "cannot open xinetd.d : $!\n";
+     my @files = (sort(readdir(DIR)));
+     closedir(DIR);
+     # Drop . & .., add the top dir
+     shift(@files); shift(@files);
+     my $uid = (stat("/etc/xinetd"))[2];
+     push(@bad,"/etc/xinetd") if ( $uid > 5 );
+     foreach my $file (@files) {
+       my $mode = (stat("/etc/xinetd.d/$file"))[2];
+       push(@bad,"/etc/xinetd.d/$file") if ( $uid > 5 );
+     }
+  } else {
+    my @files = qw (hosts.allow hosts.deny hosts.equiv inetd.conf);
+     foreach my $file (@files) {
+       my $uid = (stat("/etc/$file"))[4];
+       push(@bad,"/etc/$file") if ( $uid > 5 );
+     }
+  }
+  foreach my $bad ( @bad ) { &Fail('netw002f',"$bad - must be owned by and admin UID") }
+
+# Inetd should have logging enabled
+
+  my ($bad,$pid);
+  $pid = $ps{'inetd'} || $ps{'inetd'};
+  open(IN,"/proc/$pid/cmdline") || die "cannot find /proc/$pid/cmdline : $!\n";
+  my $line = <IN>;
+  close(IN);
+  if ( $ps{'inetd'} ) {
+    $bad = "inetd" unless ( $line =~ /-l/ );
+  } elsif ( $ps{xinetd} ) {
+    $bad = "xinetd" unless (( $line =~ /filelog/ ) || ( $line =~ /syslog/ ));
+  } 
+  if ( $bad ) {
+    &Fail('netw003f',"$bad is not configured with logging enabled");
+  }
+
+}
+
+sub check_syslog {
+
+# syslogd should be executing, is it?
+
+  unless ( $ps{'syslogd'} ) {
+    &Fail('netw004f',"syslogd is not running");
+  }
+
+}
+
+sub check_omniback {
+
+# Specify the cell server by IP addresses 
+
+  my $port=getservbyname('omni','tcp');      
+  $port = 555 || $port;  # Default omni port
+  unless ( $ports{'tcp'}{$port} ) {  return }
+
+  my $cell_file = '/usr/omni/config/cell/cell_server';
+  unless ( -r $cell_file ) {
+    &Fail('netw005f',"Omniback listening on port $port, but cell_server not specified in $cell_file");
+  }
+  open(IN,"$cell_file");
+  while(<IN>) {
+    chomp;
+    next if /^#/; 
+    next unless $_;
+    if (/[a-zA-Z_-]/ ) {
+      &Fail('netw006f',"Omniback cell server must be specified by IP address in $cell_file");    
+    }
+  }
+  close(IN);
+
+}
+
+sub check_fingerd {
+
+# fingerd's BAD...
+
+  my $port=getservbyname('finger','tcp');
+  $port = 79 || $port;  # Default finger port
+  if ( $ports{'tcp'}{$port} ) {
+    &Fail('netw007f',"Fingerd appears to be listening on port $port");
+  }
+
+}
+
+sub check_indetd {
+
+# IDENTD is not permitted
+
+  my $port=getservbyname('auth','tcp');
+  $port = 113 || $port;  # Default auth port
+  if ( $ports{'tcp'}{$port} ) {
+    &Fail('netw008f',"IDENTD (auth)  appears to be listening on port $port");
+  }
+
+}
+
+sub check_inetd_internals {
+
+# Services: daytime, time, echo, chargen, discard should be disabled
+
+  my %svcs = (
+    daytime => 13,
+    time => 37,
+    echo => 7,
+    chargen => 19,
+    discard => 9,
+   );
+
+  foreach my $service (keys(%svcs)) {
+    my $port=getservbyname($service,'tcp');
+    $port = $svcs{$service} || $port;  # Default port
+    foreach my $proto ('tcp','udp') {
+      if ( $ports{'tcp'}{$port} ) {
+        &Fail('netw008f',"$service appears to be listening on $proto port $port");
+      }
+    }
+  }
+}
+
+sub check_routing {
+
+# Routing not permitted on a 'secure' host
+
+  my @route_daemons = qw (routed gated rdpd);
+  my @bad;
+  foreach my $name (@route_daemons) {
+    if ( $ps{$name} ) { push(@bad,$name) };
+  }
+  foreach my $name (@bad) {
+    &Fail('netw009f',"Routing daemon $name appears to be running");
+  }
+
+}
+
+sub check_securetty {
+
+# securetty should direct super-user logins on invalid terminals
+
+  unless ( -f "/etc/securetty" ) {
+    &Fail('netw010f',"/etc/securetty does NOT exist");
+    return;
+  }
+  open(IN,"/etc/securetty") || die "Cannot open /etc/securetty : $!\n";
+  my @bad;
+  while(<IN>) {
+    next if (/^vc\//);          # Virt Cons
+    next if (/^tty[0-9]/);    # Hard Wired
+    chomp;
+    push(@bad,$_);
+  }
+  close(IN);
+  foreach my $bad (@bad) {
+    &Fail('netw011f',"Insecure entry $bad in /etc/securetty");
+  }
+
+# /etc/securetty should have admin ownership and permissions.
+
+  my ($dev,$ino,$mode,$nlink,$uid,$gid,@rest) = stat("/etc/securetty");  
+  undef(@bad);
+  if ( $uid > 5 ) { &Fail('netw012f',"/etc/securetty had bad uid ownership") };
+  if ( $gid > 5 ) { &Fail('netw013f',"/etc/securetty had bad gid ownership") };
+  if ( $mode & 002 ) { &Fail('netw014f',"/etc/securetty has world write permission") }
+
+}
+
+sub check_ip_fwd {
+
+  open (IN,"</proc/sys/net/ipv4/ip_forward");
+  my $fwd = <IN>;  
+  close(IN);
+  chomp($fwd);
+  if ( $fwd ) {
+    &Fail('netw015f',"IP forwarding is not permitted, but /proc/sys/net/ipv4/ip_forward == 1");
+  }
+
+}
+
+sub check_dns {
+
+#  BIND version 8.2.3 or later is required. 
+
+  my @bad;
+  if ( -x "/usr/sbin/named" ) {
+    my $info = `/usr/sbin/named -v`;
+    chomp($info);
+    my ($bind,$ver) = split(' ',$info);
+    if ( $ver lt '8.2.3' ) {
+      &Fail('netw016f',"BIND version $ver appears less than 8.2.3"); 
+    }
+  }
+
+
+}
+
+sub check_ftpd {
+
+# 4.24  ftpd, wuftpd version 2.6.0 are permited.
+
+  if ( -x "/usr/sbin/in.ftpd" ) {
+    open(IN,"/usr/sbin/in.ftpd -V |");
+    my ($bog,$ver);
+    while (<IN>) {
+      next unless /^Version wu/;
+      chomp;
+      ($bog,$ver) = split;
+      last;
+    }
+    close(IN); wait;
+    if (( $ver lt 'wu-2.6.0' ) && ( $ver )) {
+      &Fail('netw017f',"wu-ftpd version < 2.6.0");
+    }
+  }
+
+#  Anonymous FTP user shouldn't have a valid shell
+
+  my ($name,$pass,$uid,$gid,$gecos,$home,$shell);
+  open(PASS,"/etc/passwd") || die "Cannot open /etc/passwd : $!\n";
+  while(<PASS>) {
+    next unless /^ftp:/;
+    chomp;
+    ($name,$pass,$uid,$gid,$gecos,$home,$shell) = split(':',$_);
+    last;
+  }
+  close(PASS);
+  return unless ($name);
+  return unless ($shell);
+  if (( $shell ne '/bin/false' ) || ( $shell ne '/sbin/nologin' )) {
+    &Fail('netw018f',"Anon ftp user $name has valid shell of $shell");
+  }
+
+}
+
+sub check_ftpusers {
+
+# Restricted shell users should be listed in the /etc/ftpusers.
+
+  my %bad;
+  my @users;
+  open(IN,"/etc/ftpusers");
+  while(<IN>) {  chomp; push(@users,$_) }
+  close(IN);
+
+  open(IN,"/etc/passwd") || die "Cannot read /etc/passwd : $!\n";
+  while(<IN>) {
+    chomp;
+    my ($name,$pass,$uid,$gid,$gecos,$home,$shell) = split(':',$_);
+    unless ( grep(@real_shells,/^$shell$/) ) {
+      unless ( grep(@users,$name) ) {
+        $bad{$name} = $shell;
+      }
+    }
+  }
+  close(IN);
+  foreach my $name (sort(keys(%bad))) {
+    &Fail('netw019f',"Restricted shell user $name with shell ($bad{$name}) is not listed in /etc/ftpusers"); 
+  }
+
+}
+
+sub check_ntp {
+
+# NTP service is required and should only accept updates from'trusted' hosts
+
+}
+
+sub check_rcmd {
+
+# No r-commands friend
+
+  my %svcs = (
+    exec => 512,
+    login => 513,
+    shell => 514,
+   );
+
+  foreach my $service (keys(%svcs)) {
+    my $port=getservbyname($service,'tcp');
+    $port = $svcs{$service} || $port;  # Default port
+    if ( $ports{'tcp'}{$port} ) {
+      &Fail('netw022f',"$service appears to be listening on port $port");
+    }
+  }
+
+}
+
+sub check_rexd {
+
+# REXD is bad...
+
+  open(IN,"/usr/sbin/rpcinfo -u localhost 100017 2>&1 |");
+  while(<IN>) {
+    if (/ready and waiting/) { 
+      &Fail('netw023f',"Service rexd appears to be listening on prognum 100017");
+    }
+  }
+  close(IN); wait;
+
+}
+
+sub check_sshd {
+
+#  sshd shouldn't have PermitRootLogin or RhostsAuthentication
+
+  return unless (( $ports{'tcp'}{'ssh'} ) || ( $ports{'udp'}{'ssh'} ));
+  if ( -f "/etc/ssh/sshd_config" ) {
+    open(IN,"/etc/ssh/sshd_config");
+    while(<IN>) {
+      next if /^#/; 
+      chomp;
+      next unless $_;
+      if ( /PermitRootLogin/ ) {
+        my ($mark,$stat) = split(' ',$_);
+	unless ( lc($stat) ne 'no' ) {
+	  &Fail('netw024f',"sshd PermitRootLogin is $stat, should be no");
+	}
+      }
+      if ( /RhostsAuthentication / ) {
+        my ($mark,$stat) = split(' ',$_);
+	unless ( lc($stat) ne 'no' ) {
+	  &Fail('netw025f',"sshd RhostsAuthentication is $stat, should be no");
+	}
+      }
+    }
+  } else {
+    &Fail('netw026f','Cannot find /etc/ssh/sshd_config to parse!');
+  }
+
+}
+
+sub check_issue {
+
+# Don't send a telnet banner, they don't need to know what we are if they can't login
+
+  my $banner = '/etc/issue.net';
+  my $size = (stat($banner))[7];
+  if ( $size > 0 ) {
+    &Fail('netw027f',"Telnetd cannot send info before login, yet $banner > 0 bytes");
+  } 
+
+}
+
+sub check_X {
+
+# no X servers on a secure host!
+
+  if ( $ps{'X'} ) {
+    &Fail('netw028f',"X servers not permitted, yet one appears to be running as pid $ps{'X'}");
+  }
+
+}
+
+sub check_tftpd {
+
+# tftpd is not permitted with the public internet  
+
+  my $port=getservbyname('tftp','tcp');
+  $port = 69 || $port;  # Default tftp port
+  if (( $ports{'tcp'}{$port} ) || ( $ports{'udp'}{$port} )) {
+    &Fail('netw029f',"tftpd appears to be listening on port $port");
+  }
+
+}
+
+
+sub check_nis {
+ 
+#  NIS/NIS+ is not permitted on a secure host
+ 
+  if ( -x "/usr/bin/ypwhich" ) {
+    my $rep = `/usr/bin/ypwhich 2>&1`;
+    chomp($rep);
+    unless ( $rep =~ /Local domain name not set/ ) {
+      &Fail('netw030f',"NIS/NIS+ not permitted, yet this node in domain $rep");
+    }
+  }
+  my @nis_procs = qw (ypserv ypxfrd yppasswdd ypupdated ypbind);
+  foreach my $name (@nis_procs) {
+    foreach my $proto ('tcp','udp') {
+      foreach my $ver ( 1 .. 4 ) {
+        my $port = $portmap{$name}{$proto}{$ver};
+        if (( $port ) && ( $ports{$proto}{$port} )) {
+          &Fail('netw031f',"NIS svc $name is listening on $proto port $port");
+        }
+      }
+    }
+  }
+ 
+}
+
+sub check_uucp {
+
+# UUCP is bad
+   
+  my $port=getservbyname('uucp-path','tcp');
+  $port = 117 || $port;  # Default tftp port
+  if (( $ports{'tcp'}{$port} ) || ( $ports{'udp'}{$port} )) {
+    &Fail('netw032f',"uucp-path appears to be listening on port $port");
+  }
+  $port=getservbyname('uucp','tcp');
+  $port = 117 || $port;  # Default tftp port
+  if ( $ports{'tcp'}{$port} ) {
+    &Fail('netw033f',"uucp appears to be listening on port $port");
+  }
+
+}
+
+sub check_nfs {
+
+#  NFS is not permitted   
+   
+  my @nfs_procs = qw (mountd nfs llockmgr nlockmgr);
+  foreach my $name (@nfs_procs) {
+    foreach my $proto ('tcp','udp') {
+      foreach my $ver ( 1 .. 4 ) {
+        my $port = $portmap{$name}{$proto}{$ver};
+        if (( $port ) && ( $ports{$proto}{$port} )) {
+          &Fail('netw034f',"NFS service $name is listening on $proto port $port");
+        }
+      }
+    }
+  }
+
+  &check_nfs_client;
+
+}
+
+sub check_nfs_client {
+
+  # if NFS client is bad too....
+  open(IN,"/bin/df -t nfs|");
+  <IN>; # toss header
+  my $bad = 0;
+  while(<IN>) {
+     $bad = 1;
+  }
+  &Fail('netw035f','NFS mounts are NOT allowed!') if $bad;
+
+}
+
+
+sub check_smtp {
+
+#   Sendmail version 8.11.0 or later, or Postfix. EXPN and VRFY commands must be disabled.
+
+  return unless ($ports{'tcp'}{'25'});  # no one's at home
+  my $proto=(getprotobyname('tcp'))[2];   
+  my $addr = (gethostbyname('localhost'))[4];
+  my $socket =  pack('S n a4 x8', 2, 25, $addr);   
+  unless ( socket(S,2,1,$proto) ) {
+    &Fail('netw036w',"Couldn't create socket : $!");
+    return;
+  }
+  unless ( connect(S,$socket) ) {
+    &Fail('netw036f',"Couldn't connect to SMTP server : $!");
+    return;
+  }
+  select(S); $|=1;
+  my $what = <S>;
+  select(STDOUT); $|=1;
+  print S "expn root\n";
+  my $reply = <S>;
+  unless ( $reply =~ /^5/ ) { &Fail('netw037f',"SMTP server supports the expn command") }
+  print S "vrfy root\n";
+  $reply = <S>;
+  unless (( $reply =~ /^502/ ) || ( $reply =~ /^252/ )) { &Fail('netw038f',"SMTP server supports the vrfy command") }
+  print S "quit\n";
+  close(S); 
+
+}
+
+#    0     1     2       3   4    5    6      7     8      9     10      11      12
+#my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat($filename);  
+
+
+## UTILITIES
+
+sub do_ps {
+
+# What's running on this box
+
+  my %ps;
+  open(PS,"/bin/ps -e |") || die "Cannot fork /bin/ps -e : $!\n";
+  while(my $buf=<PS>) {
+    chomp($buf);
+    my ($pid,$ppid,$pty,$name) = split(' ',$buf);
+    $ps{$name}=$pid;
+  }
+  close(PS); wait;
+  return(%ps);
+
+}
+
+sub do_netstat {
+
+# Find out what we're listening on...
+
+  my %ports;
+  open(NET,"/bin/netstat -an -A inet |") ||
+    die "Cannot fork netstat : $!\n";
+  while (my $buf = <NET>) {
+    chomp($buf);
+    my ($proto,$recq,$sndq,$local,$remote,$state) = split(" ",$buf);
+    next if ( $state ne 'LISTEN' );
+    my ($add,$port) = split(':',$local);
+    $ports{$proto}{$port} = 1;
+  }
+  close(NET); wait;
+  return(%ports);
+
+}
+
+sub get_shells {
+
+# Build a list of valid shells
+
+  my @shells;
+  open(IN,"/etc/shells") || die "Cannot open /etc/shells : $!\n";
+  while(<IN>) {
+    chomp;
+    push(@shells,$_);
+  }
+  close(IN);
+  return(@shells);
+
+}
+
+sub get_portmap {
+
+# Find out what portmap has us listening on...
+
+  my %portmap;
+  open(IN,"/usr/sbin/rpcinfo -p localhost |");
+  <IN>;  # toss header
+  while(<IN>) {
+    chomp;
+    my ($prog,$ver,$proto,$port,$name) = split(' ',$_);
+    $portmap{$name}{$proto}{$ver} = $port;
+  }
+  close(IN); wait;
+  return(%portmap);
+
+}
+
+sub Fail {
+
+  my ($section,$string) = @_;
+  print "--FAIL-- [$section] $string\n";
+
+}
+
+sub Warn {
+
+  my ($section,$string) = @_;
+  print "--WARN-- [$section] $string\n";
+
+}
+
+sub Info {
+
+  my ($section,$string) = @_;
+  print "--INFO-- [$section] $string\n";
+
+}

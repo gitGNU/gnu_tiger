@@ -1,0 +1,296 @@
+<HR><PRE>
+
+
+
+
+
+
+
+
+</PRE><HR>
+<CENTER><H2> Documents for network</H2></CENTER>
+<A NAME="netw001f"><P><B>Code [netw001f]</B><P>
+The listed file is world writeable. chomd -ow file to correct.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw002f"><P><B>Code [netw002f]</B><P>
+The listed file is not owned by an 'administrative' account.
+Change the ownership, or add your admin user to 'Tiger_Admin_Accounts'
+list of valid administrative users.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw003f"><P><B>Code [netw003f]</B><P>
+The inetd daemon is not configured with loggin enabled. If xinetd
+based, add the 'filelog' or 'syslog' options in /etc/sysconfig/xinetd
+configuration file.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw004f"><P><B>Code [netw004f]</B><P>
+The syslogd daemon should be executing to log system events. Please
+add the appropriate start link to /etc/rc.d/rc[RUNLEVEL].d to the
+/etc/rc.d/init.d/syslog script, or install syslog if it isn't.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw005f"><P><B>Code [netw005f]</B><P>
+Omniback is installed, but there is no cell server specified. Please
+put the IP address of your cell server in /usr/omni/config/cell/cell_server
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw006f"><P><B>Code [netw006f]</B><P>
+Please specify the cell server by IP address in /usr/omni/config/cell/cell_server
+to prevent DNS spoofing.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw006f"><P><B>Code [netw006f]</B><P>
+Disable fingerd in inetd's config file and restart inetd. If you're
+running fingerd as a standalone daemon, please disable.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw007f"><P><B>Code [netw007f]</B><P>
+Disable identd in inetd's config file and restart inetd. If you're
+running identd as a standalone daemon, please disable.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw008f"><P><B>Code [netw008f]</B><P>
+The listed service should be disabled in inetd's config file.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw009f"><P><B>Code [netw009f]</B><P>
+The listed routing daemon should be disabled.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw010f"><P><B>Code [netw010f]</B><P>
+/etc/securetty does not exist. Please create it!
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw011f"><P><B>Code [netw011f]</B><P>
+/etc/securetty contains an invalid entry.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw012f"><P><B>Code [netw012f]</B><P>
+/etc/securetty is not OWNED by an admin user.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw013f"><P><B>Code [netw013f]</B><P>
+/etc/securetty is not OWNED by an admin group.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw014f"><P><B>Code [netw014f]</B><P>
+/etc/securetty has world write permissions.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw015f"><P><B>Code [netw015f]</B><P>
+IP Forwarding is not permitted. Please disable ip forwarding.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw016f"><P><B>Code [netw016f]</B><P>
+Your version of BIND is old, update to a more secure version.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw017f"><P><B>Code [netw017f]</B><P>
+Your version of wu-ftpd is old, update to a more secure version.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw018f"><P><B>Code [netw018f]</B><P>
+There is an administrative user (low UID) which can access the
+local FTP server. If the local FTP server is enabled and a user
+with administrative rights can access it remotely this might lead
+to a security compromise of the system. It is recommended for
+administrative users to be added into /etc/ftpusers.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="netw019w"><P><B>Code [netw019w]</B><P>
+The sendmail configuration file (sendmail.cf) has the default
+sendmail banner. This means that when the mail server is active
+it publishes the version you are currently running. Attackers can use this
+information to determine if you are running a vulnerable version.

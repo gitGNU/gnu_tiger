@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# Linux/2/check.tbl - 23/08/2001
+#
+#-----------------------------------------------------------------------------
+#
+# Add new system specific checks here.  One script name per line.
+#
+# The new Linux system checks, written by Paul Telford, are 
+# called from in the check script. This file only provides services
+# that are not checked against any tigerrc variable.
+# ----------------------------------------------------------------
+#
+# The following scripts have been added to provide new checks (mostly)
+# specific to the Debian system, written by Javier Fernandez-Sanguino
+# 
+/usr/lib/tiger/systems/Linux/2/deb_nopackfiles
+/usr/lib/tiger/systems/Linux/2/deb_checkmd5sums
+/usr/lib/tiger/systems/Linux/2/deb_checkadvisories

@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# AIX/3/mkshells - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+#
+# Parse the AIX /etc/security/login.cfg file and create something
+# that looks like the normal /etc/shells file.
+#
+outputfile=$1
+
+[ -r /etc/security/login.cfg ] && {
+  $AWK '/^[ 	]*shells[ ]*=[ ]*.*/ {
+    for(i=1;i<length($0);i++)
+      if(substr($0, i, 1) == "=")
+        break;
+    for(i++;i<length($0);i++)
+      if(substr($0, i, 1) != " ")    
+        break;
+    s = substr($0, i, length($0)-i+1);
+    split(s, shells, ",");
+    for(i in shells)
+      printf("%s\n", shells[i]);
+  }' /etc/security/login.cfg > $1
+}  

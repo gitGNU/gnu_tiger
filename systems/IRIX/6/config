@@ -1,0 +1,370 @@
+# -*- sh -*-
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# default/config - 06/14/93
+# ARC config     - 04/27/99
+# ARC config     - 05/10/99  Fixed IRIX 6.5 bug
+#
+#-----------------------------------------------------------------------------
+#
+
+findcmd()
+{
+  CMD=$1
+
+  SRCH=/bin:/usr/bin:/etc:/usr/etc:/usr/ucb:/usr/sbin:/usr/bsd:/usr/lib
+  
+  SAVEIFS=$IFS
+  IFS=:
+  set $SRCH
+  IFS=$SAVEIFS
+  for dir
+  do
+    [ $TESTEXEC $dir/$CMD ] && {
+      echo $dir/$CMD
+      return
+    }
+  done
+}
+TESTEXEC=-x
+( [ $TESTEXEC /bin/sh ] ) 2> $WORKDIR/te.$$
+[ -s $WORKDIR/te.$$ ] && TESTEXEC=-f
+export TESTEXEC
+
+RM=`findcmd rm`
+[ -n "$RM" ] && $RM $WORKDIR/te.$$
+AWK=`findcmd awk`
+CAT=`findcmd cat`
+LS=`findcmd ls`
+# -g to show group ownership
+# SysV systems don't need this... try to figure out whether we
+# need '-g' or not.
+LSGROUP="-lg"
+F1=`$LS $LSGROUP -d /etc | $AWK '{print NF}'`
+F2=`$LS -d /etc | $AWK '{print NF}'`
+[ $F1 -lt $F2 ] && LSGROUP="-l"
+# -L to show files
+LSLINK="-L"
+$LS $LSLINK 2>/dev/null >/dev/null || LSLINK=
+GREP=`findcmd grep`
+EGREP=`findcmd egrep`
+SED=`findcmd sed`
+SORT=`findcmd sort`
+COMM=`findcmd comm`
+TAIL=`findcmd tail`
+MV=`findcmd mv`
+TR=`findcmd tr`
+JOIN=`findcmd join`
+GROUPSS=`findcmd groups`
+FILECMD=`findcmd file`
+UNIQ=`findcmd uniq`
+BASENAME=`findcmd basename`
+CHMOD=`findcmd chmod`
+CHOWN=`findcmd chown`
+LN=`findcmd ln`
+PASTE=`findcmd paste`
+DIFF=`findcmd diff`
+TCPD=`findcmd tcpd`
+MAILER=`findcmd mail`
+[ ! -n "$MAILER" ] && MAILER=`findcmd mailx`
+[ ! -n "$MAILER" ] && MAILER=`findcmd Mail`
+[ ! -n "$MAILER" ] && MAILER=`findcmd sendmail`
+
+SGREP="$EGREP -s"
+X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -1`
+[ "$X" != "" ] && {
+  SGREP="$GREP -s"
+  X=`$GREP -s : /etc/passwd 2>&1 | $TAIL -1`
+  [ "$X" != "" ] && {
+    SGREP="$BASEDIR/util/sgrep"
+  }
+}
+#
+export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
+export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME
+export CHMOD CHOWN LN PASTE TCPD
+#
+UNAME=`findcmd uname`
+HOSTNAME=`findcmd hostname`
+EXPR=`findcmd expr`
+STRINGS=`findcmd strings`
+FIND=`findcmd find`
+GETHOSTNAME=`findcmd hostname`
+[ ! -n "$GETHOSTNAME" ] && {
+  GETHOSTNAME=`findcmd uname`
+  [ -n "$GETHOSTNAME" ] && GETHOSTNAME="$GETHOSTNAME -n"
+}
+#
+# Try to intuit whether -xdev option is recognized
+#
+FINDXDEV=-xdev
+$FIND /etc/passwd -xdev -name /etc/passwd 2>/dev/null > /dev/null || FINDXDEV=
+#
+FMT=`findcmd fmt || echo $CAT`
+#
+# Command to get list of mounted filesystems
+#
+GETFS=`findcmd mount`
+CC=`findcmd cc || findcmd gcc || findcmd acc || findcmd xlc`
+PS=`findcmd ps`
+DATE=`findcmd date`
+#
+# To get date (MMDDYY or some form suitable for use in a filename)
+# If nothing useful, then just echo ''
+#DATECMD="echo ''"
+DATECMD="$DATE +%y%m%d"
+#
+# To get HH:MM
+# If no +% stuff, then use
+#TIMECMD="$DATE | $AWK '{print substr($4,1,5);}'"
+TIMECMD="$DATE +%H:%M"
+#
+# Try to figure out whether diff -D needs a space or not...
+# (or whether -D is supported at all)
+#
+DIFFD=
+$DIFF -DABCDEFGH /etc/passwd /etc/group > /dev/null 2>&1 || {
+  DIFFD=' '
+  $DIFF -D ABCDEFGH /etc/passwd /etc/group > /dev/null 2>&1 || {
+    DIFF=
+  }
+}
+export DIFFD
+#
+# Jump through hoops to figure out how to test for a symbolic link
+#
+
+file=X.$$
+$LN -s . $file
+temp=$WORKDIR/F.$$
+> $temp
+( [ -h X.$file ] ) 2> $temp
+if [ ! -s $temp ]; then
+  TESTLINK=-h
+else
+  > $temp
+  ( [ -l X.$file ] ) 2> $temp
+  if [ ! -s $temp ]; then
+    TESTLINK=-l
+  else
+    > $temp
+    ( [ -L X.$file ] ) 2> $temp
+    if [ ! -s $temp ]; then
+      TESTLINK=-L
+    else
+      TESTLINK=
+    fi
+  fi
+fi
+$RM -f $temp $file
+unset temp
+unset file
+export TESTLINK
+#
+#
+export UNAME HOSTNAME EXPR STRINGS FIND FINDXDEV
+export FMT GETFS CC PS DATE DATECMD TIMECMD
+WAIT=wait
+
+SENDMAILS=""
+for dir in /usr/lib /usr/sbin /etc /usr/etc
+do
+  for prog in sendmail sendmail.mx smail
+  do
+    [ ! $TESTLINK "$dir/$prog" ] && {
+      SENDMAILS="$SENDMAILS $dir/$prog"
+    }
+  done
+done
+export SENDMAILS
+
+SENDMAILCF=
+if [ -f /usr/lib/sendmail.cf ]; then
+  SENDMAILCF=/usr/lib/sendmail.cf
+elif [ -f /etc/sendmail.cf ]; then
+  SENDMAILCF=/etc/sendmail.cf
+elif [ -f /etc/mail/sendmail.cf ]; then
+  SENDMAILCF=/etc/mail/sendmail.cf
+elif [ -f /etc/sendmail/sendmail.cf ]; then
+  SENDMAILCF=/etc/sendmail/sendmail.cf
+elif [ -f /usr/lib/mail/sendmail.cf ]; then
+  SENDMAILCF=/usr/lib/mail/sendmail.cf
+elif [ -f /usr/lib/sendmail/sendmail.cf ]; then
+  SENDMAILCF=/usr/lib/sendmail/sendmail.cf
+fi
+export SENDMAILCF
+#
+YPCAT=`findcmd ypcat`
+#
+YPSERVER="NO"
+(($PS -ef || $PS -aux ) 2>/dev/null |
+$GREP ypserv | $GREP -v -s $GREP) && YPSERVER="YES"
+
+export WAIT YPCAT YPSERVER
+#
+if [ -d /usr/mail ]; then
+  MAILSPOOL=/usr/mail
+elif [ -d /var/mail ]; then
+  MAILSPOOL=/var/mail
+elif [ -d /usr/spool/mail ]; then
+  MAILSPOOL=/usr/spool/mail
+elif [ -d /var/spool/mail ]; then
+  MAILSPOOL=/var/spool/mail
+else
+  MAILSPOOL=
+fi
+#
+if [ -d /var/spool/cron/crontabs ]; then
+  CRONSPOOL=/var/spool/cron/crontabs
+elif [ -d /usr/spool/cron/crontabs ]; then
+  CRONSPOOL=/usr/spool/cron/crontabs
+elif [ -d /etc/cron/crontabs ]; then
+  CRONSPOOL=/etc/cron/crontabs
+elif [ -d /usr/lib/cron/crontabs ]; then
+  CRONSPOOL=/usr/lib/cron/crontabs
+else
+  CRONSPOOL=
+fi
+#
+ETCSHELLS=/etc/shells
+#
+export MAILSPOOL CRONSPOOL ETCSHELLS
+#
+LOCFS="4.2|4.3|ufs|jfs|4.4"
+export LOCFS
+#
+CDIR="$BASEDIR/systems"
+#  Stuff below would not work on IRIX 6.5 
+#eval `
+#  while read var file 
+#  do
+#    if [ -f "$CONFIG_DIR/$file" ]; then
+#      loc="$CONFIG_DIR"
+#    fi
+#    if [ "$loc" != "" ]; then
+#      echo $var="$loc/$file;"
+#   else
+#      echo "echo $var=;"
+#    fi
+#    echo "export $var;"
+#  done << EOL
+if [ -f "$CONFIG_DIR/gen_passwd_sets" ]; then
+  GEN_PASSWD_SETS=$CONFIG_DIR/gen_passwd_sets
+else
+  GEN_PASSWD_SETS=""
+fi
+if [ -f "$CONFIG_DIR/gen_group_sets" ]; then
+  GEN_GROUP_SETS=$CONFIG_DIR/gen_group_sets
+else
+  GEN_GROUP_SETS=""
+fi
+if [ -f "$CONFIG_DIR/gen_alias_sets" ]; then
+  GEN_ALIAS_SETS=$CONFIG_DIR/gen_alias_sets
+else
+  GEN_ALIAS_SETS=""
+fi
+if [ -f "$CONFIG_DIR/check_cron" ]; then
+  CHECK_CRON=$CONFIG_DIR/check_cron
+else
+  CHECK_CRON=""
+fi
+if [ -f "$CONFIG_DIR/gen_bootparam_sets" ]; then
+  GEN_BOOTPARAM_SETS=$CONFIG_DIR/gen_bootparam_sets
+else
+  GEN_BOOTPARAM_SETS=""
+fi
+if [ -f "$CONFIG_DIR/gen_group_sets" ]; then
+  GEN_EXPORT_SETS=$CONFIG_DIR/gen_export_sets
+else
+  GEN_EXPORT_SETS=""
+fi
+if [ -f "$CONFIG_DIR/gen_services" ]; then
+  GEN_SERVICES_SETS=$CONFIG_DIR/gen_services
+else
+  GEN_SERVICES_SETS=""
+fi
+if [ -f "$CONFIG_DIR/gen_mounts" ]; then
+  GET_MOUNTS=$CONFIG_DIR/gen_mounts
+else
+  GET_MOUNTS=""
+fi
+if [ -f "$CONFIG_DIR/signatures" ]; then
+  SIGNATURE_FILE=$CONFIG_DIR/signatures
+else
+  SIGNATURES=""
+fi
+if [ -f "$CONFIG_DIR/services" ]; then
+  SERVICESFILE=$CONFIG_DIR/services
+else
+  SERVICESFILE=''
+fi
+if [ -f "$CONFIG_DIR/inetd" ]; then
+  INETDFILE=$CONFIG_DIR/inetd
+else
+  INETDFILE=""
+fi
+if [ -f "$CONFIG_DIR/file_access_list" ]; then
+  FILE_ACL=$CONFIG_DIR/file_access_list
+else
+  FILE_ACL=""
+fi
+if [ -f "$CONFIG_DIR/suid_list" ]; then
+  SUID_LIST=$CONFIG_DIR/suid_list
+else
+  SUID_LIST=""
+fi
+if [ -f "$CONFIG_DIR/rel_file_exp_list" ]; then
+  REL_FILE_EXCP=$CONFIG_DIR/rel_file_exp_list
+else
+  REL_FILE_EXCP=""
+fi
+if [ -f "$CONFIG_DIR/gen_cron" ]; then
+  GEN_CRON_FILES=$CONFIG_DIR/gen_cron
+else
+  GEN_CRON_FILES=""
+fi
+if [ -f "$CONFIG_DIR/gendlclients" ]; then
+  GETCLIENTDIRS=$CONFIG_DIR/gendlclients
+else
+  GETCLIENTDIRS=""
+fi
+if [ -f "$CONFIG_DIR/gen_inetd" ]; then
+  GEN_INETD_SETS=$CONFIG_DIR/gen_inetd
+else
+  GEN_INETD_SETS=""
+fi
+if [ -f "$CONFIG_DIR/getuserhome" ]; then
+  GETUSERHOME=$CONFIG_DIR/getuserhome
+else
+  GETUSERHOME=''
+fi
+if [ -f "$CONFIG_DIR/getdisks" ]; then
+  GETDISKS=$CONFIG_DIR/getdisks
+else
+  GETDISKS=""
+fi
+if [ -f "$CONFIG_DIR/embedlist" ]; then
+  EMBEDDEDLIST=$CONFIG_DIR/embedlist
+else
+  EMBEDDEDLIST=""
+fi
+export GEN_GROUP_SETS GEN_ALIAS_SETS CHECK_CRON GEN_BOOTPARAM_SETS 
+export GEN_EXPORT_SETS GEN_SERVICES_SETS GET_MOUNTS SIGNATURE_FILE 
+export SERVICESFILE INETDFILE FILE_ACL SUID_LIST REL_FILE_EXCP 
+export GEN_CRON_FILES GETCLIENTDIRS GEN_INETD_SETS GETUSERHOME 
+export GETDISKS EMBEDDEDLIST GEN_PASSWD_SETS
+

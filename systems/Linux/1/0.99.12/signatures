@@ -1,0 +1,36 @@
+#
+# Signature file for Linux 0.99.12 i486, generated Mon Oct  4 14:47:49 GMT 1993
+#
+#@DEST=Linux/0/0.99.12
+#@CONFIG=Linux/0
+#
+Y .       /bin/sh 86839708038627a0390c403d92b0f5f4 Linux 0.99.12
+# csh not found.
+# ksh not found.
+Y .       /bin/login 281101377ef9b81e0aa9de2c7749341f Linux 0.99.12
+Y .       /bin/su 526e2c8c7f4e1164554b007ec12e2ee9 Linux 0.99.12
+Y .       /bin/passwd 840eaf98cfaa3c72cb8e69332b6b07b2 Linux 0.99.12
+Y .       /etc/fingerd 7d99ef443d06c95cc363ab6862762c75 Linux 0.99.12
+Y .       /usr/etc/ftpd c8590321a1e8b2df75b49c9db7482555 Linux 0.99.12
+# in.rexecd not found.
+# rexecd not found.
+Y .       /usr/etc/rlogind da1dcec983a2e2a44f270497ff953351 Linux 0.99.12
+O sig021w /usr/etc/rshd f5116d8f94b3d11d279ac7dd1d88c803 Linux 0.99.12 (no security patch)
+Y .       /usr/etc/telnetd dea39b0c37b3c886b54b7e47eb7abdfb Linux 0.99.12
+Y .       /usr/etc/tftpd c64e6ee24b56465bbed4c673cd97997b Linux 0.99.12
+# in.uucpd not found.
+# uucpd not found.
+Y .       /usr/etc/portmap efc6ff4b9a79fbce18fbc3ec1101c56e Linux 0.99.12
+# sendmail not found.
+# sendmail.mx not found.
+# rdist not found.
+Y .       /usr/bin/rlogin 26a38db45e9b2f09a05ff14fc1b3182c Linux 0.99.12
+Y .       /usr/bin/rsh 9e032b49c4190f9059ab6a6979aafe8f Linux 0.99.12
+Y .       /usr/bin/telnet 693a512d3363b22234f67c4cfa2984df Linux 0.99.12
+Y .       /usr/etc/lpc f99ab7bdec8605802c21d7c0db4ad6e3 Linux 0.99.12
+Y .       /usr/etc/lpd ff98c0598bdbb75d96a2e3c0c6326b36 Linux 0.99.12
+Y .       /usr/bin/lpr 846676d8d13b68458e6a8e9f7c23e599 Linux 0.99.12
+Y .       /usr/bin/lprm e88164294c13f63d02a2f0995ea18b86 Linux 0.99.12
+Y .       /usr/etc/lpd ff98c0598bdbb75d96a2e3c0c6326b36 Linux 0.99.12
+# rpc.mountd not found.
+# expreserve not found.

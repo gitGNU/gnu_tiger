@@ -1,0 +1,59 @@
+# -*- sh -*-
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# site-sample - 04/22/93
+#
+#-----------------------------------------------------------------------------
+#
+#
+# Sample site configuration file
+# 
+# Rename this to either "site" or "site-`hostname`"
+#
+#------------------------------------------------------------------------
+#
+# How to determine whether user home directory is local or remote?
+#
+GETFSHOST=getfs-std          # Do everybody... don't check
+#GETFSHOST=getfs-nfs	     # Try to guess if it is NFS mount
+#GETFSHOST=getfs-automount   # SUN automount tables
+#GETFSHOST=getfs-amd         # BSD 4.4 AMD tables
+#
+# Name of file or NIS map containing automounter maps for user directories
+#
+AUTOHOMEMAP=userhome.amd
+
+export GETFSHOST AUTOHOMEMAP
+#
+# List of '|' separated names this host is known by.
+#
+# i.e:
+#HOSTNAMESLIST="jupiter|jupiter.tamu.edu|sc.tamu.edu|sc"
+HOSTNAMESLIST="$HOSTNAME"
+#
+# Any of the utilities can be replaced by placing assignments here
+# Most of the variables are the uppercase version of the command
+# name, though there are a few exceptions.
+#
+#FIND=/usr/local/gnu/bin/find
+#AWK=/usr/local/bin/mawk
+#
+#------------------------------------------------------------------------
+#
+# Define where Crack is installed (this is the path to the Crack script)
+#
+#CRACK=/usr/local/etc/crack/Crack

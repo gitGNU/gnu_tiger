@@ -1,0 +1,96 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# NeXT/check - 06/17/93
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT FMT GEN_PASSWD_SETS JOIN LS RM || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+check_domain()
+{
+  domain="$1"
+  what="$2"
+  /usr/bin/niutil -read "$domain" "$what" 2> /dev/null |
+  /usr/bin/bm -s _writers && {
+    echo "--WARN-- [ca9302a] _writers property enabled for $what in NetInfo($domain)"
+  }
+
+  /usr/bin/niutil -list "$domain" /machines serves 2>/dev/null |
+  $AWK '{
+    for(i=2;i<=NF;i++){
+      len = index($i, "/") - 1;
+      if(len == 0)
+        printf("%s ", $i);
+      else
+        printf("%s ", substr($i, 1, len));
+    }
+  }' |
+  while read subdom
+  do
+    [ "$subdom" != '.' -a "$subdom" != '..' ] && {
+      check_domain "$subdom" "$what"
+    }
+  done
+}
+
+check_domain '/' '/printers'
+check_domain '/' '/fax_modems'

@@ -1,0 +1,47 @@
+<HR><PRE>
+
+
+
+
+
+
+
+
+</PRE><HR>
+<CENTER><H2> Documents for root</H2></CENTER>
+<A NAME="root001w"><P><B>Code [root001w]</B><P>
+The indicated file allows remote (i.e., other than system console).
+root logins for telnet and other services. For /etc/default/login,
+be sure that the line "CONSOLE=/dev/console" exists. For /etc/securetty,
+be sure that there are no ttyp entries.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="root002w"><P><B>Code [root002w]</B><P>
+The indicated /etc/ftpusers file allows remote root ftp logins. The entry
+"root" should be added to this file.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="root003w"><P><B>Code [root003w]</B><P>
+The root user should not have the message capability turned on. This
+could lead to inadvertant modification of files with the root user is
+logged in.

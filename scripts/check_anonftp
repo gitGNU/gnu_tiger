@@ -1,0 +1,175 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_anonftp - 06/14/93
+#
+# 04/28/93 dls   Duh... added -L option to 'ls' when reading permission
+#                bits so that we don't get them off a symbolic link.
+# 
+# 04/27/93 dls   Added check for .rhosts file in ~ftp
+# 12 june 2002 jfs Fixed script so that it checks if ftphome/etc/passwd
+#                  exists before using grep on it
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds LS CAT AWK RM GROUPC FIND SGREP GREP || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo 
+echo "# Performing check of anonymous FTP..."
+
+haveallcmds CAT LS AWK SGREP GREP || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+checkfiles()
+{
+  level=$1
+  msgid=$2
+  rootcheck=$3
+
+  getpermit |
+  $SED -e "s%$ftphome%~ftp%" |
+  while read _f owner group ur uw ux gr gw gx or ow ox suid sgid stk
+  do
+    if [ "$_f" = "~ftp" ]; then
+      what='Anonymous FTP directory'
+    else
+      what="$_f"
+    fi
+
+    indirgrp=NO
+    for grp in $ftpgroups
+    do
+      [ "$grp" = "$group" ] && indirgrp=YES
+    done
+    
+    if [ "$owner" != 'root' ]; then
+      if [ "$owner" = 'ftp' ]; then
+	if [ $uw = 1 ]; then
+	  message $level ftp007$msgid "" "$what owned and writable by 'ftp'."
+	else
+	  message $level ftp008$msgid "" "$what owned by 'ftp' (but not writable)."
+	fi
+      else
+	if [ \( $indirgrp = YES -a $gw = 1 \) -o $ow = 1 ]; then
+	  message $level ftp007$msgid "" "$what is writable by 'ftp'."
+	elif [ "$rootcheck" = "Y" ]; then
+	  message WARN ftp009w "" "$what not owned by 'root' (owner '$owner')."
+	fi
+      fi
+    else
+      [ \( $indirgrp = YES -a $gw = 1 \) -o $ow = 1 ] && {
+	message $level ftp010$msgid "" "$what is writable by 'ftp'."
+      }
+    fi
+  done
+}
+
+status=1
+
+haveallcmds GETUSERHOME && {
+  ftphome=`$GETUSERHOME ftp`
+  status=$?
+}
+
+{
+  # TODO: this should be fixed to use the password sources (gen_passwd)
+  # instead of using the system's directly (might lead to false
+  # positives)
+  if $GREP '^ftp:' /etc/passwd && [ $status = 0 ]; then
+    if [ ! -d "$ftphome" ]; then
+      message WARN ftp006w "" "Anonymous FTP enabled, but directory does not exist."
+    elif [ ! -n "$ftphome" ]; then
+      message WARN ftp004w "" "Anonymous FTP directory is '' (null)"
+    elif [ "$ftphome" = "/" ]; then
+      message WARN ftp005f "" "Anonymous FTP directory is '/'"
+    else
+      ftpgroups=
+      haveallcmds GROUPC && ftpgroups=`$GROUPC ftp`
+
+      (
+	for file in "" /bin /dev /usr /usr/lib /usr/lib/ld.so /usr/lib/lib\* /.rhosts /.forward
+	do
+	  echo ${ftphome}$file
+	done |
+	checkfiles FAIL f Y
+      
+	haveallcmds FIND && {
+	  (cd /;$FIND $ftphome -type d -print) |
+	  checkfiles WARN w N
+	}
+      )
+
+     [ -f $ftphome/etc/passwd ] && {
+      $SGREP '^[^:]*:[a-zA-Z0-9\./,]*:' $ftphome/etc/passwd |\
+      	$SGREP -v '::' && {
+	message WARN ftp003w "" '~ftp/etc/passwd contains accounts with passwords.'
+      }
+     }
+      [ -s $ftphome/.rhosts ] && {
+	message ALERT ftp002a "" '~ftp/.rhosts exists and is not empty:'
+	$CAT $ftphome/.rhosts
+	echo
+      }
+    fi
+  else
+    message INFO ftp001i "" 'Anonymous FTP not configured on this machine.'
+  fi
+} |
+$OUTPUTMETHOD
+

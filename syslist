@@ -1,0 +1,78 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# syslist - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+
+findcmd()
+{
+    CMD=$1
+
+    SRCH=/usr/bin:/bin:/usr/ucb:/etc:/usr/etc:/usr/sbin:/sbin
+
+    SAVEIFS=$IFS
+    IFS=:
+    set $SRCH
+    IFS=$SAVEIFS
+    for dir
+    do
+       [ ! -d $dir/$CMD -a -f $dir/$CMD ] && {
+            echo $dir/$CMD
+            return
+       }
+    done
+# Try PATH
+    IFS=:
+    set $PATH
+    IFS=$SAVEIFS
+    for dir
+    do
+       [ ! -d $dir/$CMD -a -f $dir/$CMD ] && {
+            echo $dir/$CMD
+            return
+       }
+    done
+    echo "'$CMD' not in $SRCH:$PATH" 1>&2
+}
+
+FIND=`findcmd find`
+SED=`findcmd sed`
+GREP=`findcmd grep`
+SORT=`findcmd sort`
+AWK=`findcmd awk`
+
+[ "$FIND" = "" -o "$SED" = "" -o "$GREP" = "" -o \
+	"$SORT" = "" -o "$AWK" = "" ] && exit 1
+
+
+$FIND systems -name config -print |
+$SED -e 's/^systems//' -e 's%/config$%%' -e 's%^/%%' -e '/^$/d' |
+$GREP -v default |
+$SORT |
+$SED -e 's/\// /g' |
+$AWK '{ if(NF > 2){
+           printf("%s ", $1);
+           for(i=3;i<=NF;i++)
+              printf("%s ", $i);
+           printf("\n");
+        }
+        else
+           print;
+      }'
+

@@ -1,0 +1,45 @@
+#
+#
+# Sample site configuration file
+# 
+# Rename this to either "site" or "site-`hostname`"
+#
+#------------------------------------------------------------------------
+#
+# How to determine whether user home directory is local or remote?
+#
+GETFSHOST=getfs-std	     # Do everybody... don't check
+#GETFSHOST=getfs-nfs	     # Try to guess if it is NFS mount
+#GETFSHOST=getfs-automount   # SUN automount tables
+#GETFSHOST=getfs-amd         # BSD 4.4 AMD tables
+#
+# Name of NIS map containing automounter maps for user directories
+#
+AUTOHOMEMAP=userhome.amd
+
+export GETFSHOST AUTOHOMEMAP
+#
+# List of '|' separated names this host is known by.
+#
+# i.e:
+HOSTNAMESLIST="saturn|saturn.tamu.edu|net.tamu.edu|net"
+#HOSTNAMESLIST="$HOSTNAME"
+export HOSTNAMESLIST
+#
+# List of directory trees which contain device files. Names
+# should end with '/'.  This is in addition to those which are standard
+# for the particular system being used.  If configured properly,
+# diskless client /dev directories on a server will be handled
+# automatically.
+#
+FS_DEVDIRS=""
+export FS_DEVDIRS
+#
+YP="NO"
+export YP
+#
+# You can override commands here...
+#
+#FIND=/pub/gnu/bin/find
+#AWK=/pub/bin/mawk
+#CRACK=/usr/local/etc/crack/Crack

@@ -1,0 +1,169 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_sendmail - 06/14/93
+#
+# 18/05/2002 jfs Added check on banner (based on Titan's modules/smtpbanner.sh)
+#
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds AWK CAT CC EGREP FIND GET_MOUNTS LS RM SED SGREP STRINGS TR || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Checking sendmail..."
+
+haveallcmds STRINGS GREP SED AWK SORT LS || exit 1
+
+check_date()
+{
+  mailer="$1"
+  if [ -r "$mailer" ]; then
+    $STRINGS $mailer |
+    $GREP '[0-9][0-9]/[0-9][0-9]/[0-9][0-9]' |
+    $SED -e 's%^.* *\([0-9][0-9]*/[0-9][0-9]*/[0-9][0-9]*\).*$%\1%' |
+    $AWK -F/ '{
+      month=$1;
+      day=$2;
+      year=$3;
+      if(month > 12){
+      year=$1;
+      month=$2;
+      day=$3;
+    }
+    if(year<100)
+    year += 1900;
+    if(year<10)
+    year += 2000;
+    printf("%04d %02d %02d\n", year, month, day);
+    }' |
+    $SORT -r |
+    $SED -e 1q | {
+      read year month day
+      if [ ! -z $year ]
+      then 
+      [ "$year" -lt 1993 -o \( "$year" -eq 1993 -a "$month" -lt 10 \) ] && {
+	message WARN misc010w "" "$mailer appears to be older than November 1993 (apparent date $month/$day/$year), and may contain a security vulnerability."
+      }
+      fi
+    }
+  else
+    message ERROR misc012e "" "Can not read $mailer.  Test skipped."
+  fi
+}
+
+{
+if [ -r "$SENDMAILCF" ]; then
+  $GREP '^Mprog' $SENDMAILCF |
+  $SED -e 's/^.*P=\([^, ]*\).*$/\1/'
+else
+  echo "/bin/sh"
+fi
+} |
+{
+  read progmailer
+
+  usingsmrsh=0
+  case "$progmailer" in
+    */smrsh) usingsmrsh=1;;
+  esac
+
+  if [ "$usingsmrsh" = 0 ]; then
+    for mailer in $SENDMAILS
+    do
+      [ -f "$mailer" ] && check_date "$mailer"
+    done
+  else
+    $STRINGS $progmailer |
+    $GREP '/[-a-zA-Z0-9_.][-a-zA-Z0-9_./]*' |
+    $GREP -v '/.*:/.*' |
+    $SED -e 's/[^-a-zA-Z0-9_./]/ /g' |   
+    $AWK '{
+      for(i=1;i<=NF;i++)
+      if(substr($i,1,1) == "/")
+      print $i;
+    }' |
+    $GREP '^/[-/a-zA-Z0-9_.]*$' |
+    $GREP -v /bin/sh |
+    while read path
+    do
+      [ -d "$path" ] && {
+	$LS "$path" |
+	while read file
+	do
+	  case "$file" in
+	    sh|csh|perl|uudecode|sed|grep|awk|cat|ksh|bash|tcsh) {
+	      message WARN misc011w "" "Executable \`$file' in 'smrsh' directory \`$path' may create a vulnerability"
+	      }
+	    ;;
+	  esac
+	done
+      }
+    done
+  fi	      
+}
+
+if [ -r "$SENDMAILCF" ]; then
+	version = "`$GREP \"^O\ SmtpGreetingMessage=\$j\ Sendmail\ \$v\/\$Z\;\ \$b\" $SENDMAILCF`"
+	[ -n "$version" ] &&
+	      message WARN netw019w "" "Sendmail avertises its version in $SENDMAILCF, current line: $version"
+
+fi
+
+exit 0

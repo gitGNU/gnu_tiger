@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# IRIX/4/gen_export_sets - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+
+[ -r /etc/exports ] && {
+  $SED -e 's/#.*$//' -e '/^[ 	]*/d' /etc/exports |
+  $AWK '
+    $2 ~ /^-/ {print}
+    $2 !~ /^-/ {
+      printf("%s -access=", $1);
+      for(i=2;i<=NF;i++){
+        printf("%s", $i);
+	if(i != NF)
+	  printf(":");
+      }
+      printf("\n");
+    }
+  ' > $WORKDIR/etc_exports.$$
+  echo "/etc/exports" > $WORKDIR/etc_exports.$$.src
+  echo $WORKDIR/etc_exports.$$
+}

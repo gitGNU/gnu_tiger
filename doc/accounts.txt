@@ -1,0 +1,134 @@
+%acc001w
+The listed login ID is disabled in some manner ('*' in passwd field, etc),
+but the login shell for the login ID is a valid shell (from /etc/shells
+or the system equivalent).  A valid shell can potentially enable the
+login ID to continue to be used.  The login shell should be changed
+to something that doesn't exist, or to something like /bin/false.
+%acc002i
+The listed login ID is disabled, but has a potentially valid shell.
+These can usually be safely ignored.
+%acc003w
+The listed login ID is disabled in some manner ('*' in passwd field, etc),
+but the .forward file is setup to execute programs.  This can allow the
+login ID to continue to be used despite the fact that it is disabled.
+The .forward file should be checked and probably removed.
+%acc004w
+The listed login ID is disabled in some manner ('*' in passwd field, etc),
+but a non-zero length .rhosts file.  This can allow the login ID to continue
+to be used.  Unless this has been specifically set up to provide some
+service, it should be removed.
+%acc005w
+The listed login ID is disabled in some manner ('*' in passwd field, etc),
+but has a 'cron' file or 'cron' entries.  This allows commands to be executed
+on behalf of the login ID, potentially allowing access to the login ID.
+These should be removed unless specifically set up to provide a service.
+%acc006w
+The home directory of the listed login ID has group write permission,
+world write permission or both enabled.  This allows new files to be added
+(and existing files potentially removed) by others.  The write permissions
+should be removed.
+%acc007a
+The listed login ID has a '.hushlogin' file which is not zero-length.
+This file is normally a zero length file.  This file is frequently used
+by intruders as a place to store captured passwords.  This file should
+be looked at.  If it appears to be such a log file, then the system should
+be regarded as being compromised.  The system should be thoroughly checked
+and cleaned.
+%acc008w
+The listed login ID has a configuration file which has group write permission,
+word write permission, or both enabled.  This allows others to change this
+file, compromising the login ID.
+%acc009a
+The login ID 'sync' has no password and the shell is not /bin/sync, which
+is what it normally is.  This could indicate an intrusion has occurred.
+If the shell is one of the normal shells (/bin/sh, /bin/csh, etc), then
+this is very likely the situation.  The login ID should be disabled, or
+the shell reset to '/bin/sync'.
+%acc010a
+The listed login ID has a user ID of zero (0) and does not have a password.
+This could indicate an intrusion has occurred.  This should be disabled
+immediately and the machine checked and cleaned.
+%acc010aw
+The listed login ID has a user ID of zero (0) and does not have a password.
+This could indicate an intrusion has occurred.  This should be disabled
+immediately and the machine checked and cleaned.
+
+On this system, comments are not allowed in the password file.  An attempt
+to comment out an entry simply results in a login ID which begins with a
+'#'.  See message ID 'acc013w' for more information.
+%acc011w
+The listed login ID does not have a password.  Anyone can use this account,
+allowing them to explore the system for other security problems.  Unless
+this is a secure captured account, this should be corrected.
+%acc011wc
+The listed login ID does not have a password.  Anyone can use this account,
+allowing them to explore the system for other security problems.  Unless
+this is a secure captured account, this should be corrected.
+
+On this system, comments are not allowed in the password file.  An attempt
+to comment out an entry simply results in a login ID which begins with a
+'#'.  See message ID 'acc013w' for more information.
+%acc012w
+The listed login ID has a user ID of zero (0) and is not the 'root'
+account.  This should be checked to see if it is legitimate.  In any
+case, having login ID's with a user ID of zero tends to lead to security
+problems, and should be avoided (except for 'root')
+%acc012wc
+The listed login ID has a user ID of zero (0) and is not the 'root'
+account.  This should be checked to see if it is legitimate.  In any
+case, having login ID's with a user ID of zero tends to lead to security
+problems, and should be avoided (except for 'root')
+
+On this system, comments are not allowed in the password file.  An attempt
+to comment out an entry simply results in a login ID which begins with a
+'#'.  See message ID 'acc013w' for more information.
+%acc013w
+On this system, comments are not allowed in the password file.  An attempt
+to comment out an entry simply results in a login ID which begins with a
+'#'.  For example:
+
+#joeuser:zqa4324x2423x:234:23:Joe User:/home/joeuser:/bin/csh
+
+indicates a user with the username '#joeuser'.  The account has not
+been disabled, it has simply been renamed.  Such entries should be
+deleted from the system.
+%acc014f
+The root user (UID 0) should not be having "/" (system root directory)
+as its home drive. This is a possible security hole. 
+%acc015w
+The listed login ID has a duplicate home directory with another login
+ID.  This should be remedied to prevent permission problems.
+%acc016w
+The listed login ID does not have password aging enabled.  Good
+password management practices indicate that passwords should not
+be static, but rather should be changed on a regular basis.
+%acc017w
+The listed login ID does not have corresponding entries in both the
+/etc/passwd and /etc/shadow databases.  This may indicate tampering
+with either file.
+%acc018w
+The listed administrative login should have an impossible password.
+Files owned by this login ID may reside in critical system directories
+and compromise of this account could lead to trojan executables in
+typical search paths.
+%acc019w
+The listed login ID may be missing a login program initialization
+file.  This file controls the behavour of the login process and of
+many important environment variables.
+%acc020w
+The listed login ID does not have a valid login program or shell.
+Usually these are defined in /etc/shells.
+$acc021w
+The listed login ID appears to be dormant.  Files in the home
+directory of this user have not been modified in the specified
+period of time and after investigation the account may need to
+be disabled.
+%acc022w
+The listed login ID has a home directory which is not accessible.
+This should be checked to see if this is due to networking problem
+for remote home directories.  Without a valid home directory,
+the user will end up with / as the home directory.
+%acc023w
+The user's parent directory does not have the correct administrative
+permissions. It generally should not have write access for groups &
+others.

@@ -1,0 +1,268 @@
+<HR><PRE>
+
+
+
+
+
+
+
+
+</PRE><HR>
+<CENTER><H2> Documents for nfs</H2></CENTER>
+<A NAME="nfs001f"><P><B>Code [nfs001f]</B><P>
+The anonymous ID defines the 'uid' to be used for authenticating
+NFS requests which have no credentials. Setting this to 0 is
+very dangerous. It allows the system to be compromised from client
+machines.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs002w"><P><B>Code [nfs002w]</B><P>
+The anonymous ID defines the 'uid' to be used for authenticating
+NFS requests which have no credentials. Setting this to 0 is
+very dangerous. It allows all files to be searched, possibly
+revealing security problems.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs003w"><P><B>Code [nfs003w]</B><P>
+Exporting the root file-system allows remote machines to
+access critical files such as /etc/passwd, possibly allowing
+the machine to be compromised.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs004f"><P><B>Code [nfs004f]</B><P>
+Exporting the root file system allows remote machines to
+access critical file such as /etc/passwd. Exporting this
+R/W to everyone means that on the Internet can modify system
+files, allowing them to gain further access to the machine.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs005f"><P><B>Code [nfs005f]</B><P>
+Exporting the root file system allows remote machines to
+access critical file such as /etc/passwd. Exporting this
+to everyone means that anyone on the Internet can browse system
+files, allowing them to find other security problems.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs006f"><P><B>Code [nfs006f]</B><P>
+Exporting a file-system R/W to everyone means that anyone can
+modify the data on your system, possibly making changes that
+allow them to login to the system and access or destroy other
+files.
+<P>
+See `nfs013i'
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs007w"><P><B>Code [nfs007w]</B><P>
+Exporting a directory to everyone means that anyone can
+look at your files. The information gained can possibly
+be used to gain further access to the machine.
+<P>
+See `nfs013i'
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs008f"><P><B>Code [nfs008f]</B><P>
+Exporting the root file system read only and with root access
+will allow the remote machine to view system files,
+possibly allowing them to gain further access to the
+machine.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs009f"><P><B>Code [nfs009f]</B><P>
+Exporting the root file system with R/W and root access
+will allow the remote machine to edit system files,
+such as /etc/passwd, allowing them to gain access to the
+machine.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs010i"><P><B>Code [nfs010i]</B><P>
+Exporting a file-system with root access can allow the
+a user on the remote host to gain further access on
+the local machine. Removing root exports is a means
+of limiting the number of affected machines in the
+event that a machine(s) is compromised. In this case,
+the directory is protected on the server because the
+permissions are '700'. Note on some platforms, if this
+is not the root directory of a file-system, then the
+server may still be vulnerable.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs011w"><P><B>Code [nfs011w]</B><P>
+The listed directory is exported with root access to a
+machine, and the directory is accessible on the server.
+By setting the permissions to 'rwx------', if the client is
+compromised, the server can not be compromised by any files
+which are placed underneath this directory, since they will
+be unreachable by a non-privileged user on the server.
+Note on some platforms, if this is not the root directory
+of a file-system, then the server may still be vulnerable.
+<P>
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs012w"><P><B>Code [nfs012w]</B><P>
+The directory for a disk-less client is exported with
+root access, but the directory is not protected on the
+server because the permissions are not '700'. By setting
+the permissions of the directory to `700', any files created
+from the client machine will not be accessible on the server.
+Note on some platforms, if this is not the root directory
+of a file-system, then the server may still be vulnerable.
+<P>
+NOTE: For the disk-less clients '/' (root) directory, the
+permissions can *not* be `700' as non-root processes on the
+client will not be able to access any files. The permissions
+on the parent directory on the server should be set to `700'
+(or if feasible, the root directory of the file-system on which
+the directory resides should be set to `700').
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs013i"><P><B>Code [nfs013i]</B><P>
+A common problem with setting up NFS exports is the inability
+to get the client access to work. Often, in frustration,
+the administrator of the machine removes the export restrictions
+and exports the file systems to everyone. This problem is
+usually caused by host name mismatches. On most implementations
+of NFS, the name matching is case sensitive. The name specified
+in the exports file (or equivalent) must match exactly. One
+way of determining the correct name is to login to the client,
+then use `telnet' to login to the server. The `who' or `finger'
+command can then be used to determine the client host name (it
+may be truncated, but enough information should be listed to
+determine the correct name). This host name should be used in
+the access list in the exports file.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="nfs014w"><P><B>Code [nfs014w]</B><P>
+Exporting the `/usr' partition with read/write access can allow
+the server to be compromised if the client is compromised. An
+intruder can replace system binaries. By exporting it read/only,
+they will be unable to do this.
