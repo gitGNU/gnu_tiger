@@ -93,6 +93,11 @@ incomplete support this platform or a configuration error.
 %init008e
 An attempt was made to run one of the support scripts directly.
 These scripts can only be invoked by the top level scripts.
+%init009e
+The script wanted to use a temporary script which already exists, this
+might mean somebody created it to make use of an (fortunately unexistant) 
+race condition. The script will not proceed further since it will not
+use a file which it did not create itself.
 %util001e
 The attempt to compile the signature checking program (SNEFRU) failed.
 This will prevent the tests of the integrity of system binaries from
