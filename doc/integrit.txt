@@ -1,0 +1,32 @@
+%integ001i
+Integrit detected no changes. Good.
+%integ002e
+Integrit configuration files can make use of variable substitution in a way 
+Tiger cannot make use of in the current Tiger version. Please supply a custom
+configuration file using Tiger_Run_AIDE_CFG_OVERRIDE and/or make sure 
+no variable substitution is used in the Integrit configuration file.
+%integ003w
+Integrit detected changes in filesystem integrity. This line is only the 
+summary.
+%integ003w
+Integrit detected, by checking against the files' the attributes in the 
+database, the file has changed. "Benign" actions, like accessing a file 
+(remember directories are files too) may have changed it, but it may be part 
+of a breach of security. Please investigate.
+%integ004w
+Integrit detected, by checking against the files' the attributes in the 
+database, the file has been removed. "Benign" configuration errors of the 
+database settings may lead to incorporation and checking of for instance 
+temporary files. Uninstalling software and related files may lead to the 
+same result when the database was not upgraded before this check.
+If the removed file was not a temporary file and not part of legitimately
+uninstalled software, it may have been used in a breach of security.
+Please investigate.
+%integ005w
+Integrit detected, by checking file against the database, the file was 
+not part of the database. "Benign" actions like installing software and 
+related files or changes in the configuration file may lead to this result 
+when the database was not upgraded before this check. If the removed file 
+was not part of legitimately installed software, it may be in use in a 
+breach of security. 
+Please investigate.
