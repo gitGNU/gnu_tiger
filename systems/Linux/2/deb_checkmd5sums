@@ -17,6 +17,9 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# 02/26/2004 - jfs - Included patch from Chung-chieh Shan which avoids failure
+#       on packages whose names contain "."
+#       (Debian bug 234811)
 # 12/20/2003 - jfs - Included patch from Nicholas François which makes 
 #       Tiger not warn on manpage files purged through localepurge 
 #       (Debian bug 219728)
@@ -105,7 +108,7 @@ DIVERSIONS="/var/lib/dpkg/diversions"
 
 if [ -d /var/lib/dpkg/info ] 
 then
-for md5file in /var/lib/dpkg/info/*md5sums
+for md5file in /var/lib/dpkg/info/*.md5sums
 do
 [ -f $md5file ] && [ ! -L $md5file  ] && {
 # Note: We  do not check things in  /usr/share/doc
@@ -117,8 +120,7 @@ do
 	$MD5SUM -c 2>&1 | $SED -e "s/^.*md5sum: MD5 check failed for '\(.*\)'/DIFF \1/; s/^.*md5sum: can't open \(.*\)/ERR \1/" | {
 		while read err file
 		do
-			package=`echo "$md5file" | $CUT -f 1 -d "."`
-			package=`$BASENAME $package`
+			package=`$BASENAME "$package" ".md5sums"`
 			case $err in
 			DIFF)
 				# don't check diverted now
