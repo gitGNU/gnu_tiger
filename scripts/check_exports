@@ -158,7 +158,7 @@ check_entry()
 
   [ $world = 1 ] && {
     if [ "$dir" = "/" ]; then
-      if [ "$readonly" = "0" ]; then
+      if [ "$readonly" = "0" -a "$readmost" = "0" ]; then
 	message FAIL nfs004f "" "Exporting the root filesystem (/) R/W to everyone."
       else
 	message FAIL nfs005f "" "Exporting the root filesystem (/) R/O to everyone."

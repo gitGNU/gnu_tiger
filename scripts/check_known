@@ -129,6 +129,8 @@ haveallfiles BASEDIR WORKDIR || exit 1
       [ -d "$dir" ] && {
 	cd "$dir"
 	files=`$FIND . -print | $SED -e 's%^./%%' -e '/^.$/d' -e '/^..$/d'`
+	# On HP-UX change to:
+	#files=`$FIND . -print | $SED -e 's%^./%%' -e '/^.$/d' -e '/^..$/d' -e '/^[.]fsadm$/d'`
 	alertfiles=`echo "$files" |
 	            $TR ' ' '\012' |
 	            $SED -e 's%^#\{1\}[0-9][0-9.]*$%%g'

@@ -422,3 +422,23 @@ the user will end up with / as the home directory.
 The user's parent directory does not have the correct administrative
 permissions. It generally should not have write access for groups &
 others.
+<PRE>
+
+
+
+
+
+
+
+
+
+
+</PRE><HR>
+<A NAME="acc024f"><P><B>Code [acc024f]</B><P>
+There is a user in the system (which might or might not have a valid
+password) that has not logged into the system since he/she was created.
+If the user is not disabled (can log in to the system), the user's
+password is the default which might be vulnerable to brute-force attacks
+(or might even be empty).
+This check is based on the 'lastlog' file, see lastlog(8), if this
+file has been reset then these checks might send false positives.

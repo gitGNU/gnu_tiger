@@ -224,7 +224,10 @@ check_file()
 	      changelog "WARN : chmod : $change : $fsdev"
 	    }
 #TODO: In Debian GNU/Linux disk group is created to access /dev/hd*
-	    [ "$gr$gw" != '00' ] && [ "$group" != "disk" ] && {
+	    [ "$gr$gw" != '00' ] && 
+#NOTE: In HP-UX you could add also (contributed by Bob Hall
+# [ "$group" != 'sys' ] && 
+	    [ "$group" != "disk" ] && {
 	      perm=
 	      [ "$gr" = '1' ] && {
 		perm='read'

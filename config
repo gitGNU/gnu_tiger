@@ -28,8 +28,8 @@
 #TigerWorkDir='./run'
 #TigerBinDir='$BASEDIR/bin'
 # Running on the same dir
-TigerLogDir='./log'
-TigerWorkDir='./run'
+TigerLogDir='/var/log/tiger'
+TigerWorkDir='/var/run/tiger/work'
 TigerBinDir='$BASEDIR/bin'
 
 checkfile()
@@ -75,7 +75,7 @@ checkfile()
   SERVERCHECK=N
   Tiger_TESTMODE=N
   HTML=N
-  RCFILE=./tigerrc
+  RCFILE=/etc/tiger/tigerrc
   export BASEDIR LOGDIR WORKDIR BINDIR EXPLAINREPORT SERVERCHECK RCFILE
   export Tiger_TESTMODE TigerCleanup HTML
   doversion=0
@@ -145,8 +145,8 @@ checkfile()
     echo "--CONFIG-- [con004c] Using configuration files for $OS $REV."
     CONFIG_DIR="$CONFIG_LOC/$OS/$REL/$REV"
   elif [ -f "$CONFIG_LOC/$OS/$REL/config" ]; then
-    echo "--CONFIG-- [con005c] No configuration files for $OS $REV."
-    echo "           Using configuration files for generic $OS $REL."
+    echo "--CONFIG-- [con005c] Using configuration files for $OS $REV. Using"
+    echo "           configuration files for generic $OS $REL."
     echo "           Not all checks may be performed."
     CONFIG_DIR="$CONFIG_LOC/$OS/$REL"
   elif [ -f "$CONFIG_LOC/$OS/config" ]; then
@@ -176,12 +176,11 @@ checkfile()
   }
   export OUTPUTMETHOD
   
-  if [ "$Tiger_Output_FQDN" = 'N' -o "$OS" != "Linux" ]
+  if [ "$Tiger_Output_FQDN" = 'N' ]
   then
 	  HOSTNAME=`$GETHOSTNAME`
   else
-  # Not all UNIX hostnames have the -f option for FQDN... (jfs)
-  # TODO: Check which supported Unix besides Linux do and change if above
+  # Let's hope all UNIX hostnames have the -f option for FQDN... (jfs)
 	  HOSTNAME=`$GETHOSTNAME -f`
   fi
 

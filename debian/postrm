@@ -14,6 +14,10 @@ case "$1" in
 				rmdir $dir
 			}
 		done
+# Do we have any tigerXX files under /var/log/? if so we should remove
+# them. This were created due to bug #164682 ...
+		find /var/log/ -type f -name "tiger*" | xargs rm -f
+
 	;;
 	remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
 # Do nothing 

@@ -23,6 +23,10 @@
 #     Fixes to avoid false positives 
 # check_inetd - 05/27/2002 - jfs
 #     Changed TigerInstallDir to .
+#     
+# TODO
+# - This script need to be fixed so that it will not report issues when
+#   two services are assigned to the same port (Debian Bug#132278)
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'

@@ -22,10 +22,22 @@ test $DEBIAN_SCRIPT_DEBUG && set -v -x
 #     installation fails and the `postinst' is called with `abort-upgrade',
 #     `abort-remove' or `abort-deconfigure'.
 
+remove_mess() {
+    # Do we have any tigerXX files under /var/log/? if so we should remove
+    # them. This were created due to bug #164682 ...
+    db_get tiger/remove_mess || true ; REMOVE="$RET"
+    [ "$REMOVE" = "true" ] && {
+	    find /var/log/ -type f -maxdepth 1 -name "tiger*" |xargs rm -f
+    }
+
+}
+
 case "$1" in
     install)
+    	remove_mess
     ;;
     upgrade)
+    	remove_mess
     ;;
     configure)
 	# edit config file
@@ -36,6 +48,7 @@ case "$1" in
 	/usr/bin/perl -w -pi -e "
 	    s,^(Tiger_Mail_RCPT=).*$,\$1\"$MAIL_RCPT\",;
 	    " $CONFIG
+    	remove_mess
     ;;
     abort-upgrade)
     ;;

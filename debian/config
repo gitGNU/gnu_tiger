@@ -4,5 +4,6 @@
 
 db_input medium tiger/mail_rcpt || true
 db_input medium tiger/policy_adapt || true
+db_input low tiger/remove_mess || true
 db_go
 

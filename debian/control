@@ -2,8 +2,8 @@ Source: tiger
 Section: admin
 Priority: optional
 Maintainer: Javier Fernandez-Sanguino Pen~a <jfs@computer.org>
-Build-Depends: debhelper
-Standards-Version: 3.0.1
+Build-Depends: debhelper, autoconf
+Standards-Version: 3.5.7
 
 Package: tiger
 Architecture: any

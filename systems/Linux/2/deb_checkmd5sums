@@ -17,6 +17,10 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# TODO:
+# - this script will not work when diversions are used on a Debian system
+# this needs to be fixed (Debian Bug #162589)
+#
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
 

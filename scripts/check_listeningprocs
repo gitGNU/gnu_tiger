@@ -22,9 +22,14 @@
 #             UNIX implementations do not shared command line parameters
 #             (lsof does)
 #
-# TODO: provide a way (based on the Linux version) to work with Netstat's
+# TODO: 
+# - provide a way (based on the Linux version) to work with Netstat's
 # output (in Solaris -t or -u does not work and -p does not show processes
 # but net tables)
+# - the 'case' statements probably need to be introduced into an 'eval'
+# (this bug was reported for Debian GNU/Linux) in order for multiple
+# ValidUsers/ValidProcs to work ok. Check systems/Linux/2/check_listeningprocs
+# (once it has been tested it will be included here too)
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'

@@ -121,6 +121,8 @@ scan_file()
      
   # added #+@_ which should be valid characters.
   $AWK '/^[#\+@_a-zA-Z0-9\.\-\t ]*$/ {print}' < "$file" | 
+  # Bob Hall suggests the following for HP-UX
+  # $AWK '/^[-#\+@_a-zA-Z0-9\.\t ]*$/ {print}' < "$file" | 
         {
           while read rhost ruser
           do

@@ -83,3 +83,31 @@ eval $greps > $WORKDIR/wdir.tmp.$$
 }
 
 delete $WORKDIR/wdir.tmp.$$
+
+# Note: The followin directories are world-writable under HP-UX
+# (contributed by Bob Hall)
+#  $SORT $WORKDIR/wdir.tmp.$$
+#while read DIR
+# do
+# case $DIR in
+# /dev/screen/) ;;
+# /etc/opt/resmon/log/) ;;
+# /usr/newconfig/var/stm/*) ;;
+# /var/dt/appconfig/appmanager/*) ;;
+# /var/X11/Xserver/logs/) ;;
+# /var/news/) ;;
+# /var/opt/dce/rpc/local/*) ;;
+# /var/preserve/) ;;
+# /var/rbootd/) ;;
+# /var/stm/*) ;;
+# */man/cat[^\/]*[.]Z/) ;;
+# /var/spool/calendar/*) ;;
+# /var/spool/cron/tmp/*) ;;
+# /var/spool/sockets/*) ;;
+# /var/tmp/*) ;;
+# /var/userlogs/*) ;;
+# *) echo $DIR ;;
+# esac
+# done
+
+

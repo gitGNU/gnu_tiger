@@ -19,6 +19,8 @@
 #
 # 07/26/2002 jfs Modified so it can work if called directly. Removed
 #                unnecesary exit's
+# 10/14/2002 jfs Modified linux call because it was not returning
+#                a proper architecture (it was returing the year!)
 #
 #-----------------------------------------------------------------------------
 #
@@ -89,7 +91,7 @@ UNAME=`findcmd uname`
                 printf("IRIX %s %s\n", $3, $5);
            }
 	   else if($1 == "Linux"){
-		printf("Linux %s %s\n",$3, $11);
+		printf("Linux %s %s\n",$3, $12);
 	   }
 	 }
   '

@@ -16,8 +16,6 @@ build-stamp:
 	./configure --with-tigerhome=/usr/lib/tiger --with-tigerwork=/var/run/tiger/work --with-tigerlog=/var/log/tiger --with-tigerbin=/usr/sbin --with-tigerconfig=/etc/tiger
 	$(MAKE) all
 
-	# For DSAs
-	cd systems/Linux/2 && sh update_advisories.sh
 
 	touch build-stamp
 
@@ -51,7 +49,7 @@ install: build
 	install -m 600 cronrc debian/tmp/etc/tiger/
 	install -m 600 tigerrc debian/tmp/etc/tiger/
 	install -m 644 version.h debian/tmp/usr/lib/tiger/
-	find debian/tmp/ -type d -name "CVS" -exec rm -rf {} \;
+	-find debian/tmp/ -type d -a -name "CVS" |xargs rm -rf 
 
 
 # Build architecture-independent files here.
@@ -82,5 +80,10 @@ binary-arch: build install
 	dh_md5sums
 	dh_builddeb
 
+update-dsa:
+# Updated Debian Security Advisories
+# This target should only be run by the Debian maintainer (which needs
+# to fix the update_advisories appropiately)
+	cd systems/Linux/2 && sh update_advisories.sh
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install

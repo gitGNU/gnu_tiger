@@ -150,6 +150,9 @@ Tiger_Embed_Report_Exec_Only=Y
 # List of usernames separated by '|'... no whitespace
 #
 Tiger_Embedded_OK_Owners='root|bin|uucp|sys|daemon'
+# If you are using HP-UX or Solaris use the following:
+Tiger_Embedded_OK_Owners='root|bin|uucp|daemon|adm'
+# If you are paranoid use:
 #Tiger_Embedded_OK_Owners=root
 #
 # What groups can have write access to system files?

@@ -64,7 +64,7 @@ WC=/bin/wc
 # refinement will handle this.
 #
 #DIFF=/bin/diff
-MAILER=/bin/mail
+MAILER=/usr/bin/mailx
 SENDMAILS="/usr/lib/sendmail"
 SENDMAILCF="/usr/lib/sendmail.cf"
 #

@@ -67,7 +67,7 @@ haveallcmds FILECMD LS SGREP STRINGS && {
 
     case "$file" in
     *xterm) {
-      message WARN misc013w "" "$file: see CERT Advisory CA-93:17 about a security hole in xterm."
+      message WARN misc013w "" "$file: see CERT Advisory CA-93:17 about a security hole in xterm (does not apply to HP-UX)."
     }
     ;;
     esac
@@ -79,6 +79,64 @@ haveallcmds FILECMD LS SGREP STRINGS && {
 	  */xload)
 	  message WARN misc015w "" "$file appears to contain relative pathnames.  There is a known security vulnerability with xload in this configuration."
 	  ;;
+	  # The following is contributed by Bob Hall for HP-UX (it is not active by default)
+	  # TODO: find a way to read this from a file and check them instead of the case
+# /sbin/lvchange) ;;
+# /sbin/lvcreate) ;;
+# /sbin/lvdisplay) ;;
+# /sbin/lvextend) ;;
+# /sbin/lvlnboot) ;;
+# /sbin/lvmerge) ;;
+# /sbin/lvsplit) ;;
+# /sbin/lvsync) ;;
+# /sbin/lvreduce) ;;
+# /sbin/lvremove) ;;
+# /sbin/lvrmboot) ;;
+# /sbin/passwd) ;;
+# /sbin/pvchange) ;;
+# /sbin/pvck) ;;
+# /sbin/pvcreate) ;;
+# /sbin/pvdisplay) ;;
+# /sbin/pvmove) ;;
+# /sbin/pvremove) ;;
+# /sbin/sdstolvm) ;;
+# /sbin/shutdown) ;;
+# /sbin/vgcfgbackup) ;;
+# /sbin/vgcfgrestore) ;;
+# /sbin/vgchange) ;;
+# /sbin/vgchgid) ;;
+# /sbin/vgcreate) ;;
+# /sbin/vgdisplay) ;;
+# /sbin/vgexport) ;;
+# /sbin/vgextend) ;;
+# /sbin/vgimport) ;;
+# /sbin/vgreduce) ;;
+# /sbin/vgremove) ;;
+# /sbin/vgscan) ;;
+# /sbin/vgsync) ;;
+# /sbin/nomwcsyncd) ;;
+# /usr/bin/X11/X) ;;
+# /usr/lbin/chgpt) ;;
+# /usr/sbin/sd) ;;
+# /usr/bin/at) ;;
+# /usr/bin/chkey) ;;
+# /usr/bin/ct) ;;
+# /usr/lbin/grmd) ;;
+# /usr/sam/lbin/rsam) ;;
+# /usr/sbin/swacl) ;;
+# /usr/sbin/swask) ;;
+# /usr/sbin/swconfig) ;;
+# /usr/sbin/swcopy) ;;
+# /usr/sbin/swinstall) ;;
+# /usr/sbin/swjob) ;;
+# /usr/sbin/swlist) ;;
+# /usr/sbin/swmodify) ;;
+# /usr/sbin/swpackage) ;;
+# /usr/sbin/swreg) ;;
+# /usr/sbin/swremove) ;;
+# /usr/sbin/swverify) ;;
+# /usr/dt/bin/dtsession) ;;
+# /usr/dt/bin/dtterm) ;;
           *)
 	  message WARN fsys002w "" "setuid program $file has relative pathnames."
           ;;

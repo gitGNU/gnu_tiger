@@ -11,7 +11,7 @@
 # contain the checking scripts, the platform specific scripts, etc.
 # None of this will need to be writable once installed.
 #
-TIGERHOME=/export/home/system/tiger-3.1
+TIGERHOME=/usr/local/tiger
 #
 # This directory is used for scratch files while the scripts
 # are running.  It can be /tmp.  By using something other
@@ -21,11 +21,11 @@ TIGERHOME=/export/home/system/tiger-3.1
 # 
 # Of course, it is necessary that this directory be writable.
 #
-TIGERWORK=./run
+TIGERWORK=/usr/local/tiger/run
 #
 # Where do log files go.  This directory must be writable.
 #
-TIGERLOGS=./log
+TIGERLOGS=/usr/local/tiger/log
 #
 # Where do binary executables go... this is only used if the
 # binary executables don't exist in the appropriate platform
@@ -143,6 +143,7 @@ install:
 	done; \
 	for file in $(BINARIES); do \
 	  cp -p $$file $(prefix)/$(TIGERBIN)/$$file; \
+	  chmod 755 $(prefix)/$(TIGERBIN)/$$file ; \
 	done; \
 	for file in $(SCRIPTS); do \
 	  sed -e 's%^TigerInstallDir=.*$$%TigerInstallDir="'$(TIGERHOME)'"%' \
@@ -159,10 +160,10 @@ install:
 clean: 
 	cd c && $(MAKE) clean
 	-find bin/ -type f -exec rm -f {} \;
-	-rm -f man/index.bt
+	-rm -f man/index.bt config.{status,log,cache}
 
 distclean: clean
 	cd c && $(MAKE) distclean 
 	-find log/ -type f -exec rm -f {} \;
 	-find run/ -type f -exec rm -f {} \;
-	-rm -f Makefile configure config.{status,log,cache}
+	-rm -f Makefile configure 

@@ -1,0 +1,30 @@
+bootps       dgram  udp wait   root /etc/bootpd   bootpd
+chargen      dgram  udp nowait root internal
+chargen      stream tcp nowait root internal
+daytime      dgram  udp nowait root internal
+daytime      stream tcp nowait root internal
+discard      dgram  udp nowait root internal
+discard      stream tcp nowait root internal
+echo         dgram  udp nowait root internal
+echo         stream tcp nowait root internal
+exec         stream tcp nowait root /usr/lbin/rexecd   rexecd
+finger       stream tcp nowait bin /usr/lbin/fingerd  fingerd
+ftp          stream tcp nowait root /usr/lbin/ftpd	  ftpd -l
+lanmgrx.osB  stream tcp nowait root /usr/lib/lm/lmsess.osB  lmsess.osB
+login        stream tcp nowait root /usr/lbin/rlogind  rlogind
+printer     stream tcp nowait root /usr/sbin/rlpdaemon  rlpdaemon -i
+rpc dgram udp wait root /usr/dt/bin/rpc.cmsd 100068 2-5 rpc.cmsd
+rpc xti tcp swait root /usr/dt/bin/rpc.ttdbserver 100083 1 /usr/dt/bin/rpc.ttdbserver
+rpc  dgram  udp  wait    root  /usr/sbin/rpc.mountd   100005  1    rpc.mountd
+rpc  dgram  udp  wait    root  /usr/sbin/rpc.rquotad  100011  1    rpc.rquotad
+rpc  dgram  udp  wait    root  /usr/lib/netsvc/rstat/rpc.rstatd   100001  1-3  rpc.rstatd
+rpc  dgram  udp  wait    root  /usr/lib/netsvc/rstat/rpc.rusersd  100002  1-2  rpc.rusersd
+rpc  dgram  udp  wait    root  /usr/lib/netsvc/rstat/rpc.rwalld   100008  1    rpc.rwalld
+rpc  dgram  udp  wait    root  /usr/lib/netsvc/rstat/rpc.sprayd   100012  1    rpc.sprayd
+rpc  stream tcp  nowait  root  /usr/lib/netsvc/rstat/rpc.rexd     100017  1    rpc.rexd
+shell        stream tcp nowait root /usr/lbin/remshd   remshd
+telnet       stream tcp nowait root /usr/lbin/telnetd  telnetd 
+tftp         dgram  udp wait   root /usr/lbin/tftpd    tftpd
+time         dgram  udp nowait root internal
+time         stream tcp nowait root internal
+spc     stream tcp  nowait  root  /usr/softbench/bin/softspcd  /usr/softbench/bin/softspcd

@@ -596,6 +596,7 @@ fi
 
 
 
+
 trap '' 1 2 15
 cat > confcache <<\EOF
 # This file is a shell script that caches the results of configure
@@ -708,7 +709,7 @@ done
 
 ac_given_srcdir=$srcdir
 
-trap 'rm -fr `echo "Makefile config tigercron" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+trap 'rm -fr `echo "Makefile config tigercron tiger" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -744,6 +745,7 @@ s%@tigerhome@%$tigerhome%g
 s%@tigerwork@%$tigerwork%g
 s%@tigerlog@%$tigerlog%g
 s%@tigerbin@%$tigerbin%g
+s%@tigerconfig@%$tigerconfig%g
 
 CEOF
 EOF
@@ -785,7 +787,7 @@ EOF
 
 cat >> $CONFIG_STATUS <<EOF
 
-CONFIG_FILES=\${CONFIG_FILES-"Makefile config tigercron"}
+CONFIG_FILES=\${CONFIG_FILES-"Makefile config tigercron tiger"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then

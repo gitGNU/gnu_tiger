@@ -19,6 +19,8 @@
 # ARC check_path - 05/10/99  Fixed problem with parse_csh
 #
 # 07/25/2002 jfs Added a sanity check for password files
+# 10/22/2002 jfs Fixed check for PATH in config files (was not done properly
+#            due to the way it was being tested
 #
 #-----------------------------------------------------------------------------
 #
@@ -196,6 +198,12 @@ parse_bsh()
   ' $dir/$file |
   $GREP -v '".*;.*"' |
   $TR ';' '\012' |
+  # Bob Hall suggests chaging the SED from
+  # -e 's/\${\([a-zA-Z_][a-zA-Z0-9_]*}[^a-zA-Z0-9_]\)/${XXX_\1/g' \
+  # to
+  # -e 's/\${\([a-zA-Z_][a-zA-Z0-9_]*}\)$/${XXX_\1/g' \
+  # on HP-UX 
+  # TODO:(does this apply to other OS?
   $SED -e 's/#.*$//' \
        -e '/^$/d' \
        -e 's/^[ 	]*//' \
@@ -319,20 +327,20 @@ realpath="$REALPATH -d"
       [ -r $file ] && {
         case $file in
           /etc/profile|/etc/bashrc)
-            if [ ! "`$GREP -v '#' $file | $GREP PATH | $GREP export >/dev/null 2>&1`" ] 
-              then
+            found=`$GREP -v \# $file | $GREP PATH | $GREP export 2>/dev/null`
+            if [ -z "$found" ]; then
                 message WARN path009w "" "$file does not export an initial setting for PATH."
             fi
             ;;
           /etc/csh.login)
-            if ! $GREP -v '#' $file | $GREP PATH | $GREP setenv >/dev/null 2>&1
-              then
+            found="`$GREP -v \# $file | $GREP PATH | $GREP setenv 2>/dev/null`" 
+            if [ -z "$found" ]; then
                 message WARN path009w "" "$file does not setenv an initial setting for PATH."
             fi
             ;;
          *)
-            if ! $GREP -v '#' $file | $GREP PATH >/dev/null 2>&1
-              then
+            found="`$GREP -v \# $file | $GREP PATH `"
+            if [ -z "$found" ]; then
                 message WARN path009w "" "$file does not have an initial setting for PATH."
             fi
             ;;

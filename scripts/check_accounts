@@ -95,6 +95,10 @@ check_disabled()
   while read user home host shell uid
   do
     [ ! -n "$shell" ] && shell=/bin/sh
+    # TODO: Bob Hall suggest disabling the check for standard UNIX accounts. In HP-UX
+    # these are: daemon|bin|sys|adm|lp|nobody|hpdb. However, this might leave some
+    # "holes" open (just rename the account so that it will not be check for).
+    # A secure approach has to be determined for this to work properly.
     [ $TESTEXEC $shell ] && {
       eval "
 	case \"$shell\" in

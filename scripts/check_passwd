@@ -19,6 +19,7 @@
 #
 # 07/27/2002 jfs Added a sanity check for password files
 # 08/09/2002 jfs Fixed some ! tests 
+# 10/28/2002 jfs Improved check with patch from Bob Hall
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -109,7 +110,9 @@ do
     }
   done
 
-  $AWK -F: '{print $3}' $WORKDIR/p1uid.$$ |
+#  $AWK -F: '{print $3}' $WORKDIR/p1uid.$$ |
+# Check for multiple non-NIS entries with the same UID
+  $AWK -F:  '/^[^+-]/ {print $3}' $WORKDIR/p1uid.$$ |
   $SORT |
   $UNIQ -c |
   while read times uid

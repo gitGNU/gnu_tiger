@@ -26,7 +26,7 @@
 #
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir='.'
+TigerInstallDir="@tigerhome@"
 
 [ "$1" != "" ] && {
   case "$1" in
@@ -176,7 +176,7 @@ do
     [ $dayok -eq 1 ] && {
       for script in $scripts
       do
-	outprefix="$LOGDIR`$BASENAME $script`.out"
+	outprefix="$LOGDIR/`$BASENAME $script`.out"
 	suffix=${TigerCron_Log_Keep_Max:=10}
 	{
 	  if [ -f $SCRIPTDIR/$script ]; then

@@ -15,10 +15,20 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# check_listeningprocs - 23/08/2001
+# check_listeningprocs - 08/23/2001
+# check_listeningprocs - 10/16/2002 - jfs
+#              Changed the case statement into an eval in order
+#              to properly work for more than two processes or users
+#              (i.e. with "process1|process2")
+#
+# TODO:
+# - this script seems to have problems if a program opens an UDP socket
+#   expecting a reply from a remote host. This might lead to sockets reported
+#   as open spuriously (see Debian Bug#136991). Should this be fixed?
+#   (the socket is in fact open and could be accessed remotely)
 #
 #-----------------------------------------------------------------------------
-TigerInstallDir='.'
+TigerInstallDir='/usr/lib/tiger'
 
 
 #
@@ -76,6 +86,7 @@ okprocessusers=$Tiger_Listening_ValidUsers
 okprocess=$Tiger_Listening_ValidProcs
 [ ! -n "$okprocessusers" ] && okprocessusers="root"
 [ ! -n "$okprocess" ] && okprocess=""
+export okprocess okprocessusers
 
 if [ ! -z "$LSOF" ] 
 then
@@ -85,28 +96,32 @@ while read proc user type asocket
 do
 	socket=`echo $asocket |  $CUT -f 2 -d :`
 	address=`echo $asocket | $CUT -f 1 -d :`
-	[ "$address" = "127.0.0.1" ] && address="loopback"
-	[ "$address" = "0.0.0.0" -o "$address" = "*" ] && address="every"
 # Should address = 127.0.0.1 be considered harmful?
 # TODO: This could be an option
-	case $proc in
-	$okprocess)
-	;;
-	*)
-		case $user in
-		$okprocessuser) 
-		[ "$address" = "every" -a "$Tiger_Listening_Every" != "N" ] && \
-		message WARN lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." || \
-		message INFO lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." 
-		;;
-		*) 
+	[ "$address" = "127.0.0.1" ] && address="loopback"
+	[ "$address" = "0.0.0.0" -o "$address" = "*" ] && address="every"
+	isokprocess="no"
+	isokuser="no"
+	# TODO This should change into a function since it's used twice in the
+	# code
+	[ -n "$okprocess" ] && \
+	isokprocess=`eval "case $proc in ${okprocess})  echo \"yes\" ;; \
+	*) echo \"no\" ;; esac"`
+	# Probably redundant since this is done already at the top
+	[ -n "$okprocessusers" ] && \
+	isokuser=`eval "case $user in ${okprocessusers})  echo \"yes\" ;; \
+	*) echo \"no\" ;; esac"`
+	if [ "$isokprocess" = "no" ] ; then
+	if [ "$isokuser" = "yes" ] ; then
+	[ "$address" = "every" -a "$Tiger_Listening_Every" != "N" ] && \
+	message WARN lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." || \
+	message INFO lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." 
+	else
 		[ "$address" != "127.0.0.1" ]  && {
 			message WARN lin003w "" "The process \`$proc' is listening on socket $socket ($type on $address interface) is run by $user."
 		} 
-		;;
-		esac
-	;;
-	esac
+	fi # of if okuser
+	fi # of if okprocess
 
 done 
 else
@@ -125,16 +140,16 @@ do
 	socket=`echo $local | $CUT -f 2 -d : `
 	address=`echo $local | $CUT -f 1 -d : `
 	[ "$address" = "127.0.0.1" ] && address="loopback"
-	case $proc in
-	$okprocess)
-	;;
-	*)
+	isokprocess="no"
+	[ -n "$okprocess" ] && \
+	isokprocess=`eval "case $proc in ${okprocess})  echo \"yes\" ;; \
+	*) echo \"no\" ;; esac"`
+	if [ "$isokprocess" = "no" ] ; then
 		[ "$address" = "0.0.0.0" -o "$address" = "*" ] && address="every"
 		[ "$address" = "every" ] && \
-		message WARN lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." || \
-		message INFO lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface."
-	;;
-	esac
+			message WARN lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." || \
+			message INFO lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface."
+	fi
 	}
 done
 fi
