@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -90,7 +90,7 @@ then
 	# these are the codenames for the older debian releases
 	# if we see any of them we know we fail right away
         DEBIAN_VERSION=`$CUT -f1 -d' ' /etc/debian_version`
-        $GREP -E "hamm|bo|rex|buzz" /etc/debian_version 1> /dev/null
+        $GREP -E "hamm|bo|rex|buzz" /etc/debian_version 2> /dev/null
         if [ $? -eq 0 ]
         then
                 message FAIL osv002 "" "Out of date Debian GNU/Linux version"
