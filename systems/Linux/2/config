@@ -161,7 +161,8 @@ SENDMAILCF="/etc/sendmail.cf"
 export SENDMAILS SENDMAILCF
 
 LOGINDEF="/etc/login.defs"
-export LOGINDEF
+PAMLOGINDEF="/etc/pam.d/login"
+export LOGINDEF PAMLOGINDEF
 
 YPCAT=`findcmd ypcat`
 
