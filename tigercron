@@ -31,6 +31,10 @@
 #		instead of CONFIGDIR
 #
 # 04/26/2003 jfs Removed unnecessary option
+# 
+# 05/11/2003 jfs Fixed tigercron, the 'unecessary option' was in fact 
+#                the way it behaved, I wanted to removed spurious echos
+#                and ended up breaking its functionality!
 #
 #-----------------------------------------------------------------------------
 #
@@ -218,6 +222,7 @@ do
 	  do
 	    [ -f "$outprefix.$next" ] && {
 	      $MV $outprefix.$next $outprefix.$suffix
+	      echo $outprefix
 	    }
 	    suffix=$next
 	    next=`$EXPR $next - 1`
