@@ -148,7 +148,7 @@ export FS_WDIRSYS
 SYSDEFAULTPATH="/usr/bin:/usr/ucb"
 export SYSDEFAULTPATH
 #
-GETUSERHOME="$CDIR/default/getuserhome"
+GETUSERHOME="$BASEDIR/systems/default/getuserhome"
 export GETUSERHOME
 
 CDIR="$BASEDIR/systems"
