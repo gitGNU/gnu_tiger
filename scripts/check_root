@@ -18,7 +18,7 @@
 # check_root - 05/30/99
 #
 # 10/19/2003 jfs Applied patch from Ryan Bradetich which fixes mesg check
-#            in SuSE.
+#            in SuSE. Also fixed message on root logins in SSHD
 # 09/19/2003 jfs Applied patch from Nicolas François in order to properly
 #            work non-interactively (MESG complains if not running in a tty)
 # 09/03/2003 jfs Use SSHD_CONFIG instead of SSHCONF
@@ -155,10 +155,10 @@ rootssh=`$GREP PermitRootLogin $SSHD_CONFIG`
 if [ -n "$rootssh" ]; then
   if [ ! "`echo $rootssh | $GREP \"^#\"`" ]; then
     if [ "`echo $rootssh | $GREP -i yes`" ]; then
-      message WARN root001w "" "Remote root login allowed in $path"
+      message WARN root001w "" "Remote root login allowed in $SSHD_CONFIG"
     fi
     if [ "`echo $rootssh | $GREP -i nopwd`" ]; then
-       message WARN root001w "" "root login without pwd allowed in $path"
+       message WARN root001w "" "root login without pwd allowed in $SSHD_CONFIG"
     fi
   fi
 fi
