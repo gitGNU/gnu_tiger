@@ -1,6 +1,46 @@
 NOTE: To read changes made to the Debian package (since
 August 23rd 2001) see the changelog.Debian file
 
+Changes (v 3.1) 10/09/2002
+---------------------------
+
+New autoconfiguration stuff so that users can customize how to run
+Tiger (it can now be run from the local dir, that is, the directory
+it has been untarred to or any other dir). Default is  
+/usr/local/tiger. See configure.in for more information.
+
+Fixes due to testing in Solaris. Mainly bashisms, but also
+some new tests for Solaris (not activated by default) as well
+as fixes for HP-UX. Fixes include check_accounts, check_devices,
+check_ftpusers, check_issue, check_known, check_listeningprocs,
+check_logfiles, check_netrc, check_passwd, check_passwd, check_rhosts,
+
+This Solaris testing has also derived new Solaris 5.8 and Solaris 5
+configuration scripts.
+
+This new upstream version includes a new
+check_loginlog for Linux (based on SuSE's) as well as a preliminary
+version of check_patches for Solaris.
+
+check_listeningprocs using LSOF *and* NETSTAT has been moved to
+Linux (the version for any other OS uses only 'lsof' since 'netstat'
+is not standarised)
+
+Tigexp does not regenerate messages unless being run by root (so that
+common users do not get a warning if they run 'tigexp')
+
+Changes (v 3.0) 07/26/2002
+---------------------------
+
+New upstream release. Includes a lot of new checks for Linux (developed
+for the Debian GNU/Linux distribution) and also includes TARA's and HP's 
+fixes. This new upstream is distributed through savannah.gnu.org 
+(look for CVS sources there too).
+
+The full changes description can be found in the Debian changelog
+(debian/changelog in the source dir) and span from the 2.2.4-1
+to the 2.2.4p2-5 Debian packages.
+
 Changes    09/07/99
 -------
 

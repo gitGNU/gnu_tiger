@@ -1,6 +1,7 @@
 tiger (3.1-1) unstable; urgency=low
 
-  * New upstream release
+  * New upstream release which includes some fixes for Debian bugs
+  such as the "don't regenerate index" (Closes: #)
   * Made debian/rules update automatically the advisories file (which
   is now named debian_advisories so the previous chmod -x is not needed)
 

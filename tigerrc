@@ -39,6 +39,7 @@ Tiger_Check_STRICTNW=Y		# Fast - stringent N/W server checks
 Tiger_Check_LISTENING=Y		# Fast
 Tiger_Check_SYSTEM=Y		# Depends on the specific system checks
 Tiger_Check_RUNPROC=N		# Fast, needs to be customized per system
+Tiger_Check_NEVERLOG=Y		# Fast, Depends on users in the system
 # 
 # Should reports with no info be sent on cron?
 #

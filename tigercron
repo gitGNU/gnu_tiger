@@ -43,7 +43,7 @@ TigerInstallDir='.'
 #      TigerInstallDir installed location
 #
 basedir=${TIGERHOMEDIR:=$TigerInstallDir}
-CONFIGDIR="@tigerconfig@"
+CONFIGDIR="/usr/local/tiger/"
 TEMPLATEDIR="$CONFIGDIR/templates"
 
 for parm

@@ -158,10 +158,10 @@ install:
 clean: 
 	cd c && $(MAKE) clean
 	-find bin/ -type f -exec rm -f {} \;
-	-rm -f man/index.bt
+	-rm -f man/index.bt config.{status,log,cache}
 
 distclean: clean
 	cd c && $(MAKE) distclean 
 	-find log/ -type f -exec rm -f {} \;
 	-find run/ -type f -exec rm -f {} \;
-	-rm -f Makefile configure config.{status,log,cache}
+	-rm -f Makefile configure 

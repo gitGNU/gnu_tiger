@@ -64,8 +64,9 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds CUT GREP AWK SORT UNIQ LSOF || exit 1
-# Just netstat is needed to run this program, lsof is an addon
+  haveallcmds CAT CUT GREP AWK SORT UNIQ LSOF RM || exit 1
+# Lsof is needed for this program since netstat does not work
+# the same across all Unix platforms
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -77,21 +78,24 @@ done
 echo
 echo "# Checking listening processes "
 
-haveallcmds LSOF GREP CUT AWK SORT UNIQ || exit 1
+haveallcmds CAT LSOF GREP CUT AWK SORT UNIQ RM|| exit 1
 
 okprocessusers=$Tiger_Listening_ValidUsers
 okprocess=$Tiger_Listening_ValidProcs
 [ ! -n "$okprocessusers" ] && okprocessusers="root"
 [ ! -n "$okprocess" ] && okprocess=""
 
-$LSOF -nPi | $GREP "IPv" | $GREP -v "\->" | 
-$AWK '{printf("%s %s %s %s\n", $1, $3, $7, $8)}' | $SORT | $UNIQ |
-while read proc user type asocket 
-do
-	socket=`echo $asocket |  $CUT -f 2 -d :`
+check_socket()
+{
+	proc=$1
+	user=$2
+	type=$3
+	asocket=$4
+	socket=`echo $asocket |  $CUT -f 2 -d : | $SED -e 's/-.*$//'`
+	[ "$type" = "raw" ] && socket="(hex) $socket"
 	address=`echo $asocket | $CUT -f 1 -d :`
 	[ "$address" = "127.0.0.1" ] && address="loopback"
-	[ "$address" = "0.0.0.0" -o "$address" = "*" ] && address="every"
+	[ "$address" = "0.0.0.0" -o "$address" = "00000000" -o "$address" = "*" ] && address="every"
 # Should address = 127.0.0.1 be considered harmful?
 # TODO: This could be an option
 	case $proc in
@@ -112,7 +116,24 @@ do
 		esac
 	;;
 	esac
+}
+
+$LSOF -n > $WORKDIR/procs.$$
+> $WORKDIR/openprocs.$$
+$CAT $WORKDIR/procs.$$ | $GREP "IPv" | 
+	$GREP -v "\->" |
+	$AWK '{printf("%s %s %s %s\n", $1, $3, $7, $8)}' >> $WORKDIR/openprocs.$$
+# Now check for raw sockets (some trojans use them too)
+$CAT $WORKDIR/procs.$$ | $GREP "raw" |
+        $AWK '{printf("%s %s %s %s\n", $1, $3, $5, $7)}' >> $WORKDIR/openprocs.$$
+
+$CAT $WORKDIR/openprocs.$$ |
+$SORT | $UNIQ |
+while read proc user type asocket 
+do
+	check_socket $proc $user $type $asocket
 
 done 
 
+$RM $WORKDIR/procs.$$ $WORKDIR/openprocs.$$
 exit 0 

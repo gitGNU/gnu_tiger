@@ -22,7 +22,8 @@ acc018w accounts.txt 110 113
 acc019w accounts.txt 115 117
 acc020w accounts.txt 119 125
 acc022w accounts.txt 127 130
-acc023w accounts.txt 132 $
+acc023w accounts.txt 132 134
+acc024f accounts.txt 136 $
 ali001i aliases.txt 2 4
 ali002f aliases.txt 6 7
 ali003 aliases.txt 9 11
