@@ -17,6 +17,8 @@
 #
 #  config (top level) - 06/14/93
 #
+# 01/13/2004 jfs  Added check when running with -f since on some (unconfigured)
+#		  systems this might fail.
 # 08/19/2003 jfs  tara -> Tiger in the usage
 # 08/13/2003 jfs  Added some of ARSC changes including:
 #                 - support for signature generation (enhanced with also
@@ -357,7 +359,9 @@ checkfile()
   then
   # Linux hostname has the -f option for FQDN... (jfs)
   # (others?)
-          HOSTNAME=`$GETHOSTNAME -f`
+	  HOSTNAME=`$GETHOSTNAME -f 2>/dev/null`
+# But sometimes this will fail.... (if the system is not properly setup)
+	  [ $? -ne 0 ] && HOSTNAME=`$GETHOSTNAME`
   fi
 
   for file in './site-$HOSTNAME' '$BASEDIR/site-$HOSTNAME' './site' '$BASEDIR/site'
