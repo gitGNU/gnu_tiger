@@ -17,6 +17,7 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# 10/15/2003 - jfs - Modify ERROR to FAIL
 # 09/19/2003 - jfs - Add patches provided by Nicolas François to 
 #      greatly improve the speed and add support for diversions 
 #      (Debian Bug #162589).
@@ -116,12 +117,12 @@ do
 				[ -z `$GREP -x "$file" $DIVERSIONS` ] &&
 				# and conffiles should not be checked either
 				[ -z `$GREP -sx "$file" /var/lib/dpkg/info/$package.conffiles` ] &&
-					message ERROR lin005e "" "Installed file \`$file' checksum differs from installed package '$package'."
+					message FAIL lin005f "" "Installed file \`$file' checksum differs from installed package '$package'."
 # TODO: Consider including the MD5sum to this message
 # notice that some integrity checkers might do this already too.
 				;;
 			ERR)
-					message ERROR lin006e "" "Cannot check file \"$file\" provided by \"$package\" since it does not exist"
+					message FAIL lin006f "" "Cannot check file \"$file\" provided by \"$package\" since it does not exist"
 				;;
 			esac
 		done 
@@ -153,9 +154,9 @@ $SED -e 's/diversion of \(\/.*\) to \(\/.*\) by \(.*\)$/\1;\2;\3/' | {
           then
             md5sum=`$MD5SUM "$currentfile" | $CUT -f 1 -d " "`
             [ "$md5pck" != "$md5sum" ] &&
-              message ERROR lin005e "" "Installed file \`$currentfile' checksum differs from installed packages."
+              message FAIL lin005f "" "Installed file \`$currentfile' checksum differs from installed packages."
           else
-            message ERROR lin006e "" "Cannot check file \"$currentfile\" provided by \"$2\" since it does not exist"
+            message FAIL lin006f "" "Cannot check file \"$currentfile\" provided by \"$2\" since it does not exist"
           fi
         }
       }
