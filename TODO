@@ -3,6 +3,47 @@ Note: the up-to-date TODO list is maintained through Savannah's Task Manager
 (http://savannah.nongnu.org/pm/?group=tiger) this list is provided for the
 commodity of those browsing the source code
 
+GENERAL ROADMAP
+---------------
+
+The general roadmap for Tiger is the following:
+
+To be released:
+(Note: functionality might vary between releases, but this is the intended
+approach)
+
+- Version 3.7 (unstable):
+   . Revision of CVE vulnerabilities and ICAT Risks (Low, Medium, High)
+   . Add vulnerabilities that are already check by remote assessment 
+     tools (Nessus) but can be checked locally too.
+- Version 3.6 (stable): Fully CVE compatible including OVAL implementation.
+- Version 3.5 (unstable):
+   . OVAL interpreter and OS-specific OVAL
+   queries (for Debian GNU/Linux, RedHat GNU/Linux and Solaris). 
+   . Revision of current checks to add CVE mapping for vulnerabilities
+     if appropiate.
+   . Revision of documentation on fixes (tigexp) 
+- Version 3.4 (stable): bug fixes.
+- Version 3.3 (unstable):
+   . Security audit of C source code and 'eval' in scripts.
+   . Determine which checks need root privileges and which not, consider
+     use of 'sudo' to run root checks (or data gathering) if available.
+   . Integration of new checks including contributed
+   checks and checks/bug fixes from TARA 3.0.3 version.
+   . Full documentation and user manual describing checks, policy 
+   (BS-7799) compliance and comparison with other tools and checks.
+
+Released:
+- Version 3.2 (stable): major bug fix version
+- Version 3.1 (unstable): bug fixes and new checks.
+- Version 3.0 (unstable): new release merging TAMU's Tiger and forked
+   versions: ARC's Tara, HP's new checks and Debian's Tiger.
+- Version 2.2.4 (stable): last version provided by TAMU
+
+
+DETAILED ITEMS
+--------------
+
 - Automate the creation of new tar.gz's including a revision that sets
   the proper exec bits to all needed files.
 
