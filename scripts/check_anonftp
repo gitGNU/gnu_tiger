@@ -17,6 +17,7 @@
 #
 # check_anonftp - 06/14/93
 #
+# 06/28/2004 jfs Avoid duplicates for $ftphome
 # 01/13/2004 rbrad Cleanup noise and add additional check to check_anonftp.
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
 # 12/06/2002 jfs Fixed script so that it checks if ftphome/etc/passwd
@@ -185,7 +186,7 @@ haveallcmds GETUSERHOME && {
       checkfiles FAIL f Y
       
       haveallcmds FIND && {
-        (cd /; $FIND $ftphome -type d -print) |
+        (cd /; $FIND $ftphome -type d -print) | $GREP -vs $ftphome |
         checkfiles WARN w N
       }
     )
