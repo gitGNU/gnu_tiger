@@ -16,6 +16,8 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_known - 06/14/93
+# 06/15/2004 jfs Do not call LS directly with all files but use a for loop
+#                (Debian bug #246600)
 # 01/15/2004 jfs Do not run the inetd code if inetd_sets is emtpy!
 # 11/19/2003 jfs Linux: accurate, per interface, promiscuous mode detection
 #                Contributed by unspawn with some changes to make it POSIX
@@ -204,7 +206,11 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
 	`
 	if [ -n "$alertfiles" ]; then
 	  message WARN kis004w "" "$dir contains possible non-fsck files:"
-	  $LS -alR $alertfiles
+	  # TODO: Consider not listing the files and just providing
+	  # the raw numbers if the number of non-fsck files is very high.
+	  for file in $alertfiles ; do
+	  	$LS -alR $file 
+	  done
 	  echo
 	elif [ -n "$files" ]; then
 	  message WARN kis004w "Files: $alertfiles" "$dir is not empty:"
