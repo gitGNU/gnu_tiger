@@ -3,6 +3,14 @@ August 23rd 2001) see the changelog.Debian file
 
 Changes (v 3.2) 
 ----------------
+(unreleased)
+- Fixed issue with tigercron, did not work as advertised
+- Fixed syntax errors in grep calls
+- Modified SunOS config file to look for the MAILSPOOL in /var/mail
+
+
+Changes (v 3.2) 
+----------------
 - Added a roadmap to the TODO
 - Tiger will now output to the report the time of completion
 - Fixed Linux/2/check (Debian checks were not executed)
