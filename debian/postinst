@@ -42,12 +42,9 @@ case "$1" in
     configure)
 	# edit config file
 	db_get tiger/mail_rcpt || true;	MAIL_RCPT="$RET"
-# Is this needed for tiger?
-#	MAIL_RCPT=`echo "$MAIL_RCPT" | sed -e 's/@/\\\\@/g' -e 's/,/\\\\,/g'`
 	test -f $CONFIG || touch $CONFIG
-	/usr/bin/perl -w -pi -e "
-	    s,^(Tiger_Mail_RCPT=).*$,\$1\"$MAIL_RCPT\",;
-	    " $CONFIG
+	sed -e "s/^Tiger_Mail_RCPT=.*$/Tiger_Mail_RCPT=\"$MAIL_RCPT\"/" < $CONFIG > $CONFIG.$$
+        mv $CONFIG.$$ $CONFIG
     	remove_mess
     ;;
     abort-upgrade)

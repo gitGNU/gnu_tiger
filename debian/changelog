@@ -1,3 +1,27 @@
+tiger (3.2-4) unstable; urgency=low
+
+  * Updated to latest debian advisories
+  * Modified postinst so it does not break when a user enters an e-mail
+    address which includes a @ by using sed instead of Perl (Closes: #194955)
+  * Included a check to only ask the debconf tiger/mess question if 
+    there is any cruft from previous versions.
+  * Fixed check_logfiles including some of the things provided by Ryan
+    Bradetich and some other fixes to make it output less false positives
+    on Debian GNU/Linux (Closes: #195199)
+  * Fixed regular expression in Linux's config to support some older versions
+    of fileutils (Closes: #197218)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri, 20 Jun 2003 21:16:02 +0200
+
+tiger (3.2-3) unstable; urgency=low
+
+  * Modified util/difflogs to sort files in order to not report
+    spurious differentes.
+  * Fixed tigercron (again), since the previous fix was not done
+    ok.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Mon, 12 May 2003 22:52:15 +0200
+
 tiger (3.2-2) unstable; urgency=low
 
   * Fix tigercron which was broken upstream (when the echo 

@@ -4,6 +4,10 @@
 
 db_input medium tiger/mail_rcpt || true
 db_input medium tiger/policy_adapt || true
-db_input low tiger/remove_mess || true
+# Only ask for it if necessary
+cruft=`find /var/log/ -type f -maxdepth 1 -name "tiger*"`
+if [ ! -z "$cruft" ] ; then
+	db_input low tiger/remove_mess || true
+fi
 db_go
 
