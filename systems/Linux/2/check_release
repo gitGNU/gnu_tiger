@@ -22,6 +22,13 @@
 # 10/01/2003 jfs       Fixed message calls
 # 11/09/2003 jfs       Removed typeset bashism and updated RedHat versions so
 #            only 7.1 or greater are consider current (Debian Bug 219764)
+# 01/15/2004 jfs       Updated RedHat version (now it's 9 or greater), but
+#            added a note regarding Progeny support...
+#
+#-----------------------------------------------------------------------------
+# TODO:
+# - Support more distributions (SuSE, Mandrake...)
+# - Add support to RedHat Enterprise distributions?
 #
 #-----------------------------------------------------------------------------
 #
@@ -79,14 +86,18 @@ then
 	then
 		MAJOR=`echo $REDHAT_VERSION | $CUT -d. -f1`
 		MINOR=`echo $REDHAT_VERSION | $CUT -d. -f2`
-		if [ $MAJOR -lt 7 ]
+		# Note: RedHat 9 EOL is April 30th, 2004.
+		# Also notice that Progeny does provide official support
+		# for 7.2, 7.3, 8.0 and 9.0 starting January 1, 2004
+		# (but only for x86) see http://transition.progeny.com/
+		if [ $MAJOR -lt 9 ]
 		then
 			message FAIL osv001 "" "Out of date Redhat Linux version $REDHAT_VERSION"
 
-		elif [ $MAJOR -eq 7 -a $MINOR -lt 1 ]
-	        then
-	       	         message FAIL osv001 "" "Out of date Redhat Linux version $REDHAT_VERSION"
-       		         return
+#		elif [ $MAJOR -eq X -a $MINOR -lt X ]
+#	        then
+#	       	         message FAIL osv001 "" "Out of date Redhat Linux version $REDHAT_VERSION"
+#       		         return
        		 fi
 	else
                  message WARN osv004 "" "Unreleased RedHat Linux version \`$REDHAT_VERSION'"
