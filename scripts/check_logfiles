@@ -43,6 +43,7 @@
 #     readable or not is irrelevant. As a matter of fact they might not be
 #     if running a user != root. We don't care since we are not checking
 #     file content)
+# check_logfiles - 04/03/2004 - rbrad Added logfiles support for Tru64.
 #
 #-----------------------------------------------------------------------------
 #
@@ -133,6 +134,15 @@ if [ "$OS" = "HPUX" ] ; then
 	BTMP=/var/adm/btmp
 	LASTLOG=""
 	UTMP=/etc/utmp
+	LOGINLOG=""
+	MESSAGES=""
+fi
+
+if [ "$OS" = "Tru64" ]; then
+	WTMP=/var/adm/wtmp
+	BTMP=""
+	LASTLOG=""
+	UTMP=/var/adm/utmp
 	LOGINLOG=""
 	MESSAGES=""
 fi
