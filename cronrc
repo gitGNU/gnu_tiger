@@ -62,7 +62,7 @@
 # ----------------------------------------------------------------------
 # Check for network configuration every Monday
 #
-3 * Mon		check_inetd check_exports check_aliases check_path check_cron check_anonftp check_printcap check_tcpd
+3 * Mon		check_inetd check_exports check_aliases check_path check_crontabs check_anonftp check_printcap check_tcpd
 #
 # ----------------------------------------------------------------------
 # Check for strange file ownerships once a month

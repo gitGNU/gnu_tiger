@@ -15,21 +15,22 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# check_cron  - 06/14/93
+# check_crontabs  - 06/14/93
 #
 # Ideas from Dan Farmer's 'cron.chk' from COPS 1.04.
 # 
-# check_cron  - 08/14/2003 - jfs Added OUTPUTMETHOD to dependancies 
+# check_crontabs  - 08/19/2003 - jfs Renamed to check_crontabs
+# check_crontabs  - 08/14/2003 - jfs Added OUTPUTMETHOD to dependancies 
 #                            incorporated changes from ARSC tara version 3.0.3
-# check_cron  - 08/13/2003 - jfs Fixed a call to grep and added lost changes
+# check_crontabs  - 08/13/2003 - jfs Fixed a call to grep and added lost changes
 #                            made by ARSC
-# check_cron  - 08/08/2003 - jfs Avoided race conditions in temporary file
+# check_crontabs  - 08/08/2003 - jfs Avoided race conditions in temporary file
 #                            usage.
-# check_cron  - 08/12/2002 - jfs Fixed to use CRONSPOOL
-# check_cron  - 04/25/2002 - jfs Fixed dependancies
-# check_cron  - 04/28/1999 Modified by Advanced Research Corp (R) to 
+# check_crontabs  - 08/12/2002 - jfs Fixed to use CRONSPOOL
+# check_crontabs  - 04/25/2002 - jfs Fixed dependancies
+# check_crontabs  - 04/28/1999 Modified by Advanced Research Corp (R) to 
 #                        correct errors
-# check_cron  - 04/20/1999 Modified by Advanced Research Corp (R) to 
+# check_crontabs  - 04/20/1999 Modified by Advanced Research Corp (R) to 
 #                        correct errors
 # 
 #-----------------------------------------------------------------------------

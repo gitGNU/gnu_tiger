@@ -21,6 +21,7 @@
 # all the checks configured for your system in the tigerrc configuration 
 # file.
 #
+# 08/19/2003 jfs check_cron is now check_crontabs
 # 08/15/2003 jfs Integrated ARSC log to syslog mechanism but modified
 #                the check for it (better to use the same mechanism as
 #                used by the sendtologger function in order to avoid
@@ -297,9 +298,7 @@ aidepid=
 
 [ "$Tiger_Check_CRON" != 'N' ] && {
   echo "`$TIMECMD`> Checking cron entries..."
-  # Note: The check_cron scripts in the systems directory are not at all
-  # useful so we do not use run_script here
-  $SCRIPTDIR/check_cron >> $logtmp
+  run_script check_crontabs >> $logtmp
 }
 
 [ "$Tiger_Check_INETD" != 'N' ] && {
