@@ -22,6 +22,15 @@
 # requirements have been modified to adjust to what it's really needed.
 #
 # 05/01/2003 - jfs - Fixed dependancies
+# 08/09/2003 - jfs - Fixed the script so it does not grok if no valid
+#              umask entries are available
+#
+#-----------------------------------------------------------------------------
+# TODO
+# The script will not work properly if the 'umask' string is present 
+# in the script but it's not a valid call to the umask setting. 
+# It will not work properly either if more than 3 occurances of umask are 
+# present.
 #
 #-----------------------------------------------------------------------------
 #
@@ -97,9 +106,13 @@ do
            | $SED -e "s/^.*umask//"\
            | $CUT -d" " -f2`
 
+        if [ "$UMASK1" != "" ] ; then
 	[ $UMASK1 != 002 -a $UMASK1 != 022 -a $UMASK1 != 027 ] && 
 		#echo "The umask setting in $file is insecure"
 		message FAIL misc022f '' "The umask setting in $file is insecure"
+	else 
+	message WARN misc021w "" "There are no valid umask entries in $file"
+	fi
 
 
     elif [ $Occurance = 2 ]; then
@@ -114,6 +127,7 @@ do
              | $SED -e "s/^.*umask//" \
              | $CUT -d" " -f2`
 
+        [ "$UMASK1" != "" -a "$UMASK2" != "" ] && \
  	[ $UMASK1 != 002 -a $UMASK1 != 022  -a $UMASK1 != 027 -o $UMASK2 != 002 -a $UMASK2 != 022  -a $UMASK2 != 027 ] &&
 		#echo "The umask setting in $file is insecure"
                 message FAIL misc022f '' "The umask setting in $file is insecure"
