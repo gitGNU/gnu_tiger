@@ -107,7 +107,7 @@ STRINGS=/usr/bin/strings
 FIND=/usr/bin/find
 FINDXDEV=-xdev
 FMT=/usr/ucb/fmt
-GETFS=/usr/etc/mount
+GETFS=/sbin/mount
 CC=/usr/bin/cc
 CC=`findcmd gcc`
 if [ -z "$CC" ]; then

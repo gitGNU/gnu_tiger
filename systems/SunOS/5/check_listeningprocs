@@ -1,0 +1,152 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2000-2002 Javier Fernandez-Sanguino Peña
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_listeningprocs: check which processes are listening in the
+#   local system. This check is based on the generic check but will use
+#   a Solaris-specific way to retrieve the information on processes.
+#   It can be used whenever 'lsof' is not available.
+#
+# check_listeningprocs - 14 April 2003
+#    Added support for Solaris
+#
+# 04/21/2003 - jfs - Removed useless echo, use safe delete instead of RM
+#                    Fixed typo in grep (USER instead of COMMAND)
+#                    Fixed error in temporary file usage (empty openprocs.$$$
+#                    parsed instead of procs.$$$)
+#
+# TODO:
+# - Use NETSTAT together with this program, might be useful to simplify
+#   it.
+# - This script will not look for processes which are listening on an
+#   specific interface (not 0.0.0.0) or are listening on AF_INET6 sockets
+#
+#-----------------------------------------------------------------------------
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds PS PFILES SED || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  message CONFIG init003c "" "$0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Checking listening processes "
+
+haveallcmds PS PFILES SED || exit 1
+
+okprocessusers=$Tiger_Listening_ValidUsers
+okprocess=$Tiger_Listening_ValidProcs
+[ ! -n "$okprocessusers" ] && okprocessusers="root"
+[ ! -n "$okprocess" ] && okprocess=""
+
+check_socket()
+{
+	proc=$1
+	user=$2
+	type=$3
+	asocket=$4
+	socket=`echo $asocket |  $CUT -f 2 -d : | $SED -e 's/-.*$//'`
+	[ "$type" = "raw" ] && socket="(hex) $socket"
+	address=`echo $asocket | $CUT -f 1 -d :`
+	[ "$address" = "127.0.0.1" ] && address="loopback"
+	[ "$address" = "0.0.0.0" -o "$address" = "00000000" -o "$address" = "*" ] && address="every"
+# Should address = 127.0.0.1 be considered harmful?
+# TODO: This could be an option
+	case $proc in
+	$okprocess)
+	;;
+	*)
+		case $user in
+		$okprocessuser) 
+		[ "$address" = "every" -a "$Tiger_Listening_Every" != "N" ] && \
+		message WARN lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." || \
+		message INFO lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." 
+		;;
+		*) 
+		[ "$address" != "127.0.0.1" ]  && {
+			message WARN lin003w "" "The process \`$proc' is listening on socket $socket ($type on $address interface) is run by $user."
+		} 
+		;;
+		esac
+	;;
+	esac
+}
+
+> $WORKDIR/procs.$$
+# Note: The following will work for processes listening on all
+# interfaces but not if listening in only one address, also
+# ports are more than one
+for pid in `$PS -ef -o pid`
+do 
+	$PFILES $pid 2>/dev/null | 
+	$GREP "AF_INET 0\.0\.0\.0" | \
+	$SED -e 's/.*port: \([0-9]*\).*/\1/g' |
+	while read port
+	do
+		name=`$PS -p $pid -o fname |$GREP -v COMMAND`
+		user=`$PS -p $pid -o user |$GREP -v USER`
+		echo "$name $user AF_INET 0.0.0.0:$port" >> $WORKDIR/procs.$$
+	done
+done
+
+$CAT $WORKDIR/procs.$$ |
+$SORT | $UNIQ |
+while read proc user type asocket 
+do
+	check_socket $proc $user $type $asocket
+
+done 
+
+delete $WORKDIR/procs.$$ 
+exit 0 
