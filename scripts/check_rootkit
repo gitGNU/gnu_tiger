@@ -1,0 +1,75 @@
+#!/bin/sh
+# Script to look for trojaned ls and find command
+# Part of TARA Suite
+# Uses ls and find that are in path
+#
+# Use -v flag for verbose output
+#
+VERBOSE=""
+TARA=""
+MESSAGE="echo"
+if [ "$1" = '-v' ]; then
+  VERBOSE=TRUE
+    echo "Pathname  LS  FIND"
+    echo "--------  ---  ---"
+fi
+#
+#  See if running in TARA environment
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+[  -r $basedir/config ] && {
+. $basedir/config
+. $basedir/initdefs
+  TARA="YES"
+  MESSAGE="message"
+}
+
+TMPDIR="/tmp/check_rootkit"
+FINDFLAG="OK"
+LSFLAG="OK"
+BADFIND=""
+BADLS=""
+STRINGS="dummy defs divine S11klog ... .._ ..BK war war1 war2 brscan sbh rstv"
+STRINGS="$STRINGS lsniff shadow illusion cl mirkforce buca smurf psybnc"
+STRINGS="$STRINGS lib.a hideme occult tcp.log bnc eggdrop"
+set *=$STRINGS
+shift
+if [ ! -d $TMPDIR ]; then
+  mkdir -p $TMPDIR
+  if [ $? -ne 0 ]; then
+   echo "Can not create test directory, aborting ..."
+   exit
+  fi
+  rm -f "$TMPDIR/*"
+fi
+while [ -n "$1" ]; do
+  LSFLAG="OK"
+  FINDFLAG="OK"
+  TMP=`echo $1 |sed -e "s/BK/ /g"`
+  touch "$TMPDIR/$TMP"
+  if [ $? -eq 0 ]; then
+    LSTMP=`ls "$TMPDIR/$TMP" 2>/dev/null`
+    if [ -z "$LSTMP" ]; then
+      LSFLAG="BAD"
+
+      BADLS="$BADLS,$TMP"
+    fi
+    FINDTMP=`find $TMPDIR -name "$TMP" -print`
+    if [ -z "$FINDTMP" ]; then
+      FINDFLAG="BAD"
+      BADFIND="$BADFIND,$TMP"
+    fi
+  fi
+  if [ -n "$VERBOSE" ]; then
+    echo "$TMP $LSFLAG $FINDFLAG"
+  fi
+  shift
+done
+rm -rf $TMPDIR
+if [ -n "$BADLS" ]; then
+  $MESSAGE FAIL rootkit001f "" "ls appears to be a trojan version"
+  
+fi
+if [ -n "$BADFIND" ]; then
+  $MESSAGE FAIL rootkit002f "" "find appears to be a trojan version"
+fi
+
