@@ -1,3 +1,12 @@
+tiger (3.0-1) unstable; urgency=low
+
+  * New upstream release (based on savannah sources)
+  * Fix in order for deb_checkmd5sums to work with all sources (it was
+    limited due to a stupid bug)
+  * Included latest DSA advisories
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Tue, 18 Jun 2002 13:28:18 +0200
+
 tiger (2.2.4p2-5) unstable; urgency=low
 
   * Added a GPL header to all the important scripts/files used by the
