@@ -1,0 +1,79 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# SunOS/5/check - 08/09/2003
+# 
+# Checks for Solaris systems
+# 
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds CAT GREP RM SGREP STRINGS || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+haveallcmds CAT GREP RM SGREP STRINGS || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+SYSTEMDIR=$BASEDIR/systems/SunOS/5
+
+# Generic check_ndd check
+[ "$Tiger_Check_NETWORKCONFIG" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for network (ndd) configuration..."
+	$BASEDIR/systems/default/check_ndd
+}
+
