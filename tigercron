@@ -17,7 +17,7 @@
 #
 # tigercron - 06/13/93
 #
-# 04/23/2003 jfs Now uses run_script instead of SCRIPTDIR/LSCRIPTDIR which
+# 08/15/2003 jfs Now uses run_script instead of SCRIPTDIR/LSCRIPTDIR which
 #                permits tigercron to execute the most relevant script given
 #                the $OS/$REL/$ARCH
 #                Safer creation of the temporary file which includes the
