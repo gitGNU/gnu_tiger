@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 #     tiger - A UN*X security checking system
 #     Copyright (C) 2003 Michael Sconzo, Javier Fernandez-Sanguino Peña,
@@ -85,7 +85,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds GREP AWK LS || exit 1
+  haveallcmds LS || exit 1
   haveallfiles BASEDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -139,23 +139,31 @@ parse_service_block()
 	
 	while read line 
 	do
-	# TODO: Couldn't this be changed to a 'case' statement
-	# it might need to be changed to be POSIX
-		[[ "$line" = flags* ]] && {
-			[[ "$line" = "*DISABLE*" ]] && enabled='N'
-			continue
-		}
-		
-		[[ "$line" = disable* ]] && {
-			[ "${line#* }" = 'yes' ] && enabled='N'
-			continue
-		}
+		line="${line%%\#*}"
+		[ -z "$line" ] && continue
 
-		[[ "$line" = protocol* ]] && {
-			proto=`echo ${line#*=}`
-		}
+		line=`echo $line`
+		attrib="${line%% *}"
 
-		[[ "$line" = *} ]] && break
+		case "$attrib" in
+			flags)
+				for flag in $line
+				do
+					[ $flag = 'DISABLE' ] && enabled='N'
+				done
+				;;	
+
+			disable)
+				[ "${line##* }" = 'yes' ] && enabled='N'
+				;;
+	
+			protocol)
+				proto=${line#*= }
+				;;
+			\})
+				break
+				;;
+		esac
 	done
 
 	if [ "$service" = 'rexd' -a $enabled = 'Y' ]; then
@@ -166,6 +174,10 @@ parse_service_block()
 		message WARN inet012w "" "'sysstat' service is enabled, consider disabling it."
 	elif [ "$service" = 'netstat' -a $enabled = 'Y' ]; then
 		message WARN inet013w "" "'netstat' service is enabled, consider disabling it."
+	elif [ "$service" = 'linuxconf' -a $enabled = 'Y' ]; then
+		message WARN inet026w "" "'linuxconf' service is enabled, consider disabling it."
+	elif [ "$service" = 'auth' -a $enabled = 'Y' ]; then
+		message WARN inet027w "" "The 'identd or auth' service is enabled, consider disabling it."
 	elif [ "$service" = 'telnet' -a $enabled = 'Y' ]; then
 		message WARN inet098w "" "The 'telnet' server is enabled, consider using ssh instead."
 	elif [ "$service" = 'ftp' -a $enabled = 'Y' ]; then
@@ -187,47 +199,80 @@ parse_service_block()
 	fi 
 }
 
-parse_file()
+parse_defaults_block()
 {
+	logging='N'
+
 	while read line
 	do
-		[[ $line = \#* || _$line = _ ]] && continue
-		[[ $line = includedir* ]] && [ $1 = $XINETDCONF ] && {
-			dirs="$dirs ${line#* }"
-			continue
-		}
+		line="${line%%\#*}"
+		[ -z "$line" ] && continue
 
-		[[ $line = service* ]] && {
-			parse_service_block ${line#* }
-			continue
-		}
-	done < $1
+		line=`echo $line`
+		attrib="${line%% *}"
+
+		case "$attrib" in
+			log_*)
+				logging='Y'
+				;;
+			\})
+				break;
+				;;
+		esac
+	done
+	
+	[ $logging != 'Y' ] &&
+		message WARN inet100w "" "xinetd is not configured with logging enabled."
+}
+
+parse_file()
+{
+	file=$1
+
+	while read line
+	do
+		line="${line%%\#*}"
+		[ -z "$line" ] && continue
+
+		line=`echo $line`
+		attrib="${line%% *}"
+
+		case "$attrib" in
+			includedir)
+				[ $file = $XINETDCONF ] && dirs="$dirs ${line#* }"
+				continue
+				;;
+
+			defaults)
+				parse_defaults_block
+				continue
+				;;
+
+			service)
+				parse_service_block ${line#* }
+				continue
+				;;
+		esac
+	done < $file
 }
 
 # Does the XINETDCONF file exist?
-if [ -r "$XINETDCONF" ] ; then
+[ ! -r "$XINETDCONF" ] && exit 0
 
-	check_file_perms $XINETDCONF
-	parse_file $XINETDCONF
-	for dir in $dirs
+check_file_perms $XINETDCONF
+parse_file $XINETDCONF
+
+for dir in $dirs
+do
+	[ ! -d "$dir/" ] && {
+		message FAIL xnet002f "The directory ($dir) included by $XINETDCONF is not a directory."
+		continue
+	}
+		
+	$LS $dir/ 2>/dev/null |
+	while read path
 	do
-		[ ! -d "$dir/" ] && {
-			message ERROR xnet002e "The directory '$dir' included in $XINETDCONF is not a directory"
-			continue
-		}
-		$LS $dir/ |
-		while read path
-		do
-			check_file_perms $dir/$path
-			parse_file $dir/$path
-		done
+		check_file_perms $dir/$path
+		parse_file $dir/$path
 	done
-else
-        if [ ! -f "$XINETDCONF" ] ; then
-                message ERROR xnet001e "It appears that xinetd is not installed, cannot find file $XINETDCONF."
-        else
-                message ERROR xnet003e "Cannot read file $XINETDCONF."
-        fi
-fi
-
-exit 0
+done

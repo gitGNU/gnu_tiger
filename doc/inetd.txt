@@ -168,6 +168,18 @@ other systems by means of IP address spoofing.
 Consider disabling it by editing the inetd.conf file,
 removing the 'echo' and/or 'chargen' entries, and sending a HUP signal to the
 'inetd' process.
+%inet026w
+The linuxconf service can be utalized for remote administration.
+
+Consider disabling it by editing the inetd.conf file,
+removing the 'linuxconf' entry, and sending a HUP signal to the
+'inetd' process.
+%inet027w
+The 'identd or auth' service is enabled, this system provides a considerable
+number of information to remote anonymous users.
+
+Consider disabling it by editing the inetd.conf file, removing the 'auth' entry,
+and sending a HUP signal to the 'inetd' process.
 %inet098w
 Services that pass sensitive information (including passwords) should
 be replaced with the family of programs that comprise secure shell (ssh)
@@ -181,6 +193,15 @@ control. The use of this facility is encouraged to limit access and to
 improve logging.
 The listed entry was protected by tcp wrappers by the default installation
 and is currently protected this way too. This is a good thing!
+%inet100w
+The inetd services does not have logging enabled.  Adding logging to the
+inetd services will help identify potential mis-use of system system resources.
+
+To enable logging for the inetd service add the -l option in the inetd startup
+scripts.
+
+To enable logging for the xinetd services add the log_type, log_on_success 
+and/or log_on_failure to the /etc/xinetd.conf file.
 %xnet001e
 The script cannot find an xinetd configuration file in this system. This
 might happen if Xinetd is not installed of if the XINETDCONF configuration
@@ -202,7 +223,7 @@ files.
 The service is enabled in the Xinetd configuration file. You should verify
 that services enabled in the server are legitimate and consider disabling
 unused services in order to minimise exposure (and associated risk)
-%xinet005i
+%xnet005i
 The service is disabled in the Xinetd configuration file. This is usually
 a good thing, since this limits exposure of the server and prevents
 external attacks.
