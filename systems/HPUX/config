@@ -18,6 +18,8 @@
 # HPUX/config - 06/14/93
 # 06/21/2003 - jfs - Applied a patch provided by Ryan Bradetich to support
 #                    PWCK properly
+# 06/26/2003 - jfs - Exported command to check for trusted mode and 
+#                    also some variables which were defined but not exported.
 #
 #-----------------------------------------------------------------------------
 #
@@ -74,13 +76,18 @@ fi
 # refinement will handle this.
 #
 #DIFF=/bin/diff
+#
+# For check_trusted
+GETPRDEF=/usr/lbin/getprdef
+#
 MAILER=/usr/bin/mailx
 SENDMAILS="/usr/lib/sendmail"
 SENDMAILCF="/usr/lib/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ PASTE
-export BASENAME CHOWN CHMOD LN DIFF MAILER WC
+export BASENAME CHOWN CHMOD LN DIFF MAILER WC GETPRDEF
+export SENDMAILS SENDMAILCF
 #
 UNAME=/bin/uname
 GETHOSTNAME=/bin/hostname

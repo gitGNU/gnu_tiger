@@ -20,7 +20,8 @@
 # http://docs.hp.com/hpux/onlinedocs/B2355-90121/B2355-90121.html 
 #
 # 06/25/2003 rbradetich@uswest.net - Initial release
-# 06/26/2003 jfs - Added a TODO item
+# 06/26/2003 jfs - Added a TODO item, added a check to see if GETPRDEF is
+#                  available.
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -65,17 +66,19 @@ done
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
   haveallfiles BASEDIR WORKDIR || exit 1
+  haveallcmds GETPRDEF || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
 }
 #------------------------------------------------------------------------
 haveallfiles BASEDIR WORKDIR || exit 1
+haveallcmds GETPRDEF || exit 1
 
 echo
 echo "# Verifying trusted mode..."
 
-/usr/lbin/getprdef -r 2>&1 >/dev/null
+$GETPRDEF /usr/lbin/getprdef -r 2>&1 >/dev/null
 if [ $? -eq 4 ]; then
   message WARN trust001w "" "The system is not running in trusted mode."
 fi
