@@ -29,6 +29,9 @@
 # Linux/2/check - 06/26/2003 - jfs
 #       Commented out the first call to CHECK_PATCH since it is done
 #       only if running on Debian GNU/Linux
+# Linux/2/check - 08/28/2003 - jfs
+#       Removed Debian specific checks from header since they are
+#       already called for below
 #-----------------------------------------------------------------------------
 # TODO:
 #
@@ -91,16 +94,7 @@ SYSTEMDIR=$BASEDIR/systems/Linux/2
 # Javier Fernandez-Sanguino
 # 
 # Note: cannot echo TIMECMD since we lose the handle to the tmplog
-[ "$Tiger_Check_OS" != 'N' ] && {
-#  echo "`$TIMECMD`> Checking for correct OS version..."
-  $SYSTEMDIR/check_release 
-}
 
-# This only works for Debian at the moment (checked below)
-#[ "$Tiger_Check_PATCH" != 'N' ] && {
-#  echo "`$TIMECMD`> Checking for up-to-date patches..."
-#  $SYSTEMDIR/check_patches 
-#}
 
 [ "$Tiger_Check_SINGLE" != 'N' ] && {
 #  echo "`$TIMECMD`> Checking for single user mode password..."
