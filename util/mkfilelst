@@ -1,0 +1,159 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2003 Javier Fernandez-Sanguino
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+# mkfilelst - 08/12/2003 - jfs
+#
+# Takes a list of files from standard input and generates a list
+# of owner group suid sgid ur uw ux gr gw gx or ow ox lvl ownmid grpmid prmmid
+# Creates a configuration file for any given operating system and
+# release with all the standard configuration files. Can be used
+# as a second step to any port.
+#
+# ------------------------------------------------------------------------
+# TODO
+# - FILE_ACL does not yet use the sticky bit but it should also be checked
+#   for
+# ------------------------------------------------------------------------
+
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config -q
+
+. $BASEDIR/initdefs
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds CAT LS COLUMN || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+haveallcmds CAT LS COLUMN || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+echo "Working..."
+
+outfile="file_access_list.$OS-$REV-$ARCH"
+safe_temp $WORKDIR/facl.lst.$$
+$CAT $BASEDIR/util/facl.tmpl >>$WORKDIR/facl.lst.$$
+
+{
+echo "#"
+echo "# File access list file for $OS $REV $ARCH"
+echo "# generated `date`"
+echo "#"
+echo "#@DEST=$OS/$REV/$ARCH"
+echo "#@CONFIG=$OS/$REV"
+} >>$WORKDIR/facl.lst.$$
+
+check_glob ()
+# This function checks filenames which are really globs printing their
+# minimum common denominator regarding permissions, it is useful
+# to abstract information related to directories.
+# Note: This process takes quite some time, it could be improved somewhat.
+{
+    __globbed=$1
+    {
+     $LS -d $__globbed |
+     while read __file
+     do
+       getpermit $__file 
+     done  
+    } |
+    {
+      while read fn rowner rgroup rur ruw rux rgr rgw rgx ror row rox rsuid rsgid rstk
+      do
+	[ -z "$_owner" ] && _owner=$rowner; [ -z "$_group" ] && _group=$rgroup
+	[ -z "$_ur" ] && _ur=$rur; [ -z "$_uw" ] && _uw=$ruw; [ -z "$_ux" ] && _ux=$rux
+	[ -z "$_gr" ] && _gr=$rgr; [ -z "$_gw" ] && _gw=$rgw; [ -z "$_gx" ] && _gx=$rgx
+	[ -z "$_or" ] && _or=$ror; [ -z "$_ow" ] && _ow=$row; [ -z "$_ox" ] && _ox=$rox
+	[ -z "$_suid" ] && _suid=$rsuid; [ -z "$_sgid" ] && _sgid=$rsgid
+	[ -z "$_stk" ] && _stk=$rstk;
+	[ "$_owner" != "$rowner" ] && _owner="."
+	[ "$_group" != "$rgroup" ] && _group="."
+	[ "$_suid" != "$rsuid" ] && _suid="."
+	[ "$_sgid" != "$rsgid" ] && _sgid="."
+	[ "$_stk" != "$rstk" ] && _stk="."
+	[ "$_ur" != "$rur" ] && _ur="."
+	[ "$_uw" != "$ruw" ] && _uw="."
+	[ "$_ux" != "$rux" ] && _ux="."
+	[ "$_gr" != "$rgr" ] && _gr="."
+	[ "$_gw" != "$rgw" ] && _gw="."
+	[ "$_gx" != "$rgx" ] && _gx="."
+	[ "$_or" != "$ror" ] && _or="."
+	[ "$_ow" != "$row" ] && _ow="."
+	[ "$_ox" != "$rox" ] && _ox="."
+    done
+    printf "$__globbed $_owner $_group $_suid $_sgid $_ur $_uw $_ux $_gr $_gw $_gx $_or $_ow $_ox "
+   }
+}
+
+{
+echo "file owner group s g r w x r w x r w x LVL OwnID GrpID PermID"
+{
+while read file lvl ownmid grpmid prmmid
+do
+	glob=`$LS -d $file 2>/dev/null | wc -l`
+	if [ $glob -lt 2 ] ; then
+	   [ -f "$file" -o -d "$file" ] && \
+	   getpermit $file |
+           while read _file owner group ur uw ux gr gw gx or ow ox stk suid sgid stk
+	  do
+	    echo "$file $owner $group $suid $sgid $ur $uw $ux $gr $gw $gx $or $ow $ox $lvl $ownmid $grpmid $prmmid"
+	  done
+	else 
+	  check_glob "$file"
+          printf " $lvl $ownmid $grpmid $prmmid\n"
+	fi
+done
+} < $BASEDIR/util/facl.lst
+} | $COLUMN -t >>$WORKDIR/facl.lst.$$
+
+$CAT $WORKDIR/facl.lst.$$ >$outfile
+delete $WORKDIR/facl.lst.$$
+
+echo "File access list stored in $outfile."
+echo "These can be rather strict so consider reviewing them before deployment."
+
+exit 0
