@@ -3,6 +3,48 @@ August 23rd 2001) see the changelog.Debian file
 
 Changes (v 3.2) 
 ----------------
+(?? May 2003 - rc4)
+- Updated tigerrc files (-all and -dist). Removed stale file not being
+  used anymore
+- Added some references in README.sources
+- Makefile will install the C binaries after compiling (modified 'all' target)
+- Preliminary 'distribution' target in Makefile
+- Added yet more TODOs
+- Added a -q (quite) option to config to be used by tigercron (avoids cron
+  sending emails of nothing has changed, no need to redirect output)
+- Modified config to not output messages if -q is set (still need to
+  modify tiger to use it too)
+- Added checks that have been segmented and are new into tiger and tigerrc
+  (check_passwdformat, check_nisplus, check_apache, check_printcap, check_exrc,
+  check_sendmail, check_printcap)
+- Fix of Tiger_Check_ETCISSUE in tiger which made the check run always. 
+- Removed useless echo from tigercron
+- Included preliminary version of checks: aide_run, integrit_run (the last one
+  was in the tar.gz but not in CVS)
+- Fixed Steve's name in the realpath.c note
+- Added Debian's changes from the 'experimental' area including the changelog
+  and the change to the cron.d file
+- Created some scripts to check for issues in the source code, including script
+  dependancies.
+- Fixed missing or improper dependancies in a number of scripts:
+  check_accounts, check_aliases, check_anonftp, check_cron, check_devices,
+  check_embedded, check_exports, check_finddeleted, check_ftpusers, check_group,
+  check_inetd, check_issue, check_known, check_listeningproc, check_printcap,
+  check_rhosts, check_root, check_services, check_tcpd, check_umask, crack_run,
+  tripwire_run, and Linux's check.
+- Fixed PWCK behavior in check_passwd.
+- Added notes on behavior of check_sendmail, modified it to run only if 
+  SENDMAIL-CF exists.
+- Moved Debian-specific checks from check.tbl (would cause errors in non-Debian
+  Linux distributions) to 'check' and modified it so that they will only 
+  run if distribution=Debian
+- Changed Linux's check_listeningprocs Tigerinstalldir to '.'
+- Added MD5 to Linux' config
+- Fixed bug in gen_cron which makes it output to STDERR if any of the SPOOL
+  directories are empty
+- Fixed util/mksig to cread @DEST and @ORIG definitions, removed unnecessary
+  dependancies, and added missing commands.
+ 
 (23 April 2003 - rc3)
 - Applied Steve Grubb's patch to avoid a buffer overflow in realpath
 - Changed the behaviour of autoconf to avoid messing
