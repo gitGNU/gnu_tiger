@@ -17,6 +17,7 @@
 #
 # check_root - 05/30/99
 #
+# 08/28/2003 jfs Fixed syntax error
 # 08/14/2003 jfs Implemented some of ARSC changes done in Tara 3.0.3, 
 #            including a bugfix and checks for SSH PermitRootLogin's
 #            (although changes have been implemented to allow for OS
@@ -153,6 +154,7 @@ if [ -n "$rootssh" ]; then
     if [ "`echo $rootssh | $GREP -i nopwd`" ]; then
        message WARN root001w "" "root login without pwd allowed in $path"
     fi
+  fi
 fi
 }
 
