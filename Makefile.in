@@ -125,8 +125,8 @@ CONFIGFILES=./tigerrc \
 	./cronrc
 
 MISCFILES=./initdefs \
-	./check.tbl \
 	./syslist \
+	./check.d/README \
 	./util/difflogs \
 	./util/flogit \
 	./util/genmsgidx \
@@ -141,6 +141,7 @@ MISCFILES=./initdefs \
 	./util/sgrep
 
 MISCDIRS=./bin \
+	./check.d \
 	./doc \
 	./html \
 	./scripts/sub \

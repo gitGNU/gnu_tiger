@@ -69,7 +69,7 @@ execute commands which allow them to read and modify memory, boot
 alternate OS's etc.  See the 'eeprom' man page for information
 on securing the PROM monitor.
 %misc005w
-The listed security check file from a check.tbl file does not
+The listed security check file from a check.d/ file does not
 exist.
 %misc006w
 The NFS mount daemon is running with port checking disabled.

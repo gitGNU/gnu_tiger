@@ -15,8 +15,12 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# check_system - 06/15/93
-#
+# SunOS/5/5.8/check - 01/25/2004
+# 
+# Checks for SunOS 5.8 systems
+# 
+# SunOS/5/5.8/check - 01/25/2004 - rbrad
+#       New file:  Moved check_patches from check.tbl
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir='.'
@@ -55,66 +59,18 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallvars TESTEXEC || exit 1
-  haveallcmds GREP LS || exit 1
-  haveallfiles BASEDIR CONFIG_DIR SCRIPTDIR || exit 1
+  haveallfiles BASEDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
 }
 
 #------------------------------------------------------------------------
-echo
-echo "# Performing system specific checks..."
 
-haveallvars TESTEXEC || exit 1
-haveallcmds GREP LS || exit 1
-haveallfiles BASEDIR CONFIG_DIR SCRIPTDIR || exit 1
+haveallfiles BASEDIR || exit 1
 
-runtable()
-{
-  $GREP -v '^#' |
-  while read script
-  do
-    case "$script" in
-      /*)
-	if [ $TESTEXEC $script ]; then
-	  echo "# Running '$script'..."
-	  $script
-	else
-	  echo "--ERROR-- [misc005w] Can't find '$script'..."
-	fi
-        ;;
-      *)
-	if [ $TESTEXEC $CONFIG_DIR/$script ]; then
-	  echo "# Running '$CONFIG_DIR/$script'..."
-	  $CONFIG_DIR/$script
-	elif [ $TESTEXEC $SCRIPTDIR/$script ]; then
-	  echo "# Running '$SCRIPTDIR/$script'..."
-	  $SCRIPTDIR/$script
-	else
-	  echo "--ERROR-- [misc005w] Can't find $script'..."
-	fi
-        ;;
-    esac
-  done
+SYSTEMDIR=$BASEDIR/systems/SunOS/5/5.8
+
+[ "$Tiger_Check_PATCH" != 'N' ] && {
+  $SYSTEMDIR/check_patches
 }
-
-for dir in $OS/$REL/$REV/$ARCH $OS/$REL/$REV $OS/$REL $OS
-do
-  [ $TESTEXEC $BASEDIR/systems/$dir/check ] && {
-    echo "# Performing checks for $dir..."
-    $BASEDIR/systems/$dir/check
-  }
-done
-
-for dir in .. $OS/$REL/$REV/$ARCH $OS/$REL/$REV $OS/$REL $OS
-do
-  [ -d $BASEDIR/systems/$dir/check.d/ ] && {
-    $LS $BASEDIR/systems/$dir/check.d/ 2>/dev/null |
-    while read file
-    do
-       runtable < $BASEDIR/systems/$dir/check.d/$file
-    done
-  }
-done
