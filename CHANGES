@@ -32,6 +32,8 @@ Changes (v 3.2) 14 April 2003
 	. LS and AWK are no longer hardcoded in getpermit
 	. [security] 'installsig' has been modified so that the DESTDIR 
 	  in the file cannot be use to run local commands through 'eval'
+- Added missing HPUX config file
+- Added "new" signatures for Sun from TAMU
 
 New checks:
 - scripts/check_deleted: detects processes or services (servers) using 
