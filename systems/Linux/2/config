@@ -44,6 +44,7 @@
 #		of script permissions in initdefs will not work)
 # Linux/2/config - 11/19/2003 - jfs - Define REALPATH and SNEFRU to $BINDIR
 #	        and removed paths from findcmd() (patch from Ryan Bradetich)
+# Linux/2/config - 01/11/2004 - rbrad - Add OMNIBACK_CELLSERVER and NTPCONF
 #
 #-----------------------------------------------------------------------------
  
@@ -249,6 +250,13 @@ then
 fi
 # TODO: Check if all distributions use this configuration file
 
+# For omniback server configuration
+OMNIBACK_CELLSERVER="/usr/omni/config/cell/cell_server"
+export OMNIBACK_CELLSERVER
+
+# Location of the NTPCONF file
+NTPCONF=/etc/ntp.conf
+export NTPCONF
 
 # For Yellow Pages services
 YPCAT=`findcmd ypcat`

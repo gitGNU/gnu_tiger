@@ -302,10 +302,10 @@ aidepid=
 
 [ "$Tiger_Check_INETD" != 'N' ] && {
   [ -n "$INETDFILE" ] && [ -f "$INETDFILE" ] && {
-	echo "`$TIMECMD`> Checking 'inetd' configuration..."
-        run_script check_inetd >> $logtmp
-        echo "`$TIMECMD`> Checking 'tcpd' configuration..."
-        run_script check_tcpd >> $logtmp
+    echo "`$TIMECMD`> Checking 'inetd' configuration..."
+    run_script check_inetd >> $logtmp
+    echo "`$TIMECMD`> Checking 'tcpd' configuration..."
+    run_script check_tcpd >> $logtmp
   }
   [ -n "$XINETDCONF" ] && [ -f "$XINETDCONF" ] && {
     echo "`$TIMECMD`> Checking 'xinetd' configuration..."
@@ -431,6 +431,16 @@ aidepid=
 [ "$Tiger_Check_FTPUSERS" != 'N' ] && {
   echo "`$TIMECMD`> Checking ftpusers configuration..."
   run_script check_ftpusers >> $logtmp
+}
+
+[ "$Tiger_Check_OMNIBACK" != 'N' ] && {
+  echo "`$TIMECMD`> Checking omniback configuration..."
+  run_script check_omniback >> $logtmp
+}
+
+[ "$Tiger_Check_NTP" != 'N' ] && {
+  echo "`$TIMECMD`> Checking NTP configuration..."
+  run_script check_ntp >> $logtmp
 }
 
 #

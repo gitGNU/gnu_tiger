@@ -19,6 +19,7 @@
 # 11/18/2003 - jfs - Add EXPAND (patch from  Ryan Bradetich)
 # 11/19/2003 - jfs - Add REALPATH and SNEFRU (patch from  Ryan Bradetich)
 # 01/07/2004 - rbrad - Add NETSTAT
+# 01/11/2004 - rbrad - Add OMNIBACK_CELLSERVER and NTPCONF
 #
 #-----------------------------------------------------------------------------
 #
@@ -76,6 +77,15 @@ NETSTAT=/usr/bin/netstat
 MAILER=/usr/bin/mailx
 SENDMAILS="/usr/lib/sendmail"
 SENDMAILCF="/usr/lib/sendmail.cf"
+
+# For omniback server configuration
+OMNIBACK_CELLSERVER="/etc/opt/omni/cell/cell_server"
+export OMNIBACK_CELLSERVER
+
+# Location of the NTPCONF file
+NTPCONF=/etc/ntp.conf
+export NTPCONF
+
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL HEAD MV TR JOIN GROUPSS FILECMD UNIQ PASTE

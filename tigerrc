@@ -46,6 +46,9 @@ Tiger_Check_PRINTCAP=Y		# Fast
 Tiger_Check_EXRC=N		# Depends on the size of the filesystem
 Tiger_Check_ROOTKIT=Y		# Slow if chkrootkit is available
 Tiger_Check_FTPUSERS=Y		# Fast
+Tiger_Check_OMNIBACK=N  	# Fast
+Tiger_Check_NTP=Y 		# Fast
+
 # OS specific checks
 # You can comment them if they are not appropiate to your system but
 # they will not run if you are running a different OS

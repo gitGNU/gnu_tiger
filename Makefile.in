@@ -89,6 +89,8 @@ SCRIPTS=./scripts/check_accounts \
 	./scripts/check_netrc \
 	./scripts/check_network \
 	./scripts/check_nisplus \
+	./scripts/check_ntp \
+	./scripts/check_omniback \
 	./scripts/check_passwd \
 	./scripts/check_passwdformat \
 	./scripts/check_path \
