@@ -22,7 +22,7 @@
 #
 # check_inetd - 04/20/99
 #     Portions corrected y Advanced Research Corporation (R)
-# check_inetd - 12/13/01 - jfs
+# check_inetd - 12/13/2001 - jfs
 #     Fixes to avoid false positives 
 # check_inetd - 05/27/2002 - jfs
 #     Changed TigerInstallDir to .
@@ -33,6 +33,19 @@
 # check_inetd - 05/26/2003 - jfs
 #     Fixed calls to test (worked in Linux but not in other OS due
 #     to -n not being implicit)
+# check_inetd - 08/08/2003 - jfs
+#     Safe temporary file creation.
+# check_inetd - 08/09/2003 - jfs
+#     Re added RM to dependancies since it's used by delete.
+# check_inetd - 08/11/2003 - jfs
+#     Added checks for the file permissions of the INETDFILE
+# check_inetd - 08/13/2003 - jfs
+#     Added one of the fixes done by ARSC which were lost in the merge
+# check_inetd - 08/14/2003 - jfs Added OUTPUTMETHOD to dependancies.
+#     Added checks from ARSC's tara 3.0.3 for more services 
+#     (recommending the use of encryption) and implemented more checks
+#     for other problematic services/servers. Also checked 019 from FAIL
+#     to ALERT
 #     
 # TODO
 # - This script needs to be improved to warn for some of the 'chatty' issues
@@ -72,7 +85,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT UNIQ || exit 1
+  haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT UNIQ RM OUTPUTMETHOD || exit 1
   haveallfiles BASEDIR WORKDIR INETDFILE || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -83,15 +96,14 @@ done
 echo
 echo "# Performing check of 'inetd'..."
 
-haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT UNIQ || exit 1
+haveallcmds SED AWK CAT GEN_INETD_SETS GREP JOIN LS SORT UNIQ RM OUTPUTMETHOD || exit 1
 haveallfiles BASEDIR WORKDIR INETDFILE || exit 1
 
 saveifs=$IFS
 
 tmpinetd=$WORKDIR/sec.$$in
-delete $tmpinetd
-
-trap 'delete $tmpinetd; exit 1' 1 2 3 15
+safe_temp "$tmpinetd" "$WORKDIR/cinetd.$$" "$WORKDIR/inet1.$$"
+trap 'delete $tmpinetd $WORKDIR/cinetd.$$ $WORKDIR/inet1.$$; exit 1' 1 2 3 15
 
 checkinetd ()
 {
@@ -118,14 +130,37 @@ checkinetd ()
   $GREP -v '^#' $infile | grep -v '^$' |
   while read currservice s p t user currbinary parm1 parms
   do
+    [ -z "$currservice" ] && continue
     if [ "$currservice" = 'rexd' ]; then
-      message FAIL inet006f "" "'rexd' service is enabled."
+      message FAIL inet006f "" "'rexd' service is enabled, consider disabling it."
     elif [ "$currservice" = 'sysstat' ]; then
-      message WARN inet012w "" "'sysstat' service is enabled."
+      message WARN inet012w "" "'sysstat' service is enabled, consider disabling it."
     elif [ "$currservice" = 'netstat' ]; then
-      message WARN inet013w "" "'netstat' service is enabled."
+      message WARN inet013w "" "'netstat' service is enabled, consider disabling it."
+    elif [ "$currservice" = 'telnet' ]; then
+      message WARN inet098w "" "The 'telnet' server is enabled, consider using ssh instead."
+    elif [ "$currservice" = 'ftp' ]; then
+      message WARN inet098w "" "The 'ftp' server is enabled, consider using ssh/sftp instead."
+    elif [ "$currservice" = 'login' ]; then
+      message WARN inet098w "" "The 'login' server is enabled, consider using ssh/sftp instead."
+    elif [ "$currservice" = 'shell' ]; then
+      message WARN inet098w "" "The 'rsh' server is enabled, consider using ssh/sftp instead."
+    elif [ "$currservice" = 'tftp' ]; then
+      message WARN inet022w "" "The 'tftpd' server is enabled, consider disabling it"
+    elif [ "$currservice" = 'finger' ]; then
+      message WARN inet023w "" "The 'finger' server is enabled, consider disabling it"
+    elif [ "$currservice" = 'rusers' ]; then
+      message WARN inet024w "" "The 'rusers' server is enabled, consider disabling it"
+    elif [ "$currservice" = 'echo' -a "$p" = 'udp' ]; then
+      message WARN inet025w "" "The 'echo' udp server is enabled, consider disabling it"
+    elif [ "$currservice" = 'chargen' -a "$p" = 'udp' ]; then
+      message WARN inet025w "" "The 'chargen' udp server is enabled, consider disabling it"
     fi
-    
+
+    if [ "$t" = "nowait" -a "$currbinary" != "$tcpdpath" ]; then
+      message WARN inet099w "" "'$currservice' is not protected by tcp wrappers."
+    fi
+
     [ "$currbinary" = 'internal' ] && continue
 
     if [ -n "`echo $currbinary | $GREP '?'`" ] ; then
@@ -181,7 +216,7 @@ checkinetd ()
     if [ -n "`echo $exppath | $GREP '?'`" ]; then
      exppath=`echo $exppath | $SED -e "s/\?//"`
     fi
-    if [ "$currpath" != "$exppath" ]; then
+    if [ "$currpath" != "$exppath" -a "$currpath" != "$tcpdpath" ]; then
 	message WARN inet005w "" "Service $service is using $currpath instead of $exppath."
     fi
   done < $WORKDIR/cinetd.$$
@@ -190,8 +225,12 @@ checkinetd ()
 
   $AWK '$6 != "internal" {print}' $infile |
   $SORT > $WORKDIR/inet1.$$
+# TODO: Consider this change done by ARSC:
+#   $SORT +5 -6 > $WORKDIR/inet1.$$
   $AWK '$6 != "internal" {print}' $INETDFILE |
   $SORT |
+# TODO: Consider this change done by ARSC:
+#   $SORT +5 -6 |
   $JOIN -j 1 -o 1.1 2.1 1.6 - $WORKDIR/inet1.$$ |
   while read expservice currservice prog
   do
@@ -222,12 +261,43 @@ checkinetd ()
 		message INFO inet011i "$x" "Locally added entry \`$service' in inetd.conf:"
 	fi
   done
+# TODO: ARSC's tara uses the following, consider using it since
+# it looks (is?) more efficient
+#  $AWK '{printf("%s %s\n",$1,$3)}' $infile | sort> $WORKDIR/f1.$$
+#  $AWK '{printf("%s %s\n",$1,$3)}' $INETDFILE | $GREP -v "^#" | sort |
+#  $COMM -23 $WORKDIR/f1.$$ - |
+#  while read service protocol
+#  do
+#    if [ -n "$service" ]; then
+#    message INFO inet011i "" "Locally added entry \`$service'in inetd.conf:"  
+#    fi
+#  done
+#
+
 }
 
 realpath="$REALPATH -d"
 
 [ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath="echo"
 
+# Check the permissions in the /etc/inetd.conf
+# TODO: Should the location of the inetd be hardcoded? 
+# (it is in the gen_inetd programs)
+getpermit /etc/inetd.conf |
+while read _namefile _owner _group ur uw ux gr gw gx or ow ox suid sgid stk
+do
+     [ "$ur$uw$ux$gr$gw$gx$or$ow$ox" != '110000000' -a "$_group" != "root" ] && \
+         message WARN inet017w "" "The $_namefile permissions are not 600."
+     [ "$gw" != '0' ] && \
+         message WARN inet018w "" "The $_namefile file can be written by any user of the group $_group."
+     [ "$ow" != '0' ] && \
+         message ALERT inet019a "" "The $_namefile file can be written by any user."
+     [ "$_owner" != 'root' ] && \
+         message FAIL inet020f "" "The $_namefile file is not owned by root (owned by $_owner)."
+done
+
+
+# Check the information in the INETDFILE
 {
 
   haveallcmds GEN_INETD_SETS UNIQ &&

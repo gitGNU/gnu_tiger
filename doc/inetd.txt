@@ -26,11 +26,19 @@ be checked, and if anything unusual is found, the system should
 be checked for other signs of intrusion.
 %inet006f
 The 'rexd' service is very insecure and should never be enabled.
+Known rexd servers have little or no security in their design
+or implementation. Intruders can exploit this service to execute 
+commands as any user.
+
 It should be disabled immediately by editing the inetd.conf file
 and removing the 'rexd' entry, and sending a HUP signal to the
 'inetd' process.
 
 For AIX systems, CERT Advisory CA-92:05 is applicable.
+
+Notice that some intruders may turn on a service
+that you previously thought you had turned off, or replace
+the inetd program with a Trojan horse program.
 %inet007w
 'inetd' is using the indicated executable for a port other than
 what would normally be expected for this port.  This may indicate
@@ -53,9 +61,17 @@ The listed entry is a local addition to the `inetd.conf' file.
 This should be checked to see if it is a valid addition.  If it
 is not, it should be removed.
 %inet012w
-sysstat enabled
+The 'sysstat' service is enabled, this system provides a considerable
+number of information to remote anonymous users.
+Consider disabling it by editing the inetd.conf file,
+removing the 'systat' entry, and sending a HUP signal to the
+'inetd' process.
 %inet013w
-netstat enabled
+The 'netstat' service is enabled, this system provides a considerable
+number of information to remote anonymous users.
+Consider disabling it by editing the inetd.conf file,
+removing the 'netstat' entry, and sending a HUP signal to the
+'inetd' process.
 %inet014i
 The listed entry was protected by tcp wrappers by the default installation
 and is currently protected this way too. This is a good thing!
@@ -68,3 +84,100 @@ The listed entry was protected by tcp wrappers by the systema but has,
 for some unknown reason, changed to no longer be protected by them. Make
 sure that the service is secured since, if not using tcp wrappers, 
 access control for it might be disabled.
+%inet017w
+The inetd configuration file permissions is not 600. This is the recommended
+setting by CERT's 'UNIX Security Checklist v2.0'. You should check that the
+file permissions on that file are correct. 
+If an attacker can access the file due to lack of file permissions it might
+enable him to add new lines to the file which would, when inetd is restarted,
+allow him to introduce backdoors in the system.
+%inet018w
+The inetd configuration file can be written by any user of a given group since
+the file permissions ensure this. If the group is not an administrative group
+you should consider changing its permissions to 600.
+If the group includes untrusted users, one of them could 
+add new lines to the file which would, when inetd is restarted,
+allow him to introduce backdoors in the system.
+%inet019a
+The inetd configuration file can be written by any user of the system.
+This makes it possible for any user to add new lines to the file which
+would, when inetd is restarted, allow him to introduce backdoors in the
+system.
+You should review your inetd configuration file to determine if there are
+suspicious services enabled since this might indicate that an intrusion
+has taken placed on the system. Also change the file permissions to restrict
+this misuse.
+%inet020f
+The inetd configuration file is not owned by root which is usually the owner
+of this file in most systems. This might indicate that the system has
+been affected by an intrusion and permissions of both the file and 
+the directory it is stored in should be reviewed. Also review the content
+of this file in order to check if there are suspicious services enabled 
+since this might indicate that an intrusion has taken place.
+%inet021f
+TCP wrappers do not seem to be installed in the system since the 'tcpd' program
+is not found in the system. Tcp wrappers allows you to monitor and filter 
+incoming requests for common network services (through the use of the
+hosts.allow and hosts.deny files) and can be used to 'wrap' services either
+running through the inetd or in rc.d files.
+It is available via anonymous FTP from: ftp://ftp.porcupine.org/pub/security/
+%inet022w
+The tftpd service is enabled, disable tftp if not needed by
+commenting it out from the file /etc/inetd.conf and restarting the 
+inetd process. 
+
+If the tftpd service is required, create a separate partition to 
+store the files to be served by tftp and limit the tftp daemon 
+to the directory where this partition is mounted. Also make sure
+that the files in the tftpd area are not writable.
+
+If it is not required, disable it by editing the inetd.conf file, 
+removing the 'tftp' entry, and sending a HUP signal to the 'inetd' process.
+%inet023w
+The 'finger' service is enabled, this system provides a considerable
+number of information to remote anonymous users. An
+intruder can obtain quite a number of information about a remote host.
+Also, if improperly configured it can be used to create a 'finger war'
+DoS loop and can be used to do indirect finger requests 
+(that is contact remote servers when a remote user sends a request
+for  'user@other_host@your_host')
+
+You should make sure that you have an up-to-date version of fingerd. 
+Do not use a version of fingerd that is older than 16 October, 2000. 
+For more information consult the AusCERT ESB available at
+ftp://ftp.auscert.org.au/pub/auscert/ESB/ESB-2000.286
+
+Consider disabling it unless it is considered essentially
+by editing the inetd.conf file, removing the 'finger' entry,
+and sending a HUP signal to the 'inetd' process.
+
+If you cannot remove finger consider reducing the content by replacing
+it with a version which only offers restricted information.
+%inet024w
+The 'rusers' service is enabled, this system provides a considerable
+number of information to remote anonymous users.
+
+Consider disabling it by editing the inetd.conf file,
+removing the 'rusers' entry, and sending a HUP signal to the
+'inetd' process.
+%inet025w
+The 'echo' and 'chargen' UDP servers are potentially problematic
+since they can be used to setup ping-pong DoS attacks targeted at
+other systems by means of IP address spoofing.
+
+Consider disabling it by editing the inetd.conf file,
+removing the 'echo' and/or 'chargen' entries, and sending a HUP signal to the
+'inetd' process.
+%inet098w
+Services that pass sensitive information (including passwords) should
+be replaced with the family of programs that comprise secure shell (ssh)
+which use strong encryption based on public-key criptography.
+
+You can use the freely-available OpenSSH implementation at 
+http://www.openssh.org
+%inet099w
+The indicated service is not protected by tcp wrappers or xinetd access
+control. The use of this facility is encouraged to limit access and to
+improve logging.
+The listed entry was protected by tcp wrappers by the default installation
+and is currently protected this way too. This is a good thing!
