@@ -198,7 +198,7 @@ export TigerCheckEmbedded
     run_script find_files >> $logtmp
   else
     echo "`$TIMECMD`> Starting file systems scans in background..."
-    $SCRIPTDIR/find_files > $WORKDIR/fsscan.log$$ &
+    $SCRIPTDIR/find_files > $WORKDIR/fsscan.log$$ 2>/dev/null &
     fspid=$!
   fi
 }
