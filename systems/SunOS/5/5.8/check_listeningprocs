@@ -23,6 +23,8 @@
 # check_listeningprocs - 14 April 2003
 #    Added support for Solaris
 #
+# 04/21/2003 - jfs - REmoved useless echo
+#
 # TODO:
 # - Use NETSTAT together with this program, might be useful to simplify
 #   it.
@@ -131,7 +133,6 @@ do
 	do
 		name=`$PS -p $pid -o fname |$GREP -v COMMAND`
 		user=`$PS -p $pid -o user |$GREP -v COMMAND`
-		echo ports
 		echo "$name $user AF_INET 0.0.0.0:$port" >> $WORKDIR/procs.$$
 	done
 done
