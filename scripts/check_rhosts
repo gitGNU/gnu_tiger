@@ -17,12 +17,18 @@
 #
 # check_rhosts - 06/14/93
 #
+# Checks rhosts files in order to see if user's configuration leaves the
+# system open to attack.
+#
+# 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
+# 08/12/2003 jfs Added check for existance, permissions and owner of
+#                rhosts files (permissions are redundant, however)
+# 08/08/2003 jfs Improved temporary file creation.
+# 07/25/2002 jfs Added a sanity check for password files
 # 04/28/93 dls  Added '-L' option to 'ls' to get the permissions from the
 #               file instead of the symbolic link.
 #
 #               Complain if the .rhosts is a symbolic link or directory.
-#
-# 07/25/2002 jfs Added a sanity check for password files
 #
 #-----------------------------------------------------------------------------
 #
@@ -62,7 +68,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT EXPR GEN_PASSWD_SETS JOIN LS RM SED || exit 1
+  haveallcmds AWK CAT EXPR GEN_PASSWD_SETS JOIN LS RM SED OUTPUTMETHOD || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME || exit 1
   
@@ -74,8 +80,11 @@ done
 echo
 echo "# Performing check of /etc/hosts.equiv and .rhosts files..."
 
-haveallcmds AWK CAT EXPR GEN_PASSWD_SETS JOIN LS RM SED || exit 1
+haveallcmds AWK CAT EXPR GEN_PASSWD_SETS JOIN LS RM SED OUTPUTMETHOD || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
+
+safe_temp "$WORKDIR/home.hosts.$$" "$WORKDIR/pass.list.$$"
+trap 'delete $WORKDIR/home.hosts.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
 
 check_entry()
 {
@@ -180,8 +189,9 @@ process_passwd()
 {
   while read user homedir host
   do
-    [ "$homedir" = '/' -a "$user" != 'root' ] && continue
-    
+# Root is no longer skipped since it's rhosts file is also sensible
+#   [ "$homedir" = '/' -a "$user" != 'root' ] && continue
+
     [ "$host" = "$HOSTNAME" ] && {
       if [ $TESTLINK $homedir/.rhosts ]; then
 	message WARN rcmd007w "" "User $user's .rhosts file is a symbolic link:"
@@ -208,6 +218,29 @@ process_passwd()
 	fi
       fi
     }
+  done
+}
+
+file_rhosts ()
+{
+  while read user userid homedir
+  do
+    if [ -e $homedir/.rhosts ]
+    then
+            if [ "root" != "$user" ] ; then
+               message WARN rcmd016w "" "User $user has a .rhosts file"
+	    else
+               message ALERT rcmd017a "" "Root has a .rhosts file"
+	    fi
+    	    fileid=`$LS -anl $homedir/.rhosts  | $AWK '{print $3}'`
+# BUG: If no fileid is returned then there must be an error above
+# (notice we use userids instead of names here just like in the spool checks)
+	    [ -n "$fileid" ] && {
+	    fowner=`$AWK -F: '$3 ~ /'$fileid'$/ { print $1 }' $passwd_set | $HEAD -1`
+	    [ $userid -ne $fileid ] && \
+            message ALERT rcmd017a "" "User $user's .rhosts file does not belong to him, belongs to the user $fowner (user id $fileid)"
+	    }
+    fi
   done
 }
 
@@ -304,10 +337,12 @@ $entry";;
   
     $AWK -F: '{print $1, $6}' $passwd_set |
     $BASEDIR/util/${GETFSHOST:=getfs-std} > $WORKDIR/home.hosts.$$
-
     $AWK -F: '{ printf("%s %s\n", $1, $6); }' $passwd_set |
     $JOIN -o 1.1 1.2 2.3 - $WORKDIR/home.hosts.$$ |
     process_passwd
+
+    $AWK -F: '{print $1, $3, $6}' $passwd_set |
+    file_rhosts
 
     [ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
     delete $WORKDIR/home.hosts.$$
