@@ -19,13 +19,15 @@
 #		grub.conf and lilo.conf
 # 10.26.2001
 # Paul Telford <paul_telford@hp.com>
-# 04.25.2002
-# Javier Fernandez-Sanguino <jfs@computer.org>
+# 04.25.2002  Javier Fernandez-Sanguino <jfs@computer.org>
 # Expanded to check also if there are passwords in the boot loader
-#	
+# 07/25/2002 jfs       
+# Changed TigerInstallDir to .
+# Changed -e to -r and 'find' to 'access' in the error msg.
+#
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.
@@ -72,7 +74,7 @@ echo "# Checking boot loader file permissions..."
 found="N"
 
 file=/etc/lilo.conf
-if [ -e $file ]
+if [ -r $file ]
 then
 
 	found="Y"
@@ -103,7 +105,7 @@ then
 fi
 
 file=/boot/grub/grub.conf
-if [ -e $file ]
+if [ -r $file ]
 then
 
 	found="Y"
@@ -128,5 +130,5 @@ then
 fi
 
 [ "$found" != 'Y' ] && {
-	message WARN boot03 "" "Could not find lilo.conf or grub.conf"
+	message WARN boot03 "" "Could not access lilo.conf or grub.conf"
 }

@@ -87,6 +87,8 @@ CHOWN=`findcmd chown`
 LN=`findcmd ln`
 PASTE=`findcmd paste`
 DIFF=`findcmd diff`
+ID=`findcmd id`
+EXPAND=`findcmd expand`
 # We use sendmail better than mail since we use it to
 # send appropiate headers
 MAILER=`findcmd sendmail`
@@ -122,7 +124,7 @@ export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPC FILECMD UNIQ BASENAME HEAD
 export CHMOD CHOWN LN PASTE DPKG LSOF NETSTAT MD5SUM CUT 
 export SNEFRU REALPATH PWCK GRPCK CHAGE MESG DIFF WC
-export PWD AUTORPM APT
+export PWD AUTORPM APT ID EXPAND
 
 
 UNAME=`findcmd uname`

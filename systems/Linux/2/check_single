@@ -19,9 +19,12 @@
 # 		indicate a password requirement on single user mode
 # 10.26.2001
 # Paul Telford <paul_telford@hp.com>
+# 07/25/2002 jfs      Changed -e lilo.conf to -r lilo.conf
+#                     Changed TigerInstallDir to .
+#
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.
@@ -69,7 +72,7 @@ haveallfiles BASEDIR WORKDIR || exit 1
 
 # if we find a boot-loader password, great.  If not, look for single-user mode password
 
-if [ -e /etc/lilo.conf ]
+if [ -r /etc/lilo.conf ]
 then
 	$GREP "password=" /etc/lilo.conf 1> /dev/null
 	if [ $? -eq 0 ]

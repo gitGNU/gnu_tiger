@@ -17,10 +17,11 @@
 #     Please see the file COPYING for the complete copyright notice.
 #
 # SunOS/4/check_cron - 06/14/93
+# Linux/2/check_cron - 08/12/2002
 #
 #-----------------------------------------------------------------------------
 #
-if [ -f "/var/spool/cron/crontabs/$1" ]; then
+if [ -f "/var/spool/cron/$1" ]; then
   echo "YES"
 else
   echo "NO"

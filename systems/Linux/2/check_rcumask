@@ -17,6 +17,9 @@
 #
 # check_rcumask - Sat May 18 17:50:00 CEST 2002
 #
+# check_rcumask - 07/25/2002 - jfs
+#       Changed TigerInstallDir to .
+#
 # Checks if there is a umask setting for the init.d scripts (rc) so that
 # these create files with a proper mode (644).
 # Done based on scripts/check_logfiles (since the code to look for umasks
@@ -25,7 +28,7 @@
 #
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.

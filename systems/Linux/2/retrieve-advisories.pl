@@ -1,6 +1,6 @@
 #!/usr/bin/perl -n
 # Run with:
-# find . -name "*data" -exec cat \{\} \; | perl retrieve-advisories.pl >deb_advisories
+# find . -name "*data" -exec cat \{\} \; | perl retrieve-advisories.pl >debian_advisories
 # on the webml sources of Debian WWW to retrieve information
 # on all advisories and output a database for use on Tiger checks.
 # Writen for Debian's Tiger by Javier Fernández-Sanguino Peña

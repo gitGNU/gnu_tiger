@@ -71,7 +71,7 @@ haveallcmds DPKG CAT HEAD CUT GREP UNAME SED || exit 1
 
 
 currentarch=`$UNAME -m | $SED -e "s/i.86/i386/"`
-$CAT $CONFIG_DIR/deb_advisories | {
+[ -f $CONFIG_DIR/debian_advisories ] && $CAT $CONFIG_DIR/debian_advisories | {
 	while read package version arch advisory date 
 	do
 # TODO: only check if arch is the same otherwise we are checking more

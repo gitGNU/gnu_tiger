@@ -19,9 +19,12 @@
 # 		indicate that users can reboot the system
 # 04.25.2001
 # Javier Fernandez-Sanguino <jfs@computer.org>
+#
+# 07/25/2002 - jfs #       Changed TigerInstallDir to .
+#
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.

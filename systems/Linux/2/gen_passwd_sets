@@ -87,6 +87,8 @@ do
     files|compat)
 	if [ -f /etc/shadow ] 
 	    then
+		if [ -r /etc/shadow ] 
+		then
 		$SORT /etc/passwd > $WORKDIR/p.$$
 		$SORT /etc/shadow |
 		$JOIN -t: -e " " -o 2.1 1.2 2.3 2.4 2.5 2.6 2.7 - $WORKDIR/p.$$ |
@@ -103,6 +105,10 @@ do
 		    echo $WORKDIR/etc_passwd.$$ >> $outfile
 		}
 		$RM -f $WORKDIR/p.$$
+		else 
+		      echo "--FAIL-- [run001e] The file /etc/shadow is available but not readable by the user running Tiger."
+		fi
+
 	    else
 		$CAT /etc/passwd > $WORKDIR/etc_passwd.$$
 		echo "/etc/passwd" > $WORKDIR/etc_passwd.$$.src

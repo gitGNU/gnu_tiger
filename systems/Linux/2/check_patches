@@ -18,9 +18,14 @@
 # check_patches: uses autorpm or apt-get to verify if software is up-to-date
 # 10.26.2001
 # Paul Telford <paul_telford@hp.com>
+#
+# 25/07/2002 jfs Fixed so it suggests that there might be errors if running
+#                as a non-root user.
+#                Changed TigerInstallDir to .
+#
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.
@@ -66,7 +71,7 @@ echo "# Checking for up-to-date patches..."
 
 haveallcmds AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN || exit 1
 haveallcmds LS RM SORT TAIL UNIQ  || exit 1
-# How can we check fo one command *or* other ?? (jfs)
+# TODO: How can we check fo one command *or* other ?? (jfs)
 #havelallcmds APT || haveallcmds AUTORPM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
@@ -91,6 +96,8 @@ then
 elif [ -n "$APT" -a -x "$APT" ]
 then
 	tmplog="$WORKDIR/apt-get.out.tmp.$$"
+	[ "$UID" -gt 0  ] && message WARN ptch05e "" "This script is not running as super-user, it will probably be unable to update the package database from it's sources."
+
        	$APT update 1> /dev/null
        	$APT -s upgrade | $GREP "^Inst" | awk '{print $2}' > $tmplog
 	if [ -s $tmplog ]

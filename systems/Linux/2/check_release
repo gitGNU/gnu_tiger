@@ -18,9 +18,11 @@
 # check_release: verifies that system meets minimum release requirements
 # 10.26.2001
 # Paul Telford <paul_telford@hp.com>
+# 07/25/2002 jfs       Changed TigerInstallDir to .
+#
 #-----------------------------------------------------------------------------
 #
-TigerInstallDir="/usr/lib/tiger"
+TigerInstallDir='.'
 
 #
 # Set default base directory.
