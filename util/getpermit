@@ -19,11 +19,12 @@
 #
 # 04/28/93 dls  Added '-L' to 'ls' to get permissions from file instead of
 #               symbolic link.
+# 10/28/2002 jfs LS and AWK are no longer hardcoded
 #
 #-----------------------------------------------------------------------------
 #
-LS=/bin/ls
-AWK=/bin/awk
+LS=`which ls`
+AWK=`which awk`
 LSLINK=-L
 
 
@@ -67,9 +68,3 @@ lgetpermit()
 lgetpermit $1
 #
 exit 0
-#
-exit 0
-#
-exit 0
-
-
