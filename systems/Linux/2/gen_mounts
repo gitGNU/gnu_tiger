@@ -20,6 +20,8 @@
 # Updated by Advanced Research Corporation (R)
 # Linux/2/gen_mounts - 11/19/2003 - Added ext3 and reiserfs as valid 
 #     local filesystems (patch from Ryan Bradetich), also added xfs and jfs.
+# Linux/2/gen_mounts - 03/21/2005 - Warn if the filesystem is not recognised
+#     this is a fix for Tiger bug #7093 
 #
 #-----------------------------------------------------------------------------
 #
@@ -64,7 +66,7 @@ ronly()
 
 localfs()
 {
-  LOCAL=1
+  LOCAL=2
   [ "$1" = "ext2" ] && LOCAL=0
   [ "$1" = "ext3" ] && LOCAL=0
   [ "$1" = "reiserfs" ] && LOCAL=0
@@ -74,7 +76,10 @@ localfs()
   [ "$1" = "xiafs" ] && LOCAL=0
   [ "$1" = "ext" ] && LOCAL=0
   [ "$1" = "msdos" ] && LOCAL=1
-
+  if [ "$LOCAL" -eq 2 ] ; then
+	message CONFIG init010c "" "Filesystem $1 used by $2 is not recognised as a local filesystem"
+	LOCAL=1
+  fi
   return $LOCAL
 }
 
@@ -87,7 +92,7 @@ while read fs o mtpoint t fstype opts
 do
   PRINT=1
   [ "$CHKRO" = "rw" ] && { ronly "$opts" && PRINT=0; }
-  [ "$LOCAL_ONLY" = "local" ] && { localfs "$fstype" || PRINT=0; }
+  [ "$LOCAL_ONLY" = "local" ] && { localfs "$fstype" "$fs" || PRINT=0; }
   [ "$PRINT" = "1" ] && {
     dir=`dirname $fs`
     file=`$BASENAME $fs`
