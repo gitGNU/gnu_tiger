@@ -84,7 +84,7 @@ Changes (v 3.2)
   run/install Tiger
 - Updated the README.linux file
 - Updated the README.hostids file
-- Wrote a new READMe.ignore file explaining the new mechanism
+- Wrote a new README.ignore file explaining the new mechanism
 - Fixed configuration so that the -f option is not used on non-Linux systems
   ('hostname -f' is not an option available in some of them and this breaks
     Solaris!)
