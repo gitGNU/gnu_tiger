@@ -16,6 +16,7 @@
 #
 # initdefs - 06/14/93
 #
+# initdefs - 09/20/2003 - jfs - Fixed have_allvars since it was not working
 # initdefs - 09/19/2003 - jfs - Different error messages in have_allvars.
 #            Applied patch from Ryan Bradetich to fix UID -> UUID
 # initdefs - 08/13/2003 - jfs - Run_script now returns error number
@@ -80,6 +81,8 @@ haveallvars()
   for __var
   do
     eval __val=\$$__var
+    # Note: Probably checking if __val = "$" would be sufficient here
+    # too.
     echo ${__var:?error} 2>&1 >/dev/null
     [ $? -ne 0 ] || {
       echo "--ERROR-- [init007e] Don't have required variable $__var."
