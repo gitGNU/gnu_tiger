@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -70,7 +70,8 @@ echo "# Checking for single user-mode password..."
 haveallcmds AWK CAT COMM GEN_INETD_SETS GEN_SERVICES_SETS GREP JOIN LS RM SORT TAIL UNIQ || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
-# if we find a boot-loader password, great.  If not, look for single-user mode password
+# if we find a boot-loader password, great. 
+# If not, look for single-user mode password in inittab 
 
 if [ -r /etc/lilo.conf ]
 then

@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -17,8 +17,8 @@
 #
 # SunOS/4/check - 06/14/93
 # This file can be used as a template file for creating system checks
-# In any case, it is used by scripts/check_system to run all the checks for a given
-# system
+# In any case, it is used by scripts/check_system to run all the checks for a 
+# given system.
 #
 #-----------------------------------------------------------------------------
 #
