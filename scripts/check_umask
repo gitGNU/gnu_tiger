@@ -21,7 +21,8 @@
 # separated from check_logfiles since it's a broader check. The command
 # requirements have been modified to adjust to what it's really needed.
 #
-# 10/19/2033 - jfs - Applied patch from Ryan Bradetich adding 077 umask
+# 01/13/2004 - jfs - Fixed syntax error in the previous patch
+# 10/19/2003 - jfs - Applied patch from Ryan Bradetich adding 077 umask
 #              to the valid list.
 # 08/09/2003 - jfs - Fixed the script so it does not grok if no valid
 #              umask entries are available
@@ -130,7 +131,7 @@ do
              | $CUT -d" " -f2`
 
         [ "$UMASK1" != "" -a "$UMASK2" != "" ] && \
- 	[ $UMASK1 != 002 -a $UMASK1 != 022  -a $UMASK1 != 027 -a $UMASK1 != 077 -o $UMASK2 != 002 -a $UMASK2 != 022  -a $UMASK2 != 027 -a $UMASK2 != 077] &&
+ 	[ $UMASK1 != 002 -a $UMASK1 != 022  -a $UMASK1 != 027 -a $UMASK1 != 077 -o $UMASK2 != 002 -a $UMASK2 != 022  -a $UMASK2 != 027 -a $UMASK2 != 077 ] &&
 		#echo "The umask setting in $file is insecure"
                 message FAIL misc022f '' "The umask setting in $file is insecure"
 	else
