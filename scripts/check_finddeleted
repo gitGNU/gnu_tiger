@@ -132,7 +132,9 @@ do
 		# might avoid false positives or errors
 		# (if proceses disappear)
 		listenport=`$LSOF -np $npid | $GREP \(LISTEN\) |  $SORT -u | $CUT -d : -f 2 | $AWK '{printf "%s ", $1}'`
-		listenpport=`$LSOF -np $ppid | $GREP \(LISTEN\) |  $SORT -u | $CUT -d : -f 2 | $AWK '{printf "%s ", $1}'`
+		if [ -n "$ppid" ] ; then
+			listenpport=`$LSOF -np $ppid | $GREP \(LISTEN\) |  $SORT -u | $CUT -d : -f 2 | $AWK '{printf "%s, ", $1}'`
+		fi
 		# TODO:
 		# There can be servers either in the same process or
 		# its children. This code has to be improved in
@@ -141,12 +143,12 @@ do
 		if [ -n "$listenport" ]; then
 			mtype="FAIL"
 			mval="kis011f"
-			pmessage="$pmessage and is a a server listening on port $listenport"
+			pmessage="$pmessage and is a a server listening on port(s) $listenport"
 		fi 
 		if [ -n "$listenpport" ]; then
 			mtype="FAIL"
 			mval="kis011f"
-			pmessage="$pmessage and its parent process $pname is a server listening on port $listenpport"
+			pmessage="$pmessage and its parent process $pname is a server listening on port(s) $listenpport"
 		fi
 		 message $mtype $mval "" "$pmessage."
 	fi
