@@ -118,7 +118,7 @@ many important environment variables.
 %acc020w
 The listed login ID does not have a valid login program or shell.
 Usually these are defined in /etc/shells.
-$acc021w
+%acc021w
 The listed login ID appears to be dormant.  Files in the home
 directory of this user have not been modified in the specified
 period of time and after investigation the account may need to
