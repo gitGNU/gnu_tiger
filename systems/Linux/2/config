@@ -15,9 +15,9 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# SunOS/4/config - 06/14/93
+# Linux/2/config - (based on Sun/5/config) 06/14/93
 #     Developed by Advanced Research Corporation (R)
-#
+# 
 #-----------------------------------------------------------------------------
 # Linux/1/config - 04/20/99
 # Linux/2/config - 04/20/99
@@ -34,6 +34,13 @@
 #   case of RedHat's 7.1 fileutils:
 #   $ ls --version
 #   ls (GNU fileutils) 4.0.36
+# Linux/2/config - 08/11/2003 - jfs - Added TCPD to exported variables and
+#                  included HOSTALLOW and HOSTDENY
+# Linux/2/config - 08/13/2003 - jfs - Removed LSCRIPTDIR since it is no 
+#                  longer needed.
+# Linux/2/config - 08/14/2003 - jfs - Added IFCONFIG
+#
+#-----------------------------------------------------------------------------
  
 
 
@@ -98,6 +105,9 @@ SORT=`findcmd sort`
 COMM=`findcmd comm`
 TAIL=`findcmd tail`
 TCPD=`findcmd tcpd`
+HOSTALLOW=/etc/hosts.allow
+HOSTDENY=/etc/hosts.deny
+IFCONFIG=`findcmd ifconfig`
 HEAD=`findcmd head`
 MV=`findcmd mv`
 TR=`findcmd tr`
@@ -163,6 +173,7 @@ export SORT COMM TAIL MV TR JOIN GROUPC FILECMD UNIQ BASENAME HEAD
 export CHMOD CHOWN LN PASTE DPKG LSOF NETSTAT MD5SUM CUT 
 export SNEFRU MD5 REALPATH PWCK GRPCK CHAGE MESG DIFF WC
 export PWD AUTORPM APT ID EXPAND LASTLOG TEST TEE COLUMN
+export TCPD HOSTALLOW HOSTDENY IFCONFIG
 
 
 UNAME=`findcmd uname`
@@ -229,8 +240,7 @@ fi
 #
 ETCSHELLS=/etc/shells
 #
-LSCRIPTDIR=$BASEDIR/systems/$OS/$REL
-export MAILSPOOL CRONSPOOL ETCSHELLS LSCRIPTDIR
+export MAILSPOOL CRONSPOOL ETCSHELLS
 
 LOCFS=ext2
 export LOCFS
