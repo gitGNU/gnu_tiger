@@ -26,6 +26,11 @@ IMPROVEMENTS
   and/or recommended patches (|R|S|). The check needs to be tested for
   Solaris 9 too.
 
+- check_known should be improved to detect for symlink attacks and
+  hard links in user writable directories (/tmp, /var/tmp and, in
+  some systems, /var/spool/mail too, the directory list might be
+  defined in tigerrc or extracted by parsing the file system)
+
 
 NEW CHECKS 
 -----------
@@ -49,12 +54,16 @@ NEW CHECKS
 	. Solaris locked accounts (#18 and #21)
 	. Solaris default/login
 	. Solaris /etc/default/kbd
-     - Partition checks (in Linux /etc/fstab, in Solars /etc/vfstab,
+     - Partition checks (in Linux /etc/fstab, in Solaris /etc/vfstab),
        if there is a /usr, /opt then read-only, if /var
-       or /tmp nosuid. Separate /var,/usr,/tmp,/home.. from /.
+       or /tmp suggest nosuid (maybe noexec, although it's not a real
+       improvement). Separate partitions for /var, /usr, /tmp, /home
+       (boot?) so that no hard links attacks are possible.
        In general user writable directories should be separated from
        from system directories to avoid (hard) symlink attacks and
        local DoS due to partitions being full.
+       In some installations /var/log or /var/spool (or /var/mail) might
+       make sense to be separated.
      - Solaris /etc/notrouter to disable
 
      - Suggested by Bob Hall:
@@ -159,13 +168,13 @@ INTEGRATION CHECKS
   that already includes them) and, probably, some other stuff 
   (usually Perl) on which the tool itself is based.
 
-- User anaylisis: sac, hostsentry (part of Abacus, but non-free)
+- User analysis: sac, hostsentry (part of Abacus, but non-free)
 
 - Network checks: Arpwatch, Snort
 
 (DONE)- Other tools: chkrootkit 
 
 --- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
-Mon, 29 Dec 2003 20:20:11 +0100
+Sun, 27 Jun 2004 22:28:39 +0200
 
 
