@@ -24,6 +24,9 @@
 #                runs: per policy (template) or per run.
 # 07/25/2002 jfs Changed TigerInstallDir to .
 #
+# 10/28/2002 jfs Added check of non-comments in output (only available if
+#                egrep is installed)
+#
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir="@tigerhome@"
@@ -101,6 +104,17 @@ set X $time
 IFS=$saveifs
 hour=$2
 min=$3
+
+# now some sanity checks
+# WARN: Since the cronjob does not send err output we proceed but
+# this should really be fixed in order to provide proper err messages
+# (otherwise this might lead to a 'false sense of security' since the
+# same checks are done over and over again, or none at all, depends
+# on cronrc configuration)
+[ -z "$hour" ] && hour=0
+[ -z "$min" ] && min=0
+[ -z "$dow" ] && dow=1
+[ -z "$dom" ] && dom=1
 
 [ $min -gt 50 ] && {
   if [ $hour -eq 23 ]; then
@@ -227,7 +241,12 @@ done >> $WORKDIR/tigcron.diff.$$
 
 [ ! -n "$Tiger_Mail_RCPT" ] && Tiger_Mail_RCPT="root"
   
-[ -s "$WORKDIR/tigcron.diff.$$" ] && {
+length=1
+if [ ! -n "$EGREP" ] ; then
+# this is useful (if egrep is available) to remove cruft
+	length=`$EGREP -v "^\s*$|^\s*#" $WORKDIR/tigcron.diff.$$|$AWK 'END {print NR}'`
+fi
+[ -s "$WORKDIR/tigcron.diff.$$" -a $length -gt 0 ] && {
   send="Y"
   [ "$Tiger_Cron_SendOKReports" = "N" ] &&
   [  -z "`grep ERR $WORKDIR/tigcron.diff.$$`" ] &&
@@ -241,6 +260,10 @@ done >> $WORKDIR/tigcron.diff.$$
 	echo 
 	cat  $WORKDIR/tigcron.diff.$$ 
     } | $MAILER $Tiger_Mail_RCPT 
+    # This could also be 
+    # } | $MAILER -s "TIGER Output" $Tiger_Mail_RCPT < $WORKDIR/tigcron.diff.$$
+    # Alas, it's not completely portable (no -s option on some mailers)
+
 }
 
 delete $WORKDIR/tigcron.diff.$$
