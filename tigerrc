@@ -44,7 +44,7 @@ Tiger_Check_STRICTNW=Y		# Fast - stringent N/W server checks
 Tiger_Check_LISTENING=Y		# Fast
 Tiger_Check_SYSTEM=Y		# Depends on the specific system checks
 Tiger_Check_RUNPROC=N		# Fast, needs to be customized per system
-Tiger_Check_DELETED=Y		# Depends on the number of processes on the
+Tiger_Check_DELETED=N		# Depends on the number of processes on the
 				# system
 Tiger_Check_APACHE=N		# Fast
 Tiger_Check_SSH=Y		# Fast
@@ -263,7 +263,7 @@ Tiger_ROOT_PATH_OK_Group_Write='root|uucp|bin|sys|daemon'
 # Who can own things in other users PATH?
 # List of usernames separated by '|'... no whitespace
 #
-eval Tiger_PATH_OK_Owners='$Tiger_ROOT_PATH_OK_Owners'
+Tiger_PATH_OK_Owners=$Tiger_ROOT_PATH_OK_Owners
 #
 # What groups can have write access to executables in non-root user PATH?
 # List of group names separated by '|'... no whitespace.
