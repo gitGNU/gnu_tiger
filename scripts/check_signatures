@@ -17,6 +17,7 @@
 #
 # check_signatures - 06/14/93
 #
+# 08/14/2003 jfs Added OUTPUTMETHOD and SNEFRU to dependancies
 # 04/28/93 dls  Added '-L' option to 'ls' so that we get the permissions
 #               from the file instead of the symbolic link.
 #
@@ -58,7 +59,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT FMT GREP LS RM SED SORT || exit 1
+  haveallcmds AWK CAT FMT GREP LS RM SED SORT SNEFRU OUTPUTMETHOD || exit 1
   haveallfiles BASEDIR WORKDIR SIGNATURE_FILE || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -70,7 +71,7 @@ done
 echo
 echo "# Performing signature check of system binaries..."
 
-haveallcmds AWK CAT FMT GREP LS RM SED SORT SNEFRU || exit 1
+haveallcmds AWK CAT FMT GREP LS RM SED SORT SNEFRU OUTPUTMETHOD || exit 1
 haveallfiles BASEDIR SIGNATURE_FILE WORKDIR || exit 1
 
 $SED -e '/^#/d' -e '/^[ 	]*$/d' $SIGNATURE_FILE |
