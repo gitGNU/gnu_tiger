@@ -3,6 +3,9 @@ Note: the up-to-date TODO list is maintained through Savannah's Task Manager
 (http://savannah.nongnu.org/pm/?group=tiger) this list is provided for the
 commodity of those browsing the source code
 
+- Automate the creation of new tar.gz's including a revision that sets
+  the proper exec bits to all needed files.
+
 - Full security audit of the code, I dislike the use of 'eval' (used by
 the util/ scripts in the haveallof() function, but seems safe). I would not
 like to see posts in Bugtraq related to tiger.
