@@ -51,6 +51,7 @@ install: build
 	install -m 600 cronrc debian/tmp/etc/tiger/
 	install -m 600 tigerrc debian/tmp/etc/tiger/
 	install -m 644 version.h debian/tmp/usr/lib/tiger/
+	find debian/tmp/ -type d -name "CVS" -exec rm -rf {} \;
 
 
 # Build architecture-independent files here.
