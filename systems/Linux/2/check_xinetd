@@ -20,6 +20,7 @@
 # 
 #  Checks which xinetd services are enabled or disabled.
 #
+#  01/15/2004 - jfs - Fixed syntax error (at least in RH 8) and added TODO
 #  11/19/2003 - jfs - Linux-specific version based on patch from Ryan
 #      Bradetich which introduces many more checks for services and
 #      configuration (but still more is needed). Added many TODOs.
@@ -138,6 +139,8 @@ parse_service_block()
 	
 	while read line 
 	do
+	# TODO: Couldn't this be changed to a 'case' statement
+	# it might need to be changed to be POSIX
 		[[ "$line" = flags* ]] && {
 			[[ "$line" = "*DISABLE*" ]] && enabled='N'
 			continue
