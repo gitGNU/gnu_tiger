@@ -21,4 +21,5 @@
 #
 # Add new system specific checks here.  One script name per line.
 #
-check_printcap
+# Where is this check? (jfs)
+# check_printcap
