@@ -4,6 +4,12 @@ Note: the up-to-date TODO list is maintained through Savannah's Task Manager
 (http://savannah.nongnu.org/pm/?group=tiger) this list is provided for the
 commodity of those browsing the source code
 
+- Full security audit of the code, I dislike the use of 'eval' (used by
+the util/ scripts in the haveallof() function, but seems safe). I would not
+like to see posts in Bugtraq related to tiger.
+(such as http://lists.insecure.org/lists/bugtraq/1998/Jun/0160.html
+from Marc Heuse dated Fri Jun 26 1998 - 08:24:17 BST)
+
 - Update signatures using TAMU's (and maybe knowngoods.org's) signature
 database.
 See http://savannah.nongnu.org/pm/task.php?group_project_id=472&group_id=2247&func=browse
@@ -13,6 +19,7 @@ https://savannah.nongnu.org/pm/task.php?group_id=2247&group_project_id=632
 
 
 --- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
-Mon,  9 Dec 2002 19:19:30 +0100
+Tue, 10 Dec 2002 15:54:20 +0100
+
 
 
