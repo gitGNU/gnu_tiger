@@ -22,11 +22,17 @@
 #  can be compared against a "template" (policy-compliant?) runs. 
 #  This can reduce false positives even if they cannot be reduced 
 #  in a given module.
+#
+# 05/12/2003 - jfs - Sort input before diffing. For some reason some
+#                    checks might not always sort information properly
+#                    and people might get spurious reports.
 #-----------------------------------------------------------------------------
 #
 [ -z "$DIFF" ] && DIFF=`which diff`
 [ -z "$CAT" ] && CAT=`which cat`
 [ -z "$RM" ] && RM=`which rm`
+[ -z "$SORT" ] && SORT=`which sort`
+[ -z "$SORT" ] && SORT=$CAT
 [ -z "$WORKDIR" ] && WORKDIR="/tmp"
 
 
@@ -40,8 +46,10 @@ SPC="$DIFFD"
   exit 0
 }
 
-if [ -s $oldfile ]; then
-  $DIFF -D${SPC}TIGERCHANGES $oldfile $newfile |
+if [ -s "$oldfile" ]; then
+  $SORT $oldfile >$WORKDIR/oldfile.sort.$$
+  $SORT $newfile >$WORKDIR/newfile.sort.$$
+  $DIFF -D${SPC}TIGERCHANGES $WORKDIR/oldfile.sort.$$ $WORKDIR/newfile.sort.$$ |
   {
     lastcontext=
     flag=0
@@ -82,7 +90,9 @@ if [ -s $oldfile ]; then
     done
   } > $WORKDIR/tc.msg.$$
   $CAT $WORKDIR/tc.msg.$$
-  $RM -f $WORKDIR/tc.msg.$$
+  $RM -f "$WORKDIR/tc.msg.$$"
+  [ -f "$WORKDIR/newfile.sort.$$" ] && $RM -f "$WORKDIR/newfile.sort.$$"
+  [ -f "$WORKDIR/oldfile.sort.$$" ] && $RM -f "$WORKDIR/oldfile.sort.$$"
 else
   $CAT $newfile
 fi
