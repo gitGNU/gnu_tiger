@@ -43,7 +43,6 @@ approach)
         the code of some checks or new checks written for them
    . Integrated the secaudit database manager patch provided by the
      Center for Information Technology, National Institutes of Health
-
    . Integration of checks/bug fixes from TARA 3.0.3 version.
    NOTE: Mostly done for all checks (except for check_sendmail)
    Other utilities, such as buildbins changes, need to be checked.
@@ -57,8 +56,9 @@ approach)
    NOTE: Already included an annotated CERT list which determines which
      are done and which are lacking
    . Redhat (rpm) packages
-   NOTE: The spec file provided as a patched is now included but it has
-     not been tested (by me) to build RPM packages.
+   NOTE: The spec file provided as a patched is now included, I have tested
+     it to build RPM packages but I have not tested the RPM packages
+     themselves.
 
 Released:
 - Version 3.2 (stable): major bug fix version
@@ -84,126 +84,12 @@ like to see posts in Bugtraq related to tiger.
 (such as http://lists.insecure.org/lists/bugtraq/1998/Jun/0160.html
 from Marc Heuse dated Fri Jun 26 1998 - 08:24:17 BST)
 
-- Convert scripts/check_network (RedHat based) into a number of tests.
-  This is a script provided by Bryan Gartner from HP
-  It currently checks for:
-  	- Inetd configuration files (are xinetd or inetd files writable?
-	  are they owned by the proper user? does inetd use -l? does
-	  xinetd have filelog or syslog?)
-	  (Note: some checks moved to check_tcpd)
-	- Does /etc/securetty exist? Does it have other entries besides vc/tty?
-	  Is ownership of the file ok?
-	- Is ip forwarding enabled?
-	- Which version of DNS/Wu-ftpd is it running?
-	(Note: this might not be completely feasible since the check_network
-	scripts connects to the server to retrieve the banner which is
-	something that Tiger should leave to other, remote, VA tools)
-	- PermitRooLogin or Rhosts in sshd?
-	- EXPN/VRFY support in mail host?
-	Necessary services:
-	- Is syslog running?
-	- Is omniback running?
-	Not allowed (per policy):
-	- Is fingerd running? 
-	- Is identd runnig?
-	- Are inetd internal services running?
-	- Is a routing daemon enabled?
-	- R-commands?
-	- X server
-	- Tftpd
-	- NIS
-	- UUCP
-	- R-exd?
-	- NFS
-
 - Update signatures using TAMU's (and maybe knowngoods.org's) signature
 database.
 See http://savannah.nongnu.org/pm/task.php?group_project_id=472&group_id=2247&func=browse
 
 - Improve support non-Linux OSs
 https://savannah.nongnu.org/pm/task.php?group_id=2247&group_project_id=632
-
-- Modified the rhosts check so that it will check for shosts files too
-  (or create a new check_shosts file)
-
-- Modify check_network to include hosts.lpd in the tests
-
-- Add .bash_profile into check_path
-
-- Create the following scripts:
-     - Detect promiscous mode
-     - Check root $HOME files (might be redundant with check_path's)
-     - Do alias give the same as check_aliases?
-     - writable/executable check + word writable? (in find_files)
-     - Check for SAMBA configuration (checklist #20 SANS):
-     	. encrypted passwords.
-	. 600 /etc/smbpasswd or /etc/samba/smbpasswd
-	. shares enabled/disabled
-	. guest access
-	. create mask (770)
-     - Check newer FTP (/etc/ftpaccess in newer Linux systems, ftpusers
-       is deprecated) see checklist #22 of SANS.
-     - The check_inetd script should be improved to warn if echo/chargen..
-       services are enabled (SANS unix checklist #3 and Linux #4)
-     - SANS unix checklist #18 
-	. Solaris /etc/system (noexec stack)
-	. Solaris locked accounts (#18 and #21)
-	. Solaris default/login
-	. Solaris /etc/default/kbd
-     - Partition checks (in Linux /etc/fstab, in Solars /etc/vfstab,
-       if there is a /usr, /opt then read-only, if /var
-       or /tmp nosuid. Separate /var,/usr,/tmp from /
-     - Solaris /etc/notrouter to disable
-     - Rootkits check, like chkrootkit 
-     Note: partially done
-     Reference: 
-     http://linux.oreillynet.com/pub/a/linux/2002/02/07/rootkits.html
-
-     - Suggested by Bob Hall:
-        * Check if any local file systems are being exported to
-       'localhost'. Also check if the local host is in a netgroups
-        entry in its own exports file.
-	* Look for (unexpected) normal files under /dev.
-	(Note: include in 'check_devices')
-	* Check for user startup files that call 'umask' with weak
-	settings. (Should be 022 or 027.)
-	(Note: include in 'check_umask' using GENPASSWDSETS)
-	* Check that '-' is not the first character in a /etc/hosts.equiv
-	/etc/hosts.lpd, or .rhosts files. Also check for a '+' entry in
-	hosts.lpd file. 
-	(Note: include in 'check_rhosts')
-	* If a system allows it, check for an /etc/shells file and look
-	if the permitted shells are in the system directories.
-	References:
-	http://www.cert.org/tech_tips/usc20.html
-	http://www.cert.org/advisories/CA-2001-30.html
-	http://www.ciac.org/ciac/bulletins/b-37.shtml
-	http://www.nswc.navy.mil/ISSEC/Docs/Ref/GeneralInfo/unixsecurity.nrl.txt
-
-
-- Possible integration with other security tools:
- 	- Tripwire: the 'tripwire_run' script has not been tested thoroughly
-	  (mainly because in Debian it is already configured to execute
-	  regular checks standalone)
-	- Crack: same for 'crack_run' (for the same reason as for tripwire
-	  it has not been tested thoroughly yet)
-	- Other integrity checkers: aide, samhain, integrit...
-	(Note: done for aide and integrit for the moment)
-	- Other password crackers: john
-	- Logcheckers: swatch, logcheck, loganalysis, snort-logcheck
-        Tiger currently does not do any log checking (see below)
-	I'm not sure if Tiger should provide a new one or re-use 
-	existing ones and include them as an 'external' program to run 
-	through a Tiger module.  The benefit of using an accepted and use 
-	log analysis tool is that Tiger can benefit from the database of 
-	signatures of known attacks/non-issues. The problem is that the 
-	sysadmin has to install yet another tool (if he is not using an OS 
-	that already includes them) and, probably, some other stuff 
-	(like Perl) on which the tool itself is based.
-
-	- User anaylisis: sac, hostsentry (part of Abacus, but non-free)
-	- Network checks: Arpwatch, Snort
-	- Other tools: chkrootkit
 
 - Compare checks against other tools'
 	- Bastille/Titan: verify that each thing that they 'fix' (harden)
@@ -217,8 +103,6 @@ https://savannah.nongnu.org/pm/task.php?group_id=2247&group_project_id=632
 NOTE: Tiger modular behaviour makes it difficult to share data but it's easier
 to make simple checks than if using other monolythic tools (like CIS's, 
 OpenBSD's or SuSE's)
-
-- Implement logging to syslog (TARA 3.0.3 does it through logger)
 
 - Implement IDMEF to send message on alerts. Consider the use of the XML
   library available at  http://www.silicondefense.com/idwg/snort-idmef/
@@ -237,13 +121,7 @@ OpenBSD's or SuSE's)
 	- IDEA http://idea-arch.sourceforge.net/
 	- Prelude http://www.prelude-ids.org/
 
-- Implement a check for configuration files for user's password policies
-  and other sensible configuration such as /etc/login.access, /etc/login.defs,
-  /etc/login.conf
-
-- Add more information to the messages outputed for inetd services which
-  might expose password information (Unix CERT configuration list item #2.4)
-
+(DONE)- Implement logging to syslog (TARA 3.0.3 does it through logger) 
 
 --- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
 Tue, 12 Aug 2003 21:33:51 +0200
