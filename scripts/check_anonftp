@@ -17,12 +17,12 @@
 #
 # check_anonftp - 06/14/93
 #
-# 04/28/93 dls   Duh... added -L option to 'ls' when reading permission
-#                bits so that we don't get them off a symbolic link.
-# 
-# 04/27/93 dls   Added check for .rhosts file in ~ftp
-# 12 june 2002 jfs Fixed script so that it checks if ftphome/etc/passwd
+# 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
+# 12/06/2002 jfs Fixed script so that it checks if ftphome/etc/passwd
 #                  exists before using grep on it
+# 04/28/1993 dls   Duh... added -L option to 'ls' when reading permission
+#                bits so that we don't get them off a symbolic link.
+# 04/27/1993 dls   Added check for .rhosts file in ~ftp
 #
 # TODO:
 # 
@@ -78,7 +78,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds LS CAT AWK GROUPC FIND SGREP GREP || exit 1
+  haveallcmds LS CAT AWK GROUPC FIND SGREP GREP OUTPUTMETHOD || exit 1 
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -89,7 +89,7 @@ done
 echo 
 echo "# Performing check of anonymous FTP..."
 
-haveallcmds LS CAT AWK GROUPC FIND SGREP GREP || exit 1
+haveallcmds LS CAT AWK GROUPC FIND SGREP GREP OUTPUTMETHOD || exit 1 
 haveallfiles BASEDIR WORKDIR || exit 1
 
 checkfiles()
@@ -188,4 +188,6 @@ haveallcmds GETUSERHOME && {
   fi
 } |
 $OUTPUTMETHOD
+
+exit 0
 
