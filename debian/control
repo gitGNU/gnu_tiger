@@ -7,7 +7,7 @@ Standards-Version: 3.6.0.1
 
 Package: tiger
 Architecture: any
-Depends: diff (>=2.0), net-tools, shellutils (>=1.1.14-1) | coreutils, fileutils (>=3.14-1) | coreutils, textutils (>=1.20-1) | coreutils, debconf, ${shlibs:Depends}
+Depends: diff (>=2.0), net-tools, shellutils (>=1.1.14-1) | coreutils, fileutils (>=3.14-1) | coreutils, textutils (>=1.20-1) | coreutils, binutils, debconf, ${shlibs:Depends}
 Recommends: binutils, sendmail | mail-transport-agent, john, chkrootkit
 Suggests: lsof
 Description: Report system security vulnerabilities
