@@ -17,6 +17,7 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# 05/01/2004 - jfs - Fixed previous patch.
 # 02/26/2004 - jfs - Included patch from Chung-chieh Shan which avoids failure
 #       on packages whose names contain "."
 #       (Debian bug 234811)
@@ -120,7 +121,7 @@ do
 	$MD5SUM -c 2>&1 | $SED -e "s/^.*md5sum: MD5 check failed for '\(.*\)'/DIFF \1/; s/^.*md5sum: can't open \(.*\)/ERR \1/" | {
 		while read err file
 		do
-			package=`$BASENAME "$package" ".md5sums"`
+			package=`$BASENAME "$md5file" ".md5sums"`
 			case $err in
 			DIFF)
 				# don't check diverted now
