@@ -142,6 +142,7 @@ install:
 	done; \
 	for file in $(BINARIES); do \
 	  cp -p $$file $(prefix)/$(TIGERBIN)/$$file; \
+	  chmod 755 $(prefix)/$(TIGERBIN)/$$file ; \
 	done; \
 	for file in $(SCRIPTS); do \
 	  sed -e 's%^TigerInstallDir=.*$$%TigerInstallDir="'$(TIGERHOME)'"%' \

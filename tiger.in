@@ -1,0 +1,421 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# tiger - 06/14/93
+#
+# 04/29/93 dls Added support for 'tigerrc' file.
+#
+# 04/27/93 dls check_passwd is now check_accounts
+#
+# 05/26/2002 jfs Added check_tcpd test
+#
+#-----------------------------------------------------------------------------
+#
+echo "Tiger UN*X security checking system"
+echo "   Developed by Texas A&M University, 1994"
+echo "   Updated by the Advanced Research Corporation, 1999"
+echo "   Further updated by Javier Fernandez-Sanguino, 2001-2002"
+echo "   Covered by the GNU General Public License (GPL)"
+echo
+TigerInstallDir="@tigerhome@"
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+tigercleanup()
+{
+  [ -n "$fspid" ] && kill -1 $fspid 2>/dev/null
+  [ -f "$Tiger_PasswdFiles" ] && {
+    while read __file
+    do
+      delete $__file $__file.src
+    done < $Tiger_PasswdFiles
+  }
+  [ -n "$TigerCheckEmbedded" ] && delete $TigerCheckEmbedded
+  delete $WORKDIR/fsscan.log$$ $Tiger_PasswdFiles
+
+  [ -n "$TigerCleanup" ] && {
+    delete $TigerCleanup
+  }  
+}
+
+trap tigercleanup 0
+
+trap 'tigercleanup; exit 1' 1 2 3 15
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds CAT DATE DATECMD GEN_PASSWD_SETS GREP MV RM TIMECMD || exit 1
+  haveallfiles BASEDIR SCRIPTDIR WORKDIR CONFIG_DIR LOGDIR || exit 1
+  haveallvars HOSTNAME
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+haveallcmds CAT DATE DATECMD GEN_PASSWD_SETS GREP MV RM TIMECMD || exit 1
+haveallfiles BASEDIR SCRIPTDIR CONFIG_DIR LOGDIR WORKDIR || exit 1
+haveallvars HOSTNAME OS REL REV ARCH
+
+version="$TIGERVERSION"
+
+echo "Tiger security scripts *** $version ***"
+
+[ "$Tiger_TESTMODE" != 'Y' ] && {
+  datestamp="`$DATECMD`-`$TIMECMD`"
+
+  logtmp="$LOGDIR/security.report.${HOSTNAME}.tmp.$$"
+  logfile="$LOGDIR/security.report.${HOSTNAME}.$datestamp"
+  expreport="$LOGDIR/explain.report.${HOSTNAME}.$datestamp"
+}
+
+> $logtmp
+
+[ "$Tiger_TESTMODE" != 'Y' ] && {
+
+  echo "Security scripts *** $version ***" >> $logtmp
+  [ "$HTML" = "Y" ] && {
+  	echo '<H2><CENTER>TIGER System Security Scanner</H2></Center>' > $logtmp
+  	echo '<PRE>' >> $logtmp
+        echo "Tiger security scripts *** $version ***" >> $logtmp
+        echo "Output Mode is HTML"
+        echo "HTML Generator developed by the Advanced Research Corporation (R)" >> $logtmp
+  }
+  
+
+
+  $DATE >> $logtmp
+  echo "`$TIMECMD`> Beginning security report for ${HOSTNAME} ($ARCH $OS $REV)." >> $logtmp
+  echo "`$TIMECMD`> Beginning security report for ${HOSTNAME}."
+}
+
+_TIGER_RUN=Y
+export _TIGER_RUN
+OUTPUTMETHOD="$CAT"
+
+Tiger_PasswdFiles=$WORKDIR/passwd.list.$$
+export Tiger_PasswdFiles
+
+[ "$Tiger_Check_EMBEDDED" != 'N' ] && {
+  TigerCheckEmbedded="$WORKDIR/embed.list.$$"
+  > $TigerCheckEmbedded
+}
+export TigerCheckEmbedded
+
+[ "$Tiger_TESTMODE" != 'Y' ] && {
+  delete $Tiger_PasswdFiles
+  $GEN_PASSWD_SETS $Tiger_PasswdFiles
+}
+
+[ "$Tiger_Check_FILESYSTEM" != 'N' ] && {
+  if [ "$Tiger_TESTMODE" = 'Y' ]; then
+    echo "`$TIMECMD`> Performing file systems scans..."
+    $SCRIPTDIR/find_files >> $logtmp
+  else
+    echo "`$TIMECMD`> Starting file systems scans in background..."
+    $SCRIPTDIR/find_files > $WORKDIR/fsscan.log$$ &
+    fspid=$!
+  fi
+}
+
+crackpid=
+[ "$Tiger_Run_CRACK" != 'N' ] && {
+  if [ "$Tiger_TESTMODE" = 'Y' ]; then
+    echo "`$TIMECMD`> Running Crack (password cracker)..."
+    $SCRIPTDIR/crack_run
+  else
+    crackout=$WORKDIR/crack.out.$$
+    echo "`$TIMECMD`> Running Crack (password cracker) in background..."
+    nice -6 $SCRIPTDIR/crack_run > $crackout &
+    crackpid=$!
+  fi
+}
+
+trippid=
+[ "$Tiger_Run_TRIPW" != 'N' ] && {
+  if [ "$Tiger_TESTMODE" = 'Y' ]; then
+    echo "`$TIMECMD`> Running Tripwire..."
+    $SCRIPTDIR/tripwire_run
+  else
+    tripout=$WORKDIR/tripwire.out.$$
+    echo "`$TIMECMD`> Running Tripwire in background..."
+    nice -6 $SCRIPTDIR/tripwire_run > $tripout &
+    trippid=$!
+  fi
+}
+
+[ "$Tiger_Check_PASSWD" != 'N' ] && {
+  echo "`$TIMECMD`> Checking password files..."
+  $SCRIPTDIR/check_passwd >> $logtmp
+}
+
+[ "$Tiger_Check_GROUP" != 'N' ] && {
+  echo "`$TIMECMD`> Checking group files..."
+  $SCRIPTDIR/check_group >> $logtmp
+}
+
+[ "$Tiger_Check_ACCOUNTS" != 'N' ] && {
+  echo "`$TIMECMD`> Checking user accounts..."
+  $SCRIPTDIR/check_accounts >> $logtmp
+}
+
+[ "$Tiger_Check_RHOSTS" != 'N' ] && {
+  echo "`$TIMECMD`> Checking .rhosts files..."
+  $SCRIPTDIR/check_rhosts >> $logtmp
+}
+
+[ "$Tiger_Check_NETRC" != 'N' ] && {
+  echo "`$TIMECMD`> Checking .netrc files..."
+  $SCRIPTDIR/check_netrc >> $logtmp
+}
+
+[ "$Tiger_Check_PATH" != 'N' ] && {
+  echo "`$TIMECMD`> Checking PATH settings..."
+  $SCRIPTDIR/check_path >> $logtmp
+}
+
+[ "$Tiger_Check_ANONFTP" != 'N' ] && {
+  echo "`$TIMECMD`> Checking anonymous ftp setup..."
+  $SCRIPTDIR/check_anonftp >> $logtmp
+}
+
+[ "$Tiger_Check_ALIASES" != 'N' ] && {
+  echo "`$TIMECMD`> Checking mail aliases..."
+  $SCRIPTDIR/check_aliases >> $logtmp
+}
+
+[ "$Tiger_Check_CRON" != 'N' ] && {
+  echo "`$TIMECMD`> Checking cron entries..."
+  $SCRIPTDIR/check_cron >> $logtmp
+}
+
+[ "$Tiger_Check_INETD" != 'N' ] && {
+  echo "`$TIMECMD`> Checking 'inetd' configuration..."
+  $SCRIPTDIR/check_inetd >> $logtmp
+  echo "`$TIMECMD`> Checking 'tcpd' configuration..."
+  $SCRIPTDIR/check_tcpd >> $logtmp
+}
+
+[ "$Tiger_Check_EXPORTS" != 'N' ] && {
+  echo "`$TIMECMD`> Checking NFS export entries..."
+  $SCRIPTDIR/check_exports >> $logtmp
+}
+
+[ "$Tiger_Check_PERMS" != 'N' ] && {
+  echo "`$TIMECMD`> Checking permissions and ownership of system files..."
+  $SCRIPTDIR/check_perms >> $logtmp
+}
+
+[ "$Tiger_Check_SIGNATURES" != 'N' ] && {
+  echo "`$TIMECMD`> Checking for altered or out of date binaries..."
+  $SCRIPTDIR/check_signatures >> $logtmp
+}
+
+[ "$Tiger_Check_KNOWN" != 'N' ] && {
+  echo "`$TIMECMD`> Checking for indications of break-in..."
+  $SCRIPTDIR/check_known >> $logtmp
+}
+
+[ "$Tiger_Check_SYSTEM" != 'N' ] && {
+  echo "`$TIMECMD`> Performing system specific checks..."
+  $SCRIPTDIR/check_system >> $logtmp
+}
+
+[ "$Tiger_Check_ROOT_ACCESS" != 'N' ] && {
+  echo "`$TIMECMD`> Performing root access checks..."
+  $SCRIPTDIR/check_root >> $logtmp
+}
+
+[ "$Tiger_Check_ROOTDIR" != 'N' ] && {
+  echo "`$TIMECMD`> Performing root directory checks..."
+  $SCRIPTDIR/check_rootdir >> $logtmp
+}
+
+[ "Tiger_Check_ETCISSUE" != 'N' ] && {
+  echo "`$TIMECMD`> Performing /etc/issue login banner checks..."
+  $SCRIPTDIR/check_issue >> $logtmp
+}
+
+# Move to systems/Linux/2/check.tbl
+#[ "$Tiger_Check_OS" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for correct OS version..."
+#  $SCRIPTDIR/check_release >> $logtmp
+#}
+#
+#[ "$Tiger_Check_PATCH" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for up-to-date patches..."
+#  $SCRIPTDIR/check_patches >> $logtmp
+#}
+#
+#[ "$Tiger_Check_SINGLE" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for single user mode password..."
+#  $SCRIPTDIR/check_single >> $logtmp
+#}
+#[ "$Tiger_Check_BOOT" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking boot loader file permissions..."
+#  $SCRIPTDIR/check_lilo >> $logtmp
+#}
+
+[ "$Tiger_Check_BACKUPS" != 'N' ] && {
+  echo "`$TIMECMD`> Checking for secure backup devices..."
+  $SCRIPTDIR/check_devices >> $logtmp
+}
+
+
+[ "$Tiger_Check_LOGFILES" != 'N' ] && {
+  echo "`$TIMECMD`> Checking for the presence of log files..."
+  $SCRIPTDIR/check_logfiles >> $logtmp
+}
+
+#
+# The following check has been "promoted" from Linux to
+# any system since it is pretty general
+#
+[ "$Tiger_Check_LISTENING" != 'N' ] && {
+  echo "`$TIMECMD`> Checking for listening processes..."
+  $SCRIPTDIR/check_listeningprocs >> $logtmp
+}
+
+# A general watchdog for system processes
+[ "$Tiger_Check_RUNPROC" != 'N' ] && {
+  echo "`$TIMECMD`> Checking for running processes..."
+  $SCRIPTDIR/check_runprocs >> $logtmp
+}
+
+# This test should be changed from Perl to shell script, also there
+# is repeated functionality from check_listeningprocs (jfs)
+#[ "$Tiger_Check_STRICTNW" != 'N' ] && {
+#  echo "`$TIMECMD`> Checking for network configuration..."
+#  $SCRIPTDIR/check_network >> $logtmp
+#}
+
+[ "$Tiger_Check_FTPUSERS" != 'N' ] && {
+  echo "`$TIMECMD`> Checking ftpusers configuration..."
+  $SCRIPTDIR/check_ftpusers >> $logtmp
+}
+
+#
+# When not doing checks of all setuid executables, we can do
+# embedded checks while the file system scans are running.
+#
+[ "$Tiger_Check_EMBEDDED" != 'N' -a "x$Tiger_Embed_Check_SUID" != 'xY' ] && {
+  echo "`$TIMECMD`> Performing check of embedded pathnames..."
+  $SCRIPTDIR/check_embedded >> $logtmp
+}
+
+[ "$Tiger_Check_FILESYSTEM" != 'N' -a "$Tiger_TESTMODE" != 'Y' ] && {
+  echo "`$TIMECMD`> Waiting for filesystems scans to complete..."
+  wait $fspid
+  fspid=
+  echo "`$TIMECMD`> Filesystems scans completed..."
+
+  [ -s $WORKDIR/fsscan.log$$ ] && $CAT $WORKDIR/fsscan.log$$ >> $logtmp
+  delete $WORKDIR/fsscan.log$$
+}
+#
+# When checking SUID executables, wait until after file system scans
+# have completed.
+#
+[ "$Tiger_Check_EMBEDDED" != 'N' -a "x$Tiger_Embed_Check_SUID" = 'xY' ] && {
+  echo "`$TIMECMD`> Performing check of embedded pathnames..."
+  $SCRIPTDIR/check_embedded >> $logtmp
+}
+
+[ -n "$crackpid" ] && {
+  if /bin/kill -0 $crackpid 2>/dev/null; then
+    if [ "$Tiger_Collect_CRACK" = 'Y' ]; then
+      wait $crackpid
+      $CAT $crackout >> $logtmp
+      delete $crackout
+    else
+      echo "`$TIMECMD`> \`Crack' not finished. Output will be in $crackout."
+      echo "# \`Crack' not finished. Output will be in $crackout." >> $logtmp
+    fi
+  else
+    $CAT $crackout >> $logtmp
+    delete $crackout
+  fi
+} 2>/dev/null
+
+[ -n "$trippid" ] && {
+    echo "`$TIMECMD`> Waiting for Tripwire to finish..."
+    wait $trippid
+    $CAT $tripout >> $logtmp
+    delete $tripout
+} 2>/dev/null
+
+#echo "`$TIMECMD`> Security report completed for ${HOSTNAME}."
+
+[ "$Tiger_TESTMODE" != 'Y' ] && {
+  echo "`$TIMECMD`> Security report completed for ${HOSTNAME}."
+  if [ "$EXPLAINREPORT" = "Y" ]; then
+    $BASEDIR/tigexp -f $logtmp > $expreport
+    $MV $logtmp $logfile
+  elif [ "$EXPLAINREPORT" = "I" ]; then
+    $BASEDIR/tigexp -F $logtmp > $logfile
+    delete $logtmp
+  else
+    $MV $logtmp $logfile
+  fi
+
+  [ "$HTML" = "Y" ] && {
+    htmlfile="$logfile.html"
+    $MV $logfile $htmlfile
+#    $CAT html/* >> $htmlfile
+    echo "Security report is in \`$htmlfile'."
+  }
+  [ "$HTML" = "N" ] && {
+    echo "Security report is in \`$logfile'."
+  }
+
+ 
+}
+
+##tigercleanup
+
+#
+exit 0
