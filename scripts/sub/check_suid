@@ -65,6 +65,18 @@ haveallcmds FILECMD LS SGREP STRINGS && {
       $LS $LSGROUP -ld "$file"
     }
 
+    getpermit "$file" 2>/dev/null |
+    while read _file owner group ur uw ux gr gw gx or ow ox suid sgid stk
+    do
+      eval "case \"$owner\" in
+        \"$Tiger_Admin_Accounts\"|root)
+          ;;
+        *)
+          message FAIL fsys0012w \"\" \"File $file is not owned by an administrative user.\"
+          $LS $LSGROUP -ld \"$file\"
+      esac"
+    done
+ 
     case "$file" in
     *xterm) {
       message WARN misc013w "" "$file: see CERT Advisory CA-93:17 about a security hole in xterm (does not apply to HP-UX)."
