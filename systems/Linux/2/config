@@ -24,6 +24,8 @@
 #   UUID=`/usr/bin/id | /usr/bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
 # Linux/2/config - 10/09/99
 #  Added the new check_neverlogin script
+# Linux/2/config - 08/07/2002 - jfs change in LSGROUPS
+
 
 [ "$UUID" = "" ] && UNAME=`whoami`
 
@@ -67,7 +69,12 @@ CUT=`findcmd cut`
 WC=`findcmd wc`
 
 # -g to show group ownership
-LSGROUP="-lg"
+#LSGROUP="-lg"
+# (jfs) No, it's not working any longer since fileutils
+# 4.10, now -g doesn't show the owner. In GNU's ls the
+# group is shown unless -G is used
+LSGROUP="-l"
+
 # -L to show file instead of symlink
 LSLINK="-L"
 GREP=`findcmd grep`
