@@ -11,7 +11,7 @@ Changes (v 3.2.1)
   - check_rootkit
   - check_xinetd
   - aide_run and integrit_run as new (alternative) integrity file
-    checkers.
+    checkers (contributed by 'unspawn')
 - Improved/Fixed checks: check_apache, check_devices, check_exports,
    check_group, check_inetd, check_known, check_netrc, check_passwd,
    check_patch, check_perms, check_rhosts, check_root, check_services,
@@ -35,7 +35,8 @@ Changes (v 3.2.1)
   override the generic scripts.
 - Review of temporary file creation in all files including the creation
   of a new function (safe_temp) to handle temporary file usage.
-- Included a RedHat spec file to create rpm packages
+- Included a RedHat spec file to create rpm packages (contributed 
+  by 'unspawn')
 - New utilities: mkfilelst
 - Full integration with TARA 3.0.3 including:
   * Update of all SunOS 5 checks based on ARSC's implementation in TARA
