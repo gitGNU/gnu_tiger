@@ -16,6 +16,8 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # HPUX/config - 06/14/93
+# 09/03/2003 - jfs - Applied a patch provided by Ryan Bradetich to support
+#                    default locations of SSHD_CONFIG
 # 06/21/2003 - jfs - Applied a patch provided by Ryan Bradetich to support
 #                    PWCK properly
 # 06/26/2003 - jfs - Exported command to check for trusted mode and 
@@ -64,6 +66,8 @@ CHMOD=/bin/chmod
 LN=/bin/ln
 WC=/bin/wc
 MESG=/usr/bin/mesg
+ID=/usr/bin/id
+CUT=/usr/bin/cut
 # Setup PWCK depending on the status of the system
 # (is it in trusted mode?)
 /usr/lbin/getprdef -r >/dev/null 2>/dev/null
@@ -83,14 +87,22 @@ GRPCK=/usr/sbin/grpck
 # For check_trusted
 GETPRDEF=/usr/lbin/getprdef
 #
+# For SSH Daemon configuration
+if [ -f /opt/ssh/etc/sshd_config ]
+then
+	SSHD_CONFIG="/opt/ssh/etc/sshd_config"
+else
+	SSHD_CONFIG="/etc/opt/openssh/sshd_config"
+fi
+#
 MAILER=/usr/bin/mailx
 SENDMAILS="/usr/lib/sendmail"
 SENDMAILCF="/usr/lib/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ PASTE
-export BASENAME CHOWN CHMOD LN DIFF MAILER WC MESG PWCK GRPCK GETPRDEF 
-export SENDMAILS SENDMAILCF
+export BASENAME CHOWN CHMOD LN DIFF MAILER WC ID CUT MESG PWCK GRPCK GETPRDEF
+export SSHD_CONFIG SENDMAILS SENDMAILCF
 #
 UNAME=/bin/uname
 GETHOSTNAME=/bin/hostname

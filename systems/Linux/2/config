@@ -214,6 +214,14 @@ export LOGINDEF PAMLOGINDEF
 APACHECONFDIR="/etc/httpd/conf/"
 [ "$LXDISTRIBUTION" = "debian" ] && APACHECONFDIR="/etc/apache/"
 [ "$LXDISTRIBUTION" = "suse" ] && APACHECONFDIR="/etc/httpd/"
+# For SSHd configuration
+if [ -f /etc/ssh/sshd_config ]
+then
+        SSHD_CONFIG="/etc/ssh/sshd_config"
+	export SSHD_CONFIG
+fi
+# TODO: Check if all distributions use this configuration file
+
 
 # For Yellow Pages services
 YPCAT=`findcmd ypcat`

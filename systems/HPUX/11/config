@@ -88,7 +88,12 @@ GRPCK=/usr/sbin/grpck
 GETPRDEF=/usr/lbin/getprdef
 #
 # For SSH Daemon configuration
-SSHD_CONFIG="/opt/ssh/etc/sshd_config /etc/opt/openssh/sshd_config"
+if [ -f /opt/ssh/etc/sshd_config ]
+then
+        SSHD_CONFIG="/opt/ssh/etc/sshd_config"
+else
+        SSHD_CONFIG="/etc/opt/openssh/sshd_config"
+fi
 #
 MAILER=/usr/bin/mailx
 SENDMAILS="/usr/lib/sendmail"

@@ -17,11 +17,12 @@
 #
 # check_root - 05/30/99
 #
+# 09/03/2003 jfs Use SSHD_CONFIG instead of SSHCONF
 # 08/28/2003 jfs Fixed syntax error
 # 08/14/2003 jfs Implemented some of ARSC changes done in Tara 3.0.3, 
 #            including a bugfix and checks for SSH PermitRootLogin's
 #            (although changes have been implemented to allow for OS
-#            and site configuration of the SSHCONF file location)
+#            and site configuration of the SSHD_CONFIG file location)
 # 05/26/2003 jfs Fixed calls to test (worked in Linux but not in other OS due
 #     to -n not being implicit)
 # 07/25/2002 jfs  Changed TigerInstallDir to .
@@ -132,20 +133,20 @@ fi
   fi
 }
 
-[ -z "$SSHCONF" ] && {
+[ -z "$SSHD_CONFIG" ] && {
 if [ -f /usr/local/etc/sshd_config ]; then
-  SSHCONF=/usr/local/etc/sshd_config
+  SSHD_CONFIG=/usr/local/etc/sshd_config
 elif [ -f /etc/sshd_config ]; then
-  SSHCONF=/etc/sshd_config
+  SSHD_CONFIG=/etc/sshd_config
 elif [ -f /etc/ssh2/sshd2_config ]; then
-  SSHCONF=/etc/ssh2/sshd2_config
+  SSHD_CONFIG=/etc/ssh2/sshd2_config
 elif [ -f /etc/ssh/sshd_config ]; then
-  SSHCONF=/etc/ssh/sshd_config
+  SSHD_CONFIG=/etc/ssh/sshd_config
 fi
 }
 
-[ -f "$SSHCONF" ] && {
-rootssh=`$GREP PermitRootLogin $SSHCONF`
+[ -f "$SSHD_CONFIG" ] && {
+rootssh=`$GREP PermitRootLogin $SSHD_CONFIG`
 if [ -n "$rootssh" ]; then
   if [ ! "`echo $rootssh | $GREP \"^#\"`" ]; then
     if [ "`echo $rootssh | $GREP -i yes`" ]; then

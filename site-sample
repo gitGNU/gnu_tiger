@@ -51,6 +51,19 @@ HOSTNAMESLIST="$HOSTNAME"
 #
 #FIND=/usr/local/gnu/bin/find
 #AWK=/usr/local/bin/mawk
+#------------------------------------------------------------------------
+# Location of configuration files which are analysed by some modules
+#------------------------------------------------------------------------
+# For Sendmail
+#SENDMAILS="/usr/lib/sendmail"
+#SENDMAILCF="/usr/lib/sendmail.cf
+i#
+# For SSH (used by 'check_root')
+#SSHD_CONFIG="/usr/local/etc/sshd_config""
+#
+# For Apache (used by 'check_apache)
+#APACHECONFDIR="/usr/local/etc/httpd"
+#
 #
 #------------------------------------------------------------------------
 #
