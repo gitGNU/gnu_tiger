@@ -1,0 +1,157 @@
+# -*- sh -*-
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# HPUX/config - 06/14/93
+#
+#-----------------------------------------------------------------------------
+#
+UUID=`/usr/bin/id | /bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
+
+export UNAME
+
+[ "$UUID" != "0" -a "$Tiger_TESTMODE" != 'Y' ] && {
+  echo " " 1>&2
+  echo "This script must be run from a super-user account." 1>&2
+  echo " " 1>&2
+  exit 1
+}
+
+CAT=/bin/cat
+LS=/bin/ls
+# To show group ownership
+LSGROUP=
+# -L to show file instead of symlink
+LSLINK="-L"
+RM=/bin/rm
+AWK=/usr/bin/awk
+GREP=/bin/grep
+EGREP=/bin/egrep
+# Silent grep
+SGREP="$BASEDIR/util/sgrep"
+SED=/bin/sed
+SORT=/bin/sort
+COMM=/usr/bin/comm
+TAIL=/bin/tail
+MV=/bin/mv
+TR=/usr/bin/tr
+JOIN=/usr/bin/join
+GROUPSS=/usr/bin/groups
+FILECMD=/usr/bin/file
+UNIQ=/usr/bin/uniq
+PASTE=/usr/bin/paste
+BASENAME=/bin/basename
+CHOWN=/bin/chown
+CHMOD=/bin/chmod
+LN=/bin/ln
+WC=/bin/wc
+#
+# Disable diff because it doesn't support -D... so we can not
+# use diff... this will cause reports to be mailed as is... future
+# refinement will handle this.
+#
+#DIFF=/bin/diff
+MAILER=/usr/bin/mailx
+SENDMAILS="/usr/lib/sendmail"
+SENDMAILCF="/usr/lib/sendmail.cf"
+#
+export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
+export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ PASTE
+export BASENAME CHOWN CHMOD LN DIFF MAILER WC
+#
+UNAME=/bin/uname
+GETHOSTNAME=/bin/hostname
+EXPR=/bin/expr
+STRINGS=/usr/bin/strings
+FIND=/bin/find
+FINDXDEV=-xdev
+FMT=$CAT
+CC=/bin/cc
+PS=/bin/ps
+DATE=/bin/date
+DATECMD="$DATE +%y%m%d"
+TIMECMD="$DATE +%H:%M"
+TESTLINK=-h
+TESTEXEC=-x
+#
+#
+export UNAME GETHOSTNAME EXPR STRINGS FIND FINDXDEV
+export FMT CC PS DATE DATECMD TIMECMD TESTLINK TESTEXEC
+#
+WAIT=wait
+#
+# Using NIS (YP)?
+YPCAT=/usr/bin/ypcat
+#
+#
+YPSERVER="NO"
+($PS -el | $GREP ypserv | $SGREP -v $GREP) && YPSERVER="YES"
+export WAIT YPCAT YPSERVER
+#
+MAILSPOOL=/usr/mail
+#
+CRONSPOOL=/usr/spool/cron/crontabs
+#
+ETCSHELLS=/etc/shells
+#
+export MAILSPOOL CRONSPOOL ETCSHELLS
+#
+CDIR="$BASEDIR/systems"
+eval `
+  while read var file
+  do
+    if [ -f "$CONFIG_DIR/$file" ]; then
+      loc="$CONFIG_DIR"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$ARCH/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV/$ARCH"
+    elif [ -f "$CDIR/$OS/$REL/$REV/$file" ]; then
+      loc="$CDIR/$OS/$REL/$REV"
+    elif [ -f "$CDIR/$OS/$REL/$file" ]; then
+      loc="$CDIR/$OS/$REL"
+    elif [ -f "$CDIR/$OS/$file" ]; then
+      loc="$CDIR/$OS"
+    else
+      loc=""
+    fi
+    if [ "$loc" != "" ]; then
+      echo $var="$loc/$file;"
+    else
+      echo "$var=;"
+    fi
+    echo "export $var;"
+  done << EOL
+GEN_PASSWD_SETS genpasswd
+GEN_GROUP_SETS gengroups
+GEN_CRON_FILES gen_cron
+GEN_ALIAS_SETS genaliases
+CHECK_CRON check_cron
+GEN_BOOTPARAM_SETS genbootparam
+GEN_EXPORT_SETS genexports
+GEN_SERVICES_SETS genservices
+GET_MOUNTS genmounts
+SIGNATURE_FILE signatures
+SERVICESFILE services
+INETDFILE inetd
+FILE_ACL fal.db
+SUID_LIST suid_list
+REL_FILE_EXCP suidpath.db
+GETCLIENTDIRS genclients
+GEN_INETD_SETS gen_inetd
+GETDISKS getdisks
+EMBEDDEDLIST embedlist
+GETUSERHOME getuserhome
+EOL
+`
