@@ -17,6 +17,7 @@
 #
 #  config (top level) - 06/14/93
 #
+# 08/13/2004 jfs  Setup all locales as 'C' (Debian bug  #270108)
 # 04/28/2004 jfs  Changed -f RCFILE check to -r to allow use through ssh
 #                 as suggested by Falk Siemonsmeier:
 #                  cat /etc/tiger/tigerrc | ssh tiger -c /dev/stdin
@@ -52,8 +53,8 @@ TigerConfigDir='.'
 # This is important to avoid problems with commands that are
 # dependant on the defined language environment
 LANG="C"
-LC_TIME="C"
-export LANG LC_TIME
+LC_ALL="C"
+export LANG LC_ALL
 error_siggen()
 {
   dir=$1
