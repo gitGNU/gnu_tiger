@@ -44,3 +44,25 @@ files, etc) if not corrected.
 %pass013w
 The listed username is not using an acceptable, cryptographic method for the
 password hash. 
+%pass014w
+The listed login ID is disabled in some manner ('*' in passwd field, etc),
+but the login shell for the login ID is a valid shell (from /etc/shells
+or the system equivalent).  A valid shell can potentially enable the
+login ID to continue to be used.  The login shell should be changed
+to something that doesn't exist, or to something like /bin/false.
+%pass015w
+The listed login ID does not have a valid login program or shell.
+Usually these are defined in /etc/shells.
+%pass016w
+The listed login ID should not have "/" (system root directory)
+as its home drive. This is a possible security hole.
+%pass017w
+The listed login ID has a user ID of zero (0) and is not the 'root'
+account.  This should be checked to see if it is legitimate.  In any
+case, having login ID's with a user ID of zero tends to lead to security
+problems, and should be avoided (except for 'root')
+%pass18f
+The listed administrative login should have an impossible password.
+Files owned by this login ID may reside in critical system directories
+and compromise of this account could lead to trojan executables in
+typical search paths.

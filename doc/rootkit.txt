@@ -1,0 +1,38 @@
+%rootkit001f
+A test was run on the 'ls' command to determine if it 'sees'
+certain pathnames (e.g., '...','bnc','war',etc).  Tiger creates
+a temporary directory, creates files with known hacker program
+names/directories, and attempts an 'ls'.  If the 'ls' does not
+recognize the file, a FAIL is issued
+%rootkit002f
+A test was run on the 'find' command to determine if it 'sees'
+certain pathnames (e.g., '...','bnc','war',etc).  Tger creates
+a temporary directory, creates files with known hacker program
+names/directories, and attempts an 'find'.  If the 'find' does 
+not recognize the file, a FAIL is issued.
+%rootkit003w
+The 'chkrootkit' program has detected a suspicious directory
+which might be an indication of an intrusion. 
+A full analysis of the system is recommended to determine the 
+presence of further signs of intrusion since a rookit might have
+been installed. 
+%rootkit004f
+The 'chkrootkit' program has detected a possible rootkit installation
+A full analysis of the system is recommended to determine the 
+presence of further signs of intrusion since a rookit might have
+been installed. 
+%rootkit005a
+The 'chkrootkit' program has detected a rootkit installation
+A full analysis of the system is recommended to determine the 
+presence of further signs of intrusion and to determine if the
+rootkit is indeed installed.
+%rootkit006a
+A rootkit is installed by intruders in systems which have been
+successfully compromised and in which they have obtained full
+administrator priviledges. The installation of a rookit is 
+an indication of a major system compromise.
+
+If the installation of a rookit is confirmed you are encouraged 
+to power off the system and follow the steps outlined by
+Steps for Recovering from a UNIX or NT System Compromise
+(http://www.cert.org/tech_tips/root_compromise.html)

@@ -173,3 +173,13 @@ any where to that account.  The 'passwd' command does *not* sanity check this
 field when changing the password.  As a result, the 'root' account has a
 null password field, allowing anyone to remote shell in as root.  To fix
 this problem, place a '*' in the password field in /etc/passwd.
+%sig022f
+The patchdiag.xref files is not available in the configuration directory. This
+means that the script cannot proceed further since it does not have any
+information of which are the appropiate patches for this system.
+
+Please download the patchdiag file from Sunsolve, you can use, for example,
+the following link:
+http://sunsolve.sun.com/pub-cgi/patchDownload.pl?target=patchdiag.xref&method=H
+
+Once downloaded, place it in the configuration directory and rerun the script.

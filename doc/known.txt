@@ -79,3 +79,23 @@ or worms propagating through remote attacks.
 This also can happen if a local application is using shared libraries which have
 been upgraded but the service itself has not been restarted in order to
 use the new libraries.
+%kis013a
+A interface is set up on promiscuous mode, this is a common method
+used by attackers to capture user account and and password information.
+For related information, see CERT advisory CA-94:01 available in
+http://www.cert.org/advisories/CA-94.01.ongoing.network.monitoring.attacks.html
+%kis014a
+A shell entry (/bin/sh or /bin/csh) has been defined in inetd.conf, this is 
+a common method used by attackers to introduce system backdoors and may
+exploits run the following code:
+
+echo 'ingreslock stream tcp nowait root /bin/sh sh -i' > /tmp/bob; /usr/sbin/inetd -s /tmp/bob 
+
+You should check all if the inetd running in the system is using a modified
+configuration file and check all the programs specified in either that
+configuration file or /etc/inetd.conf to verify that they are correct
+and have not been replaced by Trojan horse programs.
+Also check for legitimate services that you have commented
+out in your /etc/inetd.conf. Intruders may turn on a service
+that you previously thought you had turned off, or replace
+the inetd program with a Trojan horse program.

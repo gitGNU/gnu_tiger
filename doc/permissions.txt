@@ -157,3 +157,41 @@ normally should not be able to read.  On many systems, this includes
 loss of 'arp -a' functionality for a normal user account. (On SunOS 5.x
 systems, even this functionality isn't lost... there is no reason for
 'arp' to be setgid).  This is a minor loss of functionality.
+%perm26f
+The file '/etc/login.access' provides finer control over user
+access, it can be modified to allow or disallow remote access
+to priviledged accounts.  If this file is writable by non-root
+users, then unauthorized access or privileges may be obtained.
+%perm27f
+The file '/etc/login.conf' is used by default on some BSD systems, 
+it can be used to set up user environment and to set policy and
+accounting restrictions. Since this file provides control over user
+access, if this file is writable by non-root
+users, then unauthorized access or privileges may be obtained.
+%perm28f
+The file '/etc/login.defs' is used by default on some Linux systems, 
+it can be used to set up user environment and to set policy and
+accounting restrictions (such as password aging), as it defines 
+configuration control definitions for the login package.
+Since this file provides control over user access, if this file
+is writable by non-root users, then unauthorized access or privileges 
+may be obtained.
+%perm29f
+The configuration files for PAM (Pluggable Authentication Modules)
+are used by default on many Unix systems, it can be used to set up
+the environment for some services and defined the policy for its
+access.  Since this file provides control over user access, if this file
+is writable by non-root users, then unauthorized access or privileges 
+may be obtained.
+
+More information about PAM is available from:
+http://www.kernel.org/pub/linux/libs/pam/
+and
+http://www.sun.com/solaris/pam/
+%perm30f
+The configuration files (/etc/ttys, /etc/default/login, /etc/security 
+or /etc/securetty depending on the operating system) determines
+access to users based on what consoles are they logged in.
+Since this file provides control over user access, if this file
+is writable by non-root users, then unauthorized access or privileges 
+may be obtained.

@@ -6,6 +6,11 @@ any system user. This might open security holes if these are shared
 devices or hold binaries (disks for example). The administrator should
 properly set device access (using group configuration to provide
 access to a device to multiple users, for example).
+%dev003w
+There is a file in the devices directory which is a common file. Devices
+directory should only hold special files although some systems have
+directories and shell scripts in /dev. Please check your system's
+documentation to determine if that file should be located there.
 %boot01
 The lilo configuration file (/etc/lilo.conf) should have permissions
 limiting access to only the owner (usually root).

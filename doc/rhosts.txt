@@ -84,3 +84,28 @@ The indicated .rhosts file contains invalid characters, not expected
 to be found in a .rhosts file.  This file should be examined and the
 invalid characters removed, as it may contain a typo or possibly a 
 command.
+%rcmd016w
+The user has an .rhosts file. The use of rhosts files is not a recommended
+method for secure access to remote hosts, you should consider wether or
+not the user needs to have an .rhosts file and, in any case, consider
+the use of safer replacement for the 'r' commands including public-key
+cryptography programs (such as SSH implementations)
+%rcmd017a
+The .rhosts file of a given user does not belong to him, if you are running
+the rlogin service this transfers control to what users (and where from)
+can access this account to the user that this files belongs to. This is usually
+and indication of an intrusion attempt and you should take steps to remove
+this file and determine who has accessed to this account using the rlogin
+service.
+Consider removing the 'r' commands altogether and use safer replacements
+commands, including public-key cryptography programs 
+(such as SSH implementations)
+%rcmd018a
+Root has an .rhosts file, you should avoid at all hosts providing
+passwordless remote access to the administrator user.
+This can also be an indication of a remote intrusion, if so you should
+take steps to remove this file and determine who has accessed to 
+this account using the rlogin service.
+Consider removing the 'r' commands altogether and use safer replacements
+commands, including public-key cryptography programs 
+(such as SSH implementations)

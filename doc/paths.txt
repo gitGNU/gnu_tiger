@@ -12,6 +12,10 @@ used by root, then this is not a problem.  If they are, you should
 consider changing the owner to `root'. Because of SMI's recent decission
 to install most /usr/sbin/* and /usr/bin/* executables
 as owned by `bin', this account will not flag a warning.
+
+Linux (notably RedHat) operating environments violate this convention 
+with printer (lp*) and rpm programs among others.  
+Changing ownership in this case may be problematic.
 %path003i
 No PATH variable could be extracted from the indicated file.  This either
 indicates that the PATH is not set in the file, or that the file is too

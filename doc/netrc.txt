@@ -20,3 +20,7 @@ The indicated .netrc file is a directory.  This possibly indicates
 that an intrusion has occurred.  The directory should be examined
 for unusual files.  The system should also be checked for other
 signs of intrusion.  The directory should be renamed or removed.
+%nrc005w
+The user has a .netrc file, you should avoid usage of these files unless
+absolutely necessary since they can contain sensible information which
+could be used by a local intruder.
