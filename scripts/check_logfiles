@@ -38,6 +38,11 @@
 # check_logfiles - 10/19/2003 - jfs - based on patch from Ryan Bradetich fixed
 #                  location of logfiles for HP-UX, btmp file check, and btmp
 #                  location for Linux (previously undefined)
+# check_logfiles - 11/19/2003 - jfs - Modified -r to -f
+#     (Checks should only determine wether the file exists, if its 
+#     readable or not is irrelevant. As a matter of fact they might not be
+#     if running a user != root. We don't care since we are not checking
+#     file content)
 #
 #-----------------------------------------------------------------------------
 #
