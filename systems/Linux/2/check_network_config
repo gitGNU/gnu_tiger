@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -20,11 +20,17 @@
 #
 # 11/25/2002 jfs - Initial version derived from Hispasec's bulletin
 #                  (which is based on documentation online)
+# 15/04/2003 jfs - Changed ERROR into FAIL
 #
 # References:
 # http://www.linuxsecurity.com/articles/network_security_article-4528.html
 # http://linux.oreillynet.com/pub/a/linux/2000/11/16/LinuxAdmin.html
 # 
+#-----------------------------------------------------------------------------
+# TODO
+# 
+# - Check if conf/all have the same information as conf/default, conf/ethX...
+#   (since a given interface might be different from the others)
 #
 #-----------------------------------------------------------------------------
 #
@@ -71,7 +77,7 @@ done
 haveallcmds CAT || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 haveallfiles PROCDIR || {
-        message FAIL lin008f "" "The $PROCDIR filesystem is not available. Please make sure you have configured support for this pseudo-filesystem."
+        message ERROR lin008e "" "The $PROCDIR filesystem is not available. Please make sure you have configured support for this pseudo-filesystem."
 	exit 1
 }
 echo
@@ -91,7 +97,7 @@ read_if_exist() {
 
 read_if_exist /proc/sys/net/ipv4/icmp_echo_ignore_all
 icmp_echo_ignore=$?
-read_if_exist /proc/sys/net/ipv4/icmp_echo_ignore_broadcast
+read_if_exist /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
 icmp_broadcast_ignore=$?
 read_if_exist /proc/sys/net/ipv4/icmp_bogus_error_responses
 icmp_bogus_error=$?
@@ -119,29 +125,41 @@ log_martian_def=$?
 read_if_exist /proc/sys/net/ipv4/conf/all/hidden
 ip_weak_end=$?
 
+# Aff info on this
+read_if_exist /proc/sys/net/ipv4/ip_always_defrag
+ip_always_defrag=$?
+read_if_exist /proc/sys/net/ipv4/conf/all/bootp_relay
+bootp_relay=$?
+read_if_exist /proc/sys/net/ipv4/conf/all/mc_forwarding
+mc_forwarding=$?
+read_if_exist /proc/sys/net/ipv4/conf/all/proxy_arp
+proxy_arp=$?
+read_if_exist /proc/sys/net/ipv4/conf/all/secure_redirects
+secure_redirects=$?
+
 # Now start checking and sending messages
 
 [ $icmp_echo_ignore -eq 0 ] && \
 	message INFO lin009i "The system is configured to answer ICMP ECHO requests"
 [ $icmp_broadcast_ignore -eq 0 ] && \
-	message ERROR lin010e "The system is configured to answer to ICMP broadcasts"
+	message FAIL lin010f "The system is configured to answer to ICMP broadcasts"
 [ $icmp_bogus_error -eq 0 ] && \
-	message ERROR lin011e "The system is configured to answer bogus errors"
+	message FAIL lin011f "The system is configured to answer bogus errors"
 
 [ $icmp_redirect -eq 0 -o $icmp_redirect_def -eq 0 ] && \
 	message WARN lin012w "The system accepts ICMP redirection messages"
 
 [ $tcp_syncookies -eq 0 ] && \
-	message ERROR lin013e "The system is not protected against Syn flooding attacks"
+	message FAIL lin013f "The system is not protected against Syn flooding attacks"
 
 [ $rp_filter_all -eq 0 -o $rp_filter_def -eq 0 ] && \
-	message ERROR lin014e "The system permits the transmission of IP packets with invalid addresses"
+	message FAIL lin014f "The system permits the transmission of IP packets with invalid addresses"
 
 [ $ip_fwd -eq 1 ]  && \
 	message WARN lin015w "The system has IP forwarding enabled"
 
 [ $ip_source_route_all -eq 1 -o $ip_source_route_def -eq 1 ] && \
-	message ERROR lin016e "The system permits source routing from incoming packets"
+	message FAIL lin016f "The system permits source routing from incoming packets"
 
 [ $log_martian_all -eq 0 -o $log_martian_def -eq 0 ] && \
 	message WARN lin017w "The system is not configured to log suspicious (martian) packets"
@@ -149,3 +167,5 @@ ip_weak_end=$?
 # TODO: add a test that is useful for post-2.2 kernels
 [ $ip_weak_end -eq 0 ] && \
 	message WARN lin018w "The system implements weak end host RFC"
+
+exit 0
