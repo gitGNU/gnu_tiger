@@ -62,6 +62,7 @@ CHOWN=/bin/chown
 CHMOD=/bin/chmod
 LN=/bin/ln
 WC=/bin/wc
+MESG=/usr/bin/mesg
 # Setup PWCK depending on the status of the system
 # (is it in trusted mode?)
 /usr/lbin/getprdef -r >/dev/null 2>/dev/null
@@ -86,7 +87,7 @@ SENDMAILCF="/usr/lib/sendmail.cf"
 #
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ PASTE
-export BASENAME CHOWN CHMOD LN DIFF MAILER WC GETPRDEF
+export BASENAME CHOWN CHMOD LN DIFF MAILER WC MESG PWCK GETPRDEF 
 export SENDMAILS SENDMAILCF
 #
 UNAME=/bin/uname
