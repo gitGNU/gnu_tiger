@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -21,6 +21,7 @@
 # Bastille's Apache module
 # http://httpd.apache.org/docs-2.0/misc/security_tips.html
 # http://www.intersectalliance.com/projects/ApacheConfig/index.html 
+# SANS's Linux Security Checklist (item #25)
 #
 # TODO (generic)
 # - include checks for problematic modules
@@ -154,7 +155,7 @@ do
 
 # TODO: we could list executable files in the directory
 			if [ ! -z "`echo $options | $GREP -i execcgi`" ]; then
-			message INFO apa005w "$directory directory can hold executable CGI."
+			message WARN apa005w "$directory directory can hold executable CGI."
 			fi
 
 #  TODO we could check which directories do not have an index.html file
