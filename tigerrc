@@ -253,13 +253,13 @@ Tiger_ROOT_PATH_OK_Group_Write='root|uucp|bin|sys|daemon'
 # Who can own things in other users PATH?
 # List of usernames separated by '|'... no whitespace
 #
-Tiger_PATH_OK_Owners='root|bin|daemon|uucp|sys|adm'
+eval Tiger_PATH_OK_Owners='$Tiger_ROOT_PATH_OK_Owners'
 #
 # What groups can have write access to executables in non-root user PATH?
 # List of group names separated by '|'... no whitespace.
 # No value means no groups should have write access.
 #
-Tiger_PATH_OK_Group_Write=
+eval Tiger_PATH_OK_Group_Write='Tiger_ROOT_PATH_OK_Group_Write'
 #
 # Should 'tiger' wait for Crack to finish?  If set to 'Y' it will wait
 # until it finishes.  If set to 'N', it will collect the output if
