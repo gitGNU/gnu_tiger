@@ -46,10 +46,9 @@ prefix=@prefix@
 PLATFORM_SCRIPTS:=$(shell find ./systems/ -type f)
 
 BINARIES=./tiger \
-	./tigexp 
-SCRIPTS= ./tigexp \
-	./tigercron \
-	./scripts/check_accounts \
+	 ./tigexp  \
+	 ./tigercron \
+SCRIPTS=./scripts/check_accounts \
 	./scripts/check_aliases \
 	./scripts/check_anonftp \
 	./scripts/check_cron \
@@ -155,10 +154,10 @@ install:
 	      $$file > $(prefix)/$(TIGERHOME)/$$file;\
 	  chmod 755 $(prefix)/$(TIGERHOME)/$$file; \
 	done; \
-	sed -e 's%^TigerLogDir=.*$$%TigerLogDir="'$(TIGERLOGS)'"%' \
-	    -e 's%^TigerWorkDir=.*$$%TigerWorkDir="'$(TIGERWORK)'"%' \
-	    -e 's%^TigerBinDir=.*$$%TigerBinDir="'$(TIGERBIN)'"%' \
-	    ./config > $(prefix)/$(TIGERHOME)/config; \
+#	sed -e 's%^TigerLogDir=.*$$%TigerLogDir="'$(TIGERLOGS)'"%' \
+#	    -e 's%^TigerWorkDir=.*$$%TigerWorkDir="'$(TIGERWORK)'"%' \
+#	    -e 's%^TigerBinDir=.*$$%TigerBinDir="'$(TIGERBIN)'"%' \
+#	    ./config > $(prefix)/$(TIGERHOME)/config; \
 	chmod 644 $(prefix)/$(TIGERHOME)/config;
 	(cd $(prefix)/$(TIGERHOME); ./util/genmsgidx doc/*.txt)
 
@@ -182,11 +181,11 @@ configure: configure.in
 # Configure the package with the defaults (will install to /usr/local/)
 config: configure
 	./configure
-	chmod 755 tiger tigercron config
+	chmod 755 tiger tigercron config tigexp
 
 # Configure the package to run in the local dir
 config-local: configure
 	./configure --with-tigerhome=. --with-tigerconfig=. \
 		--with-tigerwork=run/ --with-tigerlog=log/ --with-tigerbin=. \
 		--prefix=/usr/local/tiger
-	chmod 755 tiger tigercron config
+	chmod 755 tiger tigercron config tigexp

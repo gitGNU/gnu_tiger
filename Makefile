@@ -1,8 +1,8 @@
 # Generated automatically from Makefile.in by configure.
 #
 #  You only need to 'make' tiger if you are planning to run it
-#  on a regular basis.
-#
+#  on a regular basis, or to compile the binaries (sources under c/)
+#  for your platform (these binaries might be needed by some checks)
 #
 #------------------------------------------------------------------------
 #
@@ -11,7 +11,7 @@
 # contain the checking scripts, the platform specific scripts, etc.
 # None of this will need to be writable once installed.
 #
-TIGERHOME=/usr/local/tiger
+TIGERHOME=.
 #
 # This directory is used for scratch files while the scripts
 # are running.  It can be /tmp.  By using something other
@@ -21,17 +21,22 @@ TIGERHOME=/usr/local/tiger
 # 
 # Of course, it is necessary that this directory be writable.
 #
-TIGERWORK=/usr/local/tiger/run
+TIGERWORK=run/
 #
 # Where do log files go.  This directory must be writable.
 #
-TIGERLOGS=/usr/local/tiger/log
+TIGERLOGS=log/
 #
 # Where do binary executables go... this is only used if the
 # binary executables don't exist in the appropriate platform
 # sub-directory under $(TIGERHOME)/systems
 #
-TIGERBIN=/usr/local/bin
+TIGERBIN=.
+#
+# Which is the prefix of where the system is going to be installed.
+# 
+prefix=/usr/local/tiger
+#
 #------------------------------------------------------------------------
 #
 # End of user customization...
@@ -42,10 +47,9 @@ TIGERBIN=/usr/local/bin
 PLATFORM_SCRIPTS:=$(shell find ./systems/ -type f)
 
 BINARIES=./tiger \
-	./tigexp 
-SCRIPTS= ./tigexp \
-	./tigercron \
-	./scripts/check_accounts \
+	 ./tigexp  \
+	 ./tigercron \
+SCRIPTS=./scripts/check_accounts \
 	./scripts/check_aliases \
 	./scripts/check_anonftp \
 	./scripts/check_cron \
@@ -118,11 +122,11 @@ install:
         fi; \
 	if [ ! -d $(prefix)/$(TIGERWORK) ]; then \
 	  mkdir -p $(prefix)/$(TIGERWORK); \
-	  chmod 755 $(prefix)/$(TIGERWORK); \
+	  chmod 700 $(prefix)/$(TIGERWORK); \
 	fi; \
 	if [ ! -d $(prefix)/$(TIGERLOGS) ]; then \
 	  mkdir -p $(prefix)/$(TIGERLOGS); \
-	  chmod 755 $(prefix)/$(TIGERLOGS); \
+	  chmod 700 $(prefix)/$(TIGERLOGS); \
 	fi; \
 	if [ ! -d $(prefix)/$(TIGERHOME)/scripts ]; then \
 	  mkdir $(prefix)/$(TIGERHOME)/scripts; \
@@ -151,10 +155,10 @@ install:
 	      $$file > $(prefix)/$(TIGERHOME)/$$file;\
 	  chmod 755 $(prefix)/$(TIGERHOME)/$$file; \
 	done; \
-	sed -e 's%^TigerLogDir=.*$$%TigerLogDir="'$(TIGERLOGS)'"%' \
-	    -e 's%^TigerWorkDir=.*$$%TigerWorkDir="'$(TIGERWORK)'"%' \
-	    -e 's%^TigerBinDir=.*$$%TigerBinDir="'$(TIGERBIN)'"%' \
-	    ./config > $(prefix)/$(TIGERHOME)/config; \
+#	sed -e 's%^TigerLogDir=.*$$%TigerLogDir="'$(TIGERLOGS)'"%' \
+#	    -e 's%^TigerWorkDir=.*$$%TigerWorkDir="'$(TIGERWORK)'"%' \
+#	    -e 's%^TigerBinDir=.*$$%TigerBinDir="'$(TIGERBIN)'"%' \
+#	    ./config > $(prefix)/$(TIGERHOME)/config; \
 	chmod 644 $(prefix)/$(TIGERHOME)/config;
 	(cd $(prefix)/$(TIGERHOME); ./util/genmsgidx doc/*.txt)
 
@@ -167,4 +171,22 @@ distclean: clean
 	cd c && $(MAKE) distclean 
 	-find log/ -type f -exec rm -f {} \;
 	-find run/ -type f -exec rm -f {} \;
-	-rm -f Makefile configure 
+	-rm -f Makefile 
+
+maintainerclean: distclean
+	-rm -f configure tiger config tigercron
+
+configure: configure.in
+	autoconf
+
+# Configure the package with the defaults (will install to /usr/local/)
+config: configure
+	./configure
+	chmod 755 tiger tigercron config tigexp
+
+# Configure the package to run in the local dir
+config-local: configure
+	./configure --with-tigerhome=. --with-tigerconfig=. \
+		--with-tigerwork=run/ --with-tigerlog=log/ --with-tigerbin=. \
+		--prefix=/usr/local/tiger
+	chmod 755 tiger tigercron config tigexp
