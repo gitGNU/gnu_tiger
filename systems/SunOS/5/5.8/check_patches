@@ -1,0 +1,122 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2002 Javier Fernandez-Sanguino Pen~a
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_patchref - 9 August 2002
+# 
+# Module to check patches (using showrev) against the patchdiag.xref file
+# this file can be downloaded from:
+# 
+# http://sunsolve.sun.com/pub-cgi/patchDownload.pl?target=patchdiag.xref&method=H
+# TODO: this script still needs to check:
+# - that the architecture is the same as the one in the patchref.xref (field 9)
+# - that the package (and version) affected is installed (field 10)
+# - retrieve the description of the package
+#
+# DATE 	NAME 	DESCRIPTION_OF_CHANGES
+# 
+#-----------------------------------------------------------------------------
+#
+# This is the directory Tiger is installed on
+TigerInstallDir='.'
+
+# For debugging purposes
+[ -z "$GREP" ] && GREP=`which grep`
+[ -z "$CUT" ] && CUT=`which cut`
+[ -z "$CAT" ] && CAT=`which cat`
+[ -z "$SED" ] && SED=`which sed`
+[ -z "$AWK" ] && AWK=`which awk`
+[ -z "$WORKDIR" ] && WORKDIR=/tmp
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds SHOWREV CUT SED CAT GREP RM || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars HOSTNAME || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing check for patches not installed in the system.."
+
+haveallcmds SHOWREV CUT SED CAT GREP RM || exit 1
+haveallfiles CONFIG_DIR BASEDIR WORKDIR || exit 1
+haveallvars HOSTNAME || exit 1
+
+# message FAIL XXXX0??f "" "MESSAGE TO WRITE IN REPORT"
+
+# First extract the current patches to a file (faster than
+# spawning a shell for showrev each time)
+
+$SHOWREV -p > $WORKDIR/showrev.$$
+
+# Now go throught the patch list and look for in the showrev output
+if [ -f $CONFIG_DIR/patchdiag.xref ]
+then
+  $CAT $CONFIG_DIR/patchdiag.xref |
+  $GREP -v "^#" |
+  $CUT -f 1 -d \| |
+  while read patchnumber
+  do
+	patchfound=`grep "^Patch: $patchnumber" $WORKDIR/showrev.$$`
+	if [ -z "$patchfound" ] 
+	then
+		message WARN sig030w "" "Patch $patchnumber is not installed on this system"
+	fi
+  done
+else
+   message WARN sig031w "" "This system does not have a patchdiag.xref file"
+fi
+  
+
+$RM $WORKDIR/showrev.$$
+
+
+exit 0

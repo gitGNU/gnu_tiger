@@ -1,0 +1,43 @@
+ftp	stream	tcp6	nowait	root	/usr/sbin/in.ftpd	in.ftpd
+telnet	stream	tcp6	nowait	root	/usr/sbin/in.telnetd	in.telnetd
+name	dgram	udp	wait	root	/usr/sbin/in.tnamed	in.tnamed
+shell	stream	tcp	nowait	root	/usr/sbin/in.rshd	in.rshd
+shell	stream	tcp6	nowait	root	/usr/sbin/in.rshd	in.rshd
+login	stream	tcp6	nowait	root	/usr/sbin/in.rlogind	in.rlogind
+exec	stream	tcp	nowait	root	/usr/sbin/in.rexecd	in.rexecd
+exec	stream	tcp6	nowait	root	/usr/sbin/in.rexecd	in.rexecd
+comsat	dgram	udp	wait	root	/usr/sbin/in.comsat	in.comsat
+talk	dgram	udp	wait	root	/usr/sbin/in.talkd	in.talkd
+uucp	stream	tcp	nowait	root	/usr/sbin/in.uucpd	in.uucpd
+finger	stream	tcp6	nowait	nobody	/usr/sbin/in.fingerd	in.fingerd
+time	stream	tcp6	nowait	root	internal
+time	dgram	udp6	wait	root	internal
+echo	stream	tcp6	nowait	root	internal
+echo	dgram	udp6	wait	root	internal
+discard	stream	tcp6	nowait	root	internal
+discard	dgram	udp6	wait	root	internal
+daytime	stream	tcp6	nowait	root	internal
+daytime	dgram	udp6	wait	root	internal
+chargen	stream	tcp6	nowait	root	internal
+chargen	dgram	udp6	wait	root	internal
+100232/10	tli	rpc/udp	wait root /usr/sbin/sadmind	sadmind
+rquotad/1	tli	rpc/datagram_v	wait root /usr/lib/nfs/rquotad	rquotad
+rusersd/2-3	tli	rpc/datagram_v,circuit_v	wait root /usr/lib/netsvc/rusers/rpc.rusersd	rpc.rusersd
+sprayd/1	tli	rpc/datagram_v	wait root /usr/lib/netsvc/spray/rpc.sprayd	rpc.sprayd
+walld/1		tli	rpc/datagram_v	wait root /usr/lib/netsvc/rwall/rpc.rwalld	rpc.rwalld
+rstatd/2-4	tli   rpc/datagram_v wait root /usr/lib/netsvc/rstat/rpc.rstatd rpc.rstatd
+100083/1	tli	rpc/tcp wait root /usr/dt/bin/rpc.ttdbserverd rpc.ttdbserverd
+100221/1	tli	rpc/tcp	wait root /usr/openwin/bin/kcms_server	kcms_server
+fs		stream	tcp	wait nobody /usr/openwin/lib/fs.auto	fs
+100235/1 tli rpc/tcp wait root /usr/lib/fs/cachefs/cachefsd cachefsd
+100134/1	tli	rpc/ticotsord	wait	root	/usr/lib/krb5/ktkt_warnd ktkt_warnd
+printer		stream	tcp6	nowait	root	/usr/lib/print/in.lpd	in.lpd
+100234/1	tli	rpc/ticotsord	wait	root	/usr/lib/gss/gssd gssd 
+100146/1	tli	rpc/ticotsord	wait	root	/usr/lib/security/amiserv	amiserv
+100147/1	tli	rpc/ticotsord	wait	root	/usr/lib/security/amiserv	amiserv
+100150/1	tli	rpc/ticotsord	wait	root	/usr/sbin/ocfserv	ocfserv
+dtspc stream tcp nowait root /usr/dt/bin/dtspcd /usr/dt/bin/dtspcd
+100068/2-5 dgram rpc/udp wait root /usr/dt/bin/rpc.cmsd rpc.cmsd
+100153/1     dgram   rpc/udp wait root /opt/SUNWvts/bin/sunvts /opt/SUNWvts/bin/sunvts -g 
+100229/1	tli	rpc/tcp		wait	root	/usr/sbin/rpc.metad	rpc.metad
+100230/1	tli	rpc/tcp		wait	root	/usr/sbin/rpc.metamhd	rpc.metamhd
