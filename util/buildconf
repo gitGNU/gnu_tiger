@@ -1,8 +1,7 @@
 #!/bin/sh
 #
-# Creates a configuration file for any given operating system and
-# release with all the standard configuration files. Can be used
-# as a first steop to any port.
+#     tiger - A UN*X security checking system
+#     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -14,9 +13,16 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
+# buildconf
+#
+# Creates a configuration file for any given operating system and
+# release with all the standard configuration files. Can be used
+# as a first step to any port.
+#
 # 07/26/2002 jfs Modified so it can work properly standalone
 # 04/15/2003 jfs Added necessary commands CUT WC EXPAND HEAD ID
 # 04/23/2003 jfs Bail out if no argument is given, sanity check on confile
+# 08/11/2003 jfs Alphabetically ordered commands and added some other.
 #
 # ------------------------------------------------------------------------
 
@@ -103,44 +109,59 @@ AWK awk
 BASENAME basename
 CAT cat
 CC cc
+CHAGE chage
 CHMOD chmod
 CHOWN chown
+COLUMN column
 COMM comm
+CUT cut
 DATE date
+DIFF diff
 EGREP egrep
+EXPAND expand
 EXPR expr
 FILECMD file
 FIND find
 FMT fmt cat
+GETFS mount
 GETHOSTNAME hostname
 GREP grep
+GROUPC groups
 GROUPSS groups
+HEAD head
+ID id
+IFCONFIG ifconfig
 JOIN join
+LASTLOG lastlog
 LN ln
 LS ls
+LSOF lsof
+MAIL mail mailx Mail sendmail
+MAILER mail mailx Mail sendmail
+MESG mesg
+MD5 md5
+MD5SUM md5sum
 MV mv
+NETSTAT netstat
+PASTE paste
 PS ps
+PWCK pwck
+PWD pwd
+REALPATH realpath
 RM rm
 SED sed
+SNEFRU snefru
 SORT sort
 STRINGS strings
 TAIL tail
+TCPD tcpd
+TEE tee
+TEST test
 TR tr
 UNAME uname
 UNIQ uniq
-BASENAME basename
-CHMOD chmod
-CHOWN chown
-LN ln
-PASTE paste
 YPCAT ypcat
-DIFF diff
-ID id
-CUT cut
 WC wc
-HEAD head
-EXPAND expand
-MAIL mail mailx Mail sendmail
 EOL
 
 echo "WAIT=wait" >> $confile
