@@ -9,7 +9,7 @@
 #
 TigerNoBuild=Y			# C files are corrupted (ouch.)
 Tiger_Check_PASSWD=Y		# Fast
-Tiger_Check_PASSWD_SHADOW=Y	# Time varies on # of users
+Tiger_Check_PASSWD_SHADOW=N	# Time varies on # of users
 Tiger_Check_PASSWD_NIS=N	# Time varies on # of users
 Tiger_Check_GROUP=Y		# Fast
 Tiger_Check_ACCOUNTS=Y		# Time varies on # of users
