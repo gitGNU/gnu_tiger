@@ -19,6 +19,8 @@
 #
 # Ideas from Dan Farmer's 'cron.chk' from COPS 1.04.
 # 
+# check_crontabs  - 01/15/2004 - jfs Will only warn if neither cron.allow
+#                                    or cron.deny exist (Debian bug #226362)
 # check_crontabs  - 11/19/2003 - jfs Introduce some more information on
 #            allow/deny checks as suggested by unspawn.
 # check_crontabs  - 08/19/2003 - jfs Renamed to check_crontabs
@@ -198,7 +200,9 @@ then
    do
         message INFO cron007i "User $user is denied cron usage."
    done
-else
+fi
+if [ ! -f "$CRONALLOW" -a ! -f "$CRONDENY" ]
+then
      message WARN cron005w "" "Use of cron is not restricted"
 fi
 
