@@ -37,7 +37,7 @@ Tiger_Check_PATCH=N             # Depends on your network connection
 				# (if no timeout is fixed it might stall)
 Tiger_Check_LOGFILES=Y          # Fast
 Tiger_Check_USERUMASK=Y         # Fast
-Tiger_Check_ETCISSUE=Y		# Fast
+Tiger_Check_ETCISSUE=N		# Fast, needs to be customised
 Tiger_Check_STRICTNW=Y		# Fast - stringent N/W server checks
 Tiger_Check_LISTENING=Y		# Fast
 Tiger_Check_SYSTEM=Y		# Depends on the specific system checks
