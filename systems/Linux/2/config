@@ -39,6 +39,8 @@
 # Linux/2/config - 08/13/2003 - jfs - Removed LSCRIPTDIR since it is no 
 #                  longer needed.
 # Linux/2/config - 08/14/2003 - jfs - Added IFCONFIG
+# Linux/2/config - 08/29/2003 - jfs - TESTEXEC needs to be defined first 
+#                  for findcmd() to work
 #
 #-----------------------------------------------------------------------------
  
@@ -85,6 +87,9 @@ LXDISTRIBUTION="unknown"
 [ -f /etc/turbolinux-release ] && LXDISTRIBUTION="turbolinux"
 export LXDISTRIBUTION
 
+TESTEXEC=-x
+TESTLINK=-L
+export TESTLINK TESTEXEC
 
 RM=`findcmd rm`
 
@@ -190,11 +195,9 @@ DATE=`findcmd date`
 DATECMD="$DATE +%y%m%d"
 TIMECMD="$DATE +%H:%M"
 
-TESTEXEC=-x
-TESTLINK=-L
 
 export UNAME HOSTNAME EXPR STRINGS FIND FINDXDEV GETHOSTNAME
-export FMT GETFS CC PS DATE DATECMD TIMECMD TESTLINK TESTEXEC
+export FMT GETFS CC PS DATE DATECMD TIMECMD 
 
 WAIT=wait
 
