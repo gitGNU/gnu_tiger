@@ -17,9 +17,9 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
-# TODO:
-# - this script will not work when diversions are used on a Debian system
-# this needs to be fixed (Debian Bug #162589)
+# 09/19/2003 - jfs - Add patches provided by Nicolas François to 
+#      greatly improve the speed and add support for diversions.
+#
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -77,49 +77,86 @@ haveallcmds MD5SUM CAT CUT SED GREP BASENAME || exit 1
 LOCALEDIR=/usr/share/locale
 MANDIR=/usr/share/man
 LOCALEPURGE=/etc/locale.nopurge
-[ -f "$LOCALEPURGE" ] && LOCALENOPURGED=`$GREP ^[a-z] $LOCALEPURGE`  
+if [ -f "$LOCALEPURGE" ]
+then
+  LOCALENOPURGED=`for l in $($GREP ^[a-z] $LOCALEPURGE); do echo -n "$l\|"; done; echo -n "[^a-z].*"`
+  SED_REMOVE_LOCALES_PURGED="/  usr\/share\/locale\/\($LOCALENOPURGED\)\//p;/  usr\/share\/locale/d"
+fi
+DIVERSIONS="/var/lib/dpkg/diversions"
 
 if [ -d /var/lib/dpkg/info ] 
 then
-for file in /var/lib/dpkg/info/*md5sums
+for md5file in /var/lib/dpkg/info/*md5sums
 do
-[ -f $file ] && [ ! -L $file  ] && {
+[ -f $md5file ] && [ ! -L $md5file  ] && {
 # Note: We  do not check things in  /usr/share/doc
 # to speed things up
 # TODO: add a configuration option to tiger so directories
 # can be removed easily from being checked
-	package=`echo "$file" | $CUT -f 1 -d "."`
-	package=`$BASENAME $package`
-	$CAT "$file" | $GREP -v /share/doc | {
-		while read md5pck installed
+	$GREP -v "/share/doc" "$md5file" |
+# don't check purged locales
+        $SED -e "$SED_REMOVE_LOCALES_PURGED" |
+	$SED -e "s/^\(.*\)  \(.*\)/\1  \/\2/" |
+	$MD5SUM -c 2>&1 | $SED -e "s/^.*md5sum: MD5 check failed for '\(.*\)'/DIFF \1/; s/^.*md5sum: can't open \(.*\)/ERR \1/" | {
+		while read err file
 		do
-			installed=/$installed
-			[ -f "$installed" ]  && [ ! -L "$installed" ] && {
-				md5sum=`$MD5SUM "/$installed" | $CUT -f 1 -d " "`
-				[ "$md5pck" = "$md5sum" ] ||  
-				message ERROR lin005e "" "Installed file \`$installed' checksum differs from installed packages."
-			}
-			[ ! -f "$installed" ] &&  {
-			# Check for locales purged by locale-purge
-				purged="N"
-			# Check if the file belongs to purged directory
-				[ ! -z "`echo $installed |$GREP $LOCALEDIR`" -o ! -z "`echo $installed | $GREP $MANDIR`" ] && {
-					purged="Y"
-			# recover the locale
-					locale=`echo $installed |$CUT -d / -f 5` 
-			# and check against those configured in /etc/locale.nopurge
-					for localenopurged in $LOCALENOPURGED
-					do
-						[ "$localenopurged" = "$locale" ] && purged="N"
-					done
-				}
-				[ "$purged" = "N" ] && \
-				message ERROR lin006e "" "Cannot check file \"$installed\" provided by \"$package\" since it does not exist"
-			}
+			case $err in
+			DIFF)
+				# don't check diverted now
+				[ -z `$GREP -x "$file" $DIVERSIONS` ] &&
+					message ERROR lin005e "" "Installed file \`$file' checksum differs from installed packages."
+# the md5sum could be added to this message (this can also be done by an IDS)
+				;;
+			ERR)
+					package=`echo "$md5file" | cut -f 1 -d "."`
+					package=`basename $package`
+					message ERROR lin006e "" "Cannot check file \"$file\" provided by \"$package\" since it does not exist"
+				;;
+			esac
 		done 
 	}
 }
-done 
+done
+# check diversions
+/usr/sbin/dpkg-divert --list |
+# extract the file diverted, the backup file and the diverter package
+$SED -e 's/diversion of \(\/.*\) to \(\/.*\) by \(.*\)$/\1;\2;\3/' | {
+  saveIFS=$IFS
+  IFS=";"
+  while read file tofile bypackage
+  do
+    IFS=":" ; set X `$DPKG -S "$file" | $GREP -v "^diversion by "`
+    IFS=", " ; set X $2
+    while [ "$2" != "" ]
+    do
+      if [ "$2" == "$bypackage" ]
+      then
+        currentfile=$file
+      else
+        currentfile=$tofile
+      fi
+      [ -f "/var/lib/dpkg/info/$2.md5sums" ] && {
+        md5pck=`$GREP "$(echo "$file\$"|$CUT -c2-)" /var/lib/dpkg/info/$2.md5sums | $CUT -f 1 -d " "`
+        [ -n "$md5pck" ] && {
+          if [ -f $currentfile ]
+          then
+            md5sum=`$MD5SUM "$currentfile" | $CUT -f 1 -d " "`
+            [ "$md5pck" != "$md5sum" ] &&
+              message ERROR lin005e "" "Installed file \`$currentfile' checksum differs from installed packages."
+          else
+            message ERROR lin006e "" "Cannot check file \"$currentfile\" provided by \"$2\" since it does not exist"
+          fi
+        }
+      }
+      shift
+    done
+    IFS=";"
+  done
+
+  # restore IFS
+  IFS=$saveIFS
+}
+
 else
 	message WARN lin006w "" "This check cannot be done since we seem not to be running on a Debian GNU/Linux system"
 fi
