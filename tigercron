@@ -17,25 +17,31 @@
 #
 # tigercron - 06/13/93
 #
+# 04/23/2003 jfs Now uses run_script instead of SCRIPTDIR/LSCRIPTDIR which
+#                permits tigercron to execute the most relevant script given
+#                the $OS/$REL/$ARCH
+#                Safer creation of the temporary file which includes the
+#                scripts' results.
+# 04/23/2003 jfs Sanity check for the existance of ctrfile, use TigerConfigDir
+#               instead of CONFIGDIR
+# 10/28/2002 jfs Added check of non-comments in output (only available if
+#                egrep is installed)
+# 07/25/2002 jfs Changed TigerInstallDir to .
+# 12/26/2001 jfs Modified to provide new ways to compare against previous
+#                runs: per policy (template) or per run.
 # 12/02/2001 jfs Fixed script to properly send out mails with valid
 #                headers and content
 #
-# 12/26/2001 jfs Modified to provide new ways to compare against previous
-#                runs: per policy (template) or per run.
-# 07/25/2002 jfs Changed TigerInstallDir to .
-#
-# 10/28/2002 jfs Added check of non-comments in output (only available if
-#                egrep is installed)
-#
-# 04/23/2003 jfs Sanity check for the existance of ctrfile, use TigerConfigDir
-#		instead of CONFIGDIR
-#
-# 04/26/2003 jfs Removed unnecessary option
-# 
-# 05/11/2003 jfs Fixed tigercron, the 'unecessary option' was in fact 
-#                the way it behaved, I wanted to removed spurious echos
-#                and ended up breaking its functionality!
-#
+#-----------------------------------------------------------------------------
+# TODO:
+# - Study wether or not GPG can be used to automatically sign messages
+#   sent (using a passwordless key)
+# - Make it work with syslog to send the reports (in much the same way 
+#   that sendtologger is used by Tiger when a '-l @syslogserver' is used)
+#   (Note: This would also help since having it log locally instead of
+#   could help users running logcheck, at least in Debian)
+# - Consider if running checks by absolute filename reference is permitted
+#   or not
 #-----------------------------------------------------------------------------
 #
 TigerInstallDir="."
@@ -67,7 +73,7 @@ done
 # Verify that a config file exists there, and if it does
 # source it.
 #
-[ ! -r $basedir/config ] && {
+[ ! -r "$basedir/config" ] && {
   echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
   exit 1
 }
@@ -83,7 +89,7 @@ TEMPLATEDIR="$TigerConfigDir/templates"
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
   haveallcmds DATE SED EXPR DIFF MAILER GREP BASENAME || exit 1
-  haveallfiles BASEDIR SCRIPTDIR LSCRIPTDIR WORKDIR LOGDIR || exit 1
+  haveallfiles BASEDIR SCRIPTDIR WORKDIR LOGDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
@@ -91,7 +97,7 @@ TEMPLATEDIR="$TigerConfigDir/templates"
 
 #------------------------------------------------------------------------
 haveallcmds DATE SED EXPR DIFF MAILER GREP BASENAME || exit 1
-haveallfiles BASEDIR SCRIPTDIR LSCRIPTDIR WORKDIR LOGDIR || exit 1
+haveallfiles BASEDIR SCRIPTDIR WORKDIR LOGDIR || exit 1
 
 umask 077
 
@@ -101,12 +107,9 @@ umask 077
 
 [ ! -n "$ctrlfile" ] && ctrlfile=$TigerConfigDir/cronrc
 [ ! -r "$ctrlfile" ]  &&  {
-	message ERROR tigxxxx "" "Cannot read \`$ctrlfile', tigercron cannot proceed."
-	exit 1
-}	
-
-
-saveifs=$IFS
+	    message ERROR tigxxxx "" "Cannot read \`$ctrlfile', tigercron cannot proceed."
+	    exit 1
+}
 
 set X `$DATE`
 dow=$2
@@ -204,19 +207,19 @@ do
       for script in $scripts
       do
 	outprefix="$LOGDIR/`$BASENAME $script`.out"
+	safe_temp $outprefix.$$.tmp
 	suffix=${TigerCron_Log_Keep_Max:=10}
 	{
-	  if [ -f $SCRIPTDIR/$script ]; then
-	    $SCRIPTDIR/$script
-	  elif [ -f $LSCRIPTDIR/$script ]; then
-	    $LSCRIPTDIR/$script
-	  elif [ -f $script ]; then
-	    $script
-	  else
-	    message ERROR tigxxxx "" "$script in tigercron file \`$ctrlfile' not executable."
-	  fi
-	} > $outprefix.tmp
-	if [ -s $outprefix.tmp ]; then
+	  run_script $script
+# TODO: Consider if including absolute references is considered
+# validif [ -f $_SCRIPTDIR/$script ]; then
+#	  elif [ -f $script ]; then
+#	    $script
+#	  else
+#	    message ERROR tigxxxx "" "Not found (and cannot run) $script as requested in tigercron file, `$ctrlfile'."
+#	  fi
+	} > $outprefix.$$.tmp
+	if [ -s $outprefix.$$.tmp ]; then
 	  next=`$EXPR $suffix - 1`
 	  while [ "$next" -ge 1 ]
 	  do
@@ -226,7 +229,7 @@ do
 	    suffix=$next
 	    next=`$EXPR $next - 1`
 	  done
-	  $MV $outprefix.tmp $outprefix.1
+	  $MV $outprefix.$$.tmp $outprefix.1
 	  echo $outprefix
 	fi
       done
@@ -273,9 +276,12 @@ fi
 	echo 
 	cat  $WORKDIR/tigcron.diff.$$ 
     } | $MAILER $Tiger_Mail_RCPT 
-    # This could also be 
+    # Note1: This could also be 
     # } | $MAILER -s "TIGER Output" $Tiger_Mail_RCPT < $WORKDIR/tigcron.diff.$$
     # Alas, it's not completely portable (no -s option on some mailers)
+    # Note2: It could even be
+    # } | $GPG -e -a | $MAILER -s "TIGER Output" $Tiger_Mail_RCPT < $WORKDIR/tigcron.diff.$$
+    # But it should then use passwordless keys for GPG
 
 }
 
