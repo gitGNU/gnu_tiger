@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -15,8 +15,28 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# Linux/deb_checkadvisories - 24/08/2001
+# Linux/deb_checkadvisories - 08/24/2001
 #
+# Check Debian advisories and determine which ones affect the system.
+# Notice that the file containing the submitted Debian advisories is
+# 'deb_advisories', which needs to be updated using the sources at 
+# cvs.debian.org.  These are available at
+# http://www.debian.org/devel/website/using_cvs
+# The problem is that that script has been thought so that the maintainer
+# can update the information, it's not so easy to update it yourself.
+# You can use  the 'retrieve-advisories.pl' script to update it, however.
+#
+# If there are no updates for this file, you are probably better off
+# configuring your system to use the 'check_patches' script instead. 
+# This script, like cron-apt does, uses apt to download the package 
+# list and determine which packages need to be updated.
+# Please read the following:
+# http://www.debian.org/doc/manuals/securing-debian-howto/ch9.en.html#s-keep-up-to-date
+# deb_checkadvisories might probably be removed in the future or change it
+# to use the RDF feed from the website.
+#
+# Linux/deb_checkadvisories - 08/24/2001 - jfs - initial version
+# Linux/deb_checkadvisories - 04/15/2003 - jfs - Added notes to the script
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
 
