@@ -16,6 +16,11 @@
      Please see the file `COPYING' for the complete copyright notice.
 
  c/realpath.c - 06/14/93
+ c/realpath.c - 04/22/2003 - jfs 
+ 	applied patch from Jeff Grub changing realpath
+ 	to my_realpath and adding upper bounds for buffers
+	(libc already implements realpath, maybe it should be used if 
+	available)
 
 */
 
@@ -52,12 +57,12 @@
 #ifdef __STDC__
 extern char *getwd(char * const);
 extern int readlink(char * const, char * const, const size_t);
-extern char *realpath(const char *, char [], int);
+extern char *my_realpath(const char *, char [], int);
 extern char *_realpath(char [], int);
 #else
 extern char *getwd();
 extern int readlink();
-extern char *realpath();
+extern char *my_realpath();
 extern char *_realpath();
 #endif
 
@@ -71,9 +76,9 @@ extern char *_realpath();
 
 #ifdef __STDC__
 char *
-realpath(const char *path1, char path2[], int decomp)
+my_realpath(const char *path1, char path2[], int decomp)
 #else
-char *realpath(path1, path2, decomp)
+char *my_realpath(path1, path2, decomp)
 char *path1, *path2;
 int decomp;
 #endif
@@ -233,8 +238,8 @@ main(argc, argv)
 int argc;
 char **argv;
 {
-     char path[1025];
-     char rpath[1025];
+     char path[MAXPATHLEN+1];
+     char rpath[MAXPATHLEN+1];
      int decomp = 0;
 
      char **argp = argv;
@@ -248,10 +253,10 @@ char **argv;
      }
 
      if(argc == 1){
-	  while(fgets(path, 1024, stdin)){
+	  while(fgets(path, MAXPATHLEN, stdin)){
 	       char *cp = strchr(path, '\n');
 	       *cp = '\0';
-	       realpath(path, rpath, decomp);
+	       my_realpath(path, rpath, decomp);
 	       if(rpath[0])
 		    fprintf(stdout, "%s %s\n", path, rpath);
 	  }
@@ -259,11 +264,10 @@ char **argv;
      else {
 	  int i;
 	  for(i=1;i<argc;i++){
-	       realpath(argp[i], rpath, decomp);
+	       my_realpath(argp[i], rpath, decomp);
 	       if(rpath[0])
 		    fprintf(stdout, "%s\n", rpath);
 	  }
      }
      exit(0);
 }
-
