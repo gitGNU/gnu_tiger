@@ -117,12 +117,17 @@ LASTLOG=/var/log/lastlog
 UTMP=/var/run/utmp
 LOGINLOG=/var/log/loginlog
 MESSAGES=/var/log/messages
+SULOG=""
 
 if [ "$OS" = "SunOS" ] ; then
 	WTMP=/var/adm/wtmpx
 	UTMP=/var/adm/utmpx
 # Check: Note BTMP does not seem to exist
-# And maybe also sulog and messages should be checked.
+	BTMP=/var/adm/btmp
+	LASTLOG=/var/adm/lastlog
+	LOGINLOG=/var/adm/loginlog
+	MESSAGES=/var/adm/messages
+	SULOG=/var/adm/sulog
 fi
 
 if [ "$OS" = "Linux" ] ; then
@@ -204,6 +209,15 @@ if [ -n "$LOGINLOG" ] ; then
     else
         check_fileperm $LOGINLOG 110000000 || 
     	    message FAIL logf005f "" "Log file $LOGINLOG permission should be 600"
+    fi
+fi
+
+if [ -n "$SULOG" ] ; then
+    if [ ! -f "$SULOG" ] ; then
+        message FAIL logf006f "" "Log file $SULOG does not exist"
+    else
+        check_fileperm $SULOG 110000000 || 
+    	    message FAIL logf005f "" "Log file $SULOG permission should be 600"
     fi
 fi
  
