@@ -25,3 +25,6 @@ or login issues if not corrected.
 %pass007w
 Some password controls or constraints are missing.  These should be be
 applied to all users via their /etc/login.defs configuration values.
+%pass008e
+The password file was not generated and cannot be analysed. This might
+probably happen due to Tiger not running with full administrative access.

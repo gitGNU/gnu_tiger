@@ -31,6 +31,13 @@ The scripts looks for autorpm followed by apt-get.  If either
 one is found it is used to determine if updated packages
 are available for your system.  This message indicates that
 neither program was found on your system. 
+%ptch05e
+If the Tiger tool is not running as root it will probably not be
+able to update the package database from the latest sources available.
+Some errors might be printed on the output and the security check
+will be done only on the current available list of packages (which
+might not be up-to-date). Make sure that you are running the tool
+as an administrative user.
 %osv001
 The operating system version appears to be less than RedHat 6.2
 Due to security enhancements and fixes available in recent releases,
