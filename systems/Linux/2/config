@@ -148,7 +148,7 @@ DPKG=`findcmd dpkg`
 NETSTAT=`findcmd netstat`
 LSOF=`findcmd lsof`
 MD5SUM=`findcmd md5sum`
-if [ -d "$BINDIR" ]; then
+if [ -f "$BINDIR/realpath" ]; then
 	REALPATH=$BINDIR/realpath
 else 
 	REALPATH=`findcmd realpath`
@@ -166,7 +166,7 @@ X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -1`
     SGREP="$BASEDIR/util/sgrep"
   }
 }
-if [ -d $BINDIR ]; then
+if [ -f "$BINDIR/snefru" ]; then
 	SNEFRU=$BINDIR/snefru
 else
 	SNEFRU=`findcmd snefru`
