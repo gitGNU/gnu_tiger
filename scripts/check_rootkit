@@ -17,8 +17,9 @@
 #
 # check_rootkit -  05/15/2002
 # 
-# Script to find systems which have been rootkited. It looks for
+# Script to find systems which have been rootkited (sp?). It looks for
 # trojaned ls and find commands.
+#
 # It also includes a wrapper to run CHKROOTKIT and format 
 # the results in Tiger's message format.
 #
@@ -26,6 +27,7 @@
 # uses those defined in the path
 #
 # DATE (MM/DD/YYYY) 	NAME 	DESCRIPTION_OF_CHANGES
+# 01/13/2004            jfs     Avoid which error on stdout if it's not found
 # 10/15/2003            jfs     Make CHKROOTKIT check silent
 # 09/19/2003            jfs     Removed unused temporary file creation
 # 08/14/2003            jfs     Implemented usage of CHKROOTKIT if available
@@ -133,7 +135,7 @@ fi
 # Chkrookit binary location|override + default check
 if [ -z "${Tiger_CHKROOTKIT_LOC_OVERRIDE}" ]
 then
-        CHKROOTKIT=`which chkrootkit`
+        CHKROOTKIT=`which chkrootkit 2>/dev/null`
 else
         CHKROOTKIT=${Tiger_CHKROOTKIT_LOC_OVERRIDE}
 fi
