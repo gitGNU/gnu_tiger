@@ -72,16 +72,23 @@ haveallcmds CUT CHAGE || exit 1
 echo
 echo "# Verifying system specific password checks..."
 
+saveifs=$IFS
+IFS=:
 # Check for password aging
 [ -r /etc/passwd ] && {
-  $CUT -d: -f1 /etc/passwd |
-  while read user
+  $CUT -d: -f1,2 /etc/passwd |
+  while read user pwd
   do 
     if $CHAGE -l $user 2>/dev/null | $GREP "Password Expires:" | $GREP Never >/dev/null 2>&1
     then
       message WARN pass19w "" "Login ID $user does not have password aging enabled."
     fi
+
+    [ "$Tiger_Check_PASSWD_SHADOW" = 'Y' -a -s /etc/passwd -a "$pwd" != "x" ] && {
+      message WARN pass20w "" "Login ID $user is not configured to use shadow passwords."
+    }
   done
 }
+IFS=$saveifs
 
 exit 0
