@@ -216,6 +216,10 @@ WAIT=wait
 # Configuration files
 SENDMAILS="/usr/sbin/sendmail"
 SENDMAILCF="/etc/sendmail.cf"
+if [ -f /etc/mail/sendmail.cf ]
+then
+	SENDMAILCF="/etc/mail/sendmail.cf"
+fi
 export SENDMAILS SENDMAILCF
 
 LOGINDEF="/etc/login.defs"
