@@ -21,7 +21,6 @@
 #-----------------------------------------------------------------------------
 # Linux/1/config - 04/20/99
 # Linux/2/config - 04/20/99
-#   UUID=`/usr/bin/id | /usr/bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
 # Linux/2/config - 10/09/99
 #  Added the new check_neverlogin script
 # Linux/2/config - 08/07/2002 - jfs change in LSGROUPS
@@ -41,19 +40,32 @@
 # Linux/2/config - 08/14/2003 - jfs - Added IFCONFIG
 # Linux/2/config - 08/29/2003 - jfs - TESTEXEC needs to be defined first 
 #                  for findcmd() to work
+# Linux/2/config - 09/19/2003 - jfs - Define UUID (otherwise the new check 
+#		of script permissions in initdefs will not work)
 #
 #-----------------------------------------------------------------------------
  
 
 
-[ "$UUID" = "" ] && UNAME=`whoami`
-
-export UNAME
+#UUID=`/usr/bin/id | /bin/sed -e 's/uid=\([0-9][0-9]*\).*$/\1/'`
+UUID=`id -u`
+UNAME=`whoami`
+# This will work in most shells
+[ "$UUID" = "" ] && UUID=$UID
+[ "$UNAME" = "" ] && UNAME=$USER
+# Last resort 
+[ "$UUID" = "" -a ! "$UNAME" = "" ] && {
+	# Try this and see it works
+	UUID=`grep  ^$UNAME: /etc/passwd  |awk -F : '{print $3}'`
+}
+export UNAME UUID
 
 [ "$UNAME" != "root" ] && {
   echo " " 1>&2
   echo "This script should be run from a super-user account." 1>&2
   echo " " 1>&2
+# We don't need to bail out here, but most scripts will not run
+# properly, however
 #  exit 1
 }
 
