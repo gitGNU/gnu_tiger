@@ -25,6 +25,7 @@
 # Changed TigerInstallDir to .
 # Changed -e to -r and 'find' to 'access' in the error msg.
 # 10/19/2003 jfs - Applied patch from Ryan Bradetich to work in SuSE systems.
+# 11/18/2003 jfs - Fixed typo (Debian bug #221470)
 #
 #-----------------------------------------------------------------------------
 #
@@ -108,7 +109,7 @@ fi
 if [ -r /etc/grub.conf ] ; then
    # SuSE uses /etc/grub.conf.
    file=/etc/grub.conf
-elsif [ -r  /boot/grub/menu.lst ] ; then
+elif [ -r  /boot/grub/menu.lst ] ; then
    # Debian uses /boot/grub/menu.lst
    file=/boot/grub/menu.lst
 else
