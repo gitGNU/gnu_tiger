@@ -15,7 +15,10 @@
 #
 #     Please see the file `COPYING' for the complete copyright notice.
 #
-# check_ftpusers -  Sat May 18 18:39:35 CEST 2002
+# check_ftpusers - jfs -  Sat May 18 18:39:35 CEST 2002
+# 
+# Analyses the system's /etc/ftpusers and determines if the administrative
+# users are in that file.
 #
 # 07/25/2002 jfs Added a sanity check for password files.
 #                Changed TigerInstallDir to .
@@ -76,6 +79,9 @@ echo "# Performing common access checks for root..."
 
 haveallcmds AWK GREP CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
+
+safe_temp "$WORKDIR/pass.list.$$"
+trap 'delete $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
 
 # Just in case if it's not configured properly
 [ -z "${Tiger_Accounts_Trust}" ] && { 
