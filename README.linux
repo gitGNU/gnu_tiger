@@ -12,7 +12,7 @@ were made to the following files:
 
 CHANGED:
  Makefile
- systems/Linux/2/check.tbl - Added checks below
+ systems/Linux/2/check     - Added checks described below 
  systems/Linux/2/config    - Added binaries needed for checks below
  README.linux              - This file
 
@@ -41,7 +41,7 @@ http://packages.debian.org/tiger
 
 tiger-2.2.4 includes support for Redhat Linux 2.x.xx.  Modifications and
 additions are based on "Redhat Linux 2.0.35 i586", and were made on
-Septermber 14, 1998 by Robert L. Ziegler (rlz@mediaone.net).
+September 14, 1998 by Robert L. Ziegler (rlz@mediaone.net).
 
 Modifications to support Redhat Linux 2.0.35 were made to the following files:
 
