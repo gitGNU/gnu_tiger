@@ -22,8 +22,12 @@ tiger (3.2.1-1) unstable; urgency=low
       installed (Closes: #207904)
     - check_path now uses -L to follow symlinks (Closes: #161993)
     - Adds new password check for empty passwords (Closes: #197228)
+    - Fixed typo in accounts.txt spotted by Philipp Weis (Closes: #211793)
   * Added -XMacOSX to exclude the new OS provided upstream.
+  * Modified debian/rules to move the MacOSX and Tru64 directories to
+    tiger-otheros
   * Added patch for new po-debconf format (Closes: #186800)
+  * (but changed it so that the 'root' user is not translatable)
 
  -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri, 19 Sep 2003 02:33:00 +0200
 
