@@ -81,7 +81,7 @@ haveallvars TESTLINK HOSTNAME || exit 1
 
 # Note $NICE is not needed, if defined then it is used
 
-$NICE $FIND / -name '.exrc' -print 2>>/dev/null |\
+$NICE $FIND / -name '.exrc' -print 2>/dev/null |\
 while read FILEPATH
 do
   EXRCDIR=${FILEPATH%/.exrc}
