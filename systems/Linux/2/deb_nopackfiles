@@ -17,7 +17,8 @@
 #
 # Linux/deb_nopackfiles - 23/08/2001
 # 
-# 03/21/2005 - jfs - Remove uneeded {} (Debian bug #297889)
+# 03/21/2005 - jfs - Remove uneeded {} (Debian bug #297889). Also redirect
+#              find stderr to /dev/null
 # 06/18/2004 - jfs - Made the dirlist variable so that directories which
 #              do not exist are not checked for (Debian bug #254574)
 #              Also fixed SED check so that only binary files (and not
@@ -146,7 +147,7 @@ else
 	seddirlist=`echo $dirlist | $SED -e 's/ /\\\\\|/g; s/\//\\\\\//g'`
 	$FIND /var/lib/dpkg/info -name "*.list" -exec cat {} \; |
         $SED -ne "/^\($seddirlist\)/p" > $WORKDIR/dpkg-packages.list
-        $FIND $dirlist -type f |
+        $FIND $dirlist -type f  2>/dev/null |
         # We are not using -maxdepth here, but we could...
         $GREP -x -F -v -f $WORKDIR/dpkg-packages.list |
         # To search for diversions
