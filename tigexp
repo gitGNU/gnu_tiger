@@ -19,7 +19,7 @@
 # tigexp  - 05/23/2003 - changed so that it is managed by autoconf
 #
 # This program retrieves information explaining what a given message 
-# (INFO, WARN or ERR) given out by Tiger means.
+# (INFO, WARN, ALERT, FAIL or ERR) given out by Tiger means.
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir="."
