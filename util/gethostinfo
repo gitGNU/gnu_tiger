@@ -25,6 +25,16 @@
 #
 #-----------------------------------------------------------------------------
 # TODO:
+# - It might be better to not use $OS/$REV for Linux in the same sense
+#   that it is used for other operating systems. For Linux distributions
+#   (RedHat, Debian, Mandrake, SuSE...) that's just the Kernel thus,
+#   the $OS/$REV variables should be substituted with 
+#   $OS=distribution
+#   $REV=distribution release
+#   The code used by Bastille for OS identification might come in handy
+#   here (basicly you just need to parse some /etc/ file which varies
+#   from distribution and determines which release you are using)
+#
 # - Investigate if it's better to use uname -rms, which probably is
 #   better to parse (and less error-prone) as suggested by Nicolas François
 #-----------------------------------------------------------------------------
@@ -62,7 +72,7 @@ AWK=`findcmd awk`
 #------------------------------------------------------------------------
 # This should get:
 #
-#    Sun, Cray, AIX, HP-UX, IRIX
+#    Sun, Cray, AIX, HP-UX, IRIX, Linux and MacOSX
 #
 UNAME=`findcmd uname`
 
