@@ -1,0 +1,18 @@
+
+
+Note: the up-to-date TODO list is maintained through Savannah's Task Manager
+(http://savannah.nongnu.org/pm/?group=tiger) this list is provided for the
+commodity of those browsing the source code
+
+- Update signatures using TAMU's (and maybe knowngoods.org's) signature
+database.
+See http://savannah.nongnu.org/pm/task.php?group_project_id=472&group_id=2247&func=browse
+
+- Improve support non-Linux OSs
+https://savannah.nongnu.org/pm/task.php?group_id=2247&group_project_id=632
+
+
+--- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
+Mon,  9 Dec 2002 19:19:30 +0100
+
+
