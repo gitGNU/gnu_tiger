@@ -19,17 +19,18 @@
 # 
 #  Checks which xinetd services are enabled or disabled.
 #
+#  11/19/2003 - jfs - Added more verbose check if the configuration file
+#              does not exist. Fix syntax error. Thanks to Ryan Bradetich.
 #  08/19/2003 - jfs - Allow override of XINETDCONF and fix error
 #  08/12/2003 - jfs - Now write messages for disabled services too. Also
 #               fixed some errors.
-#  08/11/2003 - jfs - Fixed dependancies. Now uses XINETDFILE instead of 
+#  08/11/2003 - jfs - Fixed dependancies. Now uses XINETDCONF instead of 
 #               hardcoding the location. Added additional checks
 #               to avoid errors and use message instead of echo.
 #
 #-----------------------------------------------------------------------------
 # TODO:
 #
-# - write the messages for these warnings/information
 # - xinetd checks should determine if insecure services are active or
 #   running as root when not needed.
 # - check if the xinetd configuration file is writable
@@ -81,6 +82,8 @@ done
 
 #------------------------------------------------------------------------
 haveallcmds GREP AWK LS || exit 1
+# TODO add XINETDCONF to haveallfiles when it's defined in the config
+# scripts for all systems
 haveallfiles BASEDIR || exit 1
 
 echo
@@ -92,29 +95,33 @@ check_xinetconfig()
 	$LS $xinetd_dir |
 	while read file
 	do
-		if [ "`$GREP -i 'disable' $file | $AWK '{print $NF}'`" = "no" ] ; 
+		if [ "`$GREP -i 'disable' $xinetd_dir/$file | $AWK '{print $NF}'`" = "no" ] ; 
 		then
 			service=`$GREP -w 'server' $file | $GREP '=' | $AWK '{print $NF}'`
-			message INFO xnet002i "Service $file is enabled using: $service."
+			message INFO xnet004i "Service $file is enabled using: $service."
 		else
-			message INFO xnet002i "Service $file is disabled."
+			message INFO xnet005i "Service $file is disabled."
 		fi
 	done
 }
 
 [ -z "$XINETDCONF" ] && XINETDCONF="/etc/xinetd.conf"
 
-if [ -r "$XINETDCONF" ] ;
-then
+if [ -r "$XINETDCONF" ] ; then
 	$GREP 'includedir' $XINETDCONF | $AWK '{print $NF}' |
 	while read xinetd_directory
-	if [ -d "$xinetd_directory" ] 
-	then
-		check_xinetconfig $xinetd_directory
-	else
-		message FAIL xnet002f "The location included in $XINETDCONF is not a directory"
-	fi
+	do
+		if [ -d "$xinetd_directory" ] 
+		then
+			check_xinetconfig $xinetd_directory
+		else
+			message ERROR xnet002e "The location included in $XINETDCONF is not a directory"
+		fi
 	done
 else
-	message FAIL xnet001f "It appears that xinetd is not installed, cannot find file $XINETDCONF."
+	if [ ! -f "$XINETDCONF" ] ; then
+		message ERROR xnet001e "It appears that xinetd is not installed, cannot find file $XINETDCONF."
+	else
+	        message ERROR xnet003e "Cannot read file $XINETDCONF."
+	fi
 fi

@@ -181,3 +181,28 @@ control. The use of this facility is encouraged to limit access and to
 improve logging.
 The listed entry was protected by tcp wrappers by the default installation
 and is currently protected this way too. This is a good thing!
+%xnet001e
+The script cannot find an xinetd configuration file in this system. This
+might happen if Xinetd is not installed of if the XINETDCONF configuration
+variable is not properly defined. The script will try to find this configuration
+file in standard locations (/etc/xinetd.conf) but if it's not there
+you will need to define it in the siterc configuration file.
+%xnet002e
+A directory which is being included by the XINETDCONF configuration file
+is not really a directory. This prevents the script from analysing all
+the active services and might be a configuration issue. Please check
+Xinetd's configuration file.
+%xnet003e
+The script cannot read the xined configuration file in this system. This
+should not usually happen since the script should be running with
+root priviledges. In order to analyse the configuration file you need
+to run this script as a user who can read all the Xinetd configuration
+files.
+%xnet004i
+The service is enabled in the Xinetd configuration file. You should verify
+that services enabled in the server are legitimate and consider disabling
+unused services in order to minimise exposure (and associated risk)
+%xinet005i
+The service is disabled in the Xinetd configuration file. This is usually
+a good thing, since this limits exposure of the server and prevents
+external attacks.
