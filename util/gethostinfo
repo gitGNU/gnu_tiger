@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -19,8 +19,6 @@
 #
 # 07/26/2002 jfs Modified so it can work if called directly. Removed
 #                unnecesary exit's
-# 10/14/2002 jfs Modified linux call because it was not returning
-#                a proper architecture (it was returing the year!)
 #
 #-----------------------------------------------------------------------------
 #
@@ -95,6 +93,10 @@ UNAME=`findcmd uname`
 	   }
 	 }
   '
+# In some uname's we might need this ...
+#		printf("Linux %s %s\n",$3, $11);
+# TODO: check if the format has changed from
+# version 2.0.11
   exit
 }
 
