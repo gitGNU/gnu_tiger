@@ -1,0 +1,65 @@
+(sent on  Fri Jun 14 09:07:00 2002 to the Tiger-TAMU mailing list 
+at <tiger@net.tamu.edu> but, unfortunately, didn't make it to list readers,
+included here for the convenience of Tiger users)
+
+Dear Tiger users (is anyone listening?)
+
+First let me introduce myself, I'm Javier Fernández-Sanguino, I'm
+currently a Debian developer (and have been for around 5 years) and
+main author of the "Debian Securing Manual" [0]).  I have contributed
+(and still do) to many free software projects besides Debian including
+Freeradius, Nessus, Bastille and have been also very active in spanish
+translation teams.
+
+Since my professional interest has shifted from pure free software
+towards free software security, I have been actively watching (and
+contributing) in different areas. Free software is currently very
+competitive in many security areas, just to mention a few: network
+intrusion detection (Snort), vulnerability scanners (Nessus),
+hardening software (Bastille) and high-availability (the linux virtual
+server project and VRRP developments). However, one of the areas free
+software was falling behind was on host-based intrusion detection
+tools.
+
+Deciding this could be easily fixed I started working with Tiger last
+year, integrating it into Debian, once this was done (it was really
+easy) I started adding new security checks, first Debian-specific and,
+later on, more general. Bryan Gartner from HP around november 7th 2001
+asked the TAMU team, the TARA team at ARSC and myself if there was any
+active work on integrating the forks (TARA's and Debian's) or a single
+development tree people could work on.
+
+The answer to that question was, at the time, no. Now it's _yes_.
+
+After some work on my behalf, I have integrated TARA's, HP's and
+Debian's into the same source-code base. This is currently being
+distributed by Debian as tiger-2.2.4p2-4 [1] In order to avoid
+fragmentation I have started a new Savannah project for Tiger [2]
+which currently holds:
+
+- two mailing lists (users' and developers')
+- a bug tracking system (in order to avoid using Debian's [3] for
+bugs not related to Debian packages)
+- a CVS repository (which now holds the common source code base) [4]
+- a download area [5]
+- News and other miscellanea
+
+I would like to suggest users to subscribe to the user mailing list to
+discuss issues regarding this (new) codebase. And if anyone is
+interested in becoming a developer for this project, feel free to
+subscribe to the developer's mailing list too.
+
+I have branded this release tiger '3.0' so as to avoid confusion
+regarding previous TAMU (or ARSC's TARA) releases.
+
+	Best regards
+
+	Javier Fernández-Sanguino Peña
+
+
+[0] http://www.debian.org/doc/admin-manuals#securing
+[1] Latest versions are available at http://packages.debian.org/tiger
+[2] http://savannah.gnu.org/projects/tiger/
+[3] http://bugs.debian.org/tiger
+[4] https://savannah.gnu.org/cgi-bin/viewcvs/tiger/
+[5] http://freesoftware.fsf.org/download/tiger/
