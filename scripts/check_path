@@ -18,9 +18,13 @@
 # check_path  - 06/14/93
 # ARC check_path - 05/10/99  Fixed problem with parse_csh
 #
-# 07/25/2002 jfs Added a sanity check for password files
+# 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
+# 08/13/2003 jfs Return if the files do not exist (a safeguard for the
+#                functions but these is redundant code anyway)
+# 08/08/2003 jfs Improved temporary file creation.
 # 10/22/2002 jfs Fixed check for PATH in config files (was not done properly
 #            due to the way it was being tested)
+# 07/25/2002 jfs Added a sanity check for password files
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -66,7 +70,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK GEN_PASSWD_SETS GREP JOIN RM RM SED TR || exit 1
+  haveallcmds AWK GEN_PASSWD_SETS GREP JOIN RM SED TR OUTPUTMETHOD || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars HOSTNAME || exit 1
   
@@ -79,8 +83,11 @@ done
 echo
 echo "# Performing check of PATH components..."
 
-haveallcmds AWK GREP JOIN RM SED TR || exit 1
+haveallcmds AWK GEN_PASSWD_SETS GREP JOIN RM SED TR OUTPUTMETHOD || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
+
+safe_temp $WORKDIR/pth.$$
+trap 'delete $WORKDIR/pth.$$ ; exit 1' 1 2 3 15
 
 checkcmds()
 {
@@ -197,7 +204,7 @@ parse_bsh()
   user="$1"
   dir="$2"
   file="$3"
-
+  [ ! -f "$dir/$file" ] && return
   
   $AWK '
   BEGIN {LINE="";}
@@ -258,9 +265,7 @@ parse_csh()
   dir="$2"
   file="$3"
 
-  if [ ! -f $3 ]; then
-    exit
-  fi
+  [ ! -f "$dir/$file" ] && return
   
   $AWK '
   $0 ~ /\\$/ {printf("%s ", substr($0, 1, length($0)-1));}
