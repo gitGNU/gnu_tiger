@@ -113,10 +113,19 @@ do
     }
   done
 
-  $AWK -F: '$2 == "" {print $1}' $WORKDIR/p1uid.$$  |
-  while read username
+  $AWK -F: '{print $1,$2}' $WORKDIR/p1uid.$$ |
+  while read username passwd
   do
-    message FAIL pass011f "" "Username \`$username' has an empty password field."
+    eval "case \"$passwd\" in
+      \"\")
+	message FAIL pass011f \"\" \"Username \\\`$username' has an empty password field.\"
+	;;
+      $Tiger_Passwd_Hashes|\*)
+	;;
+      *)
+	message WARN pass013w \"\" \"Username \\\`$username' is not using an acceptable password hash ($passwd).\"
+	;;
+      esac"
   done
 
 #  $AWK -F: '{print $3}' $WORKDIR/p1uid.$$ |
@@ -133,12 +142,24 @@ do
     }
   done
 
-  $AWK -F: 'NF != 7 {print}' $WORKDIR/p1uid.$$ |
-  while read entry
+  $AWK -F: "\$3 > $Tiger_Accounts_Trust {print \$6}" $WORKDIR/p1uid.$$ |
+  $SORT |
+  $UNIQ -c |
+  while read times homedir
   do
-    message WARN pass003w "$entry" "Malformed entry in $src1:"
+    [ $times -gt 1 ] && {
+      message WARN pass012w "" "Home directory $homedir exists multiple times ($times) in $src1."
+    }
   done
-  
+
+  if [ ! -n "$PWCK" ]; then
+    $AWK -F: 'NF != 7 {print}' $WORKDIR/p1uid.$$ |
+    while read entry
+    do
+      message WARN pass003w "$entry" "Malformed entry in $src1:"
+    done
+  fi
+
   $GREP -v "^$passwd1\$" $WORKDIR/pass2.$$ |
   while read passwd2
   do
@@ -188,8 +209,8 @@ $OUTPUTMETHOD
 
 [ -n "$PWCK" ] && {
   # TODO: Add the results to the report
-  pwckerr=`$PWCK /etc/passwd /etc/shadow >/dev/null 2>&1`
-  if [ $? -ne 0 ] ; then
+  pwckerr=`$PWCK /etc/passwd /etc/shadow 2>&1`
+  if [ -n "$pwckerr" ] ; then
     message WARN pass006w "" "Integrity of password files questionable ($PWCK)."
   fi
 }

@@ -37,3 +37,10 @@ indicates a configuration problem and should be corrected.
 %pass011f
 The listed username has an empty password string.  This will allow any user
 to gain access to the account without being prompted for a password.
+%pass012w
+The listed home directory is specified for multiple users. This can lead to
+denial-of-service and unexpected resource usage (i.e. shell initialization
+files, etc) if not corrected.
+%pass013w
+The listed username is not using an acceptable, cryptographic method for the
+password hash. 

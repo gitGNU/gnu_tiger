@@ -24,15 +24,52 @@ local=0
 for parm
 do
   case "$parm" in
-    -p) ;;
+    -p) passwordflag=Y;;
     -l) local=1;;
     *)	outfile="$parm";;
   esac
 done
 
+zappasswd()
+{
+  IFS=:
+  while read user passwd rest
+  do
+    tcbfile="/tcb/files/auth/${user%${user#?}}/$user"
+    if [ -f $tcbfile ]; then
+      passwd=`$AWK -F: '/u_pwd=/ { print substr($2, 7) }' $tcbfile`
+    fi
+
+    case $passwd in
+      # bigcrypt passwords used in trusted mode. (13 + (x * 11))
+      [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./]+([a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./]))
+           passwd="bigcrypt"
+           ;;
+      # Normal UNIX passwds (13 chars)
+      [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./]?(,[a-zA-Zo-9\.]+))
+           passwd="crypt3"
+           ;;
+      "")
+	   passwd=""
+           ;;
+      *)
+           passwd="*"
+           ;;
+    esac
+    echo "$user:$passwd:$rest"
+  done
+}
 
 $GREP -v '^[-+]' /etc/passwd |
-$SORT > $WORKDIR/etc_passwd.$$
+$SORT |
+{
+  if [ "$passwordflag" = 'Y' ]; then
+    $CAT
+  else
+    zappasswd
+  fi
+} > $WORKDIR/etc_passwd.$$
+
 echo "/etc/passwd" > $WORKDIR/etc_passwd.$$.src
 echo $WORKDIR/etc_passwd.$$ >> $outfile
 
