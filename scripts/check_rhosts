@@ -20,6 +20,8 @@
 # Checks rhosts files in order to see if user's configuration leaves the
 # system open to attack.
 #
+# 10/19/2003 jfs Patch from Nicolas François which uses -f instead of -e
+#    in order to avoid Solaris problems. And also adds TESTLINK HOSTNAME
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
 # 08/12/2003 jfs Added check for existance, permissions and owner of
 #                rhosts files (permissions are redundant, however)
@@ -82,6 +84,7 @@ echo "# Performing check of /etc/hosts.equiv and .rhosts files..."
 
 haveallcmds AWK CAT EXPR GEN_PASSWD_SETS HEAD JOIN LS RM SED OUTPUTMETHOD || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
+haveallvars TESTLINK HOSTNAME || exit 1
 
 safe_temp "$WORKDIR/home.hosts.$$" "$WORKDIR/pass.list.$$"
 trap 'delete $WORKDIR/home.hosts.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
@@ -223,7 +226,7 @@ file_rhosts ()
 {
   while read user userid homedir
   do
-    if [ -e $homedir/.rhosts ]
+    if [ -f $homedir/.rhosts ]
     then
             if [ "root" != "$user" ] ; then
                message WARN rcmd016w "" "User $user has a .rhosts file"

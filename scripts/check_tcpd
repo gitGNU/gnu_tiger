@@ -22,6 +22,8 @@
 # it also determines which services are running wrapped in tcp-wrappers.
 # (based on check_inetd)
 #
+# check_tcpd 10/19/2003 jfs Patch from Nicolas François which uses -f 
+#    instead of -e in order to avoid Solaris problems. 
 # check_tcpd - 10/07/2003 - jfs - Remove temporary files
 # check_tcpd - 08/11/2003 - jfs
 #     Check for the availability of TCPD and only run the checks on inetd
@@ -181,16 +183,16 @@ realpath="$REALPATH -d"
 
 [ ! -n "$REALPATH" -o ! $TESTEXEC "$REALPATH" ] && realpath="echo"
 
-[ -z "$TCPD" -o ! -e "$TCPD" ] && \
+[ -z "$TCPD" -o ! $TESTEXEC "$TCPD" ] && \
 	message FAIL inet021f "" "Tcp wrappers does not seem to be installed in this system."
 
-if [ -z "$HOSTALLOW" -o ! -e "$HOSTALLOW" ] ; then
+if [ -z "$HOSTALLOW" -o ! -f "$HOSTALLOW" ] ; then
 	message FAIL inet022f "" "The hosts.allow file used by Tcp wrappers does not seem to be present in this system"
 else
 	check_hfileperm $HOSTALLOW
 fi
 
-if [ -z "$HOSTDENY" -o ! -e "$HOSTDENY" ] ; then
+if [ -z "$HOSTDENY" -o ! -f "$HOSTDENY" ] ; then
 	message FAIL inet022f "" "The hosts.deny file used by Tcp wrappers does not seem to be present in this system"
 else
 	check_hfileperm $HOSTDENY
