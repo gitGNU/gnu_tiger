@@ -18,8 +18,18 @@
 # Linux/deb_checkmd5sums - 24/08/2001
 #
 # 09/19/2003 - jfs - Add patches provided by Nicolas François to 
-#      greatly improve the speed and add support for diversions.
+#      greatly improve the speed and add support for diversions 
+#      (Debian Bug #162589).
+#      Also added some minor changes so the package in question
+#      is printed when files don't match and avoid printing
+#      errors related to conffiles (Debian Bug #211329)
+#      
 #
+# TODO:
+# - Consider using a single file instead of calling MD5sum
+#   each time.
+# - Add an option to Tiger so some directories might be excluded from this
+#   check.
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -91,25 +101,26 @@ do
 [ -f $md5file ] && [ ! -L $md5file  ] && {
 # Note: We  do not check things in  /usr/share/doc
 # to speed things up
-# TODO: add a configuration option to tiger so directories
-# can be removed easily from being checked
 	$GREP -v "/share/doc" "$md5file" |
-# don't check purged locales
+# Also don't check purged locales
         $SED -e "$SED_REMOVE_LOCALES_PURGED" |
 	$SED -e "s/^\(.*\)  \(.*\)/\1  \/\2/" |
 	$MD5SUM -c 2>&1 | $SED -e "s/^.*md5sum: MD5 check failed for '\(.*\)'/DIFF \1/; s/^.*md5sum: can't open \(.*\)/ERR \1/" | {
 		while read err file
 		do
+			package=`echo "$md5file" | $CUT -f 1 -d "."`
+			package=`$BASENAME $package`
 			case $err in
 			DIFF)
 				# don't check diverted now
 				[ -z `$GREP -x "$file" $DIVERSIONS` ] &&
-					message ERROR lin005e "" "Installed file \`$file' checksum differs from installed packages."
-# the md5sum could be added to this message (this can also be done by an IDS)
+				# and conffiles should not be checked either
+				[ -z `$GREP -sx "$file" /var/lib/dpkg/info/$package.conffiles` ] &&
+					message ERROR lin005e "" "Installed file \`$file' checksum differs from installed package '$package'."
+# TODO: Consider including the MD5sum to this message
+# notice that some integrity checkers might do this already too.
 				;;
 			ERR)
-					package=`echo "$md5file" | cut -f 1 -d "."`
-					package=`basename $package`
 					message ERROR lin006e "" "Cannot check file \"$file\" provided by \"$package\" since it does not exist"
 				;;
 			esac
