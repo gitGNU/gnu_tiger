@@ -1,0 +1,95 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) YEAR AUTHOR
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_exrc - 14 April 2003 
+#
+# Find .exrc files that are not in user's home directories. The vi
+# command will look for the existence of such a file in the current
+# directory, and so may inadvertenly perform commands that can
+# compromise your system's security when starting vi or ex.
+#
+#
+# 14 April 2003 - jfs - Created this script based on patch #1354
+#
+#-----------------------------------------------------------------------------
+#
+# This is the directory Tiger is installed on
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds FIND || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing Check of .exrc files ..."
+
+haveallcmds FIND || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+haveallvars TESTLINK HOSTNAME || exit 1
+
+# Note $NICE is not needed, if defined then it is used
+
+$NICE $FIND / -name '.exrc' -print 2>>/dev/null |\
+while read FILEPATH
+do
+  EXRCDIR=${FILEPATH%/.exrc}
+  if grep -q ":${EXRCDIR}:" /etc/passwd
+  then
+    continue
+  fi
+  message WARN kis009w "" "Editor config file not in a user's home dir -- ${FILEPATH}"
+done
+
+exit 0

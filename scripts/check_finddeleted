@@ -1,0 +1,128 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2002 Javier Fernandez-Sanguino
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_findeleted - 16 April 2003
+#
+# This script will check if deleted files are being used by any process
+# in the current system. This is somewhat usual behaviour for some applications
+# but it might also be an indication of:
+#  a) an intruder launching processes and then deleting its files so that
+#     the admin does not notice it.
+#  b) servers which have been patched after an updated but have not been
+#     restarted and are, thus, using removed library files and are still
+#     vulnerable.
+#
+# DATE 	NAME 	DESCRIPTION_OF_CHANGES
+# 04/16/2002 - jfs - First version based on Brian Hatch's articles
+#              (http://www.hackinglinuxexposed.com/articles/20020507.html)
+# 04/17/2002 - jfs - Use safe delete() instead of $RM
+#
+#
+#-----------------------------------------------------------------------------
+#
+# This is the directory Tiger is installed on
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds GREP CAT LSOF PS CAT || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME || exit 1
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+echo
+echo "# Performing check of deleted files used by processes..."
+
+haveallcmds GREP CAT LSOF PS CAT || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+haveallvars TESTLINK HOSTNAME || exit 1
+
+
+
+$PS -A -o pid,ppid |$GREP -v PID  |
+while read pid ppid
+do
+	# It can be deleted if name includes (deleted) or
+	# TYPE = DEL
+	$LSOF -np $pid  | $GREP -v PID | $GREP "(deleted)" >>$WORKDIR/deleted.$$
+	$LSOF -np $pid  | $GREP -v PID | $GREP "DEL" >>$WORKDIR/deleted.$$
+
+	$CAT $WORKDIR/deleted.$$ |
+        while read command npid user fd type device other
+        # Other is composed of 'size node name', except if DEL is used
+        # (in this case size is 0) we use it to print details of the
+	# file
+        do
+		# It can be deleted if name includes (deleted) or
+		# TYPE = DEL, but SYSV 'files' are not considered
+                if [ -n "`echo $other | $GREP \"(deleted)\"`" ] || [ -z "`echo $other | $GREP SYSV`" -a "$type" = "DEL" ] ; then
+			# There can be servers either in the same process or
+			# its children
+			$PS -A -o pid,ppid,cmd | $GREP $npid  |
+			while read pids ppid nameserv
+			do
+				if [ -n "`$LSOF -np $pids | $GREP \"(LISTEN)\"`" ]; then
+					if [ "$pids" != "$npid" ] ; then
+						message FAIL kis011f "" "The parent process of server $nameserv (pid $npid) is using deleted files"
+					else 
+						message FAIL kis011f "" "Server $nameserv (pid $npid) is using deleted files"
+					fi
+				fi
+			done
+		 message WARN kis012w "" "Program $command (pid $npid, parent $ppid) is using a deleted file: $other"
+		fi
+	done
+	delete $WORKDIR/deleted.$$
+done
+
+
+exit 0
