@@ -17,6 +17,7 @@
 #
 # genmsgidx  - 06/14/93
 #
+# 09/19/2003 - jfs - Applied fixes contributed by Nicolas François
 # 08/13/2003 - jfs - Avoided bashism
 #
 #-----------------------------------------------------------------------------
@@ -78,12 +79,13 @@ RM=`findcmd rm`
 AWK=`findcmd awk`
 BASENAME=`findcmd basename`
 CHMOD=`findcmd chmod`
+LS=`findcmd ls`
 
 haveallof commands AWK LS BASENAME || exit 1
 haveallof variables BASEDIR || exit 1
 
 $LS $BASEDIR/doc/*.txt |
-for infile 
+while read infile 
 do
   file=`$BASENAME $infile`
   $AWK '
