@@ -532,7 +532,7 @@ fi
 
 
 
-test "x$prefix" != "xNONE" || prefix=/usr/local/
+test "x$prefix" != "xNONE" || prefix=/usr/local
 
 # Check whether --with-tigerhome or --without-tigerhome was given.
 if test "${with_tigerhome+set}" = set; then
@@ -543,7 +543,7 @@ else
 fi
 
 if test "$tigerhome" = "no" ; then
-        tigerhome=tiger
+        tigerhome=${prefix}/tiger
 fi
 
 # Check whether --with-tigerconfig or --without-tigerconfig was given.
@@ -555,7 +555,8 @@ else
 fi
 
 if test "$tigerconfig" = "no" ; then
-        tigerconfig=tiger
+        tigerconfig=${sysconfdir}/tiger
+
 fi
 
 # Check whether --with-tigerwork or --without-tigerwork was given.
@@ -567,7 +568,7 @@ else
 fi
 
 if test "$tigerwork" = "no" ; then
-        tigerwork=tiger/run
+        tigerwork=${localstatedir}/tiger/run
 fi
 
 # Check whether --with-tigerlog or --without-tigerlog was given.
@@ -579,7 +580,7 @@ else
 fi
 
 if test "$tigerlog" = "no" ; then
-        tigerlog=tiger/log
+        tigerlog=${localstatedir}/tiger/log
 fi
 
 # Check whether --with-tigerbin or --without-tigerbin was given.
@@ -591,7 +592,7 @@ else
 fi
 
 if test "$tigerbin" = "no" ; then
-        tigerbin=bin
+        tigerbin=${sbindir}
 fi
 
 
@@ -711,7 +712,7 @@ done
 
 ac_given_srcdir=$srcdir
 
-trap 'rm -fr `echo "Makefile config tigercron tiger tigexp" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+trap 'rm -fr `echo "Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -789,7 +790,7 @@ EOF
 
 cat >> $CONFIG_STATUS <<EOF
 
-CONFIG_FILES=\${CONFIG_FILES-"Makefile config tigercron tiger tigexp"}
+CONFIG_FILES=\${CONFIG_FILES-"Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then
