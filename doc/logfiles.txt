@@ -31,7 +31,11 @@ It might not exist due to a system configuration error or an
 intruder that has tried to cover this tracks by removing it.
 %logf006f
 The log file "messages" should exist to show a trace of the system logs
-(including reboots and kernel messages).  It might not exist if you have
-configured your system to use a different file for logging or if an
-intruder has tried to cover this tracks by removing it since the messages
-file might contain bad login attempts from local users and remote hosts.
+(including reboots and kernel messages), it is also often used by the 
+syslog daemon to log information. The contents of the "messages" logfile
+depends upon the configuration of the syslog.conf and varies by 
+distribution and/or system administrator preferrence.
+It might not exist if you have configured your system to use a 
+different file for logging or if an intruder has tried to cover 
+his tracks by removing it since the messages file might contain 
+bad login attempts from local users and remote hosts.
