@@ -36,7 +36,11 @@ install: build
 
 	# Add here commands to install the package into debian/tmp.
 	$(MAKE) install prefix=debian/tmp/
+	# Just in case
 	chmod a+x debian/tmp/usr/lib/tiger/systems/Linux/2/{deb,gen,check}_*
+	chmod a+x debian/tmp/usr/lib/tiger/scripts/check_*
+	# This is not needed
+	-rm -rf debian/tmp/usr/lib/tiger/man/
 	# Remove the systems that do not apply. 
 	# Currently only Linux and default
 	# AIX/  default/  HPUX/  IRIX/  Linux/  NeXT/  SunOS/  UNICOS/ UNICOSMK
@@ -45,7 +49,7 @@ install: build
 	#	mv debian/tmp/usr/lib/tiger/systems/{AIX,HPUX,IRIX,NeXT,SunOS,UNICOS,UNICOSMK} debian/tiger-otheros/usr/lib/tiger/systems/
 	#install -m 755 debian/tiger debian/tmp/usr/sbin/
 	#install -m 755 debian/tigexp debian/tmp/usr/sbin/
-	install -m 755 tigercron debian/tmp/usr/lib/tiger/
+	#install -m 755 tigercron debian/tmp/usr/lib/tiger/
 	install -m 600 cronrc debian/tmp/etc/tiger/
 	install -m 600 tigerrc debian/tmp/etc/tiger/
 	install -m 600 debian/debian.ignore debian/tmp/etc/tiger/tiger.ignore
@@ -69,7 +73,6 @@ binary-arch: build install
 	dh_installcron
 	dh_installman man/tiger.8 man/tigexp.8
 	dh_installinfo
-#	dh_undocumented
 	dh_installchangelogs CHANGES
 	dh_link
 	dh_strip -XHPUX -XSunOS -XAIX -XHPUX -XIRIX -XNeXT
