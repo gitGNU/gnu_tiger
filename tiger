@@ -333,6 +333,11 @@ aidepid=
   run_script check_known >> $logtmp
 }
 
+[ "$Tiger_Check_ROOTKIT" != 'N' ] && {
+  echo "`$TIMECMD`> Performing rootkit checks..."
+  run_script check_rootkit >> $logtmp
+}
+
 [ "$Tiger_Check_SYSTEM" != 'N' ] && {
   echo "`$TIMECMD`> Performing system specific checks..."
   run_script check_system >> $logtmp

@@ -43,6 +43,7 @@ Tiger_Check_APACHE=N		# Fast
 Tiger_Check_SENDMAIL=N		# Fast
 Tiger_Check_PRINTCAP=Y		# Fast
 Tiger_Check_EXRC=N		# Depends on the size of the filesystem
+Tiger_Check_ROOTKIT=Y		# Slow if chkrootkit is available
 # OS specific checks
 # You can comment them if they are not appropiate to your system but
 # they will not run if you are running a different OS
@@ -51,11 +52,11 @@ Tiger_Check_PATCH=N             # Depends on your network connection
 				# (if no timeout is fixed it might stall)
 Tiger_Check_SINGLE=Y            # Fast
 Tiger_Check_BOOT=Y              # Fast
-Tiger_Check_INITTAB=Y              # Fast
-Tiger_Check_RCUMASK=Y              # Fast
-Tiger_Check_NEVERLOG=Y              # Fast
+Tiger_Check_INITTAB=Y           # Fast
+Tiger_Check_RCUMASK=Y           # Fast
+Tiger_Check_NEVERLOG=Y          # Fast
 Tiger_Check_OS=Y                # Fast
-# - Linux and Solaris specific
+# - Linux, HPUX and Solaris specific
 Tiger_Check_NETWORKCONFIG=Y     # Fast
 # - HPUX specific
 Tiger_Check_TRUSTED=Y
