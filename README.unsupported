@@ -1,0 +1,96 @@
+
+Unsupported OS
+--------------
+
+Tiger can work in any UN*x-like operating system that provides the 
+necessary POSIX tools (sed, awk...), however, in order to work
+properly it needs to be 'configured' for the platform it is running
+in. You can get a list of supported systems running 'syslist' in the
+Tiger source tree (see below), other systems will just use the
+default configuration (under systems/default) which might or might
+not work in your system.
+
+If you operating system is not supported by Tiger you need to:
+
+1.- fix gethostinfo to identify your system (i.e. have it know what
+    information does 'uname -a' provide) and return $OS, $REL and $REV
+
+2.- Create a config file under systems/$OS/$REL/$REV with util/buildconf
+
+3.- Create the signatures file under systems/$OS/$REL/$REV with util/mksig
+
+4.- Create the services file under systems/$OS/$REL/$REV with 
+    util/read_services.sh
+
+5.- Other files such as the file_access_list or suid_list can be manually
+    created.
+
+Tiger will use the scripts under systems/default which will work in most
+systems, but you might need to make them work properly if the default
+behaviour does not work. The following scripts might need to be created
+under $OS/$REL/$REV since they are used by some Tiger checks:
+
+GEN_PASSWD_SETS gen_passwd_sets
+GEN_GROUP_SETS gen_group_sets
+GEN_ALIAS_SETS gen_alias_sets
+CHECK_CRON check_cron
+GEN_BOOTPARAM_SETS gen_bootparam_sets
+GEN_EXPORT_SETS gen_export_sets
+GEN_SERVICES_SETS gen_services
+GET_MOUNTS gen_mounts
+GEN_CRON_FILES gen_cron
+GETCLIENTDIRS gendlclients
+GEN_INETD_SETS gen_inetd
+GETDISKS getdisks
+GETUSERHOME getuserhome
+
+
+Currently supported OS
+----------------------
+
+This is the output of 'syslist' as of Tiger 3.2: 
+
+AIX 3
+AIX 3.2 
+AIX 4
+HPUX
+HPUX 10
+HPUX 10.20 9000 
+HPUX 11
+HPUX 11.00 9000 
+IRIX
+IRIX 4
+IRIX 4.0.5F IP12 
+IRIX 4.0.5F IP20 
+IRIX 4.0.5H IP22 
+IRIX 5
+IRIX 6
+Linux 0
+Linux 0.99.12 
+Linux 1
+Linux 0.99.12 
+Linux 2
+NeXT 3
+NeXT 3.0 
+NeXT 3.1 
+SunOS 4
+SunOS 4.1.1 sun3 
+SunOS 4.1.1 sun4 
+SunOS 5
+SunOS 5.1 sun4 
+SunOS 5.2 sun4 
+SunOS 5.4 sun4 
+SunOS 5.5.1 sun4 
+SunOS 5.5 sun4 
+SunOS 5.8 
+UNICOS
+UNICOS 10
+UNICOS 7
+UNICOS 7.0.0 
+UNICOSMK
+
+
+------------------------------
+Javier Fernandez-Sanguino
+Fri, 18 Apr 2003 00:27:38 +0200
+
