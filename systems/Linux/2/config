@@ -42,6 +42,8 @@
 #                  for findcmd() to work
 # Linux/2/config - 09/19/2003 - jfs - Define UUID (otherwise the new check 
 #		of script permissions in initdefs will not work)
+# Linux/2/config - 11/19/2003 - jfs - Define REALPATH and SNEFRU to $BINDIR
+#	        and removed paths from findcmd() (patch from Ryan Bradetich)
 #
 #-----------------------------------------------------------------------------
  
@@ -73,7 +75,7 @@ findcmd()
 {
   CMD=$1
 
-  SRCH=/usr/lib/tiger/bin:/usr/local/lib/tiger/bin:/bin:/usr/bin:/usr/sbin:/sbin:/usr/lib:/usr/lib/tiger/bin:/usr/local/bin:/usr/local/sbin
+  SRCH=/bin:/usr/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin
 
   SAVEIFS=$IFS
   IFS=:
@@ -146,7 +148,11 @@ DPKG=`findcmd dpkg`
 NETSTAT=`findcmd netstat`
 LSOF=`findcmd lsof`
 MD5SUM=`findcmd md5sum`
-REALPATH=`findcmd realpath`
+if [ -d "$BINDIR" ]; then
+	REALPATH=$BINDIR/realpath
+else 
+	REALPATH=`findcmd realpath`
+fi
 PWD=`findcmd pwd`
 AUTORPM=`findcmd autorpm`
 APT=`findcmd apt-get`
@@ -160,7 +166,11 @@ X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -1`
     SGREP="$BASEDIR/util/sgrep"
   }
 }
-SNEFRU=`findcmd snefru`
+if [ -d $BINDIR ]; then
+	SNEFRU=$BINDIR/snefru
+else
+	SNEFRU=`findcmd snefru`
+fi
 MD5=`findcmd md5`
 [ -z "$MD5" -a -n "$MD5SUM" ] && MD5=$MD5SUM
 PWCK=`findcmd pwck`
