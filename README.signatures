@@ -16,16 +16,31 @@ operating systems (systems/).
 Note that this files might not be as up to date as it would be desired for
 some operating systems. 
 
-You can retrieve updated signatures at
-http://www.net.tamu.edu/ftp/security/TAMU/tiger-sigs/ (these are being
-integrated into the tiger source code)
+You can retrieve updated signatures from:
 
-and
+- http://www.net.tamu.edu/ftp/security/TAMU/tiger-sigs/ (these are being
+integrated into the tiger source code, note, however, they are no
+longer current)
 
-http://www.knowngoods.org/download.html -(these will probably be in the near future too)
+- http://www.knowngoods.org/download.html (these will probably be in the 
+near future too), for a good discussion on this service check
+http://slashdot.org/articles/02/12/09/0411224.shtml?tid=172
+
+Some vendors provide signatures or patch information for their
+operating systems:
+
+- Sun has a web interface for MD5 sums of Solaris
+  at http://sunsolve.sun.com/pub-cgi/fileFingerprints.pl
+  As well as a patch tools based on patchdiag.xref available at:
+  http://sunsolve.sun.com/pub-cgi/patchDownload.pl?target=patchdiag.xref&method=H
+
+- IBM provides a list of APAR fixes at 
+  http://techsupport.services.ibm.com/server/aix.CAPARdb
+  http://techsupport.services.ibm.com/server/LatestFixData51
+  http://techsupport.services.ibm.com/server/aix.fdc51
+  http://techsupport.services.ibm.com/server/aix.fixsearch5L
+
 
 
 --- Javier Fernandez-Sanguino Pen~a  <jfs@computer.org>
-Mon,  9 Dec 2002 19:19:30 +0100
-
-
+Thu, 17 Apr 2003 23:53:28 +0200
