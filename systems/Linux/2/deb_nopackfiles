@@ -17,6 +17,11 @@
 #
 # Linux/deb_nopackfiles - 23/08/2001
 # 
+# 06/18/2004 - jfs - Made the dirlist variable so that directories which
+#              do not exist are not checked for (Debian bug #254574)
+#              Also fixed SED check so that only binary files (and not
+#              directories) are included in the list which should slightly
+#              improve performance.
 # 09/19/2003 - jfs - Applied patch from Nicolas François  which enhances
 #            speed by restricting the list of files to check to those that
 #            will be, indeed, tested and improved DPKG dependancy.
@@ -101,12 +106,32 @@ fi
 safe_temp $WORKDIR/dpkg-packages.list
 trap 'delete $WORKDIR/dpkg-packages.list ; exit 1' 1 2 3 15
 
+# NOTE: /usr/lib cannot be added here since quite a lot of packages
+# will compile stuff there on installation which will result in a 
+# tremendous report...
+dirlist="/bin/ /usr/bin/ /sbin/ /usr/sbin/ /lib/ /usr/X11R6/bin/"
+okdirs=""
+# Before using dirlist we are going to determine which values are ok
+for dir in $dirlist ; do
+	if [ -d $dir ] ; then
+		if [ -n "$okdirs" ] ; then
+			okdirs="$dir $okdirs" 
+		else
+			okdirs=$dir
+		fi
+	fi
+done
+dirlist=$okdirs
+if [ -z "$dirlist" ]; then
+	message ERROR linxxxw "" "None of the configured directories are available"
+	exit 1
+fi
 
 # We have two options here, use dpkg (non-optimal but on the safe side)
 # or use grep (optimal but not on the safe side)
 if [ "$Tiger_DPKG_Optimize" = "N" ]
 then
-        $FIND /bin/ /usr/bin/ /sbin/ /usr/sbin/ /lib/ /usr/X11R6/bin/ -type f 2>/dev/null|
+        $FIND $dirlist -type f 2>/dev/null|
         # We are not using -maxdepth here, but we could...
         while read file
         do
@@ -117,9 +142,10 @@ then
         done       
 else
         # Alternative (optimal but not following standard way)
+	seddirlist=`echo $dirlist | $SED -e '{ s/ /\\\\\|/g; s/\//\\\\\//g }'`
 	$FIND /var/lib/dpkg/info -name "*.list" -exec cat {} \; |
-        $SED -ne "/^\/\(bin\|usr\/bin\|sbin\|usr\/sbin\|lib\|usr\/X11R6\/bin\)/p" > $WORKDIR/dpkg-packages.list
-        $FIND /bin/ /usr/bin/ /sbin/ /usr/sbin/ /lib/ /usr/X11R6/bin/ -type f |
+        $SED -ne "/^\($seddirlist\)/p" > $WORKDIR/dpkg-packages.list
+        $FIND $dirlist -type f |
         # We are not using -maxdepth here, but we could...
         $GREP -x -F -v -f $WORKDIR/dpkg-packages.list |
         # To search for diversions
@@ -130,3 +156,5 @@ else
         done
         delete $WORKDIR/dpkg-packages.list
 fi
+
+exit 0
