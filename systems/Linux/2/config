@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -25,8 +25,10 @@
 # Linux/2/config - 10/09/99
 #  Added the new check_neverlogin script
 # Linux/2/config - 08/07/2002 - jfs change in LSGROUPS
-# Linux/2/config - 25/11/2002 - jfs added PROCDIR and APACHECONFDIR
+# Linux/2/config - 11/25/2002 - jfs added PROCDIR and APACHECONFDIR
 #                               also added code to determine Linux distribution
+# Linux/2/config - 04/15/2002 - jfs added check for LSGROUP variable based
+#				on fileutils version
 
 
 [ "$UUID" = "" ] && UNAME=`whoami`
@@ -80,16 +82,9 @@ CAT=`findcmd cat`
 LS=`findcmd ls`
 CUT=`findcmd cut`
 WC=`findcmd wc`
+TEE=`findcmd tee`
+COLUMN=`findcmd column`
 
-# -g to show group ownership
-#LSGROUP="-lg"
-# (jfs) No, it's not working any longer since fileutils
-# 4.10, now -g doesn't show the owner. In GNU's ls the
-# group is shown unless -G is used
-LSGROUP="-l"
-
-# -L to show file instead of symlink
-LSLINK="-L"
 GREP=`findcmd grep`
 EGREP=`findcmd egrep`
 SED=`findcmd sed`
@@ -144,12 +139,22 @@ MESG=`findcmd mesg`
 LASTLOG=`findcmd lastlog`
 TEST=`findcmd test`
 
+# Test which options should we use
+__lsver=`$LS --version | $GREP fileutils | $SED -e "s/.*4\.\([[:digit:]]\)/\1/"`
+LSGROUP="-l"
+[ -n "$__lsver" ] && [ $__lsver -lt 10 ] && {
+	# Since fileutils 4.10, -g doesn't show the owner. In GNU's ls the
+	# group is shown unless -G is used
+	LSGROUP="-lg"
+}
+# -L to show file instead of symlink
+LSLINK="-L"
 
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPC FILECMD UNIQ BASENAME HEAD
 export CHMOD CHOWN LN PASTE DPKG LSOF NETSTAT MD5SUM CUT 
 export SNEFRU REALPATH PWCK GRPCK CHAGE MESG DIFF WC
-export PWD AUTORPM APT ID EXPAND LASTLOG TEST
+export PWD AUTORPM APT ID EXPAND LASTLOG TEST TEE COLUMN
 
 
 UNAME=`findcmd uname`
