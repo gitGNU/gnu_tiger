@@ -45,6 +45,23 @@
 # - Consider generating one message per command instead of per file
 #   (better for reporting but worst for the .ignore mechanism)
 #
+# NOTES:
+#
+# A generic way to remove these messages for a given directory 
+# DIR of PROGRAM would be:
+#
+# Program PROGRAM .* is using a deleted file: .*DIR.*
+#
+# Add that line to your configuration's tiger.ignore file and the
+# messages will not appear in the reports.
+# 
+# Just for reference, there are a number of services that run with deleted
+# files frequently, this includes (in Linux) things like gconfd-2,
+# MozillaFirebird (stuff under  the user's .phoenix dir) and
+# some applications that make use of /dev/null or /dev/console
+# (I don't know why lsof flags those as "deleted", but they have been removed
+# from the script)
+#
 #-----------------------------------------------------------------------------
 #
 # This is the directory Tiger is installed on
