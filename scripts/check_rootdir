@@ -19,6 +19,8 @@
 #
 # check_rootdir - 07/25/2002 - jfs
 #       Changed TigerInstallDir to .
+# check_rootdir - 06/21/2003 - jfs
+#       Removed useless debug message (patch from Ryan Bradetich)
 #
 #-----------------------------------------------------------------------------
 #
@@ -97,7 +99,7 @@ inode=`$LS -di / | $AWK '{print $1}'`
 	   11) str="$str group \`$group' and world write"
 	       mode='go-w';;
 	esac
-        echo FAIL "" "${str} access."
+        #echo FAIL "" "${str} access."
         message FAIL rootdir002f "" "${str} access."
      }
   done
