@@ -185,14 +185,7 @@ MESG=`findcmd mesg`
 LASTLOG=`findcmd lastlog`
 TEST=`findcmd test`
 
-# Test which options should we use
-__lsver=`$LS --version | $GREP fileutils | $SED -e "s/.*4\.\([[:digit:]]*\).*/\1/"`
 LSGROUP="-l"
-[ -n "$__lsver" ] && [ $__lsver -lt 10 ] && {
-	# Since fileutils 4.10, -g doesn't show the owner. In GNU's ls the
-	# group is shown unless -G is used
-	LSGROUP="-lg"
-}
 # -L to show file instead of symlink
 LSLINK="-L"
 
