@@ -22,6 +22,12 @@
 # (home directory accesibility, shell configuration files, dormant accounts
 # and .hushlogin files)
 #
+# 17/11/2004 jfs  Fixed eval in check_accounts so that find is _only_ 
+#                 executed for users which are not part of
+#                 Tiger_Admin_Accounts, this prevents Tiger from accesing
+#                 filesystems when not needed  (Debian bug #280653)
+#                 It also should speed this check by removing unnecesary
+#                 filesystem checks.
 # 05/02/2004 jfs  Try to avoid eval problems if user/shells/directories contain
 #                 non-empty (but invalid) characters (such as space) 
 #                 (Debian bug #246987)
@@ -268,16 +274,10 @@ check_users()
 
      # Dormant account check.
      [ "$home" != / -a -n "$home" -a "$Tiger_Dormant_Limit" != 0 ] && {
-       eval "
-         case \"$user\" in
-           $Tiger_Admin_Accounts)
-             ;;
-           *)
-             [ `$FIND "$home/" -mtime -$Tiger_Dormant_Limit | $WC -l` -eq 0 ] && {
-               message WARN acc021w \"\" \"Login ID $user appears to be a dormant account.\"
-             }
-             ;;
-         esac"
+       notadmin=`eval "case \"$user\" in $Tiger_Admin_Accounts) ;; *) echo $user;; esac"`
+       [ -n "$notadmin" ] &&  \
+       [ `$FIND "$home/" -mtime -$Tiger_Dormant_Limit | $WC -l` -eq 0 ] && 
+           message WARN acc021w "" "Login ID $user appears to be a dormant account."
      }
 
      # Non-zero sized .hushlogin
