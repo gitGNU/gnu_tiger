@@ -20,6 +20,8 @@
 # Script to make signatures for a supported operating system.
 #
 # 04/23/2003 - jfs - added missing MD5 definition and check
+#                    merged with original (2.2.3) mksig and removed games
+#                    added @DEST and @CONFIG definitions
 #
 #-----------------------------------------------------------------------------
 #
@@ -78,6 +80,8 @@ echo "Working..."
   echo "#"
   echo "# Signature file for $OS $REV $ARCH, generated `date`"
   echo "#"
+  echo "#@DEST=$OS/$REV/$ARCH"
+  echo "#@CONFIG=$OS/$REV"
 
   while read file
   do
@@ -101,36 +105,36 @@ echo "Working..."
       echo "# $file not found."
     fi
   done <<EOL
-XConsole
-Xwrapper
 at
 atc
 bash
-battlestar
-canfield
 cardctl
 chage
 chfn
 chsh
-cribbage
 crontab
+csh
 ct
 cu
 dm
 dos
 dump
 dumpreg
+expreserve
+fingerd
+ftpd
 gpasswd
+inc
+inetd
 in.fingerd
 in.ftpd
+inndstart
 in.rexecd
 in.rlogind
 in.rshd
 in.telnetd
 in.tftpd
-inc
-inetd
-inndstart
+in.uucpd
 ksh
 lockfile
 login
@@ -139,6 +143,8 @@ lpd
 lpq
 lpr
 lprm
+lpstat
+ls
 man
 minicom
 mount
@@ -146,15 +152,16 @@ movemail
 mutt
 named
 netreport
+netstat
 newgrp
 ntpdate
 nwsfind
 nxterm
 passwd
-phantasia
 ping
 portmap
 procmail
+ps
 pwdb_chkpwd
 rcp
 rdist
@@ -162,17 +169,21 @@ restore
 restorefont
 restorepalette
 restoretextmode
+rexecd
 rlogin
+rlogind
 robots
 rpc.mountd
+rpc.passwd
 rpc.yppasswdd
 rsh
+rshd
 rxvt
-sail
 screen
 sendmail
+sendmail.mx
 seyon
-snake
+sh
 sperl5.00404
 ssh
 sshd
@@ -182,40 +193,32 @@ suidperl
 tcpd
 tcsh
 telnet
-tetris-bsd
+telnetd
+tftpd
 traceroute
-trojka.scores
 umount
 userhelper
 usernetctl
 uucico
 uucp
+uucpd
 uuname
 uustat
 uux
 uuxqt
-vga_connectN
-vga_klondike
-vga_mines
-vga_ohhell
-vga_othello
-vga_solitaire
-vga_spider
 wall
 write
-xbill
-xhextris
+XConsole
 xlock
 xscreensaver
 xterm
-xtrojka.score
+Xwrapper
 ypbind
 ypserv
+ypxfrd
 zgv
 zsh
 EOL
 } > $outfile
-
-$RM -f $WORKDIR/snefru
 
 echo "Signatures stored in $outfile."
