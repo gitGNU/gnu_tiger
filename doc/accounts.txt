@@ -98,10 +98,6 @@ as its home drive. This is a possible security hole.
 %acc015w
 The listed login ID has a duplicate home directory with another login
 ID.  This should be remedied to prevent permission problems.
-%acc016w
-The listed login ID does not have password aging enabled.  Good
-password management practices indicate that passwords should not
-be static, but rather should be changed on a regular basis.
 %acc017w
 The listed login ID does not have corresponding entries in both the
 /etc/passwd and /etc/shadow databases.  This may indicate tampering

@@ -78,7 +78,7 @@ echo "# Verifying system specific password checks..."
   do 
     if $CHAGE -l $user 2>/dev/null | $GREP "Password Expires:" | $GREP Never >/dev/null 2>&1
     then
-      message WARN acc016w "" "Login ID $user does not have password aging enabled."
+      message WARN pass19w "" "Login ID $user does not have password aging enabled."
     fi
   done
 }

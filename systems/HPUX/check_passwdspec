@@ -100,13 +100,13 @@ do
       [[ "$hash" != +([a-zA-Z0-9\./]) ]] && continue
 
       # Valid password hash without an password expiration date.
-      message WARN acc016w "" "Login ID $login does not have password aging enabled."
+      message WARN pass19w "" "Login ID $login does not have password aging enabled."
       continue
     }
 
     [[ "$hash" != [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./],+([a-zA-Z0-9\./]) ]] && {
       # Valid password hash without an password expiration date.
-      message WARN acc016w "" "Login ID $login does not have password aging enabled."
+      message WARN pass19w "" "Login ID $login does not have password aging enabled."
     }
   done 
 done < $WORKDIR/pass.list.$$

@@ -66,3 +66,7 @@ The listed administrative login should have an impossible password.
 Files owned by this login ID may reside in critical system directories
 and compromise of this account could lead to trojan executables in
 typical search paths.
+%pass19w
+The listed login ID does not have password aging enabled.  Good
+password management practices indicate that passwords should not
+be static, but rather should be changed on a regular basis.
