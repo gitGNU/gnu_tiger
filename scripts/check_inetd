@@ -47,6 +47,8 @@
 #     for other problematic services/servers. Also checked 019 from FAIL
 #     to ALERT
 # check_inetd - 10/07/2003 - jfs Removed temporary files
+# check_inetd - 10/19/2003 - jfs Applied patch from Ryan Bradetich which
+#     adds the exec service to the 'rexd' check.
 #
 # TODO
 # - This script needs to be improved to warn for some of the 'chatty' issues
@@ -132,8 +134,8 @@ checkinetd ()
   while read currservice s p t user currbinary parm1 parms
   do
     [ -z "$currservice" ] && continue
-    if [ "$currservice" = 'rexd' ]; then
-      message FAIL inet006f "" "'rexd' service is enabled, consider disabling it."
+    if [ "$currservice" = 'rexd' -o "$currservice" = 'exec' ]; then
+      message FAIL inet006f "" "'$currservice' service is enabled, consider disabling it."
     elif [ "$currservice" = 'sysstat' ]; then
       message WARN inet012w "" "'sysstat' service is enabled, consider disabling it."
     elif [ "$currservice" = 'netstat' ]; then
