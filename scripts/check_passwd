@@ -43,6 +43,7 @@
 # 10/07/2003 jfs Delete temporary files
 # 10/19/2003 jfs Patch from Nicolas François which uses EGREP instead of GREP
 #    in order to avoid Solaris problems.
+# 10/11/2003 jfs Patch from Ryan Braderitch's to fix a WARN -> FAIL
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -129,7 +130,7 @@ check_passwd_entries()
     eval "case \"$login\" in
       $Tiger_Admin_Accounts)
          [ \"$hash\" != '*' ] && {
-           message WARN pass018f \"\" \"Administrative user $login does not have an impossible password.\"
+           message FAIL pass018f \"\" \"Administrative user $login does not have an impossible password.\"
          }
          continue
          ;;
