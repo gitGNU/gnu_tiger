@@ -20,6 +20,7 @@
 # 10-30-2001
 # Paul Telford <paul_telford@hp.com>
 #
+# 09/19/2003 jfs  Fixed error with patch submitted by Ryan Bradetich
 # 08/12/2003 jfs  Fixed error (dirs->dir) and added a warning for 
 #                 non-special files.
 # 08/11/2003 jfs  Fixed dependancies.
@@ -105,7 +106,7 @@ dirs="/dev"
 # (in Solaris /dev/ are symlinks to devices in /devices/pseudo)
 [ -d /devices ] && dirs="$dirs /device"
 [ -d /devices/pseudo ] && dirs="$dirs /devices/pseudo"
-for dir in dirs
+for dir in $dirs
 do
 for file in $dir/[a-z0-9]*
 do
