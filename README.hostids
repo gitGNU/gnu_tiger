@@ -9,9 +9,11 @@ used as a host-based intrusion detection system (HIDS for shorts).
 
 The overall procedure is:
 1.- Tiger runs a given module on a configured time
-2.- it checks if there is a policy template or a previous run
-to check against, if there is one the output is compared against
-it (only changes are reported).
+2.- Messages not ignored (see README.ignore) are passed through
+3.- Messages of a module are checked against those in a specific 
+policy template for the module or a previous run to check against,
+if available. Only messages not reported before (or not in the policy
+will be checked against)
 3.- The report (wether full or differential) is sent through e-mail
 to the address configured at 'Tiger_Mail_RCPT'
 
@@ -84,5 +86,4 @@ IDS alarms and reports cannot be trusted anyway.
 
 
 -- Javier Fernández-Sanguino Peña <jfs@computer.org>
-Wed, 12 Jun 2002 00:56:39 +0200
-
+Thu, 17 Apr 2003 19:00:20 +0200

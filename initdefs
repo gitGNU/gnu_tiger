@@ -93,6 +93,19 @@ delete()
   done 2>/dev/null
 }
 #
+# Determine if a message must be ignored. In order for this
+# it uses the IGNORE_FILE defined 
+# (in a similar way as logcheck does, using $EGREP -v -f )
+#
+ignore_message()
+{
+	__retval=1
+  	__mesgcheck="$1"  
+	[ -n "$IGNORE_FILE" ] && [ -f $IGNORE_FILE ] &&  \
+	[ -n "`echo $__mesgcheck | $EGREP -v -f $IGNORE_FILE`" ] && __retval=0
+	return $__retval
+}
+#
 # Format a message...
 #
 message()
@@ -102,6 +115,9 @@ message()
   _trail="$3"
   _mesg="$4"  
   __len=${Tiger_Output_Width:=79}
+
+  # If the message should be ignore it is removed
+  ignore_message $_mesg && return 
 
   [ "$HTML" = "N" ] && {
 
