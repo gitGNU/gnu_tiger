@@ -7,6 +7,13 @@
 # Select checks to perform.  Specify 'N' (uppercase) for checks
 # you don't want performed.
 #
+# Notice this does not affect which checks will be performed through
+# the cron job (Tiger's cronrc file governs that, usually under
+# /usr/local/etc/tiger or /etc/tiger), it only affects which
+# checks will be performed when running the full security checks
+# (i.e. 'tiger')
+#
+#
 TigerNoBuild=Y			# C files are corrupted (ouch.)
 Tiger_Check_PASSWD=Y		# Fast
 Tiger_Check_PASSWD_SHADOW=Y	# Time varies on # of users
