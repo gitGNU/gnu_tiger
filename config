@@ -17,6 +17,9 @@
 #
 #  config (top level) - 06/14/93
 #
+# 04/28/2004 jfs  Changed -f RCFILE check to -r to allow use through ssh
+#                 as suggested by Falk Siemonsmeier:
+#                  cat /etc/tiger/tigerrc | ssh tiger -c /dev/stdin
 # 01/13/2004 jfs  Added check when running with -f since on some (unconfigured)
 #		  systems this might fail.
 # 08/19/2003 jfs  tara -> Tiger in the usage
@@ -338,8 +341,8 @@ checkfile()
     done
   }
 
-  [ -n "$RCFILE" -a ! -f "$RCFILE" ] && {
-    echo "Control file "$RCFILE" not found... exiting..."
+  [ -n "$RCFILE" -a ! -r "$RCFILE" ] && {
+    echo "Control file "$RCFILE" not defined or not readable... exiting..."
     exit 1
   }
 
@@ -347,7 +350,7 @@ checkfile()
   # Preprocess the RC file, to export variables to environment
   #
 
-  [ -n "$RCFILE" -a -f $RCFILE ] && {
+  [ -n "$RCFILE" -a -r $RCFILE ] && {
     $GREP -v '^#' $RCFILE |
     $SED -e 's/^\(.*\)=/export \1; \1=/' > $WORKDIR/rcfile.$$
     . $WORKDIR/rcfile.$$
