@@ -1,3 +1,15 @@
+tiger (3.1-5) unstable; urgency=low
+
+  * Included some of the changes that will be in the next Tiger release
+  * Config now sets the locale to POSIX (just in case it breaks some tests)
+  * Check_listeningprocs now works with multiple program names (Closes: #164898)
+  * Recovered the fixes from 3.0-2 which has made an old bug surface 
+    (Closes: #164307, #166176, #166744)
+  * Updated to latest advisories
+  * Removed debugging output from systems/Linux/2/check_neverlogin
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Mon, 28 Oct 2002 17:51:03 +0100
+
 tiger (3.1-4) unstable; urgency=medium
 
   * Fixed LOGDIR in tigercron.in which was making templates not work.
@@ -34,6 +46,24 @@ tiger (3.1-1) unstable; urgency=low
   * Updated DSAs are now available
 
  -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 25 Jul 2002 19:37:41 +0200
+
+tiger (3.0-3) unstable; urgency=low
+
+  * Updated to latest advisories.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed,  7 Aug 2002 10:33:47 +0200
+
+tiger (3.0-2) unstable; urgency=low
+
+  * Changed Linux' config file so that it sets LSGROUPS to nothing
+  Due to a change in fileutils-4.1.1 which changed the standard
+  behavior from "showing groups (but really doing nothing)" to
+  "not showing the owner" ! (Closes: #155588)
+  * Modified config to set the environment properly (this was the
+  first workaround I tried for the previous bug, didn't fix it but
+  it seems better to leave the locale's environment, just in case...)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Tue,  6 Aug 2002 17:06:01 +0200
 
 tiger (3.0-1) unstable; urgency=low
 
