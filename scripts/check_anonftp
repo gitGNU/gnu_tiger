@@ -5,7 +5,7 @@
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 1, or (at your option)
+#    the Free Software Foundation; either version 2, or (at your option)
 #    any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -23,6 +23,22 @@
 # 04/27/93 dls   Added check for .rhosts file in ~ftp
 # 12 june 2002 jfs Fixed script so that it checks if ftphome/etc/passwd
 #                  exists before using grep on it
+#
+# TODO:
+# 
+# - The script prints a warning whenever a directory is owned by 'ftp' and is
+# user-writeable. It also prints a warning if a directory is not
+# owned by ftp, but is writable by ftp. However some implementations
+# of anonymous ftp I've seen allow for an upload directory to be
+# owned by ftp and writable by ftp. On NetBSD this is ~ftp/incoming.
+# On HP-UX it is ~ftp/pub.
+#
+# Possible option: the user the FTP server sruns as
+# Possible option: variable to specify an upload directory that will allow
+#    ftp write privileges
+#
+# - The script uses /etc/passwd to determine if 'ftp' exists. It should use
+#   GEN_PASSWD
 #
 #-----------------------------------------------------------------------------
 #
