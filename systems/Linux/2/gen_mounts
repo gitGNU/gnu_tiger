@@ -22,6 +22,9 @@
 #     local filesystems (patch from Ryan Bradetich), also added xfs and jfs.
 # Linux/2/gen_mounts - 03/21/2005 - Warn if the filesystem is not recognised
 #     this is a fix for Tiger bug #7093 
+# Linux/2/gen_mounts - 04/14/2005 - Add more filesystems and recognise the 
+#     fact that users can define fallback filesystems (Debian Bug #304555 and
+#     #302646)
 #
 #-----------------------------------------------------------------------------
 #
@@ -66,25 +69,71 @@ ronly()
 
 localfs()
 {
+# Determine which filesystem is local, for filesystems valid for Linux
+# read the mount(5), fstab(5) or Documentation/filesystems in the Linux
+# kernel
   LOCAL=2
+  fs=$1
+  # Strip fallback filesystems
+  fs=`echo $fs | $SED -e 's/,.*$//'`
+  # Valid local filesystems
+  [ "$1" = "ext" ] && LOCAL=0
   [ "$1" = "ext2" ] && LOCAL=0
   [ "$1" = "ext3" ] && LOCAL=0
+  [ "$1" = "ext" ] && LOCAL=0
   [ "$1" = "reiserfs" ] && LOCAL=0
   [ "$1" = "xfs" ] && LOCAL=0
   [ "$1" = "jfs" ] && LOCAL=0
   [ "$1" = "minix" ] && LOCAL=0
   [ "$1" = "xiafs" ] && LOCAL=0
-  [ "$1" = "ext" ] && LOCAL=0
+  [ "$1" = "sysv" ] && LOCAL=0
+  [ "$1" = "ufs" ] && LOCAL=0
+  [ "$1" = "coherent" ] && LOCAL=0
+  [ "$1" = "xenix" ] && LOCAL=0
+  [ "$1" = "hpfs" ] && LOCAL=0
+  [ "$1" = "rootfs" ] && LOCAL=0
+  [ "$1" = "shm" ] && LOCAL=0
+  [ "$1" = "tmpfs" ] && LOCAL=0
+  # Filesystems of other OS
   [ "$1" = "msdos" ] && LOCAL=1
+  [ "$1" = "umsdos" ] && LOCAL=1
+  [ "$1" = "vfat" ] && LOCAL=1
+  [ "$1" = "hfs" ] && LOCAL=1
+  [ "$1" = "qnx4" ] && LOCAL=1
+  [ "$1" = "udf" ] && LOCAL=1
+  # Remotely mounted fs
+  [ "$1" = "nfs" ] && LOCAL=1
+  [ "$1" = "nfs4" ] && LOCAL=1
+  [ "$1" = "ncpfs" ] && LOCAL=1
+  [ "$1" = "smbfs" ] && LOCAL=1
+  [ "$1" = "coda" ] && LOCAL=1
+  [ "$1" = "rpc_pipefs" ] && LOCAL=1
   # Skip these as they are virtual filesystems
   [ "$1" = "proc" ] && LOCAL=1
-  [ "$1" = "tmpfs" ] && LOCAL=1
   [ "$1" = "devpts" ] && LOCAL=1
   [ "$1" = "usbfs" ] && LOCAL=1
+  [ "$1" = "usbdevfs" ] && LOCAL=1
+  [ "$1" = "devfs" ] && LOCAL=1
   [ "$1" = "sysfs" ] && LOCAL=1
   [ "$1" = "none" ] && LOCAL=1
   [ "$1" = "autofs" ] && LOCAL=1
   [ "$1" = "binfmt_misc" ] && LOCAL=1
+  [ "$1" = "cramfs" ] && LOCAL=1
+  [ "$1" = "ramfs" ] && LOCAL=1
+  [ "$1" = "romfs" ] && LOCAL=1
+  [ "$1" = "mqueue" ] && LOCAL=1
+  [ "$1" = "sockfs" ] && LOCAL=1
+  [ "$1" = "bdev" ] && LOCAL=1
+  [ "$1" = "pipefs" ] && LOCAL=1
+  [ "$1" = "eventpollfs" ] && LOCAL=1
+  [ "$1" = "futexfs" ] && LOCAL=0
+  # Other filesystems we don't support
+  [ "$1" = "adfs" ] && LOCAL=1
+  [ "$1" = "affs" ] && LOCAL=1
+  [ "$1" = "autofs" ] && LOCAL=1
+  [ "$1" = "efs" ] && LOCAL=1
+  [ "$1" = "iso9660" ] && LOCAL=1
+  # The rest we warn about
   if [ "$LOCAL" -eq 2 ] ; then
   	echo "--CONFIG-- [con010c] Filesystem $1 used by $2 is not recognised as a local filesystem" >&2
 	LOCAL=1
@@ -94,6 +143,7 @@ localfs()
 
 # If run directly do this, just in case:
 [ -z "$GETFS" ] && GETFS=`which mount`
+[ -z "$SED" ] && GETFS=`which sed`
 [ -z "$BASENAME" ] && BASENAME=`which basename`
 
 $GETFS  |
