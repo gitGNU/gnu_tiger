@@ -369,8 +369,11 @@ Tiger_Listening_ValidProcs=''
 # seen in the process table will generate a FAIL:
 #
 # The process list below is just an example (useful for Linux)
-# change it to suit your needs
+# change it to suit your needs. You can use either the process name
+# or the full path name
 # Tiger_Running_Procs='syslogd cron atd klogd'
+# or
+# Tiger_Running_Procs='/sbin/syslogd /usr/sbin/atd /usr/sbin/cron /sbin/klogd'
 #
 # Should we optimize DPKG checks? (by not using dpkg but looking on
 # the file database at /var/lib/dpkg?)

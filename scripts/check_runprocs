@@ -22,8 +22,10 @@
 #        This is a lightweight software watchdog, I know :)
 #
 # 08/12/2003 - jfs - Fixed dependancies.
-# 03/31/2003 - jfs - Use comm instead of fname so that the names of the 
+# 03/31/2005 - jfs - Use comm instead of fname so that the names of the 
 #              processes are not truncated (Debian bug #288086)
+# 04/15/2005 - jfs - Capture arguments in an extra value, use fname first
+#               and then check against comm
 #
 #-----------------------------------------------------------------------------
 TigerInstallDir='.'
@@ -90,12 +92,12 @@ do
 # COLUMNS or use the -w switch (portable?)
 # TODO: I dislike spawning a 'ps' process per configured process
 # maybe this could be rewritten more optimally? (jfs)
-	$PS -eo pid,user,state,command |
+	$PS -eo pid,user,state,fname,command,args |
 	$GREP $proc | {
 		found="no"
-		while read pid user state comm
+		while read pid user state fname comm args
 		do
-		   [ "$proc" = "$comm" -a "$state" != "T" -a "$state" != "Z" ] && found="yes"
+		   [ "$proc" = "$comm" ] || [ "$proc" = "$fname" ] && [ "$state" != "T" ] && [ "$state" != "Z" ] && found="yes"
 		done
 		[ "$found" = "no" ] && message FAIL misc020f "" "The process '$proc' has not been found running in the processes table."
 	}
