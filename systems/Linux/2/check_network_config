@@ -22,7 +22,9 @@
 #                  (which is based on documentation online)
 # 15/04/2003 jfs - Changed ERROR into FAIL
 # 10/15/2003 jfs - Return '1' instead of '-1' (Debian bug #215891)
-# 04/16/2005 jfs - Fixed check of ICMP redirects (Debian bug #304957)
+# 04/16/2005 jfs - Fixed check of ICMP redirects (Debian bug #304957).
+#                  Also fixed call to message so that everything appears
+#                  in one line.
 #
 # References:
 # http://www.linuxsecurity.com/articles/network_security_article-4528.html
@@ -142,32 +144,32 @@ secure_redirects=$?
 # Now start checking and sending messages
 
 [ $icmp_echo_ignore -eq 0 ] && \
-	message INFO lin009i "The system is configured to answer ICMP ECHO requests"
+	message INFO lin009i "" "The system is configured to answer ICMP ECHO requests"
 [ $icmp_broadcast_ignore -eq 0 ] && \
-	message FAIL lin010f "The system is configured to answer to ICMP broadcasts"
+	message FAIL lin010f "" "The system is configured to answer to ICMP broadcasts"
 [ $icmp_bogus_error -eq 0 ] && \
-	message FAIL lin011f "The system is configured to answer bogus errors"
+	message FAIL lin011f "" "The system is configured to answer bogus errors"
 
 [ $icmp_redirect -eq 1 -o $icmp_redirect_def -eq 1 ] && \
-	message WARN lin012w "The system accepts ICMP redirection messages"
+	message WARN lin012w "" "The system accepts ICMP redirection messages"
 
 [ $tcp_syncookies -eq 0 ] && \
-	message FAIL lin013f "The system is not protected against Syn flooding attacks"
+	message FAIL lin013f "" "The system is not protected against Syn flooding attacks"
 
 [ $rp_filter_all -eq 0 -o $rp_filter_def -eq 0 ] && \
-	message FAIL lin014f "The system permits the transmission of IP packets with invalid addresses"
+	message FAIL lin014f "" "The system permits the transmission of IP packets with invalid addresses"
 
 [ $ip_fwd -eq 1 ]  && \
-	message WARN lin015w "The system has IP forwarding enabled"
+	message WARN lin015w "" "The system has IP forwarding enabled"
 
 [ $ip_source_route_all -eq 1 -o $ip_source_route_def -eq 1 ] && \
-	message FAIL lin016f "The system permits source routing from incoming packets"
+	message FAIL lin016f "" "The system permits source routing from incoming packets"
 
 [ $log_martian_all -eq 0 -o $log_martian_def -eq 0 ] && \
-	message WARN lin017w "The system is not configured to log suspicious (martian) packets"
+	message WARN lin017w "" "The system is not configured to log suspicious (martian) packets"
 
 # TODO: add a test that is useful for post-2.2 kernels
 [ $ip_weak_end -eq 0 ] && \
-	message WARN lin018w "The system implements weak end host RFC"
+	message WARN lin018w "" "The system implements weak end host RFC"
 
 exit 0
