@@ -47,6 +47,7 @@
 # Linux/2/config - 01/11/2004 - rbrad - Add OMNIBACK_CELLSERVER and NTPCONF
 # Linux/2/config - 01/15/2004 - jfs - Add XINETDCONF and INETDCONF
 # Linux/2/config - 03/31/2005 - jfs - Changed GROUPC to GROUPSS
+# Linux/2/config - 04/17/2005 - jfs - Added IPTABLES and CMP
 #
 #-----------------------------------------------------------------------------
  
@@ -117,6 +118,7 @@ CUT=`findcmd cut`
 WC=`findcmd wc`
 TEE=`findcmd tee`
 COLUMN=`findcmd column`
+CMP=`findcmd cmp`
 
 GREP=`findcmd grep`
 EGREP=`findcmd egrep`
@@ -128,6 +130,9 @@ TCPD=`findcmd tcpd`
 HOSTALLOW=/etc/hosts.allow
 HOSTDENY=/etc/hosts.deny
 IFCONFIG=`findcmd ifconfig`
+IP=`findcmd ip`
+NETSTAT=`findcmd netstat`
+IPTABLES=`findcmd iptables`
 HEAD=`findcmd head`
 MV=`findcmd mv`
 TR=`findcmd tr`
@@ -147,8 +152,6 @@ EXPAND=`findcmd expand`
 # send appropiate headers
 MAILER=`findcmd sendmail`
 [ -z "$MAILER" ] && MAILER=`findcmd mail`
-DPKG=`findcmd dpkg`
-NETSTAT=`findcmd netstat`
 LSOF=`findcmd lsof`
 MD5SUM=`findcmd md5sum`
 if [ -f "$BINDIR/realpath" ]; then
@@ -157,9 +160,11 @@ else
 	REALPATH=`findcmd realpath`
 fi
 PWD=`findcmd pwd`
-AUTORPM=`findcmd autorpm`
+# Package management tools
+DPKG=`findcmd dpkg`
 APT=`findcmd apt-get`
-IP=`findcmd ip`
+RPM=`findcmd rpm`
+AUTORPM=`findcmd autorpm`
 # Silent grep
 SGREP="$EGREP -s"
 X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -1`
@@ -192,10 +197,10 @@ LSLINK="-L"
 
 export CAT LS LSGROUP LSLINK RM AWK GREP EGREP SGREP SED
 export SORT COMM TAIL MV TR JOIN GROUPSS FILECMD UNIQ BASENAME HEAD
-export CHMOD CHOWN LN PASTE DPKG LSOF NETSTAT MD5SUM CUT 
+export CHMOD CHOWN LN PASTE LSOF MD5SUM CUT COLUMN CMP
 export SNEFRU MD5 REALPATH PWCK GRPCK CHAGE MESG DIFF WC
-export PWD AUTORPM APT ID EXPAND LASTLOG TEST TEE COLUMN
-export TCPD HOSTALLOW HOSTDENY IFCONFIG IP
+export PWD DPKG RPM AUTORPM APT ID EXPAND LASTLOG TEST TEE 
+export TCPD HOSTALLOW HOSTDENY IFCONFIG IP IPTABLES NETSTAT
 
 
 UNAME=`findcmd uname`
