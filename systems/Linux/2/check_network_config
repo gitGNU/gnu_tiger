@@ -25,6 +25,7 @@
 # 04/16/2005 jfs - Fixed check of ICMP redirects (Debian bug #304957).
 #                  Also fixed call to message so that everything appears
 #                  in one line.
+# 04/17/2005 jfs - Added check for local firewall rules
 #
 # References:
 # http://www.linuxsecurity.com/articles/network_security_article-4528.html
@@ -171,5 +172,33 @@ secure_redirects=$?
 # TODO: add a test that is useful for post-2.2 kernels
 [ $ip_weak_end -eq 0 ] && \
 	message WARN lin018w "" "The system implements weak end host RFC"
+
+# Check if there is (at least) and 
+
+haveallcmds CMP IPTABLES && {
+	iptablesrules=$WORKDIR/ipt.$$
+	iptablesempty=$WORKDIR/iptempt.$$
+	safe_temp $iptablesrules $iptablesempty
+	trap 'delete $iptablesrules $iptablesempty; exit 1;' 1 2 3 15
+	
+	$IPTABLES -nL 2>/dev/null >>$iptablesrules
+	if [ -s "$iptablesrules" ]; then
+		$CAT >>$iptablesempty <<EOF
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination         
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination         
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination         
+EOF
+		$CMP -s $iptablesrules $iptablesempty 
+		[ $? -eq 0 ] && message FAIL lin019f "" "The system does not have any local firewall rules configured"
+	else
+		message ERROR run002e "" "Cannot extract local firewalling rules running $IPTABLES"
+	fi
+	delete $iptablesrules $iptablesempty
+}
 
 exit 0
