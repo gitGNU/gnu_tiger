@@ -116,8 +116,7 @@ haveallfiles BASEDIR WORKDIR || exit 1
 
 safe_temp "$WORKDIR/pass.list.$$" "$WORKDIR/p1name.$$" "$WORKDIR/p2name.$$" "$WORKDIR/p1uid.$$" "$WORKDIR/p2uid.$$"
 
-trap 'delete "$WORKDIR/pass.list.$$" "$WORKDIR/p1name.$$" \
-"$WORKDIR/p2name.$$" "$WORKDIR/p1uid.$$" "$WORKDIR/p2uid.$$" ; exit 1' 1 2 3 15
+trap 'delete "$WORKDIR/pass.list.$$" "$WORKDIR/p1name.$$" "$WORKDIR/p2name.$$" "$WORKDIR/p1uid.$$" "$WORKDIR/p2uid.$$" ; exit 1;' 1 2 3 15
 
 check_passwd_entries()
 {
@@ -230,7 +229,7 @@ conflict_check()
 # shell initilization files.
 shcase='/bin/sh|/bin/csh|/bin/bash|/bin/tcsh|/bin/ksh'
 if [ "$OS" = "SunOS" ] ; then
-	shcase="$shcase|/sbin/sh|/usr/bin/bash
+	shcase="$shcase|/sbin/sh|/usr/bin/bash"
 fi
 
 [ -n "$ETCSHELLS" -a -s "$ETCSHELLS" ] && {
@@ -274,11 +273,10 @@ do
   $UNIQ -c |
   while read times uid
   do
-    # Previous fix for Debian bug #117117, ARSC's fix is much better (jfs)
-    #    times=`$GREP ":$uid:" $WORKDIR/p1uid.$$ | $AWK 'END { print NR }'`
-    [ $times -gt 1 ] && {
+# Previous fix for Debian bug #117117, ARSC's fix is much better 
+#    times=`$GREP ":$uid:" $WORKDIR/p1uid.$$ | $AWK 'END { print NR }'`
+    [ $times -gt 1 ] && \
       message WARN pass002w "" "UID $uid exists multiple times ($times) in $source."
-    }
   done
 
   # Check for multiple entries with duplicate home directories.
