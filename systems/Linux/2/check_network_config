@@ -22,6 +22,7 @@
 #                  (which is based on documentation online)
 # 15/04/2003 jfs - Changed ERROR into FAIL
 # 10/15/2003 jfs - Return '1' instead of '-1' (Debian bug #215891)
+# 04/16/2005 jfs - Fixed check of ICMP redirects (Debian bug #304957)
 #
 # References:
 # http://www.linuxsecurity.com/articles/network_security_article-4528.html
@@ -147,7 +148,7 @@ secure_redirects=$?
 [ $icmp_bogus_error -eq 0 ] && \
 	message FAIL lin011f "The system is configured to answer bogus errors"
 
-[ $icmp_redirect -eq 0 -o $icmp_redirect_def -eq 0 ] && \
+[ $icmp_redirect -eq 1 -o $icmp_redirect_def -eq 1 ] && \
 	message WARN lin012w "The system accepts ICMP redirection messages"
 
 [ $tcp_syncookies -eq 0 ] && \
