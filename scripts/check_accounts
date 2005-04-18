@@ -222,6 +222,8 @@ check_users()
        # group so this check does
        # TODO: make it check if there are more than a single user in the group
        # and if it is = owner
+       # There is also usually a list of groups that we might want to 
+       # white list here (such as 'adm' or 'staff')
 
        [ "$ow" = 1 ] || [ "$owner" != "$group" -a "$gw" = 1 ] && {
          str="Login ID $user's home directory ($home) has"
