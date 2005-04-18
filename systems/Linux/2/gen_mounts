@@ -25,6 +25,7 @@
 # Linux/2/gen_mounts - 04/14/2005 - Add more filesystems and recognise the 
 #     fact that users can define fallback filesystems (Debian Bug #304555 and
 #     #302646)
+# Linux/2/gen_mounts - 04/18/2005 - Fix to previous patch which introduced typos
 #
 #-----------------------------------------------------------------------------
 #
@@ -74,13 +75,10 @@ localfs()
 # kernel
   LOCAL=2
   fs=$1
-  # Strip fallback filesystems
-  fs=`echo $fs | $SED -e 's/,.*$//'`
   # Valid local filesystems
   [ "$1" = "ext" ] && LOCAL=0
   [ "$1" = "ext2" ] && LOCAL=0
   [ "$1" = "ext3" ] && LOCAL=0
-  [ "$1" = "ext" ] && LOCAL=0
   [ "$1" = "reiserfs" ] && LOCAL=0
   [ "$1" = "xfs" ] && LOCAL=0
   [ "$1" = "jfs" ] && LOCAL=0
@@ -98,6 +96,7 @@ localfs()
   [ "$1" = "msdos" ] && LOCAL=1
   [ "$1" = "umsdos" ] && LOCAL=1
   [ "$1" = "vfat" ] && LOCAL=1
+  [ "$1" = "ntfs" ] && LOCAL=1
   [ "$1" = "hfs" ] && LOCAL=1
   [ "$1" = "qnx4" ] && LOCAL=1
   [ "$1" = "udf" ] && LOCAL=1
@@ -143,13 +142,15 @@ localfs()
 
 # If run directly do this, just in case:
 [ -z "$GETFS" ] && GETFS=`which mount`
-[ -z "$SED" ] && GETFS=`which sed`
+[ -z "$SED" ] && SED=`which sed`
 [ -z "$BASENAME" ] && BASENAME=`which basename`
 
 $GETFS  |
 while read fs o mtpoint t fstype opts
 do
   PRINT=1
+  # Strip fallback filesystems
+  fstype=`echo $fstype | $SED -e 's/,.*$//'`
   [ "$CHKRO" = "rw" ] && { ronly "$opts" && PRINT=0; }
   [ "$LOCAL_ONLY" = "local" ] && { localfs "$fstype" "$fs" || PRINT=0; }
   [ "$PRINT" = "1" ] && {
