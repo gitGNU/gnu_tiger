@@ -47,6 +47,7 @@ approach)
    Other utilities, such as buildbins changes, need to be checked.
    . Full documentation and user manual describing checks, policy 
    (BS-7799) compliance and comparison with other tools and checks.
+       - Include tigerrc and cronrc manpages
    . Provide other logging mechanisms (syslog, snmp) if tools are
      available.
    . Checks for SANS's Top 10 (generic) and Top 20 (UNIX) vulnerabilities
