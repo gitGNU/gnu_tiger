@@ -129,7 +129,7 @@ localfs()
   # Other filesystems we don't support
   [ "$1" = "adfs" ] && LOCAL=1
   [ "$1" = "affs" ] && LOCAL=1
-  [ "$1" = "autofs" ] && LOCAL=1
+  [ "$1" = "afs" ] && LOCAL=1
   [ "$1" = "efs" ] && LOCAL=1
   [ "$1" = "iso9660" ] && LOCAL=1
   # The rest we warn about
