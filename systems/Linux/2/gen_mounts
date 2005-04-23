@@ -79,6 +79,7 @@ localfs()
   [ "$1" = "ext" ] && LOCAL=0
   [ "$1" = "ext2" ] && LOCAL=0
   [ "$1" = "ext3" ] && LOCAL=0
+  [ "$1" = "auto" ] && LOCAL=0
   [ "$1" = "reiserfs" ] && LOCAL=0
   [ "$1" = "xfs" ] && LOCAL=0
   [ "$1" = "jfs" ] && LOCAL=0
