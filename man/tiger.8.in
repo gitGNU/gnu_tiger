@@ -33,22 +33,18 @@ can be used to obtain explanations of the problems reported by \fBtiger\fR.
 .LP
 You can configure
 .B tiger
-to your by adjusting the 
+by adjusting the 
 .B Tiger_
 variables in the 
 .I @tigerconfigdir@/tigerrc
-configuration file. This configuration file specifies which module checks
-(see
+configuration file. For each available module (see 
 .B MODULES
-below) are run through 
-.B Tiger_Check
-variables which can be either
-.B Y
-(run the check) or 
-.B N
-(do not run the check). Other configuration variables will modify the
-behaviour of some modules, and should be adjusted based on the
-operating system.
+below) there is a corresponding variable in the configuration file that 
+determines whether the module is run. All of the variables names start with
+.B Tiger_check_
+and should be set equal to Y to run, or N to skip. Other configuration
+variables will modify the behaviour of some modules, and should be 
+adjusted based on the operating system.
 .LP
 The 
 .I @tigerconfigdir@/tiger.ignore
