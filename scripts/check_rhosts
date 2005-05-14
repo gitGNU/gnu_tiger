@@ -20,6 +20,8 @@
 # Checks rhosts files in order to see if user's configuration leaves the
 # system open to attack.
 #
+# 05/14/2005 jfs Patch from Nicolas François which prints a warning
+#                for any host in .rhost
 # 03/31/2005 jfs Printout rhosts accesses
 # 10/19/2003 jfs Patch from Nicolas François which uses -f instead of -e
 #    in order to avoid Solaris problems. And also adds TESTLINK HOSTNAME
@@ -250,7 +252,8 @@ file_rhosts ()
 
 saveifs="$IFS"
 
-rhostcase='*) NOTE=0;;'
+# By default, a warning will be issued for any host in any .rhosts file.
+rhostcase='*) note=1;;'
 
 [ -n "$RHOST_SITES" ] && {
   rhostcase=
