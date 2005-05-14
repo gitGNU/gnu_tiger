@@ -2,15 +2,24 @@
 #
 # Audit SuSE Linux Script v1.4 (c) 2002 by Marc Heuse
 # <mheuse@kpmg.com> | <marc@suse.de> | http://www.suse.de/~marc/audit/
-
+# 
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
 #
-# This is private property. Everyone may use and change this script,
-# as long as this copyright notice is kept unchanged.
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
 #
-# Changes by Javier Fernandez-Sanguino: 
-# - 
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#  
+# You can also find a copy of the GNU General Public License at
+# http://www.gnu.org/licenses/licenses.html#TOCLGPL
 #
-# TODO (JFS): Review Debian/RedHat scripts and add changes here...
 #
 PATH="/sbin:/usr/sbin:/bin:/usr/bin:$PATH"
 HOSTNAME=`hostname`

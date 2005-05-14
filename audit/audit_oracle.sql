@@ -1,4 +1,22 @@
 # Oracle Audit Script v1.0 (c) 2001-2002 by Marc Heuse - marc@suse.de - License: GPL v2  - http://www.suse.de/~marc/audit/
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#  
+# You can also find a copy of the GNU General Public License at
+# http://www.gnu.org/licenses/licenses.html#TOCLGPL
+#
 # Use this script like this: connect internal; @audit_oracle.sql;
 # This script was designed in a way to get all necessary data for a security review, however preventing doubles.
 # Running this script costs pretty much performance, so execute it off-peak hours in a production environment!
