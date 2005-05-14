@@ -92,12 +92,12 @@ do
 # COLUMNS or use the -w switch (portable?)
 # TODO: I dislike spawning a 'ps' process per configured process
 # maybe this could be rewritten more optimally? (jfs)
-	$PS -eo pid,user,state,fname,command,args |
+	$PS -eo pid,user,state,comm,command,args |
 	$GREP $proc | {
 		found="no"
-		while read pid user state fname comm args
+		while read pid user state comm command args
 		do
-		   [ "$proc" = "$comm" ] || [ "$proc" = "$fname" ] && [ "$state" != "T" ] && [ "$state" != "Z" ] && found="yes"
+		   [ "$proc" = "$comm" ] || [ "$proc" = "$command" ] && [ "$state" != "T" ] && [ "$state" != "Z" ] && found="yes"
 		done
 		[ "$found" = "no" ] && message FAIL misc020f "" "The process '$proc' has not been found running in the processes table."
 	}
