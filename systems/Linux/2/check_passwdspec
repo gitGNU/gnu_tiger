@@ -18,6 +18,7 @@
 # check_passwdspec: Perform system specific password checks here like
 #               password aging checks, etc.
 # 
+# 05/14/2005 jfs - Patch from Nicolas François which checks the user strictly
 # 05/14/2005 jfs - Better fix for pwd=! (Debian bug #308141)
 # 03/21/2005 jfs - Fixed password aging check. Separate all checks so that
 #                  they prevent bugs if pwd="!" (Debian Bug #297889)
@@ -91,7 +92,7 @@ IFS=:
 
    # For expiration, pull the password string from /etc/shadow if it exists
    [ -r /etc/shadow ] && { 
-        pwd=`$GREP $user /etc/shadow | $CUT -d: -f2`
+        pwd=`$GREP "^$user:" /etc/shadow | $CUT -d: -f2`
    }
    # Skip this check if the user account is locked
    [ "x$pwd" != 'x!' ] && [ "x$pwd" != 'x*' ] && {
