@@ -47,7 +47,7 @@ fi
 mkdir "$AUDIT_DIR" || exit 1
 cd "$AUDIT_DIR" || exit 1
 
-[ "`id -u`" -ne 0 ] && echo "Not running as root, some information might not be extracted"
+[ "`id`" -ne 0 ] && echo "Not running as root, some information might not be extracted"
 
 # Extract information from the system
 tar cf etc.tar /etc/*conf* /etc/*cfg* /etc/*.d /etc/rc* /sbin/rc* \
@@ -91,76 +91,75 @@ fi
 
 for dir in $DIRS; do 
 	find $dir \( -perm -4000 -o -perm -2000 -o -perm -1000 \) -type f \
-	 -exec /bin/ls -ld {} \; >> find-s_id.out 2>&1
-	find $dir -perm -2 '!' -type l -exec /bin/ls -ld {} \; >> find-write.out 2>&1
+	 -exec /bin/ls -ld {} \; >> find-s_id.out
+	find $dir -perm -2 '!' -type l -exec /bin/ls -ld {} \; >> find-write.out
 done
 
 
 # List directories
-/bin/ls -al / > ls-root.out 2>&1 
-/bin/ls -alR /etc > ls-etc.out 2>&1
-/bin/ls -alRL /dev /devices > ls-dev.out 2>&1
-/bin/ls -al /tmp /var/tmp /usr/tmp > ls-tmp.out 2>&1
-/bin/ls -alR /var/log /var/adm /var/spool /var/audit > ls-var.out 2>&1
-/bin/ls -lL /dev/*rmt* /dev/*floppy* /dev/fd0* /dev/*audio* /dev/*mix* > ls-dev-spec.out 2>&1
-/bin/ls -alR /opt /software /usr/local > ls-software.out 2>&1
+/bin/ls -al / > ls-root.out
+/bin/ls -alR /etc > ls-etc.out
+/bin/ls -alRL /dev /devices > ls-dev.out
+/bin/ls -al /tmp /var/tmp /usr/tmp > ls-tmp.out
+/bin/ls -alR /var/log /var/adm /var/spool /var/audit > ls-var.out 2> /dev/null
+/bin/ls -lL /dev/*rmt* /dev/*floppy* /dev/fd0* /dev/*audio* /dev/*mix* > ls-dev-spec.out 2> /dev/null
+/bin/ls -alR /opt /software /usr/local > ls-software.out 2> /dev/null
 
 # Mounted file systems
-mount > mount.out 2>&1
+mount > mount.out
 
 # RPC programs
-rpcinfo -p > rpcinfo.out 2>&1
+rpcinfo -p > rpcinfo.out 2> /dev/null
 # Processes
-ps -elf > ps.out 2>&1
-showrev -a > showrev.out 2>&1
+ps -elf > ps.out
+showrev -a > showrev.out 2> /dev/null
 
 # Installed software (through the package system)
-pkginfo -l > pkginfo.out 2>&1
+pkginfo -l > pkginfo.out 2> /dev/null
 
 # Patches
-patchadd -p > patchadd.out 2>&1
-# Takes to long
-#pkgchk > pkgchk.out 2>&1
+patchadd -p > patchadd.out 2> /dev/null
+pkgchk > pkgchk.out 2> /dev/null
 
 # System information
-uname -a > uname.out 2>&1
+uname -a > uname.out
 # Users connected to the system
-last -25 > last_25.out 2>&1
-last -5 root > last_root.out 2>&1
+last -25 > last_25.out
+last -5 root > last_root.out
 # Note: xhost might block sometimes (when X11 running and no display)
-xhost > xhost.out 2> /dev/null 2>&1
+xhost > xhost.out 2> /dev/null
 # Xauthorities
-xauth list >xauth.out 2>&1
-eeprom security-mode > eeprom.out 2>&1
+xauth list >xauth.out 2> /dev/null
+eeprom security-mode > eeprom.out 2> /dev/null
 # History of user running the audit
-history > history.out 2>&1
+history > history.out
 # Open listeners
-netstat -an > netstat-an.out 2>&1
+netstat -an > netstat-an.out
 # Interfaces
-netstat -i > netstat-i.out 2>&1
+netstat -i > netstat-i.out
 # Routing
-netstat -rn > netstat-rn.out 2>&1
+netstat -rn > netstat-rn.out
 # Process-sockets
-which lsof >/dev/null 2>&1 && lsof -n 2>&1
+[ -n "`which lsof`" ] && lsof -n >lsof.out
 # Arp information
-arp -na >arp.out 2>&1
+arp -n >arp.out 2>/dev/null
 # Environment and Umask
 
-echo "$OLD_ENV" 2>&1
-echo "$OLD_UMASK" 2>&1
+echo "$OLD_ENV" > env.out
+echo "$OLD_UMASK" > umask.out
 
 # Definition of shared libraries (Solaris 8 and later)
-crle -v >crl.out 2>&1
+crle -v >crl.out 2> /dev/null
 
 # Kernel modules
-modinfo >modinfo.out 2>&1
+modinfo >modinfo.out 2>/dev/null
 
 # Disk
-df -kl > df-local.out 2>&1
+df -kl > df-local.out
 # All disks
-df -k > df.out 2>&1
+df -k > df.out
 # Swap
-swal -l >swap.out 2>&1
+swal -l >swap.out
 
 # Ndd parameters
 
@@ -171,23 +170,23 @@ for i in ip_forwarding ip_forward_src_routed ip_respond_to_timestamp \
          ip_respond_to_echo_broadcast        ip_respond_to_address_mask_broadcast \
          ip_ire_arp_interval ip_ire_flush_interval ip_strict_dst_multihoming \
          ip_send_redirects ip6_forwarding ip6_send_redirects ip6_ignore_redirect; do 
-    echo "$i: " >> ndd.out 
-    ndd /dev/ip "$i" >> ndd.out 2>&1
+    echo -n "$i: " >> ndd.out
+    ndd /dev/ip "$i" >> ndd.out 2> /dev/null
     echo "" >> ndd.out
 done
 
 # ARP
 for i in arp_cleanup_interval; do
-    echo "$i: " >> ndd.out
-    ndd /dev/arp "$i" >> ndd.out 2>&1
+    echo -n "$i: " >> ndd.out
+    ndd /dev/arp "$i" >> ndd.out 2> /dev/null
     echo "" >> ndd.out
 done
 
 # TCP
 for i in tcpip_abort_cinterval tcp_conn_req_max_q tcp_conn_req_max_q0 tcp_strong_iss \
    tcp_extra_priv_ports tcp_time_wait_interval tcp_ip_abort_cinterval; do
-    echo "$i: " >> ndd.out
-    ndd /dev/tcp "$i" >> ndd.out 2>&1
+    echo -n "$i: " >> ndd.out
+    ndd /dev/tcp "$i" >> ndd.out 2> /dev/null
     echo "" >> ndd.out
 done
 

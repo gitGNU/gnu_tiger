@@ -24,7 +24,7 @@ CRACK_PWD="yes"
 FULL_FS="yes"
 # ----- End local customisation -------------------
 
-[ "`id -u`" -ne 0 ] && echo "Not running as root, some information might not be extracted"
+[ "`id`" -ne 0 ] && echo "Not running as root, some information might not be extracted"
 
 FILE_LIST_ETC="/etc/aliases /etc/sendmail.cf /etc/mail /etc/dt /etc/group \
  /etc/cron* /etc/export* /etc/xtab /etc/profile /etc/login* /etc/xtab \
@@ -73,88 +73,90 @@ if [ "$FULL_fs" = "yes" ] ; then
 else
 # Finding in the whole filesystem maybe too much
 # restrict to a specific set of directories
-	DIRS="/bin /usr /etc /dev /var /lib /opt /sbin /tmp"
+	DIRS="/bin /usr /etc /dev /var /kernel /lib /opt /sbin /sys /vol /tmp"
 fi
 
 for dir in $DIRS; do 
 	find $dir \( -perm -4000 -o -perm -2000 -o -perm -1000 \) -type f \
-	 -exec /bin/ls -ld {} \; >> find-s_id.out 2>&1
-	find $dir -perm -2 '!' -type l -exec /bin/ls -ld {} \; >> find-write.out 2>&1
+	 -exec /bin/ls -ld {} \; >> find-s_id.out
+	find $dir -perm -2 '!' -type l -exec /bin/ls -ld {} \; >> find-write.out
 done
 
 # List directories
-/bin/ls -al / > ls-root.out 2>&1
-/bin/ls -alR /etc > ls-etc.out 2>&1
-/bin/ls -alRL /dev > ls-dev.out 2>&1
-/bin/ls -al /tmp /*/tmp/ > ls-tmp.out 2>&1
-/bin/ls -alR /var/log /var/adm /var/spool /var/spool/mail /var/user* > ls-var.out 2>&1
-/bin/ls -lL /dev/*rmt* /dev/*floppy* /dev/fd0* /dev/*audio* /dev/*mix* > ls-dev-spec.out 2>&1
-/bin/ls -alR /usr/adm /usr/bin/mail/  /usr/*/adm/ > ls-usr.out 2>&1
-/bin/ls -alR /opt /software /usr/local > ls-software.out 2>&1
-/bin/ls -alRL /home > ls-home.out 2>&1
+/bin/ls -al / > ls-root.out
+/bin/ls -alR /etc > ls-etc.out
+/bin/ls -alRL /dev > ls-dev.out
+/bin/ls -al /tmp /*/tmp/ > ls-tmp.out
+/bin/ls -alR /var/log /var/adm /var/spool /var/spool/mail /var/user* > ls-var.out
+/bin/ls -lL /dev/*rmt* /dev/*floppy* /dev/fd0* /dev/*audio* /dev/*mix* > ls-dev-spec.out 2> /dev/null
+/bin/ls -alR /usr/adm /usr/bin/mail/  /usr/*/adm/ > ls-usr.out
+/bin/ls -alR /opt /software /usr/local > ls-software.out 2> /dev/null
+/bin/ls -alRL /home > ls-home.out
 
 # Mounted file systems
-mount > mount.out 2>&1
+mount > mount.out
 
 # RPC programs
-rpcinfo -p > rpcinfo.out 2>&1
+rpcinfo -p > rpcinfo.out 2> /dev/null
 
 # Processes
 ps -elf > ps.out
 # Patches
-instfix -a > instfix.out 2>&1
+instfix -a > instfix.out
 # System information
-uname -a > uname.out 2>&1
-oslevel >> uname.out 2>&1
-oslevel -r >>uname.out 2>&1
+uname -a > uname.out
+oslevel >> uname.out
+oslevel -r >>uname.out
 # Users connected to the system
-last -25 > last_25.out 2>&1
-last -5 root > last_root.out 2>&1
-xhost > xhost.out 2>&1
+last -25 > last_25.out
+last -5 root > last_root.out
+xhost > xhost.out 2> /dev/null
 # History of user running the audit
-history > history.out 2>&1
+history > history.out
 # Open listeners
-netstat -an > netstat-an.out 2>&1
+netstat -an > netstat-an.out
 # Interfaces
-netstat -i > netstat-i.out 2>&1
+netstat -i > netstat-i.out
 # Routing
-netstat -rn > netstat-rn.out 2>&1
+netstat -rn > netstat-rn.out
 # Process-sockets
-which lsof >/dev/null 2>&1 && lsof -n >lsof.out 2>&1
+[ -n "`which lsof`" ] && lsof -n >lsof.out
 # Arp information
-arp -an >arp.out 2>&1
+arp -n >arp.out 2>/dev/null
 
 # Environment and Umask
-echo "$OLD_ENV" > env.out 2>&1
-echo "$OLD_UMASK" > umask.out 2>&1
+echo "$OLD_ENV" > env.out
+echo "$OLD_UMASK" > umask.out
 
 # Disk
+df -kl > df-local.out
+# All disks
 df -k > df.out
 
 
 # Review TCP/IP configuration:
-no -a > no.out 2>&1
+no -a > no.out
 # Inet services
-inetserv -s -S -X >inet-serv.out 2>&1
-hostent -S >hostent.out  2>&1
-namerslv -s -I >namesrv.out 2>&1
-lssrc -a >lssrc-all.out 2>&1
-lssrc -g tcpip >lssrc-tcpip.out 2>&1
-lssrc -ls inetd >lssrc-inetd.out 2>&1
-lssrc -g nfs >lssrc-nfs.out 2>&1
-lsdev -C -c if >lsdev-if.out 2>&1
+inetserv -s -S -X >inet-serv.out 2> /dev/null
+hostent -S >hostent.out  2> /dev/null
+namerslv -s -I >namesrv.out 2> /dev/null
+lssrc -a >lssrc-all.out 2> /dev/null
+lssrc -g tcpip >lssrc-tcpip.out 2> /dev/null
+lssrc -ls inetd >lssrc-inetd.out 2> /dev/null
+lssrc -g nfs >lssrc-nfs.out 2> /dev/null
+lsdev -C -c if >lsdev-if.out 2> /dev/null
 
 # Password inconsistencies
-which pwdck >/dev/null 2>&1 && pwdck -n ALL >pwdck.out 2>&1
-which grpck >/dev/null 2>&1 && grpck -n ALL >grpck.out 2>&1
+/usr/bin/pwdck -n ALL >pwdck.out 2>&1
+/usr/bin/grpck -n ALL >grpck.out 2>&1
 
 
 
 # List users
-lsuser -f ALL >lsuser.out 2>&1
+lsuser -f ALL >lsuser.out
 # Software inventory
-lslpp -l > sw-inv.out 2>&1
-lslpp -h > sw-inv-host.out 2>&1
+lslpp -l > sw-inv.out 2> /dev/null
+lslpp -h > sw-inv-host.out 2> /dev/null
 
 cd /tmp
 tar cf "$OUTFILE" "$AUDIT_NAME"
