@@ -1,0 +1,30 @@
+
+README for audit scripts
+------------------------
+
+The audit scripts are a set of scripts intented to be run in systems
+to recover useful information for them. The information recovered
+should be sufficient to do a "white box" analysis of the system.
+These scripts are targeted at systems where running an "advanced" 
+(or complex) tool such as Tiger, Titan or the CIS scoring tool is
+ not an option, this is typical on production systems where 
+installation of tools is "out of bounds" or where the system 
+administrator wants to review the code of the tool that is going to be used.
+
+The suite of scripts is made of simple shell scripts (and a batch
+file for Windows 2000/XP/2003) that will extract the relevant
+information from the system (installed software and patches,
+permissions, TCP/IP listeners, processes, etc.) and allow you to review
+that information manually and fill in the appropiate checklist.
+
+These scripts are derived from Marc Heuse's set of audit scripts [1].
+Similar tools include Seán Boran's UNIX/Linux local audit tool [2].
+They can be run through a system console and will just generate a 
+pack of information that can be transfered for an external system for
+analysis.
+
+The audit scripts have been tested on AIX, Debian GNU/Linux, Red
+Hat Linux, SuSE Linux, HPUX, Solaris and Windows (2000, 2003 and XP). 
+
+[1] http://www.suse.de/~marc/audit/
+[2] http://www.boran.com/security/sp/solaris/audit_tool.html 
