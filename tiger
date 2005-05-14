@@ -20,6 +20,8 @@
 # The UN*X security check system. This is the main program that will run
 # all the checks configured for your system in the tigerrc configuration 
 # file.
+#
+# 05/14/2005 jfs Patch from Nicolas François which fixes aide output handling
 # 01/25/2005 cslater Added separate config variable for 
 #		 check_passwdformat.
 # 01/15/2003 jfs Check should use INETDCONF (and not INETDFILE).
@@ -507,8 +509,8 @@ aidepid=
 [ -n "$aidepid" ] && {
     echo "`$TIMECMD`> Waiting for Aide to finish..."
     wait $aidepid
-    $CAT $tripout >> $logtmp
-    delete $tripout
+    $CAT $aideout >> $logtmp
+    delete $aideout
 } 2>/dev/null
 
 #echo "`$TIMECMD`> Security report completed for ${HOSTNAME}."
