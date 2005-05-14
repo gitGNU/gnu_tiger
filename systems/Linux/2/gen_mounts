@@ -26,6 +26,8 @@
 #     fact that users can define fallback filesystems (Debian Bug #304555 and
 #     #302646)
 # Linux/2/gen_mounts - 04/18/2005 - Fix to previous patch which introduced typos
+# Linux/2/gen_mounts - 05/14/2005 - Added auto (Debian bug #305670), udev when
+#     using on /dev (Debian bug #307802), capifs (Debian bug #307887)
 #
 #-----------------------------------------------------------------------------
 #
@@ -93,6 +95,7 @@ localfs()
   [ "$1" = "rootfs" ] && LOCAL=0
   [ "$1" = "shm" ] && LOCAL=0
   [ "$1" = "tmpfs" ] && LOCAL=0
+  [ "$1" = "auto" ] && LOCAL=0
   # Filesystems of other OS
   [ "$1" = "msdos" ] && LOCAL=1
   [ "$1" = "umsdos" ] && LOCAL=1
@@ -133,6 +136,9 @@ localfs()
   [ "$1" = "afs" ] && LOCAL=1
   [ "$1" = "efs" ] && LOCAL=1
   [ "$1" = "iso9660" ] && LOCAL=1
+  [ "$1" = "capifs" ] && LOCAL=1
+  # Some special filesystems
+  [ "$1" = "unknown" ] && [ "$2" = "/dev" ] && LOCAL=1
   # The rest we warn about
   if [ "$LOCAL" -eq 2 ] ; then
   	echo "--CONFIG-- [con010c] Filesystem $1 used by $2 is not recognised as a local filesystem" >&2
