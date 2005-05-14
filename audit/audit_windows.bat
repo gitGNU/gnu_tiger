@@ -1,6 +1,6 @@
 @echo off
 
-:: Windows 2000/XP/2003 Auditing and Forensics script v 0.9
+:: Windows 2000/XP/2003 Auditing and Forensics script v 1.0
 ::
 :: This "simple" script will generate an audit report of the Microsoft
 :: Windows system it is run in. All the audit files will be deposited in
@@ -41,9 +41,7 @@
 
 :: ------------------------------------------------------------------------------
 
-:: TODO: Security policies Should check (with secedit) vs. .inf definitions 
 :: TODO: cd to %TEMP% before proceeding? 
-:: TODO: more tests (registry values from default policy?)
 :: TODO: Filesystem checks could also check cacls
 :: TODO: Additional tools like
 :: -- ASSOC? (msinfo32 includes it?)
@@ -302,7 +300,6 @@ ECHO Listening services and connections: >>%REPORT%
 ECHO. >>%REPORT%
 netstat -ano >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 ECHO WARN: 'Netstat' is not available in this system  >>%REPORT%
-@echo -------------------------------------------
 
 :OpenPorts
 @echo Open ports
@@ -385,6 +382,15 @@ ENDLOCAL
 :Endport
 @echo -------------------------------------------
 
+@echo -------------------------------------------
+ECHO Listening RPC services: >>%REPORT%
+ECHO. >>%REPORT%
+:: Rpcinfo is provided both by Windows Services for Unix and by third-party vendors
+:: See http://support.microsoft.com/?id=313621
+rpcinfo -p >>%REPORT% 2>nul
+if ERRORLEVEL == 9009 ECHO WARN: 'Rpcinfo' is not available in this system  >>%REPORT%
+@echo -------------------------------------------
+
 
 @echo Extracting routing table
 ECHO Routing table: >>%REPORT%
@@ -394,6 +400,32 @@ netstat -nr >>%REPORT%
 
 :: TODO: more information could probably be gathered with the 'show'
 :: commands of netsh (at least in WinXP)
+
+:: See http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/netsh.mspx
+:: and http://www.microsoft.com/technet/prodtechnol/windowsserver2003/library/ServerHelp/28e2f559-bfa6-4f3a-857c-ffd045f8de79.mspx
+@echo Extracting firewall configuration
+ECHO Extracting firewall configuration: >>%REPORT%
+ECHO. >>%REPORT%
+netsh firewall show config >>%REPORT% 2>nul
+if ERRORLEVEL == 9009 GOTO:Nonetsh
+GOTO:Endnetsh
+
+:: Could be further divided as:
+
+:: Current profile
+::ECHO Firewall current profile: >>%REPORT%
+::netsh firewall show currentprofile >>%REPORT% 2>nul
+::ECHO Firewall  icmpsettings: >>%REPORT%
+::netsh firewall show  icmpsetting >>%REPORT% 2>nul
+::ECHO Firewall  logging: >>%REPORT%
+::netsh firewall show  logging >>%REPORT% 2>nul
+::....
+
+:Nonetsh
+ECHO WARN: 'Net sh' is not available in this system  >>%REPORT%
+:Endnetsh
+@echo -------------------------------------------
+
 
 :FileInfo
 @echo Retrieving file information (this might take a while)
@@ -489,7 +521,13 @@ ECHO. >>%REPORT%
 :: reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall >>%REPORT%
 :: @echo -------------------------------------------
 
-
+:: Check existing security policy with the one provided in the archive (secpolicy.inf)
+IF NOT EXIST secpolicy.inf GOTO :Nopolicy
+ECHO Checking security policy: >>%REPORT%
+ECHO. >>%REPORT%
+secedit /analyze /cfg secpolicy.inf /db secpolcheck.sdb /log secpolcheck.log
+if ERRORLEVEL == 9009 GOTO ECHO WARN: 'Secpolicy' is not available in this system >>%REPORT%
+:Nopolicy
 
 :: Check hotfixes
 
