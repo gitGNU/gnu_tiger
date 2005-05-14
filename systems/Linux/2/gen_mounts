@@ -27,7 +27,8 @@
 #     #302646)
 # Linux/2/gen_mounts - 04/18/2005 - Fix to previous patch which introduced typos
 # Linux/2/gen_mounts - 05/14/2005 - Added auto (Debian bug #305670), udev when
-#     using on /dev (Debian bug #307802), capifs (Debian bug #307887)
+#     using on /dev (Debian bug #307802), capifs (Debian bug #307887), nfsd
+#     (Debian bug #308585)
 #
 #-----------------------------------------------------------------------------
 #
@@ -107,6 +108,7 @@ localfs()
   # Remotely mounted fs
   [ "$1" = "nfs" ] && LOCAL=1
   [ "$1" = "nfs4" ] && LOCAL=1
+  [ "$1" = "nfsd" ] && LOCAL=1
   [ "$1" = "ncpfs" ] && LOCAL=1
   [ "$1" = "smbfs" ] && LOCAL=1
   [ "$1" = "coda" ] && LOCAL=1
