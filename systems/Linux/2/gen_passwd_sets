@@ -42,6 +42,9 @@
 # Linux/2/gen_passwd_sets - 06/27/2004 - jfs 
 #      Fixed location of sort call which made duplicates appear, also
 #      define CAT if not defined (for local testing)
+# Linux/2/gen_passwd_sets - 05/14/2005 - jfs 
+#      Add LDAP password support with patch provided by Micha Kersloot
+#      (Debian bug #307505)
 #
 #-----------------------------------------------------------------------------
 #
@@ -55,6 +58,7 @@
 [ -z "$RM" ] && RM=`which rm`
 [ -z "$CP" ] && CP=`which cp`
 [ -z "$YPCAT" ] && YPCAT=`which ypcat 2>/dev/null`
+[ -z "$GETENT" ] && GETENT=`which getent 2>/dev/null`
 [ -z "$WORKDIR" ] && WORKDIR=/tmp
 
 local=0
@@ -188,6 +192,15 @@ do
 	     fi
 	   }
 	 ;;
+    ldap) [ "$local" != 1 ] && [ -n "$GETENT" ]  && {
+	    $GETENT passwd > $WORKDIR/ldap_passwd.$$ 2>/dev/null
+	    if [ $? -eq 0 ] ; then
+		    echo $WORKDIR/ldap_passwd.$$ >> $outfile
+	    else
+		    $RM $WORKDIR/ldap_passwd.$$
+	    fi
+          }
+         ;;
 # This is from SunOS, what should we do here for Linux? (if anything)
 #    nisplus) [ "$local" != 1 ] && {
 #               $NISCAT passwd.org_dir > $WORKDIR/nisplus_passwd.$$
@@ -201,4 +214,4 @@ do
 done
 
 
-
+exit 0

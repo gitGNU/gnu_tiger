@@ -273,7 +273,11 @@ export YP
 
 YPSERVER="NO"
 ($PS aux | $GREP ypserv | $SGREP -v $GREP) && YPSERVER="YES"
-export WAIT YPCAT YPSERVER 
+
+# To check databases
+GETENT=`findcmd getent`
+
+export WAIT YPCAT YPSERVER GETENT
 
 # Directories
 MAILSPOOL=/var/spool/mail
