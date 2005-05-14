@@ -17,6 +17,7 @@
 #
 # check_listeningprocs - 08/23/2001
 #
+# 05/15/2005 jfs  Proper check for processes in loopback (Debian Bug #307695)
 # 05/02/2004 jfs  Try to avoid eval problems if handling variables with
 #                 special characters (such as space)
 # 09/19/2003 - jfs - Allow empty okprocess and okprocessuser with the patch
@@ -174,7 +175,7 @@ do
 				message WARN lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." || \
 				message INFO lin002i "" "The process \`$proc' is listening on socket $socket ($type) on $address interface." 
 		else
-			[ "$address" != "127.0.0.1" ]  && {
+			[ "$address" != "loopback" ]  && {
 				message WARN lin003w "" "The process \`$proc' is listening on socket $socket ($type on $address interface) is run by $user."
 			} 
 		fi # of if okuser
