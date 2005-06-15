@@ -22,6 +22,8 @@
 # (home directory accesibility, shell configuration files, dormant accounts
 # and .hushlogin files)
 #
+# 15/06/2005 jfs  Check for null $uids before using them in comparisons
+#                 (Debian bug #312080)
 # 17/11/2004 jfs  Fixed eval in check_accounts so that find is _only_ 
 #                 executed for users which are not part of
 #                 Tiger_Admin_Accounts, this prevents Tiger from accesing
@@ -248,7 +250,7 @@ check_users()
      }
 
      # Check permissions on the parent home directory
-     [ $uid -gt $Tiger_Accounts_Trust ] && {
+     [ -n "$uid" ] && [ $uid -gt $Tiger_Accounts_Trust ] && {
        getpermit ${home%/*}/ | {
          read _f owner group ur uw ux gr gw gx or ow ox suid sgid sticky
 
@@ -294,7 +296,7 @@ check_users()
      # A secure approach has to be determined for this to work properly.
 
      [ -z "$shell" ] && shell=/bin/sh
-     [ $TESTEXEC $shell ] && [ $uid -gt $Tiger_Accounts_Trust ] && {
+     [ $TESTEXEC $shell ] && [ -n "$uid" ] && [ $uid -gt $Tiger_Accounts_Trust ] && {
        eval "
          case \"$shell\" in
            $shcase)
