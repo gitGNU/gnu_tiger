@@ -208,7 +208,7 @@ check_users()
 
      # Verify the home directory is accessable.
      [ ! -d "$home/" ] && {
-       [ $Tiger_Accounts_Trust -lt $uid ] && [ "$host" = "$HOSTNAME" ] && {
+       [ -n "$uid" ] && [ $Tiger_Accounts_Trust -lt $uid ] && [ "$host" = "$HOSTNAME" ] && {
          message WARN acc022w "" "Login ID $user home directory ($home) is not accessible."
        }
        continue
