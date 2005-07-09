@@ -18,6 +18,10 @@
 # sub/check_suid - 06/14/93
 #
 #-----------------------------------------------------------------------------
+# TODO
+# - Consider fixing the Tiger_Admin_Accounts check so that it takes into
+#   account Tiger_Accounts_Trust too
+#-----------------------------------------------------------------------------
 # This script is not runnable directly.
 # 
 inputfile="$1"
