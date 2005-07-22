@@ -17,6 +17,9 @@
 #
 #  config (top level) - 06/14/93
 #
+# 06/22/2005 jfs  Abort signature generation if the user does not 
+#                 have permissions to change the directories signatures are
+#                 stored in.
 # 01/21/2005 jfs  Safer creation of $WORKDIR if undefined 
 # 08/13/2004 jfs  Setup all locales as 'C' (Debian bug  #270108)
 # 04/28/2004 jfs  Changed -f RCFILE check to -r to allow use through ssh
@@ -77,7 +80,7 @@ do_siggen()
   if [ ! -d "$BASEDIR/systems/$OS/$REV/$ARCH/" ] 
   then
         printf "Creating the directory $BASEDIR/systems/$OS/$REV/$ARCH/ where signatures will be stored..."
-    	mkdir -p "$BASEDIR/systems/$OS/$REV/$ARCH/"
+    	mkdir -p "$BASEDIR/systems/$OS/$REV/$ARCH/" || { echo "Cannot create directory '$BASEDIR/systems/$OS/$REV/$ARCH/'!" >&2; exit 1; }
 	echo "...created"
   fi
 # NOTE: I'm not sure it's ok to create the directory since
@@ -99,7 +102,7 @@ do_siggen()
   then
     printf "Generating and installing file access lists..."
     $BASEDIR/util/mkfilelst
-    mv "file_access_list.$OS-$REV-$ARCH" $BASEDIR/systems/$OS/$REV/$ARCH/file_access_list
+    mv "file_access_list.$OS-$REV-$ARCH" $BASEDIR/systems/$OS/$REV/$ARCH/file_access_list || { echo "Cannot move files to '$BASEDIR/systems/$OS/$REV/$ARCH/'!" >&2; exit 1; }
     echo "...done"
   else
     error_siggen "$PWD" "file_access_list.$OS-$REV-$ARCH" "$WORKDIR"
