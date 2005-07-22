@@ -17,6 +17,8 @@
 #
 # find_files - 06/14/93
 #
+# 07/22/2005 jfs Fixed check of GET_MOUNTS
+#
 # 04/03/2004 rbrad Added GETDISKS to haveallcmds.  
 #	     Added exit 1 if haveallvars failes
 #
@@ -29,6 +31,17 @@
 # 04/27/93 dls Fixed it so that filenames are stored in a
 #              variable, separated by '/'.  Also, while added
 #              some new filename patterns to search for.
+#
+#-----------------------------------------------------------------------------
+# TODO:
+# - There is not currently a way for admins to have find _not_ go through
+#   directories that might be too big or should not be reviewed, consider
+#   using the -prune option (in combination with the defined FINEPRUNEOPT
+#   in configuration) like this:
+#   -a \! -name NAME -prune -a \! -name "*REGEXP*" -prune
+#
+# - Alternative, allow the admin to restrict the depth of the test using
+#   -maxdepth
 #
 #-----------------------------------------------------------------------------
 #
@@ -260,7 +273,7 @@ rw=rw
     # but better than banging the heads around.
     #
     echo "$FINDXDEV"
-    echo "`$GETMOUNTS`"
+    echo "`$GET_MOUNTS`"
   else
     echo "$FINDPRUNE"
     echo "/"
