@@ -130,6 +130,8 @@ CONFIGFILES=./tigerrc \
 MISCFILES=./initdefs \
 	./syslist \
 	./check.d/README \
+	./util/buildbins \
+	./util/buildport \
 	./util/difflogs \
 	./util/flogit \
 	./util/genmsgidx \
@@ -139,7 +141,11 @@ MISCFILES=./initdefs \
 	./util/getfs-std \
 	./util/gethostinfo \
 	./util/getnetgroup \
+	./util/getpermit \
+	./util/installsig \
 	./util/logit \
+	./util/mkfilelist \
+	./util/mksig \
 	./util/setsh \
 	./util/sgrep
 
