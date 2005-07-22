@@ -29,6 +29,9 @@
 # Linux/2/gen_mounts - 05/14/2005 - Added auto (Debian bug #305670), udev when
 #     using on /dev (Debian bug #307802), capifs (Debian bug #307887), nfsd
 #     (Debian bug #308585)
+# Linux/2/gen_mounts - 07/22/2005 - Changed extraction from mount command
+#     so it can cope with whitespaces in mount locations, added sanity check
+#     and fix a bug that mangled $fs (Debian bug #315435)
 #
 #-----------------------------------------------------------------------------
 #
@@ -77,7 +80,6 @@ localfs()
 # read the mount(5), fstab(5) or Documentation/filesystems in the Linux
 # kernel
   LOCAL=2
-  fs=$1
   # Valid local filesystems
   [ "$1" = "ext" ] && LOCAL=0
   [ "$1" = "ext2" ] && LOCAL=0
@@ -143,7 +145,7 @@ localfs()
   [ "$1" = "unknown" ] && [ "$2" = "/dev" ] && LOCAL=1
   # The rest we warn about
   if [ "$LOCAL" -eq 2 ] ; then
-  	echo "--CONFIG-- [con010c] Filesystem $1 used by $2 is not recognised as a local filesystem" >&2
+  	echo "--CONFIG-- [con010c] Filesystem '$1' used by '$2' is not recognised as a local filesystem" >&2
 	LOCAL=1
   fi
   return $LOCAL
@@ -155,11 +157,25 @@ localfs()
 [ -z "$BASENAME" ] && BASENAME=`which basename`
 
 $GETFS  |
-while read fs o mtpoint t fstype opts
+while read line
 do
+# $fs on $mtpoint type $fstype ($opts)
   PRINT=1
+  fs=`echo $line | sed -e 's/ on.*$//'`
+  mtpoint=`echo $line | sed -e 's/^.* on //' | sed -e 's/ type.*$//'`
+  # Indent spaces in case we found any in the mount point
+  mtpoint=`echo $mtpoint | sed -e 's/\([[:space:]]\)/\\\\\1/g'`
+  fstype=`echo $line | sed -e 's/.* type \(.*\) (.*/\1/'`
   # Strip fallback filesystems
   fstype=`echo $fstype | $SED -e 's/,.*$//'`
+  opts=`echo $line | sed -e 's/.* (\(.*\))$/\1/'`
+  # Sanity check, do not proceed if the values are empty or if
+  # we have not been able to parse the information properly
+  [ -z "$fs" ] || [ -z "$mtpoint" ] || [ -z "$fstype" ] || [ -z "$opts" ] || \
+  [ "$fs" = "$line" ] || [ "$mtpoint" = "$line" ] || \
+  [ "$fstype" = "$line" ] || [ "$opts" = "$line" ] && \
+  continue
+  # TODO: warn in continuing?
   [ "$CHKRO" = "rw" ] && { ronly "$opts" && PRINT=0; }
   [ "$LOCAL_ONLY" = "local" ] && { localfs "$fstype" "$fs" || PRINT=0; }
   [ "$PRINT" = "1" ] && {
