@@ -131,7 +131,7 @@ MISCFILES=./initdefs \
 	./syslist \
 	./check.d/README \
 	./util/buildbins \
-	./util/buildport \
+	./util/buildconf \
 	./util/difflogs \
 	./util/flogit \
 	./util/genmsgidx \
@@ -144,7 +144,7 @@ MISCFILES=./initdefs \
 	./util/getpermit \
 	./util/installsig \
 	./util/logit \
-	./util/mkfilelist \
+	./util/mkfilelst \
 	./util/mksig \
 	./util/setsh \
 	./util/sgrep
