@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <pwd.h>
@@ -102,6 +103,7 @@ char **argv;
 	  for(argv++;*argv;argv++)
 	       showperms(*argv);
      }
+     return(0);
 }
 
 #define outmode(m, b) {if((m)&(b))putchar('1');else putchar('0');putchar(' ');}

@@ -185,6 +185,7 @@ Note that the test cases given are from 8-pass Snefru (e.g., SECURITY_LEVEL=8)
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #define INPUT_BLOCK_SIZE  16	/* size in 32-bit words of an input block to
 				 * the hash routine  */
 /*
@@ -1291,12 +1292,9 @@ Hash512 (output, input)
 {
 	static int shiftTable[4] = {16, 8, 16, 24};
 	/* the array of data being hashed  */
-	word32	block[INPUT_BLOCK_SIZE];
 	word32	SBE;	/* just a temporary */
 	int     shift, leftShift;
-	int     i;
 	int     index;
-	int     next, last;
 	int     byteInWord;
 	word32	*SBox0;
 	word32	*SBox1;
