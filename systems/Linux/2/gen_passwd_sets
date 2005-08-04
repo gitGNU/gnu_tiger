@@ -45,6 +45,8 @@
 # Linux/2/gen_passwd_sets - 05/14/2005 - jfs 
 #      Add LDAP password support with patch provided by Micha Kersloot
 #      (Debian bug #307505)
+# Linux/2/gen_passwd_sets - 08/4/2005 - jfs 
+#      Generate LDAP source file if using LDAP passwords
 #
 #-----------------------------------------------------------------------------
 #
@@ -195,6 +197,7 @@ do
     ldap) [ "$local" != 1 ] && [ -n "$GETENT" ]  && {
 	    $GETENT passwd > $WORKDIR/ldap_passwd.$$ 2>/dev/null
 	    if [ $? -eq 0 ] ; then
+		    echo "LDAP" > $WORKDIR/ldap_passwd.$$.src
 		    echo $WORKDIR/ldap_passwd.$$ >> $outfile
 	    else
 		    $RM $WORKDIR/ldap_passwd.$$
