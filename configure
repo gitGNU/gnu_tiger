@@ -1029,6 +1029,7 @@ ac_given_srcdir=$srcdir
 ac_given_INSTALL="$INSTALL"
 
 trap 'rm -fr `echo "Makefile
+	c/Makefile
 	man/tiger.8
 	man/tigercron.8" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
@@ -1118,6 +1119,7 @@ EOF
 cat >> $CONFIG_STATUS <<EOF
 
 CONFIG_FILES=\${CONFIG_FILES-"Makefile
+	c/Makefile
 	man/tiger.8
 	man/tigercron.8"}
 EOF
