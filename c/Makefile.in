@@ -21,7 +21,7 @@
 # and they could not be compiled at first (they have
 # been added later)
 BINLIST=getpermit snefru md5 testsuid realpath
-COPTS= -DNEEDGETWD
+COPTS=-Wall
 INSTALL=@INSTALL@
 CC=@CC@
 

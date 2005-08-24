@@ -1,3 +1,4 @@
+# Generated automatically from Makefile.in by configure.
 # Makefile for tiger binaries
 # 
 #
@@ -21,12 +22,14 @@
 # and they could not be compiled at first (they have
 # been added later)
 BINLIST=getpermit snefru md5 testsuid realpath
-COPTS= -DNEEDGETWD
+COPTS=-Wall
+INSTALL=/usr/bin/install -c
+CC=gcc
 
 all: ${BINLIST}
 
 install:  all
-	cp ${BINLIST} ../bin/
+	$(INSTALL) -m0755 ${BINLIST} ../bin/
 
 
 % : %.c

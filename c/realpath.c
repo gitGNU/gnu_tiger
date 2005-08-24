@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <unistd.h>
 #include <sys/param.h>
 #include <sys/types.h>
 #include <string.h>
@@ -56,8 +57,11 @@
 #endif
 
 #ifdef __STDC__
+#ifndef _UNISTD_H
 extern char *getwd(char * const);
+extern char *getcwd(char * const, const size_t);
 extern int readlink(char * const, char * const, const size_t);
+#endif
 extern char *my_realpath(const char *, char [], int);
 extern char *_realpath(char [], int);
 #else
@@ -110,7 +114,11 @@ int decomp;
      int linkcount = 0;
 
      if(path[0] != '/'){
+#if defined __STDC__
+	  getcwd(buffer, sizeof(buffer));
+#else
 	  getwd(buffer);
+#endif
 	  prevslash = buffer+strlen(buffer);
 	  strcpy(prevslash,"/");
 	  strcpy(prevslash+1,path);
