@@ -32,6 +32,8 @@
 # Linux/2/gen_mounts - 07/22/2005 - Changed extraction from mount command
 #     so it can cope with whitespaces in mount locations, added sanity check
 #     and fix a bug that mangled $fs (Debian bug #315435)
+# Linux/2/gen_mounts - 08/29/2005 - Added vzfs (VPS filesystem) to local fs, 
+#     Savannah bug #14299
 #
 #-----------------------------------------------------------------------------
 #
@@ -98,7 +100,8 @@ localfs()
   [ "$1" = "rootfs" ] && LOCAL=0
   [ "$1" = "shm" ] && LOCAL=0
   [ "$1" = "tmpfs" ] && LOCAL=0
-  [ "$1" = "auto" ] && LOCAL=0
+  [ "$1" = "auto" ] && LOCAL=0        
+  [ "$1" = "vzfs" ] && LOCAL=0        # VPS virtual partition
   # Filesystems of other OS
   [ "$1" = "msdos" ] && LOCAL=1
   [ "$1" = "umsdos" ] && LOCAL=1
