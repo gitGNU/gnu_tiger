@@ -248,6 +248,7 @@ install: installdirs installbinaries installconfig installmanpages
 	@echo "Copying miscellaneous dirs..."
 	@for dir in $(MISCDIRS); do \
 	  tar cf - $$dir | (cd $(DESTDIR)$(TIGERHOME); tar xpf -); \
+	  chown -R `whoami` $(DESTDIR)$(TIGERHOME)/$$dir; \
 	done
 	@echo "Copying miscellaneous files..."
 	@for file in $(MISCFILES); do \
