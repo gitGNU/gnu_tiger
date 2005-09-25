@@ -34,6 +34,7 @@
 #     and fix a bug that mangled $fs (Debian bug #315435)
 # Linux/2/gen_mounts - 08/29/2005 - Added vzfs (VPS filesystem) to local fs, 
 #     Savannah bug #14299
+# Linux/2/gen_mounts - 09/25/2005 - Added cifs (Debian bug #329813)
 #
 #-----------------------------------------------------------------------------
 #
@@ -116,6 +117,7 @@ localfs()
   [ "$1" = "nfsd" ] && LOCAL=1
   [ "$1" = "ncpfs" ] && LOCAL=1
   [ "$1" = "smbfs" ] && LOCAL=1
+  [ "$1" = "cifs" ] && LOCAL=1
   [ "$1" = "coda" ] && LOCAL=1
   [ "$1" = "rpc_pipefs" ] && LOCAL=1
   # Skip these as they are virtual filesystems
