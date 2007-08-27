@@ -49,7 +49,8 @@ There is an administrative user (low UID) which can access the
 local FTP server. If the local FTP server is enabled and a user
 with administrative rights can access it remotely this might lead
 to a security compromise of the system. It is recommended for 
-administrative users to be added into /etc/ftpusers.
+administrative users to be added into /etc/ftpusers
+if you have a FTP server installed.
 %netw019w
 The sendmail configuration file (sendmail.cf) has the default
 sendmail banner. This means that when the mail server is active
@@ -59,10 +60,11 @@ information to determine if you are running a vulnerable version.
 There is no ftpusers configuration file. In some systems this might
 enable all administrative users (low UID) to access the local FTP 
 server if it is enabled (some other systems might deprecate its use). 
-It is recommended that administrative users are added into /etc/ftpusers.
+It is recommended that administrative users are added into /etc/ftpusers
+if you have a FTP server installed.
 %netw021w
 There is a restricted user (uses a restricted shell) which can access the
 local FTP server. If the local FTP server is enabled and a restricted user
 can access it remotely this might lead to a security compromise of the
 system. It is recommended for restricted users to be added into
-/etc/ftpusers.
+/etc/ftpusers if you have a FTP server installed.
