@@ -17,6 +17,8 @@
 #
 #  config (top level) - 06/14/93
 #
+# 08/30/2006 jfs  Attempt to create working directory if it does not exist 
+#                 (Debian bug #366919)
 # 06/22/2005 jfs  Abort signature generation if the user does not 
 #                 have permissions to change the directories signatures are
 #                 stored in.
@@ -286,7 +288,15 @@ checkfile()
   # directory
   if [ ! -d "$WORKDIR" ] ; then
   	  echo "Configured working directory $WORKDIR does not exist" >&2
-	  exit 1
+  	  if [ "$QUIET" != "Y" ] ; then
+	  	echo "Creating working directory $WORKDIR"
+		echo
+	  fi
+	  # TODO: -p switch is not portable
+  	  if ! mkdir -p "$WORKDIR" >/dev/null 2>&1; then
+	  	  echo "Configured working directory $WORKDIR cannot be created (should you use -w?)" >&2
+		  exit 1
+	  fi
   fi
 
 
