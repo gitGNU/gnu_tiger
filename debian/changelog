@@ -1,3 +1,243 @@
+tiger (1:3.2.1-38) unstable; urgency=low
+
+  * systems/Linux/2/gen_mounts, vmblock is now recognised as a non-local FS. 
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Wed, 27 Jun 2007 00:46:54 +0200
+
+tiger (1:3.2.1-37) unstable; urgency=low
+
+  * systems/Linux/2/check_rcumask: Fix syntax error (Closes: #430224)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Sat, 23 Jun 2007 15:52:58 +0200
+
+tiger (1:3.2.1-36) unstable; urgency=low
+
+  * Fix the location of Tiger's default file (Closes: #426182)
+  * Updated the Debian advisories listing (as of today, latest DSA is 1316)
+  * Changed the maintainer's email address
+  * system/Linux/2/check_lilo: run the boot loader check if on amd64 (Closes: #412669)
+  * system/Linux/2/deb_checkmd5sums: Fix the script so that it understands
+    properly the "new" md5sum format (Closes: #412822)
+  * Add new suid files to the list of SUIDs at  system/Linux/2/suid_list
+   (Closes:  #417330)
+  * scripts/check_devices: Extend the list of EXPECTEDDIRS for Linux to cover
+    udev-specific dirs (Closes: #417940, #420488)
+  * systems/Linux/2/check_rcumask: Skip comment lines defining umask 
+    (Closes: 418531)
+  * scripts/check_ftpusers: Skip this check if there is no FTP daemon
+    installed (Closes: #420486)
+  * scripts/check_printcap:  Skip this test if CUPS is installed 
+    (Closes: #420487)
+  * system/Linux/2/gen_mounts: Added fusectl to the local filesystems 
+    (Closes: #409386)
+  * Debconf translations:
+    - Included Dutch translation provided by Bart Cornelis (Closes: #414768)
+    - Included Portuguese translation provided by Luísa Lourenço (Closes: #415534)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Fri, 22 Jun 2007 01:04:17 +0200
+
+tiger (1:3.2.1-35) unstable; urgency=low
+
+  * [scripts/check_rootkit] 
+    Send stderr output of chkrootkit to /dev/null to avoid the 'warning, got
+    bogus unix line' messages that netstat might output (Closes: #223847)
+  * Update advisories
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 30 Nov 2006 21:42:23 +0100
+
+tiger (1:3.2.1-34) unstable; urgency=low
+
+  * Linux/2/gen_mounts - Added selinuxfs to local FS (Closes: #397832)
+  * scripts/check_accounts - Redirect find errors in home directories
+    to /dev/null, prevents root being sent errors when using NFS mounted
+    home directories with root_squash. Thanks to Matus Harvan for the 
+    patch (Closes: #386163)
+  * Update Debian advisories lists.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri, 10 Nov 2006 16:01:21 +0100
+
+tiger (1:3.2.1-33) unstable; urgency=low
+
+  * Fix typo in check_rootkit script, thanks to Michael Cihar (Closes: #385475) 
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 31 Aug 2006 23:04:43 +0200
+
+tiger (1:3.2.1-32) unstable; urgency=low
+
+  * Modify config so that it will attempt to create a working directory if 
+    it does not exist (Closes: #366919)
+  * [scripts/check_rootkit] Introduce Tiger_CHKROOTKIT_ARGS so that
+    admins can ajust the behaviour of CHKROOTKIT (defaults to '-q') 
+    (Closes: #320341)
+  * Include output of chkrootkit when a file is INFECTED (Closes: #277533)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 30 Aug 2006 14:13:42 +0200
+
+tiger (1:3.2.1-31) unstable; urgency=low
+
+  * systems/Linux/2/deb_checkmd5sums: Fix Ubuntu bug 50611 by excluding dev/
+    and lib/udev/devices/ from the md5sum test, thanks to Richard Laager
+    for the patch (Closes: #383400)
+  * systems/Linux/2/check_neverlogin: handle users prepended with domains
+    (DOMAIN\user) properly (Closes: #344890)
+  * Update advisories from Debian as of today.
+  * Simplify dependencies (just use coreutils) (Closes: #368713)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 17 Aug 2006 07:51:17 +0200
+
+tiger (1:3.2.1-30) unstable; urgency=low
+
+  * Fix deb_nopackfiles to kip directories that are symbolic links, this
+    happens with /usr/X11R6/bin as the latest Xorg package versions just
+    symlink this to /usr/bin/  (Closes: #367931,  #373790)
+  * Fix deprecated syntax with sort that made the cron job spout warnings.
+    Thanks to Cyril Chaboisseau and Adam James for providing a patch
+    (Closes: #369501)
+  * Fix check_listeningprocs to prevent it from botching when udp6 services
+    are up (Closes: #375165)
+  * Updated information of DSAs (should someday include information based
+    on the DTSA archive but I'd rather use OVAL...)
+  * Add some more TODOs
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed,  5 Jul 2006 02:30:25 +0200
+
+
+tiger (1:3.2.1-29) unstable; urgency=low
+
+  * Fix check_accounts to properly review the contents of .forward files.
+    Thanks to Rainer Schopf for the fix (Closes: #329610)
+  * Added cifs to the non local filesystems in gen_mounts (Closes: #329813)
+  * Use TAIL in Linux scripts conforming to POSIX 1003.2-1992 (Closes: #339090)
+  * check_accounts: Add quotation marks to Tiger_Admin_Accounts to prevent
+    errors if empty (Closes: #342181)
+  * check_devices: Handle the special case of having " in filenames by
+    quoting the character (Closes: #355096)
+  * Nice Tigercron by default, users wishing to change the nice can adjust
+    it in /etc/default/tiger (Closes: #334186, #325257, #339655)
+  * Disable signature checks in the default tigerrc since those provided are
+    not updated, debsums is prefered in Debian (Closes: #327486)
+  * Update the list of advisories in debian_advisories
+  * Debconf translations:
+    - Added Vietnamese translation provided by Clytie Siddall (Closes: #322301)
+    - Added Swedish translation provided by Daniel Nylander (Closes: #343731)
+  * Use debhelper compatibility version 4 (it was about time!)
+  * Lintian fix: eliminate duplicate Recommends/Depends on binutils
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 20 Apr 2006 23:05:48 +0200
+
+tiger (1:3.2.1-28) unstable; urgency=low
+
+  * Added a dependency on "| debconf-2.0" as requested by Joey Hess
+  * Use Debhelper compatibility version 4
+  * Updated to latest CVS code:
+    - gen_passwd_sets: Create a src file if using LDAP (Closes: #319815)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu,  4 Aug 2005 19:16:22 +0200
+
+tiger (1:3.2.1-27) unstable; urgency=low
+
+  * Updated to latest CVS code, with some new fixes and patches including:
+    - check_accounts: Check for null $uids before using them in comparisons
+      (Closes: #312080)
+    - check_runprocs: Use comm instead of fname (Closes: #308486)
+    - Linux/gen_mounts: Changed extraction from mount command
+    so it can cope with whitespaces in mount locations, added sanity
+    check and fix a bug that mangled $fs (Closes: #315435)
+    - Makefile.in: install files needed to run tiger -G (Closes: #319468)
+  * German translation update of debconf templates provided by  Erik Schanze 
+    (Closes: #311857)
+  * Updated to latest batch of Debian advisories
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri, 22 Jul 2005 16:50:33 +0200
+
+tiger (1:3.2.1-26) unstable; urgency=low
+
+  * Updated to latest CVS code, with some new fixes and patches including:
+    - check_listeningprocs (generic and Linux versions): Proper check for
+      processes in loopback (Closes: #307695)
+    - Linux/check_passwdspec:  Better fix for pwd=! (Closes #308141)
+    - Linux/deb_checkmd5sums: Prevent issues with /usr/bin/[ by adjusting 
+      GREP calls (Closes #305484)
+    - Linux/gen_mounts:  Added auto, udev when using on /dev,
+      capifs and nfsd. (Closes: #305670 #307802 #307887 #308585)
+      Note to self: Bug mount manpages since none of these are listed
+      there...
+    - Linux/gen_passwd: Add LDAP password support with patch provided by Micha
+      Kersloot (Closes: #307505)
+    - Documentation improvements (README.Sources and TODO)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sat, 14 May 2005 12:52:09 +0200
+
+tiger (1:3.2.1-25) unstable; urgency=low
+
+  * Updated to latest CVS code:
+    - Add afs as a non-local filesystem, and auto as a local filesystem
+    (Closes: #305670)
+    - Improve manpage wording
+  * Provide a default value for Tiger_Running_Procs instead of leaving
+    it empty
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 21 Apr 2005 20:09:45 +0200
+
+tiger (1:3.2.1-24) unstable; urgency=medium
+
+  * Updated to CVS code:
+     - Fixed Linux/2/gen_mounts code which broke with the patches 
+     implemented before the previous upload.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Mon, 18 Apr 2005 18:23:30 +0200
+
+tiger (1:3.2.1-23) unstable; urgency=low
+
+  * Updated to CVS code, this changes:
+    - gen_mounts now considers valid and non-local many more filesystems
+      (as described in mount(5)) including devfs (Closes: #304956, #304555,
+      #304557)
+    - check_listeningprocs will now check against both fname and comm and
+      strips the arguments of the command (this is an improvement over the
+      fix done in #288086)
+    - check_network_config properly checks ICMP redirects and the message
+      generation is fixed now it also now checks for local iptables rules
+      (Closes: #304957)
+    - several typo fixes in doc/linux.txt
+  * Updated DSA listing
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sat, 16 Apr 2005 22:19:50 +0200
+
+tiger (1:3.2.1-22) unstable; urgency=low
+
+  * Added some more valid but non-local filesystems ('none', 'binfmt_misc',
+    'autofs') to gen_mounts (Closes: #302646)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sat,  2 Apr 2005 13:07:07 +0200
+
+tiger (1:3.2.1-21) unstable; urgency=low
+
+  * Added the sysfs as a valid (local, but not reviewed) filesystem
+    (Closes: #302612)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sat,  2 Apr 2005 01:52:34 +0200
+
+tiger (1:3.2.1-20) unstable; urgency=low
+
+  * Upgraded to latest CVS sources:
+    - Depend on binutils (Closes: #301451)
+    - (check_rootdir) Do not warn on the inode if the root filesystem is not
+    ext2|3 (Closes: #298305)
+    - (check_runprocs)  Use comm instead of fname so that the names of the
+    processes are not truncated (Closes: #288086)
+    - (check_lilo) Only run if running on the x86 architecture (Closes: #288737)
+    - (check_single) Only run if running on the x86 architecture (Closes: #288737)
+    - (check_passwdspec) Fixed password aging check. Separate all checks 
+    so that they prevent bugs if pwd="!" (Closes: #297889)
+    - (deb_checkmd5sums) Do not warn if the md5 file is not present in the
+    list file (Closes: #299935)
+    - (deb_nopackfiles) Remove uneeded {} (Closes: #297889)
+    - Also fixes a number of documentation typos fixed by Nicolas Francois
+  * Updated advisories
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu, 31 Mar 2005 17:14:50 +0200
+
 tiger (1:3.2.1-19) unstable; urgency=low
 
   * tigercron

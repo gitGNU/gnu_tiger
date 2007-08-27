@@ -1,6 +1,11 @@
 
 TODO stuff for Debian's tiger:
 
+- Make the cron configuration selectable by the user (make it possible to 
+  switch it on/off through Debconf), see #349391
+
+- Make the tigercron script print information on when checks where started /
+  stopped, see #338664
 
 - Make Source package=tara and upgrade to 2.4.
   ISSUE: tara package did not include properly the Debian directories

@@ -9,7 +9,7 @@ SHELL=/bin/bash
 #export DH_VERBOSE=1
 
 # This is the debhelper compatability version to use.
-export DH_COMPAT=1
+export DH_COMPAT=4
 
 build: build-stamp
 build-stamp:
@@ -37,27 +37,28 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	# Add here commands to install the package into debian/tmp.
-	$(MAKE) install DESTDIR=debian/tmp/
+	# Add here commands to install the package into debian/tiger.
+	$(MAKE) install DESTDIR=debian/tiger/
 	# Just in case
-	chmod a+x debian/tmp/usr/lib/tiger/systems/Linux/2/{deb,gen,check}_*
-	chmod a+x debian/tmp/usr/lib/tiger/scripts/check_*
+	chmod a+x debian/tiger/usr/lib/tiger/systems/Linux/2/{deb,gen,check}_*
+	chmod a+x debian/tiger/usr/lib/tiger/scripts/check_*
 	# This is not needed
-	-rm -rf debian/tmp/usr/lib/tiger/man/
+	-rm -rf debian/tiger/usr/lib/tiger/man/
 	# Remove the systems that do not apply. 
 	# Currently only Linux and default
 	# AIX/  default/  HPUX/  IRIX/  Linux/  NeXT/  SunOS/  UNICOS/ UNICOSMK
 	# TODO: make this for all dirs save for Linux and default (i.e.
 	# make this 'mv' more generic)
-	-find debian/tmp/ -type d -a -name "CVS" |xargs rm -rf 
-	mv debian/tmp/usr/lib/tiger/systems/{AIX,HPUX,IRIX,NeXT,SunOS,UNICOS,UNICOSMK,Tru64,MacOSX} debian/tiger-otheros/usr/lib/tiger/systems/
-	#install -m 755 debian/tiger debian/tmp/usr/sbin/
-	#install -m 755 debian/tigexp debian/tmp/usr/sbin/
-	#install -m 755 tigercron debian/tmp/usr/lib/tiger/
-	install -m 600 cronrc debian/tmp/etc/tiger/
-	install -m 600 tigerrc debian/tmp/etc/tiger/
-	install -m 600 debian/debian.ignore debian/tmp/etc/tiger/tiger.ignore
-	install -m 644 version.h debian/tmp/usr/lib/tiger/
+	-find debian/tiger/ -type d -a -name "CVS" |xargs rm -rf 
+	mv debian/tiger/usr/lib/tiger/systems/{AIX,HPUX,IRIX,NeXT,SunOS,UNICOS,UNICOSMK,Tru64,MacOSX} debian/tiger-otheros/usr/lib/tiger/systems/
+	#install -m 755 debian/tiger debian/tiger/usr/sbin/
+	#install -m 755 debian/tigexp debian/tiger/usr/sbin/
+	#install -m 755 tigercron debian/tiger/usr/lib/tiger/
+	install -m 600 cronrc debian/tiger/etc/tiger/
+	install -m 600 tigerrc debian/tiger/etc/tiger/
+	install -m 600 debian/tiger.default debian/tiger/etc/default/tiger
+	install -m 600 debian/debian.ignore debian/tiger/etc/tiger/tiger.ignore
+	install -m 644 version.h debian/tiger/usr/lib/tiger/
 
 
 # Build architecture-independent files here.

@@ -4,30 +4,29 @@
 #    this format, e.g. by running:
 #         info -n '(gettext)PO Files'
 #         info -n '(gettext)Header Entry'
-#
 #    Some information specific to po-debconf are available at
 #            /usr/share/doc/po-debconf/README-trans
-#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
-#
+#         or http://www.debian.org/intl/l10n/po-debconf/README-trans#
 #    Developers do not need to manually edit POT or PO files.
+# Erik Schanze <mail@erikschanze.de>, 2005.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tiger_1:3.2.1-26_de\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-10-10 19:26+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2005-06-03 22:49+0200\n"
+"Last-Translator: Erik Schanze <mail@erikschanze.de>\n"
+"Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.9.1\n"
 
 #. Description
 #: ../templates:4
 msgid "Who should receive the daily mails?"
-msgstr "Wer soll die t�glichen Mails empfangen?"
+msgstr "Wer soll die täglichen E-Mails empfangen?"
 
 #. Description
 #: ../templates:4
@@ -38,11 +37,16 @@ msgid ""
 "Also note that any administrator will be able to access the reports since "
 "they are available in the /var/log/tiger/ directory."
 msgstr ""
+"Der Benutzer, den Sie unten eingeben, wird alle von 'tiger' versandten "
+"E-Mails erhalten, wenn die Cron-Jobs laufen. Das bedeutet nicht, dass der "
+"Benutzer Berichte erhält, wenn Sie 'tiger' als einzelnes Programm aufrufen. "
+"Beachten Sie auch, dass jeder Administrator auf die Berichte zugreifen kann, "
+"weil sie im Verzeichnis /var/log/tiger/ verfügbar sind."
 
 #. Description
 #: ../templates:13
 msgid "Take a minute to customize 'tiger'"
-msgstr ""
+msgstr "Nehmen Sie sich die Zeit, 'tiger' einzurichten."
 
 #. Description
 #: ../templates:13
@@ -58,11 +62,22 @@ msgid ""
 "against each one of the templates available (one per module) and only new "
 "warnings will be issued."
 msgstr ""
+"Sie sollten die Dateien im Verzeichnis /etc/tiger/ an Ihre Sicherheits- "
+"Richtlinie anpassen. Zuerst sollten Sie die Tests einrichten, die auf Ihrem "
+"System gemacht werden und die Daten für die Tests (in der Datei "
+"/etc/tiger/tigerrc) bereitstellen, um Falschmeldungen zu vermeiden. Dann "
+"sollten Sie (in der Datei /etc/tiger/cronrc) einstellen, zu welchen Zeiten "
+"die Tests gemacht werden. Danach sollten Sie aus den Durchläufen der Module "
+"Schablonen (im Verzeichnis /etc/tiger/templates/) erstellen, wenn Module "
+"Warnungen ausgeben, die für Ihre Sicherheits-Richtlinie nicht problematisch "
+"sind. Sind die Schablonen erstellt, wird jeder Durchlauf mit den verfügbaren "
+"Schablonen (eine pro Modul) verglichen und es werden nur neue Warnungen "
+"angezeigt."
 
 #. Description
 #: ../templates:28
 msgid "Remove templates in buggy 'tiger' versions"
-msgstr ""
+msgstr "Schablonen einer fehlerhaften 'tiger'-Version entfernen"
 
 #. Description
 #: ../templates:28
@@ -76,3 +91,12 @@ msgid ""
 "to avoid removing previous templates. Should we remove these files if any "
 "are found?"
 msgstr ""
+"Anfänglich enthielt die 'tiger'-Version in Debian 3.1 einen Fehler, bei dem "
+"die Schablonen im Verzeichnis /var/log/ anstelle von /var/log/tiger/ angelegt "
+"wurden. Die Schablonen werden aber im Verzeichnis /var/log/tiger/ erwartet und "
+"die anderen werden bei neueren Versionen von 'tiger' nicht funktionieren. Sie "
+"wollen vielleicht eine Kopie (als Schablonen) behalten und sie selbst an die "
+"richtige Stelle legen. Das Paket tut das nicht automatisch, um nicht frühere "
+"Schablonen zu entfernen. Sollen diese Dateien gelöscht werden, wenn welche "
+"gefunden werden?"
+

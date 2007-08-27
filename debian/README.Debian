@@ -158,7 +158,7 @@ and replaced them.
 - Tiger now understands and will not give false warnings when "localepurge" has 
 been installed and a lot of files removed (FIXED scripts/Linux/2/deb_checkmd5sums)
 
--- Javier Fernandez-Sanguino Peña <jfs@computer.org>
+-- Javier Fernandez-Sanguino Peña <jfs@debian.org>
 Last updated: Wed, 12 Jun 2002 00:08:59 +0200
 
 

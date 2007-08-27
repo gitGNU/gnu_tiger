@@ -1,5 +1,6 @@
 etc/tiger
 etc/tiger/templates
+etc/default
 usr/sbin
 usr/lib/tiger
 var/run/tiger/work
