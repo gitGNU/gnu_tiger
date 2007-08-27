@@ -48,6 +48,7 @@
 # Linux/2/config - 01/15/2004 - jfs - Add XINETDCONF and INETDCONF
 # Linux/2/config - 03/31/2005 - jfs - Changed GROUPC to GROUPSS
 # Linux/2/config - 04/17/2005 - jfs - Added IPTABLES and CMP
+# Linux/2/config - 05/20/2006 - jfs - Use TAIL properly (POSIX 1003.2-1992)
 #
 #-----------------------------------------------------------------------------
  
@@ -167,10 +168,10 @@ RPM=`findcmd rpm`
 AUTORPM=`findcmd autorpm`
 # Silent grep
 SGREP="$EGREP -s"
-X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -1`
+X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -n 1`
 [ "$X" != "" ] && {
   SGREP="$GREP -s"
-  X=`$GREP -s : /etc/passwd 2>&1 | $TAIL -1`
+  X=`$GREP -s : /etc/passwd 2>&1 | $TAIL -n 1`
   [ "$X" != "" ] && {
     SGREP="$BASEDIR/util/sgrep"
   }
