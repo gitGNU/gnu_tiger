@@ -32,6 +32,9 @@
 # 07/25/2002 jfs  Changed TigerInstallDir to .
 # 03/31/2005 jfs  Added EXPECTEDIRS dn EXPECTEDDEVICES in /dev (Os specific)
 #                 and added Solaris (9) devices
+# 05/20/2006 jfs  Handle the special case of having " in filenames by quoting
+#                 the character (Debian bug #355096)
+# 06/21/2007 jfs  Extend the list of EXPECTEDDIRS for Linux to cover udev
 #
 #-----------------------------------------------------------------------------
 #
@@ -68,7 +71,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds LS AWK || exit 1
+  haveallcmds LS AWK SED || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -76,7 +79,7 @@ done
 }
 #------------------------------------------------------------------------
 
-haveallcmds LS AWK || exit 1
+haveallcmds LS AWK SED || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 check_dev_file()
@@ -112,7 +115,7 @@ if [ "$OS" = "SunOS" ] ; then
 	EXPECTEDDIRS="/dev/cfg|/dev/cua|/dev/dsk|/dev/es|/dev/fd|/dev/md|/dev/printers|/dev/pts|/dev/rdsk|/dev/sad|/dev/swap|/dev/term"
 fi
 if [ "$OS" = "Linux" ] ; then
-	EXPECTEDDIRS="/dev/mapper|/dev/net|/dev/shm|/dev/cciss|/dev/fd|/dev/ida|/dev/input|/dev/mapper|/dev/net|/dev/pts|/dev/rd|/dev/shm|/dev/usb|/dev/ataraid"
+	EXPECTEDDIRS="/dev/mapper|/dev/net|/dev/shm|/dev/cciss|/dev/fd|/dev/ida|/dev/input|/dev/mapper|/dev/net|/dev/pts|/dev/rd|/dev/shm|/dev/usb|/dev/ataraid|/dev/bus|/dev/cdroms|/dev/discs|/dev/disk|/dev/dri|/dev/fb|/dev/floppy|/dev/i2c|/dev/loop|/dev/md|/dev/misc|/dev/ptal-printd|/dev/scsi|/dev/snd|/dev/sound|/dev/tts|/dev/vc|/dev/vcc"
 fi
 
 dirs="/dev"
@@ -126,6 +129,7 @@ for file in $dir/[a-z0-9]*
 do
 
 	[ -f "$file" ] &&  {
+	file=`echo $file | $SED -e 's/"/\\\"/g'`
     	eval "case \"$file\" in
 		$EXPECTEDFILES)
 		# Expected directories
