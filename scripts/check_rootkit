@@ -27,6 +27,14 @@
 # uses those defined in the path
 #
 # DATE (MM/DD/YYYY) 	NAME 	DESCRIPTION_OF_CHANGES
+# 11/30/2006            jfs     Send stderr output of chkrootkit to /dev/null 
+#                               to avoid the 'warning, got bogus unix line'
+#                               messages that netstat might output (See Debian
+#                               Bug 223847)
+# 08/31/2006            jfs     Fix typo in script
+# 08/30/2006            jfs     Introduce Tiger_CHKROOTKIT_ARGS so that 
+#                               admins can ajust the behaviour of CHKROOTKIT
+#                               Output the lines of infected errors
 # 01/13/2004            jfs     Avoid which error on stdout if it's not found
 # 10/15/2003            jfs     Make CHKROOTKIT check silent
 # 09/19/2003            jfs     Removed unused temporary file creation
@@ -139,6 +147,13 @@ then
 else
         CHKROOTKIT=${Tiger_CHKROOTKIT_LOC_OVERRIDE}
 fi
+# Chkrootkit arguments
+if [ -z "${Tiger_CHKROOTKIT_ARGS}" ]
+then
+# Note: we use the quiet mode to avoid parsing all the lines of 
+# "Searching for..." things
+	Tiger_CHKROOTKIT_ARGS="-q"
+fi
 
 # Redirect to /dev/null to make it silent 
 # (maybe a warning should be issued)
@@ -146,12 +161,11 @@ haveallcmds CHKROOTKIT >/dev/null && {
 	echo "# Running chkrootkit ($CHKROOTKIT) to perform further checks..."
 # TODO: This code does not show some of chkrootkit's messages (such as
 # suspicious files)
-# TODO2: Consider sending output to /dev/null to avoid the
+#
+# Send stderr output to /dev/null to avoid the
 # 'warning, got bogus unix line' messages that netstat might output 
 # (See Debian Bug 223847)
-	$CHKROOTKIT -q |
-# Note: we use the quiet mode to avoid parsing all the lines of 
-# "Searching for..." things
+	$CHKROOTKIT $Tiger_CHKROOTKIT_ARGS 2>/dev/null|
 	while read line
 	do
 		case "$line" in 
@@ -171,7 +185,7 @@ haveallcmds CHKROOTKIT >/dev/null && {
 		INFECTED*)
   		message ALERT rootkit005a "" "Chkrootkit has found a file which seems to be infected because of a rootkit"
                 message ALERT rootkit009a "" "A rootkit seems to be installed in the system"
-		;;
+		echo $line ;;
 		esac
 
 	done
