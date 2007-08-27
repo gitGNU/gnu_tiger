@@ -22,6 +22,8 @@
 # (home directory accesibility, shell configuration files, dormant accounts
 # and .hushlogin files)
 #
+# 10/11/2006 jfs  Redirect find errors in $HOME to null (Debian bug #386163)
+# 20/04/2006 jfs  Fix the pipe check in forward files (Debian bug #329610)
 # 15/06/2005 jfs  Check for null $uids before using them in comparisons
 #                 (Debian bug #312080)
 # 17/11/2004 jfs  Fixed eval in check_accounts so that find is _only_ 
@@ -180,7 +182,7 @@ check_disabled()
   ([ ! -d "$home/" ] || [ "$host" != "$HOSTNAME" ]) && return
 
   # Check the .forward file.
-  [ -s $home/.forward ] && $GREP '\|' $home/.forward 2>&1 >/dev/null && 
+  [ -s $home/.forward ] && $GREP -F '|' $home/.forward 2>&1 >/dev/null && 
     message WARN acc003w "" "Login ID $user is disabled, but has a .forward file which executes commands."
 
   # Check the .rhosts file.
@@ -280,7 +282,7 @@ check_users()
      [ "$home" != / -a -n "$home" -a "$Tiger_Dormant_Limit" != 0 ] && {
        notadmin=`eval "case \"$user\" in $Tiger_Admin_Accounts) ;; *) echo $user;; esac"`
        [ -n "$notadmin" ] &&  \
-       [ `$FIND "$home/" -mtime -$Tiger_Dormant_Limit | $WC -l` -eq 0 ] && 
+       [ `$FIND "$home/" -mtime -$Tiger_Dormant_Limit 2>/dev/null | $WC -l` -eq 0 ] && 
            message WARN acc021w "" "Login ID $user appears to be a dormant account."
      }
 
