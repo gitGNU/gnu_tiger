@@ -77,7 +77,7 @@
 # ----------------------------------------------------------------------
 # Check for system configuration once a month
 #
-1 2 *         check_services check_signatures check_umask check_ftpusers check_embedded check_exrc
+1 2 *         check_services check_umask check_ftpusers check_embedded check_exrc
 #
 # ----------------------------------------------------------------------
 # Run a password cracker against the local passwords once a month
@@ -86,13 +86,20 @@
 #2 2 *           crack_run
 #
 # Run an integrity checker once every week.
-# This is removed since many integrity checkers provide this already
-# upon installation.  If yours does not uncomment the lines below
-# depending on your selected/installed integrity checker
+#
+# This is not enabled by default since many integrity checkers provide 
+# this already upon installation. If yours does not uncomment the lines below
+# depending on your selected/installed integrity checker.
 #
 # For tripwire:
 #5 * Mon	tripwire_run
+#
 # For aide:
 #5 * Mon	aide_run
+#
 # For integrit:
 #5 * Mon	integrit_run
+#
+# For internal signature checks (not reliable nor update, use only if you
+# have manually updated /usr/lib/tiger/systems/$OS/$VERSION/signatures
+#5 * Mon        check_signatures
