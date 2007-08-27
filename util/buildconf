@@ -183,10 +183,10 @@ echo "TIMECMD=\"$timecmd\"" >> $confile
 echo "export DATECMD TIMECMD" >> $confile
 
 sgrep='$EGREP -s'
-X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -1`
+X=`$EGREP -s : /etc/passwd 2>&1 | $TAIL -n 1`
 [ "$X" != "" ] && {
   sgrep='$GREP -s'
-  X=`$GREP -s : /etc/passwd 2>&1 | $TAIL -1`
+  X=`$GREP -s : /etc/passwd 2>&1 | $TAIL -n 1`
   [ "$X" != "" ] && {
     sgrep='$BASEDIR/util/sgrep'
   }
