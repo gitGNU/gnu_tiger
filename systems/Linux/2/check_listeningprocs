@@ -17,6 +17,8 @@
 #
 # check_listeningprocs - 08/23/2001
 #
+# 07/05/2006 jfs  Try not to botch when udp6 services are being read
+#                 (Debian Bug #375165)
 # 05/15/2005 jfs  Proper check for processes in loopback (Debian Bug #307695)
 # 05/02/2004 jfs  Try to avoid eval problems if handling variables with
 #                 special characters (such as space)
@@ -136,7 +138,7 @@ else
 	$SED -e '1d;2d' |
 	while read type x y local remote listen user inode proc
 	do
-		[ "$type" = "udp" ] && {
+		[ "$type" = "udp" ] || [ "$type" = "upd6" ] && {
 			# there is no listen filed, every field are shifted left
 			user=$listen
 			proc="$inode $proc"
@@ -144,6 +146,7 @@ else
 		}
 
 		[ "$type" = "tcp" ] && type="TCP"
+		[ "$type" = "tcp6" ] && type="TCP"
 
 		echo $user $type $local "`echo $proc | $CUT -f 2 -d /`"
 	done
