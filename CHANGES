@@ -2,13 +2,46 @@ NOTE: To read changes made to the Debian package (since
 August 23rd 2001) see the changelog.Debian file
 
 Changes (v 3.2.2) 
-(Unreleased)
 ----------------
 - Applied patches from Ryan Bradetich to fix Makefiles in HPUX
 - Fixed bashisms in scripts
 - Fixed YPCAT calls
-[TODO: write more of the changes done here]
+- Added the audit scripts collection (audit/ subdir). These 
+  scripts extract information for a given operating system 
+  for offline review and have been provided by Marc Heuse and
+  improved by me. For more information see the README file in
+  that dir.
+  Supported OSes:
+    - AIX (tested in 4.x and 5.x)   - Debian GNU/Linux
+    - HPUX 10/11                    - Nokia IPSO
+    - ORACLE                        - RedHaT GNU/Linux
+    - Slackware                     - Solaris
+    - SuSE Linux                    - Windows XP/2000/2003
+- Added support for a check.d directory where administrators can dump
+  scripts and have Tiger run them periodically
+- Small improvements to the messages's documentation. Including fixes to
+  some error Ids which were not correct
+- Documentation improvements: explain new options and behaviour
+  in the manpages, overall improvements to text files provided in sources.
 
+- Fixed scripts: check_accounts, check_aliases, check_anonftp, check_crontabs,
+  check_devices, check_embedded, check_exports, check_finddeleted,
+  check_ftpusers, check_group, check_inetd, check_known, check_listeningprocs,
+  check_logfiles, check_netrc, check_passwd, check_passwdformat, check_path,
+  check_printcap, check_rhosts, check_root, check_rootdir, check_rootkit,
+  check_runprocs, check_sendmail, check_services, check_ssh, check_system,
+  check_tcpd, check_umask, check_xinetd, find_files
+  (Over 60 reported bugs fixed)
+
+- New checks: check_ntp, check_omniback,  (Linux-specific) check_xinetd,
+- Many fixes in HPUX and Linux checks.
+- Added support for Solaris 8 and Solaris 9. New checks:
+   - 'check_listeningproces' check for this OS too (uses pfiles instead of lsof)
+   - 'check_patches': uses a patchdiag.xref file to look for missing patches
+- Added Tru64 support
+- Added HPUX-specific tigerrc file
+- Added spec file to build RPM packages
+- Move checks that need to be done to a TODO.check file
 
 Changes (v 3.2.1) 
 ----------------
