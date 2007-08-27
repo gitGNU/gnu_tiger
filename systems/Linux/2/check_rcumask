@@ -17,9 +17,12 @@
 #
 # check_rcumask - Sat May 18 17:50:00 CEST 2002
 #
-# Check_rcumask - 10/15/2004 - jfs - Proper warning if no umask settings
+# check_rcumask - 06/23/2007 - jfs - Fix syntax error (Debian bug #430224)
+# check_rcumask - 06/21/2007 - jfs - Skip comment lines (Debian bug #418531)
+# check_rcumask - 05/20/2006 - jfs - Use TAIL properly (POSIX 1003.2-1992)
+# check_rcumask - 10/15/2004 - jfs - Proper warning if no umask settings
 #       are defined (Debian bug #234661)
-# Check_rcumask - 10/15/2003 - jfs - Removed bashishm (Debian bug #215896)
+# check_rcumask - 10/15/2003 - jfs - Removed bashishm (Debian bug #215896)
 # check_rcumask - 07/25/2002 - jfs
 #       Changed TigerInstallDir to .
 # check_rcumask - 09/10/2002 - jfs
@@ -102,33 +105,36 @@ for file in '/etc/init.d/rcS' '/etc/rc.d/init.d/umask.sh' '/etc/init.d/umask.sh'
 do
    [ -r $file ] && {
 
-   Occurance=`$GREP umask $file | $WC -l`
+   Occurance=`$GREP umask $file |$GREP -v ^# | $WC -l`
 
    if [ $Occurance -eq 1 ]; then
 	Foundumask=1
 	UMASK1=`$GREP umask $file  \
+           | $GREP -v ^\# \
            | $EXPAND  \
            | $SED -e "s/^.*umask//"\
            | $CUT -d" " -f2`
 
-	[ $UMASK1 != 002 -a $UMASK1 != 022 ] && 
+	[ "$UMASK1" != "002" -a "$UMASK1" != "022" ] && 
 		message FAIL misc017f '' "The umask setting in $file for the init scripts is insecure"
 
 
     elif [ "$Occurance" = 2 ]; then
 	Foundumask=1
 	UMASK1=`$GREP umask $file  \
+             | $GREP -v ^# \
              | $EXPAND \
              | $HEAD -n 1 \
              | $SED -e "s/^.*umask//" \
              | $CUT -d" "  -f2`
 	UMASK2=`$GREP umask $file  \
+             | $GREP -v ^# \
              | $EXPAND \
              | $TAIL -n 1 \
              | $SED -e "s/^.*umask//" \
              | $CUT -d" "  -f2`
 
- 	[ $UMASK1 != 002 -a $UMASK1 != 022 -o $UMASK2 != 002 -a $UMASK2 != 022 ] &&
+ 	[ "$UMASK1" != "002" -a "$UMASK1" != "022" -o "$UMASK2" != "002" -a "$UMASK2" != "022" ] &&
 		message FAIL misc017f '' "The umask setting in $file for the init scripts is insecure"
         elif [ "$Occurance" = 0 ]; then
 	        message WARN misc021w "" "There are no umask entries in $file"
