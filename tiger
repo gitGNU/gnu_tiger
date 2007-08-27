@@ -48,7 +48,7 @@
 echo "Tiger UN*X security checking system"
 echo "   Developed by Texas A&M University, 1994"
 echo "   Updated by the Advanced Research Corporation, 1999-2002"
-echo "   Further updated by Javier Fernandez-Sanguino, 2001-2005"
+echo "   Further updated by Javier Fernandez-Sanguino, 2001-2007"
 echo "   Covered by the GNU General Public License (GPL)"
 echo
 TigerInstallDir="."
