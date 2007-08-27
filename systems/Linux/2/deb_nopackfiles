@@ -17,6 +17,9 @@
 #
 # Linux/deb_nopackfiles - 23/08/2001
 # 
+# 05/07/2006 - jfs - Skip directories that are symbolic links, this happens
+#              with /usr/X11R6/bin as the latest Xorg package
+#              versions just symlink this to /usr/bin/  (Debian bug #367931)
 # 03/21/2005 - jfs - Remove uneeded {} (Debian bug #297889). Also redirect
 #              find stderr to /dev/null
 # 06/18/2004 - jfs - Made the dirlist variable so that directories which
@@ -111,11 +114,11 @@ trap 'delete $WORKDIR/dpkg-packages.list ; exit 1' 1 2 3 15
 # NOTE: /usr/lib cannot be added here since quite a lot of packages
 # will compile stuff there on installation which will result in a 
 # tremendous report...
-dirlist="/bin/ /usr/bin/ /sbin/ /usr/sbin/ /lib/ /usr/X11R6/bin/"
+dirlist="/bin/ /usr/bin/ /sbin/ /usr/sbin/ /lib/ /usr/X11R6/bin"
 okdirs=""
 # Before using dirlist we are going to determine which values are ok
 for dir in $dirlist ; do
-	if [ -d $dir ] ; then
+	if [ -d $dir ] && [ ! -L $dir ] ; then
 		if [ -n "$okdirs" ] ; then
 			okdirs="$dir $okdirs" 
 		else
