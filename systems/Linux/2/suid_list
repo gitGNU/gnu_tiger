@@ -15,12 +15,16 @@
 /usr/bin/smbmnt
 /usr/bin/gpg
 /usr/bin/sudo
+/usr/bin/pumount
+/usr/bin/pmount
 /usr/bin/cardinfo
 /usr/bin/splaymidi
 /usr/bin/lockvc
 /usr/sbin/chroot
 /usr/sbin/exim
+/usr/sbin/exim4
 /usr/sbin/pppd
+/usr/sbin/pppoe
 /usr/games/qw-client-svga.real
 /usr/games/quake-svga.real
 /usr/lib/pt_chown
@@ -28,8 +32,8 @@
 /usr/lib/man-db/man
 /usr/lib/telnetlogin
 /usr/lib/apache/suexec
-/usr/lib/ssh-keysign
-/usr/X11R6/bin/X
+/usr/lib/apache2/suexec
+/usr/bin/X
 /sbin/unix_chkpwd
 /sbin/cardctl
 /bin/login
@@ -37,3 +41,5 @@
 /bin/mount
 /bin/umount
 /bin/ping
+/bin/ping6
+/usr/bin/traceroute.lbl
