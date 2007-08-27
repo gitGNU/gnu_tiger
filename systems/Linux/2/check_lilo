@@ -28,8 +28,9 @@
 # 11/18/2003 jfs - Fixed typo (Debian bug #221470)
 # 01/15/2004 jfs - Fixed dependancies
 # 12/27/2004 jfs - Fixed grub.conf naming (Debian bug #286641)
-# 03/21/2005 jfs      Only run if running on the x86 architecture
-#                     (Debian bug #288737)
+# 03/21/2005 jfs   Only run if running on the x86 architecture
+#                  (Debian bug #288737)
+# 06/22/2007 jfs   Run if on amd64 (Debian bug #412669)
 #
 #-----------------------------------------------------------------------------
 #
@@ -77,8 +78,8 @@ haveallcmds GREP RM UNAME EGREP || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 machine=`$UNAME -m`
-# Only applies to the x86 architecture:
-[ -z "`echo $machine | $EGREP 'i.86$'`" ] && exit 0
+# Only applies to the x86 or amd64 architectures:
+[ -z "`echo $machine | $EGREP 'i.86$|^x86_64$'`" ] && exit 0
 
 echo
 echo "# Checking boot loader file permissions..."
