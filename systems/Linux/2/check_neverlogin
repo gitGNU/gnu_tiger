@@ -26,6 +26,8 @@
 # but were logged on to. Meaning that they might still have their 
 # initial weak password!
 #
+# 17/08/2006 jfs  Handle users prepended with domains (DOMAIN\user) properly
+#                 (Debian bug #344890)
 # 10/01/2003 jfs  Modified to do better error checking on the use of 
 #                 Tiger_PasswdFiles. Also added code to remove temporary
 #                 files created by the script.
@@ -66,7 +68,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-	haveallcmds AWK GREP LASTLOG TEST GEN_PASSWD_SETS || exit 1
+	haveallcmds SED AWK GREP LASTLOG TEST GEN_PASSWD_SETS || exit 1
 	haveallfiles BASEDIR WORKDIR ETCSHELLS || exit 1
 
 	echo "--CONFIG-- [init003c] $0: Configuration ok..."
@@ -76,7 +78,7 @@ done
 
 echo
 echo "# Checking Logins not used on the system ..."
-haveallcmds AWK GREP LASTLOG TEST GEN_PASSWD_SETS || exit 1
+haveallcmds SED AWK GREP LASTLOG TEST GEN_PASSWD_SETS || exit 1
 haveallfiles BASEDIR WORKDIR ETCSHELLS || exit 1
 
 {
@@ -105,6 +107,10 @@ for user in `$LASTLOG | $AWK '/Never logged in/ {print$1}'`; do
   result=0
   $CAT $WORKDIR/pass.list.$$  |
   while read passwd_set ; do
+	# Substitute '/' in user definitions in case we encounter a
+	# username of the form DOMAIN\user (might happen if the system
+	#  is configured to use winbindd for AD connectivity)
+	user=`echo $user | $SED -e 's|\\\|\\\\\\\|g'`
   	SHELL=`$GREP "^$user:" $passwd_set | $AWK -F: '{print$7}'`
 	$TEST -z "$SHELL" && SHELL="/bin/sh"
 	$GREP -q "^$SHELL" $ETCSHELLS && export result=1
