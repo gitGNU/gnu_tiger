@@ -49,7 +49,7 @@ haveallcmds SORT GREP JOIN LS REALPATH || exit 1
 haveallfiles WORKDIR || exit 1
 
 $REALPATH < $file |
-$SORT +1 > $WORKDIR/link.tmp.$$
+$SORT -k 2 > $WORKDIR/link.tmp.$$
 
 $GREP -v '^#' $FILE_ACL |
 $SORT |
