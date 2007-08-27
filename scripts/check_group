@@ -16,6 +16,10 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_group  - created 06/14/93
+#
+# check_group  - 07/05/2006 - jfs - Fix deprecated syntax with sort.
+#    Thanks to Cyril Chaboisseau and Adam James for providing a patch
+#    (Debian bug: #369501)
 # check_group  - 04/03/2003 - rbrad - grpck does not always return non-0 values
 #                                     on errors. 
 # check_group  - 10/07/2003 - jfs - Delete temporary files
@@ -92,7 +96,7 @@ while read group1
 do
   src1=`$CAT $group1.src`
   $SORT $group1 > $WORKDIR/g1name.$$
-  $SORT -t: +2 -3 $group1 > $WORKDIR/g1gid.$$
+  $SORT -t: -k 3,3 $group1 > $WORKDIR/g1gid.$$
 
   $AWK -F: '{print $1}' $WORKDIR/g1name.$$ |
   $UNIQ -d |
@@ -123,7 +127,7 @@ do
     src2=`$CAT $group2.src`
 
     $SORT $group2 > $WORKDIR/g2name.$$
-    $SORT -t: +2 -3 $group2 > $WORKDIR/g2gid.$$
+    $SORT -t: -k 3,3 $group2 > $WORKDIR/g2gid.$$
     $JOIN -t: -o 1.1 1.3 2.3 $WORKDIR/g1name.$$ $WORKDIR/g2name.$$ |
     {
       IFS=:
