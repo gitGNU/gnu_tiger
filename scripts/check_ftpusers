@@ -20,6 +20,9 @@
 # Analyses the system's /etc/ftpusers and determines if the administrative
 # users are in that file.
 #
+# 06/21/2007 jfs Skip the check if we don't find any FTP server software 
+#                (Debian bug #420486)
+#
 # 03/31/2005 jfs Allow FTPUSERS to be customised (some OS have it
 #                in alternate locations)
 # 10/01/2003 jfs Removed passwd files if not used any longer.
@@ -69,7 +72,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK GREP CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
+  haveallcmds AWK GREP CAT GEN_PASSWD_SETS JOIN LS RM FIND || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME || exit 1
   
@@ -81,11 +84,17 @@ done
 echo
 echo "# Performing common access checks for root..."
 
-haveallcmds AWK GREP CAT GEN_PASSWD_SETS JOIN LS RM || exit 1
+haveallcmds AWK GREP CAT GEN_PASSWD_SETS JOIN LS RM FIND || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 safe_temp "$WORKDIR/pass.list.$$"
 trap 'delete $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
+
+if ! $FIND /bin /sbin /usr/bin /usr/sbin/ /usr/local/bin \
+           /usr/local/sbin -name "*ftpd" >/dev/null 2>&1 ; then
+# No FTP server found, exit and do not implement this check
+    exit 0
+fi
 
 # Just in case if it's not configured properly
 [ -z "${Tiger_Accounts_Trust}" ] && { 
