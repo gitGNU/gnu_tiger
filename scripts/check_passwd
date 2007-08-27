@@ -53,6 +53,8 @@
 # 12/27/2004 jfs Delete temporary passwd files only on exit (Debian bug #284899)
 # 03/31/2005 jfs Recognise old xxxxxxxxxxxxx as a valid password hash
 #                Add /bin/true as valid shell as well as Solaris shells
+# 05/20/2006 jfs Add quotation marks to Tiger_Admin_Accounts to prevent
+#                errors if empty (Debian bug #342181)
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -146,7 +148,7 @@ check_passwd_entries()
 
     # Perform administrative checks (Maybe this should be a function...)
     eval "case \"$login\" in
-      $Tiger_Admin_Accounts)
+      \"$Tiger_Admin_Accounts\")
          [ \"$hash\" != '*' ] && {
            message FAIL pass018f \"\" \"Administrative user $login does not have an impossible password.\"
          }
@@ -195,7 +197,7 @@ conflict_check()
 
 
   $SORT $passwd2 > $WORKDIR/p2name.$$
-  $SORT -t: +2 -3 $passwd2 > $WORKDIR/p2uid.$$
+  $SORT -t: -k 3,3 $passwd2 > $WORKDIR/p2uid.$$
   $JOIN -t: -o 1.1 1.3 2.3 $WORKDIR/p1name.$$ $WORKDIR/p2name.$$ |
   {
     IFS=:
@@ -252,7 +254,7 @@ do
   check_passwd_entries
 
   $SORT $passwd_set > $WORKDIR/p1name.$$
-  $SORT -t: +2 -3 $passwd_set > $WORKDIR/p1uid.$$
+  $SORT -t: -k 3,3 $passwd_set > $WORKDIR/p1uid.$$
 
   # Check for duplicate usernames.
   $AWK -F: '{print $1}' $WORKDIR/p1name.$$ |
