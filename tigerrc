@@ -31,7 +31,7 @@ Tiger_Check_INETD=Y		# Fast for inetd, Varies on xinetd
 Tiger_Check_SERVICES=Y		# Could be faster, not bad though
 Tiger_Check_KNOWN=Y		# Fast
 Tiger_Check_PERMS=Y		# Could be faster, not bad though
-Tiger_Check_SIGNATURES=Y	# Several minutes
+Tiger_Check_SIGNATURES=N	# Several minutes
 Tiger_Check_FILESYSTEM=Y	# Time varies on disk space... can be hours
 Tiger_Check_ROOTDIR=Y           # Fast, only 2 checks
 Tiger_Check_ROOT_ACCESS=Y       # Fast
@@ -371,7 +371,7 @@ Tiger_Listening_ValidProcs=''
 # The process list below is just an example (useful for Linux)
 # change it to suit your needs. You can use either the process name
 # or the full path name
-# Tiger_Running_Procs='syslogd cron atd klogd'
+Tiger_Running_Procs='syslogd cron atd klogd'
 # or
 # Tiger_Running_Procs='/sbin/syslogd /usr/sbin/atd /usr/sbin/cron /sbin/klogd'
 #
@@ -379,3 +379,10 @@ Tiger_Listening_ValidProcs=''
 # the file database at /var/lib/dpkg?)
 #
 Tiger_DPKG_Optimize=Y
+# 
+# Other applications:
+# 
+# Arguments used in the command line for chkrootkit. If you are using
+# NFS filesystems you might want to add '-n' here too. '-q' makes the 
+# chkrootkit process work in 'quiet' mode.
+Tiger_CHKROOTKIT_ARGS="-q"
