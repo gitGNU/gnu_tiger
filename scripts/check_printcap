@@ -19,6 +19,7 @@
 #
 # Checks the printer control file.
 #
+# 06/22/2007 - jfs   - Skip this test if CUPS is installed (Debian bug #420487)
 # 01/21/2004 - rbrad - Make the check of the config file through haveallcmds
 # 01/11/2004 - rbrad - Check for /etc/printcap before parseing.
 #		Bug reported by: Michael Schleif.
@@ -76,6 +77,8 @@ infile=/etc/printcap
 }
 
 #------------------------------------------------------------------------
+
+[ -x /usr/sbin/cupsd ] && exit 0
 
 echo
 echo "# Checking printer configuration files..."
