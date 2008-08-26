@@ -19,6 +19,8 @@
 #
 # 09/19/2003 - jfs - Applied fixes contributed by Nicolas François
 # 08/13/2003 - jfs - Avoided bashism
+# 08/26/2008 - jfs - Fix temporary race condition by using tempfile
+#                    in those systems that have it
 #
 #-----------------------------------------------------------------------------
 
@@ -70,12 +72,20 @@ haveallof()
 }
 
 TESTEXEC=-x
-( [ $TESTEXEC /bin/sh ] ) 2> /tmp/te.$$
-[ -s /tmp/te.$$ ] && TESTEXEC=-f
+
+# Setup a tempfile
+[ -n "$TMPDIR" ] && TMPDIR=/tmp/
+tempfile=`tempfile`
+[ -z "$tempfile" ] && tempfile=$TMPDIR/te.$$
+[ ! -e $tempfile ] && >$tempfile
+
+# This test is only needed for some old systems that do not support -x
+( [ $TESTEXEC /bin/sh ] ) 2> $tempfile
+[ -s $tempfile ] && TESTEXEC=-f
 export TESTEXEC
 
 RM=`findcmd rm`
-[ -n "$RM" ] && $RM /tmp/te.$$
+[ -n "$RM" ] && $RM $tempfile
 AWK=`findcmd awk`
 BASENAME=`findcmd basename`
 CHMOD=`findcmd chmod`
