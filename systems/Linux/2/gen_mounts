@@ -45,6 +45,7 @@
 #                                 - Added fuse.truecrypt as a local FS
 #                                 - Added fuse.encfs as a local FS (Debian bug #483727)
 #                                 - Added debugfs as a non-local FS, to skip it from checks (Debian bug #469685)
+#                                 - Added afs as a local FS (Savannah bug #14028)
 #
 #-----------------------------------------------------------------------------
 #
@@ -138,6 +139,8 @@ localfs()
   [ "$1" = "smbfs" ] && LOCAL=1
   [ "$1" = "cifs" ] && LOCAL=1
   [ "$1" = "coda" ] && LOCAL=1
+  [ "$1" = "AFS" ] && LOCAL=1       # Andrew Filesystem
+  [ "$1" = "afs" ] && LOCAL=1       # Andrew Filesystem
   [ "$1" = "rpc_pipefs" ] && LOCAL=1
   # Skip these as they are virtual filesystems
   [ "$1" = "proc" ] && LOCAL=1
