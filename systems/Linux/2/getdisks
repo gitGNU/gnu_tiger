@@ -16,10 +16,13 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # getdisks - 06/24/93
+# 09/08/2008 - jfs - Do not warn for non-local filesystems here
 #
 #-----------------------------------------------------------------------------
 #
 
-$GET_MOUNTS local |
+MOUNT_WARN=$1
+
+$GET_MOUNTS local all $MOUNT_WARN |
 $AWK '{printf("%s ",$1)}
 END {printf("\n")}' 

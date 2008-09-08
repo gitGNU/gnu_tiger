@@ -76,6 +76,8 @@ dirname()
   
 LOCAL_ONLY=$1
 CHKRO=$2
+WARN_UNKNOWN=$3
+[ -z "$WARN_UNKNOWN" ] && WARN_UNKNOWN="unknown"
 
 ronly()
 {
@@ -171,7 +173,9 @@ localfs()
   [ "$1" = "unknown" ] && [ "$2" = "/dev" ] && LOCAL=1
   # The rest we warn about
   if [ "$LOCAL" -eq 2 ] ; then
+    if [ -z "$WARN_UNKNOWN" ] && [ "$WARN_UNKOWN" = "unknown" ]; then
   	echo "--CONFIG-- [con010c] Filesystem '$1' used by '$2' is not recognised as a local filesystem" >&2
+    fi
 	LOCAL=1
   fi
   return $LOCAL

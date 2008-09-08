@@ -308,6 +308,7 @@ Tiger_FSScan_SymLinks=Y		# strange symbolic links
 Tiger_FSScan_ofNote=Y		# weird filenames
 Tiger_FSScan_WDIR=N		# world writable directories
 Tiger_FSScan_Unowned=Y		# files with undefined owners/groups
+Tiger_FSScan_Unknown=Y		# Warn about unknown filesystems used
 #
 # Should we scan read-only filesystems
 #

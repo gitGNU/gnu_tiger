@@ -17,6 +17,8 @@
 #
 # check_perms - 06/14/93
 #
+# 09/08/2008 jfs Added support for warn about unknown filesystems when calling 
+#                gen_mounts
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
 # 05/01/2003 jfs Fixed dependancies
 # 11/05/2002 jfs Small fix to prevent shell expansion to ocur while testing
@@ -85,6 +87,9 @@ haveallvars TESTLINK || exit 1
   message CONFIG perm004c "" "No file permission database."
   exit 1
 }
+
+mounts_warn="unknown"
+[ "$Tiger_FSScan_Unknown" != 'Y' ] && mounts_warn="none"
 
 display_what_access()
 {
@@ -196,7 +201,7 @@ check_file()
   saveifs=$IFS
 
   haveallcmds GET_MOUNTS && {  
-    $GET_MOUNTS local all |
+    $GET_MOUNTS local all $mounts_warn |
     while read mtpoint fstype fsdevice rdevice
     do
       for fsdev in $fsdevice $rdevice
