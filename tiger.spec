@@ -66,7 +66,7 @@ autoconf
 	--with-tigerhome=/usr/lib/tiger \
 	--with-tigerbin=/usr/sbin \
 	--with-tigerconfig=/etc/tiger \
-	--with-tigerwork=/var/run/tiger \
+	--with-tigerwork=/var/lib/tiger/work \
 	--with-tigerlog=/var/log/tiger
 %else
 	--with-tigerhome=/usr/local/tiger \
@@ -145,7 +145,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %if %{want_reloc}
 /usr/sbin/
 /usr/lib/%{name}
-/var/run/%{name}
+/var/lib/%{name}
 /var/log/%{name}
 /etc/%{name}
 %else
