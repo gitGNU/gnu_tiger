@@ -21,8 +21,6 @@
 #-----------------------------------------------------------------------------
 #
 
-MOUNT_WARN=$1
-
-$GET_MOUNTS local all $MOUNT_WARN |
+$GET_MOUNTS local all |
 $AWK '{printf("%s ",$1)}
 END {printf("\n")}' 
