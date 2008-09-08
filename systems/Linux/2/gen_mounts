@@ -36,6 +36,7 @@
 # Linux/2/gen_mounts - 11/16/2006 - Added selinuxfs to local FS (Debian bug #397832)
 # Linux/2/gen_mounts - 06/22/2007 - Added fusectl to local FS (Debian bug #409386)
 # Linux/2/gen_mounts - 06/26/2007 - Added Vmware's vmblock as non-local FS
+# Linux/2/gen_mounts - 09/08/2008 - Added reiser4 as a local FS
 #
 #-----------------------------------------------------------------------------
 #
@@ -90,6 +91,7 @@ localfs()
   [ "$1" = "ext3" ] && LOCAL=0
   [ "$1" = "auto" ] && LOCAL=0
   [ "$1" = "reiserfs" ] && LOCAL=0
+  [ "$1" = "reiser4" ] && LOCAL=0
   [ "$1" = "xfs" ] && LOCAL=0
   [ "$1" = "jfs" ] && LOCAL=0
   [ "$1" = "minix" ] && LOCAL=0
