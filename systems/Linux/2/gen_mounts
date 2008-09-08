@@ -45,7 +45,8 @@
 #                                 - Added fuse.truecrypt as a local FS
 #                                 - Added fuse.encfs as a local FS (Debian bug #483727)
 #                                 - Added debugfs as a non-local FS, to skip it from checks (Debian bug #469685)
-#                                 - Added afs as a local FS (Savannah bug #14028)
+#                                 - Added afs as a non-local FS (Savannah bug #14028)
+#                                 - Added gfs and gfs2 as a local FS (Debian bug #490344)
 #
 #-----------------------------------------------------------------------------
 #
@@ -123,6 +124,11 @@ localfs()
   [ "$1" = "fuse.truecrypt" ] && LOCAL=0        # Encrypted filesystem, used in Ubuntu 'hardy'
   [ "$1" = "fuse.encfs" ] && LOCAL=0            # Encrypted filesystem
   [ "$1" = "fuse.gvfs-fuse-daemon" ] && LOCAL=0 # Used in Ubuntu 'hardy'
+  [ "$1" = "gfs" ] && LOCAL=0       # Red Hat's Global Filesystem
+                                    # http://sources.redhat.com/cluster/wiki/
+  [ "$1" = "gfs2" ] && LOCAL=0      # Red Hat's Global Filesystem
+  # Note: gfs is considered local even though remoutely mounted in a SAN as this filesystem should
+  # not be shared simultaneously with other systems...
   # Filesystems of other OS
   [ "$1" = "msdos" ] && LOCAL=1
   [ "$1" = "umsdos" ] && LOCAL=1
