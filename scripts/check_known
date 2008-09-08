@@ -16,8 +16,6 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_known - 06/14/93
-# 09/08/2008 jfs Use support for configuration item to prevent unknown filesystems
-#                from begin reported by gen_mounts
 # 05/20/2006 jfs Use TAIL properly (POSIX 1003.2-1992)
 # 06/15/2004 jfs Do not call LS directly with all files but use a for loop
 #                (Debian bug #246600)
@@ -108,9 +106,6 @@ haveallfiles BASEDIR WORKDIR || exit 1
 safe_temp "$WORKDIR/login.str.$$" "$WORKDIR/pass.list.$$"
 trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
 
-mounts_warn="unknown"
-[ "$Tiger_FSScan_Unknown" != 'Y' ] && mounts_warn="none"
-
 {
   haveallcmds IFCONFIG && { 
      # Note: This is Linux specific 
@@ -192,7 +187,7 @@ mounts_warn="unknown"
   }
   
   haveallcmds GET_MOUNTS AWK FIND SED TR && {
-    $GET_MOUNTS local all $mounts_warn |
+    $GET_MOUNTS local |
     $AWK '{
       if($1 == "/")
         print "/lost+found";

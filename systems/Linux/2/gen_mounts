@@ -189,12 +189,27 @@ localfs()
   [ "$1" = "capifs" ] && LOCAL=1
   # Some special filesystems
   [ "$1" = "unknown" ] && [ "$2" = "/dev" ] && LOCAL=1
+
+  # Handle the Tiger_FSScan_Local and Tiger_FSScan_Nonlocal variables, if defined
+  if [ ! -z "$Tiger_FSScan_Local" ] ; then
+    # List of known filesystems the admin considers to be local to the system
+    if echo $1 | $EGREP -q $Tiger_FSScan_Local; then
+        LOCAL=0
+    fi
+  fi
+  if [ ! -z "$Tiger_FSScan_NonLocal" ] ; then
+    # List of known filesystems the admin considers to be not local to the system
+    if echo $1 | $EGREP -q $Tiger_FSScan_NonLocal; then
+        LOCAL=0
+    fi
+  fi
+
   # The rest we warn about
   if [ "$LOCAL" -eq 2 ] ; then
-    if [ -z "$WARN_UNKNOWN" ] && [ "$WARN_UNKOWN" = "unknown" ]; then
-  	echo "--CONFIG-- [con010c] Filesystem '$1' used by '$2' is not recognised as a local filesystem" >&2
+    if [ -z "$Tiger_FSScan_WarnUnknown" ] || [ "$Tiger_FSScan_WarnUnknown" == "Y" ] ; then
+        echo "--CONFIG-- [con010c] Filesystem '$1' used by '$2' is not recognised as a local filesystem" >&2
     fi
-	LOCAL=1
+    LOCAL=1
   fi
   return $LOCAL
 }
@@ -203,6 +218,7 @@ localfs()
 [ -z "$GETFS" ] && GETFS=`which mount`
 [ -z "$SED" ] && SED=`which sed`
 [ -z "$BASENAME" ] && BASENAME=`which basename`
+[ -z "$EGREP" ] && EGREP=`which egrep`
 
 $GETFS  |
 while read line

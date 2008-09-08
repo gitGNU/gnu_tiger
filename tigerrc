@@ -308,7 +308,10 @@ Tiger_FSScan_SymLinks=Y		# strange symbolic links
 Tiger_FSScan_ofNote=Y		# weird filenames
 Tiger_FSScan_WDIR=N		# world writable directories
 Tiger_FSScan_Unowned=Y		# files with undefined owners/groups
-Tiger_FSScan_Unknown=Y		# Warn about unknown filesystems used
+#  The following variables change the way the GET_MOUNTS (gen_mounts) script works:
+Tiger_FSScan_WarnUnknown=Y	# Warn about unknown filesystems used
+Tiger_FSScan_Local=''		# Filesystems considered to be local to the system, pipe-separated
+Tiger_FSScan_NonLocal=''	# Filesystems considered to be non-local to the system, pipe-separated
 #
 # Should we scan read-only filesystems
 #

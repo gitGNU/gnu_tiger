@@ -19,7 +19,7 @@
 #
 # 08/09/2008 jfs Have GET_MOUNTS use local like getdisks does and do not warn
 #                for non-local filesystems
-
+#
 # 07/22/2005 jfs Fixed check of GET_MOUNTS
 #
 # 04/03/2004 rbrad Added GETDISKS to haveallcmds.  
@@ -264,21 +264,19 @@ rw=rw
 [ "x$Tiger_FSScan_ReadOnly" = 'xY' ] && rw=
 
 {
-  mounts_warn="unknown"
-  [ "$Tiger_FSScan_Unknown" != 'Y' ] && mounts_warn="none"
   if [ ! -n "$FINDXDEV" ]; then
     echo "$FINDPRUNE"
     echo "/"
   elif haveallcmds GETDISKS; then
     echo "$FINDXDEV"
-    $GETDISKS $mounts_warn
+    $GETDISKS
   elif haveallcmds GET_MOUNTS; then
     #
     # This will do each file system in series... slower,
     # but better than banging the heads around.
     #
     echo "$FINDXDEV"
-    echo "`$GET_MOUNTS local all $mounts_warn`"
+    echo "`$GET_MOUNTS local all`"
   else
     echo "$FINDPRUNE"
     echo "/"
