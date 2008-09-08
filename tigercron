@@ -17,6 +17,8 @@
 #
 # tigercron - 06/13/93
 #
+# 04/12/2008 jfs Include patch from Chris Lamb that fixes bashism in the script
+#                (Debian bug #468700)
 # 08/15/2003 jfs Now uses run_script instead of SCRIPTDIR/LSCRIPTDIR which
 #                permits tigercron to execute the most relevant script given
 #                the $OS/$REL/$ARCH
