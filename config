@@ -395,10 +395,11 @@ checkfile()
   #
 
   [ -n "$RCFILE" -a -r $RCFILE ] && {
+    tempfile=`tempfile -d $WORKDIR` || tempfile=$WORKDIR/rcfile.$$
     $GREP -v '^#' $RCFILE |
-    $SED -e 's/^\(.*\)=/export \1; \1=/' > $WORKDIR/rcfile.$$
+    $SED -e 's/^\(.*\)=/export \1; \1=/' > $tempfile
     . $WORKDIR/rcfile.$$
-    $RM -f $WORKDIR/rcfile.$$
+    $RM -f $tempfile
   }
 
   HOSTNAME=`$GETHOSTNAME`
