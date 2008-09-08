@@ -200,7 +200,7 @@ localfs()
   if [ ! -z "$Tiger_FSScan_NonLocal" ] ; then
     # List of known filesystems the admin considers to be not local to the system
     if echo $1 | $EGREP -q $Tiger_FSScan_NonLocal; then
-        LOCAL=0
+        LOCAL=1
     fi
   fi
 
