@@ -16,6 +16,10 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # Linux/2/gen_cron - 06/14/93
+# 11/08/2007 - jfs - Handles properly the case when the special @daily,@reboot,
+#                    etc. definitions are used instead of real times. Also fix
+#                    bug deailing with variables in crontab contents 
+#                    (Debian bug 418440) 
 # 03/21/2005 - jfs - Fixed -a checks to be POSIX compatbile
 # 10/01/2003 - jfs - Added check to see if CRONSPOOL can be read, also
 #    fixed the way the information is read since LS might be locale
