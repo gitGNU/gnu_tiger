@@ -17,6 +17,7 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# 09/09/2008 - jfs - Use prelink to calculate checksums if present (Debian bug #445531)
 # 06/22/2007 - jfs - Fix Debian bug 50611 by properly reading md5sum's output
 # 08/17/2006 - jfs - Fix Ubuntu bug 50611 by excluding dev/ and 
 #        lib/udev/devices/ from the md5sum test, thanks to Richard Laager 
@@ -107,6 +108,9 @@ haveallcmds MD5SUM CAT CUT SED GREP BASENAME || exit 1
 
 # Prelink
 PRELINK=/usr/sbin/prelink
+if [ -x "$PRELINK" ] ; then
+    MD5SUM="$PRELINK -y --md5"
+fi
 
 # From the localepurge binary:
 LOCALEDIR=/usr/share/locale
@@ -139,7 +143,6 @@ do
                         file=`echo $file | sed -e "s/:$//"`
 			case $err in
 			DIFF|FAILED)
-                                # TODO: Use prelink if available
 				# don't check diverted now
 				[ -z "`$GREP -sxF \"$file\" $DIVERSIONS`" ] &&
 				# and conffiles should not be checked either
