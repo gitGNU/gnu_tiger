@@ -50,6 +50,8 @@
 #                                 - Added inotifyfs, hugetlb and subfs as a non-local FS
 #                                 - Make futexfs a non-local FS (Debian bug #490822)
 #                                 - Added bind as a non-local FS (Debian bug #451879)
+#                                 - Skip udev fs even if its in a tmpfs FS, prevent analysis
+#                                   of unexistant symlinks (See Debian bug 434333)
 #
 #-----------------------------------------------------------------------------
 #
@@ -120,6 +122,8 @@ localfs()
   [ "$1" = "rootfs" ] && LOCAL=0                # Provides an empty root directory for the bootstrap phase
   [ "$1" = "shm" ] && LOCAL=0                   # IPC-shared memory regions
   [ "$1" = "tmpfs" ] && LOCAL=0                 # Temporary files (kept in RAM unless swapped)
+  # Exception: udev uses a tmpfs and it has many symlinks that point nowhere, it should be skipped
+  [ "$1" = "tmpfs" ] && [ "$2" = "udev" ] && LOCAL=1 
   [ "$1" = "auto" ] && LOCAL=0
   [ "$1" = "selinuxfs" ] && LOCAL=0
   [ "$1" = "fusectl" ] && LOCAL=0
