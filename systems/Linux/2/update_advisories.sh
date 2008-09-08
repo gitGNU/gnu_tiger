@@ -22,7 +22,7 @@
 DEB_ADV_DIR=~jfs/debian/www/webwml/english/security/
 if [ -d $DEB_ADV_DIR ] 
 then
-	find $DEB_ADV_DIR -name "*data" -exec cat \{\} \; | perl retrieve-advisories.pl >debian_advisories
+	find $DEB_ADV_DIR -name "*data" -a -type f -exec cat \{\} \; | perl retrieve-advisories.pl >debian_advisories
 else
 	echo "Cannot access the $DEB_ADV_DIR directory."
 	echo "Cannot generate the advisories data for Tiger."
