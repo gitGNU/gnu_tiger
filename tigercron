@@ -256,7 +256,7 @@ do
 done >> $WORKDIR/tigcron.diff.$$
 
 [ ! -n "$Tiger_Mail_RCPT" ] && Tiger_Mail_RCPT="root"
-[ ! -n "$Tiger_Mail_FROM" ] && Tiger_Mail_FROM="root@$HOSTNAME"
+[ ! -n "$Tiger_Mail_FROM" ] && Tiger_Mail_FROM="root@$(hostname)"
   
 length=1
 if [ ! -n "$EGREP" ] ; then
@@ -266,15 +266,15 @@ fi
 [ -s "$WORKDIR/tigcron.diff.$$" -a $length -gt 0 ] && {
   send="Y"
   [ "$Tiger_Cron_SendOKReports" = "N" ] &&
-  [  -z "`grep ERR $WORKDIR/tigcron.diff.$$`" ] &&
+  [ -z "`grep ERR $WORKDIR/tigcron.diff.$$`" ] &&
   [ -z "`grep WARN $WORKDIR/tigcron.diff.$$`" ] && { 
   	send="N"
   }
   haveallcmds MAILER && [ "$send" = "Y" ] &&  {
 	# Mail header (so it does not just say it's root
-	echo "From: \"Tiger automatic auditor at $HOSTNAME\" <$Tiger_Mail_FROM>"
+	echo "From: \"Tiger automatic auditor at $(hostname)\" <$Tiger_Mail_FROM>"
 	echo "To: $Tiger_Mail_RCPT"
-	echo "Subject: Tiger Auditing Report for $HOSTNAME"
+	echo "Subject: Tiger Auditing Report for $(hostname)"
 	echo 
 	cat  $WORKDIR/tigcron.diff.$$ 
     } | $MAILER $Tiger_Mail_RCPT 
