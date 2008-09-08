@@ -47,6 +47,8 @@
 #                                 - Added debugfs as a non-local FS, to skip it from checks (Debian bug #469685)
 #                                 - Added afs as a non-local FS (Savannah bug #14028)
 #                                 - Added gfs and gfs2 as a local FS (Debian bug #490344)
+#                                 - Added inotifyfs, hugetlb and subfs as a non-local FS
+#                                 - Make futexfs a non-local FS (Debian bug #490822)
 #
 #-----------------------------------------------------------------------------
 #
@@ -114,9 +116,9 @@ localfs()
   [ "$1" = "coherent" ] && LOCAL=0
   [ "$1" = "xenix" ] && LOCAL=0
   [ "$1" = "hpfs" ] && LOCAL=0
-  [ "$1" = "rootfs" ] && LOCAL=0
-  [ "$1" = "shm" ] && LOCAL=0
-  [ "$1" = "tmpfs" ] && LOCAL=0
+  [ "$1" = "rootfs" ] && LOCAL=0                # Provides an empty root directory for the bootstrap phase
+  [ "$1" = "shm" ] && LOCAL=0                   # IPC-shared memory regions
+  [ "$1" = "tmpfs" ] && LOCAL=0                 # Temporary files (kept in RAM unless swapped)
   [ "$1" = "auto" ] && LOCAL=0
   [ "$1" = "selinuxfs" ] && LOCAL=0
   [ "$1" = "fusectl" ] && LOCAL=0
@@ -149,25 +151,28 @@ localfs()
   [ "$1" = "afs" ] && LOCAL=1       # Andrew Filesystem
   [ "$1" = "rpc_pipefs" ] && LOCAL=1
   # Skip these as they are virtual filesystems
-  [ "$1" = "proc" ] && LOCAL=1
-  [ "$1" = "devpts" ] && LOCAL=1
-  [ "$1" = "usbfs" ] && LOCAL=1
+  [ "$1" = "proc" ] && LOCAL=1                  # General access point to kernel data structures
+  [ "$1" = "devpts" ] && LOCAL=1                # Pseudoterminal support (Open Group's Unix98 standard)
+  [ "$1" = "usbfs" ] && LOCAL=1                 # USB devices
   [ "$1" = "usbdevfs" ] && LOCAL=1
   [ "$1" = "devfs" ] && LOCAL=1
-  [ "$1" = "sysfs" ] && LOCAL=1
+  [ "$1" = "sysfs" ] && LOCAL=1                 # General access point to system data
   [ "$1" = "securityfs" ] && LOCAL=1            # Used by Ubuntu, see http://lwn.net/Articles/153366/ 
   [ "$1" = "none" ] && LOCAL=1
   [ "$1" = "autofs" ] && LOCAL=1
-  [ "$1" = "binfmt_misc" ] && LOCAL=1
+  [ "$1" = "binfmt_misc" ] && LOCAL=1           # Miscellaneous executable formats
   [ "$1" = "cramfs" ] && LOCAL=1
   [ "$1" = "ramfs" ] && LOCAL=1
   [ "$1" = "romfs" ] && LOCAL=1
-  [ "$1" = "mqueue" ] && LOCAL=1
-  [ "$1" = "sockfs" ] && LOCAL=1
-  [ "$1" = "bdev" ] && LOCAL=1
+  [ "$1" = "mqueue" ] && LOCAL=1                # POSIX message queues
+  [ "$1" = "sockfs" ] && LOCAL=1                # Sockets
+  [ "$1" = "bdev" ] && LOCAL=1                  # Block devices
   [ "$1" = "pipefs" ] && LOCAL=1
-  [ "$1" = "eventpollfs" ] && LOCAL=1
-  [ "$1" = "futexfs" ] && LOCAL=0
+  [ "$1" = "eventpollfs" ] && LOCAL=1           # Efficient event polling mechanism
+  [ "$1" = "inotifyfs" ] && LOCAL=1 
+  [ "$1" = "hugetlbf" ] && LOCAL=1 
+  [ "$1" = "subfs" ] && LOCAL=1 
+  [ "$1" = "futexfs" ] && LOCAL=1               # futex (Fast Userspace Locking) mechanism
   [ "$1" = "vmblock" ] && LOCAL=1               # Vmware filesystem
   [ "$1" = "debugfs" ] && LOCAL=1               # Debugging filesystem see 
                                                 # http://lwn.net/Articles/115405/
