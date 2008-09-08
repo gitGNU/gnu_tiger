@@ -98,9 +98,9 @@ check_xinetconfig()
 		if [ "`$GREP -i 'disable' $xinetd_dir/$file | $AWK '{print $NF}'`" = "no" ] ; 
 		then
 			service=`$GREP -w 'server' $file | $GREP '=' | $AWK '{print $NF}'`
-			message INFO xnet004i "Service $file is enabled using: $service."
+			message INFO xnet004i "" "Service $file is enabled using: $service."
 		else
-			message INFO xnet005i "Service $file is disabled."
+			message INFO xnet005i "" "Service $file is disabled."
 		fi
 	done
 }
@@ -115,13 +115,13 @@ if [ -r "$XINETDCONF" ] ; then
 		then
 			check_xinetconfig $xinetd_directory
 		else
-			message ERROR xnet002e "The location included in $XINETDCONF is not a directory"
+			message ERROR xnet002e "" "The location included in $XINETDCONF is not a directory"
 		fi
 	done
 else
 	if [ ! -f "$XINETDCONF" ] ; then
-		message ERROR xnet001e "It appears that xinetd is not installed, cannot find file $XINETDCONF."
+		message ERROR xnet001e "" "It appears that xinetd is not installed, cannot find file $XINETDCONF."
 	else
-	        message ERROR xnet003e "Cannot read file $XINETDCONF."
+	        message ERROR xnet003e "" "Cannot read file $XINETDCONF."
 	fi
 fi

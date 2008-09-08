@@ -109,13 +109,12 @@ lowner=
   #
   while read owner command
   do
-    
     com="`echo \"$command\" | $SED -e 's/[0-9]*>//g' | $TR -d '()\;\`&!|'`"
 
     # Can't 'set' this because of shell meta-characters.
     cmd="`echo \"$com\" | $AWK '{print $1}'`"
   
-    base=`$BASENAME "$cmd"`
+    base=`$BASENAME -- "$cmd"`
     case "$base" in
       sh|csh|ksh|tcsh|zsh|bash|if|cd)
       [ "$2" != "-c" ] && cmd="`echo \"$com\" | $AWK '{print $2}'`";;
@@ -189,7 +188,7 @@ then
    $GREP -v "^#" | 
    while read user
    do
-        message WARN cron006w "User $user is allowed cron usage."
+        message WARN cron006w "" "User $user is allowed cron usage."
    done
 fi
 if [ -f "$CRONDENY" ]
@@ -198,7 +197,7 @@ then
    $GREP -v "^#" | 
    while read user
    do
-        message INFO cron007i "User $user is denied cron usage."
+        message INFO cron007i "" "User $user is denied cron usage."
    done
 fi
 if [ ! -f "$CRONALLOW" -a ! -f "$CRONDENY" ]

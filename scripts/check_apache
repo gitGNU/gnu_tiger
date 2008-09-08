@@ -90,19 +90,23 @@ haveallfiles APACHECONFDIR BASEDIR WORKDIR || exit 1
 
 # First check if Apache is bound to use only an IP address
 [ -f $APACHECONFDIR/httpd.conf ] && {
-	$GREP ^Listen $APACHECONFDIR/httpd.conf |
-	while read listen ipaddr
-	do
-		port=`echo $ipaddr | $CUT -f : -d 2`
-		ipaddr=`echo $ipaddr | $SED -e 's/:.*$//'`
-	done
+	listen=`$GREP ^Listen $APACHECONFDIR/httpd.conf | head -1 | $AWK '{print $2}'`
+        if [ -n "$listen" ]; then
+                if echo "$listen" | grep -q ':' ; then
+                    port=`echo "$listen" | $CUT -d : -f 2`
+                    ipaddr=`echo "$listen" | $SED -e 's/:.*$//'`
+                else
+                    port="$listen"
+                    ipaddr=""
+                fi
+        fi
 	# TODO: this check should warn only if this is a multihomed host
 	# (we probably need to check this in other places so a utils function
 	# 'amImultihome' might be useful)
 	if [ -z "$port" -o -z "$ipaddr" ]; then
-		message WARN apa001w "The Apache server is not configured to be bound to an specific IP address."
+		message WARN apa001w "" "The Apache server is not configured to be bound to an specific IP address."
 	else 
-		message INFO apa001w "The Apache server is configured to listen only on address $ipaddr port $port."
+		message INFO apa001w "" "The Apache server is configured to listen only on address $ipaddr port $port."
 	fi
 }
 # Now check options
@@ -130,9 +134,9 @@ do
 		# Before reseting check the '/' configuration
 			if  [ "$directory" = "/" ] ; then
 				[ $denyfirst -ne 1 -o $alldenied -ne 0 ] &&  \
-				message WARN apa002w "There is no limitation to access filesystem locations (configuration for '/')"
+				message WARN apa002w "" "There is no limitation to access filesystem locations (configuration for '/')"
 				[ "$options" != "None" -a "$options" != "none" ] && \
-				message WARN apa002w "Options flag  for the filesystem should be 'None' (configuration for '/')"
+				message WARN apa002w "" "Options flag  for the filesystem should be 'None' (configuration for '/')"
 			fi
 			directory="Any (default)"
 			denyfirst=0
@@ -149,20 +153,20 @@ do
 # followed back to the root dir
 # Sample: ln -s /etc/passwd
 			if [ ! -z "`echo $options | $GREP -i ifownermatch`" ]; then
-			message INFO apa003i "$directory directory configuration permits symlink following only if owner of the symlink matches."
+			message INFO apa003i "" "$directory directory configuration permits symlink following only if owner of the symlink matches."
 			else 
-			message WARN apa004w "$directory directory configuration permits symlink following."
+			message WARN apa004w "" "$directory directory configuration permits symlink following."
 			fi
 			fi # of followsymlinks
 
 # TODO: we could list executable files in the directory
 			if [ ! -z "`echo $options | $GREP -i execcgi`" ]; then
-			message WARN apa005w "$directory directory can hold executable CGI."
+			message WARN apa005w "" "$directory directory can hold executable CGI."
 			fi
 
 #  TODO we could check which directories do not have an index.html file
 			if [ ! -z "`echo $options | $GREP -i indexes`" ]; then
-			message WARN apa006w "$directory directory will provide content listing if there are no index.html files."
+			message WARN apa006w "" "$directory directory will provide content listing if there are no index.html files."
 			fi
 
 		fi # of the options
