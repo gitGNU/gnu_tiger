@@ -46,7 +46,7 @@
 #                                 - Added fuse.encfs as a local FS (Debian bug #483727)
 #                                 - Added debugfs as a non-local FS, to skip it from checks (Debian bug #469685)
 #                                 - Added afs as a non-local FS (Savannah bug #14028)
-#                                 - Added gfs and gfs2 as a local FS (Debian bug #490344)
+#                                 - Added configfs, gfs and gfs2 as a local FS (Debian bug #490344)
 #                                 - Added inotifyfs, hugetlb and subfs as a non-local FS
 #                                 - Make futexfs a non-local FS (Debian bug #490822)
 #                                 - Added bind as a non-local FS (Debian bug #451879)
@@ -179,6 +179,7 @@ localfs()
   [ "$1" = "vmblock" ] && LOCAL=1               # Vmware filesystem
   [ "$1" = "debugfs" ] && LOCAL=1               # Debugging filesystem see 
                                                 # http://lwn.net/Articles/115405/
+  [ "$1" = "configfs" ] && LOCAL=1
   # Other filesystems we don't support
   [ "$1" = "adfs" ] && LOCAL=1
   [ "$1" = "affs" ] && LOCAL=1
