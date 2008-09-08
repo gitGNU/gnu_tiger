@@ -77,10 +77,16 @@ do
       $GETUSERHOME "$file" >/dev/null 2>/dev/null
 
       if [ $? = 0 ]; then
+        # Parse the crontab file:
+        # - Replace '@' commands (Debian-specific), since we don't care on
+        #   times we just replace them with '0 0 0 0 0'
+        # - Remove variable definitions
 	$SED -e 's/#.*$//' -e '/^$/d' $CRONSPOOL/$name |
+        $SED -e 's/^@[A-Za-z]*/0 0 0 0 0/' |
+        $SED -e '/^[A-Za-z]*.*=/d' |
 	while read a b c d e command
 	do
-	  echo "$name $command"
+          [ -n "$command" ] && echo "$name $command"
 	done >> $outfile
       else
 	echo "--WARN-- Found cron file for unknown user $file."
