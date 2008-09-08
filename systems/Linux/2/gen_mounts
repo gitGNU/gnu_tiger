@@ -32,11 +32,13 @@
 # Linux/2/gen_mounts - 07/22/2005 - Changed extraction from mount command
 #     so it can cope with whitespaces in mount locations, added sanity check
 #     and fix a bug that mangled $fs (Debian bug #315435)
+# Linux/2/gen_mounts - 08/29/2005 - Added vzfs (VPS filesystem) to local fs,
+#     Savannah bug #14299
 # Linux/2/gen_mounts - 05/20/2006 - Added cifs to non local FS (Debian bug #329813)
 # Linux/2/gen_mounts - 11/16/2006 - Added selinuxfs to local FS (Debian bug #397832)
 # Linux/2/gen_mounts - 06/22/2007 - Added fusectl to local FS (Debian bug #409386)
 # Linux/2/gen_mounts - 06/26/2007 - Added Vmware's vmblock as non-local FS
-# Linux/2/gen_mounts - 09/08/2008 - Added reiser4 as a local FS
+# Linux/2/gen_mounts - 09/08/2008 - Added reiser4 as a local FS (Debian bug #498203)
 #
 #-----------------------------------------------------------------------------
 #
@@ -90,6 +92,7 @@ localfs()
   [ "$1" = "ext2" ] && LOCAL=0
   [ "$1" = "ext3" ] && LOCAL=0
   [ "$1" = "auto" ] && LOCAL=0
+  [ "$1" = "vzfs" ] && LOCAL=0        # VPS virtual partition
   [ "$1" = "reiserfs" ] && LOCAL=0
   [ "$1" = "reiser4" ] && LOCAL=0
   [ "$1" = "xfs" ] && LOCAL=0
