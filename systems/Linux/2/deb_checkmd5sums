@@ -105,6 +105,9 @@ echo "# Checking md5sums of installed files"
 
 haveallcmds MD5SUM CAT CUT SED GREP BASENAME || exit 1
 
+# Prelink
+PRELINK=/usr/sbin/prelink
+
 # From the localepurge binary:
 LOCALEDIR=/usr/share/locale
 MANDIR=/usr/share/man
@@ -136,6 +139,7 @@ do
                         file=`echo $file | sed -e "s/:$//"`
 			case $err in
 			DIFF|FAILED)
+                                # TODO: Use prelink if available
 				# don't check diverted now
 				[ -z "`$GREP -sxF \"$file\" $DIVERSIONS`" ] &&
 				# and conffiles should not be checked either
