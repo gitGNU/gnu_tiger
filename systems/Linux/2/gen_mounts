@@ -49,6 +49,7 @@
 #                                 - Added gfs and gfs2 as a local FS (Debian bug #490344)
 #                                 - Added inotifyfs, hugetlb and subfs as a non-local FS
 #                                 - Make futexfs a non-local FS (Debian bug #490822)
+#                                 - Added bind as a non-local FS (Debian bug #451879)
 #
 #-----------------------------------------------------------------------------
 #
@@ -152,6 +153,8 @@ localfs()
   [ "$1" = "rpc_pipefs" ] && LOCAL=1
   # Skip these as they are virtual filesystems
   [ "$1" = "proc" ] && LOCAL=1                  # General access point to kernel data structures
+  [ "$1" = "bind" ] && LOCAL=1                  # Used to remount directories, define as virtual
+                                                # as otherwise files would be checked twice
   [ "$1" = "devpts" ] && LOCAL=1                # Pseudoterminal support (Open Group's Unix98 standard)
   [ "$1" = "usbfs" ] && LOCAL=1                 # USB devices
   [ "$1" = "usbdevfs" ] && LOCAL=1
