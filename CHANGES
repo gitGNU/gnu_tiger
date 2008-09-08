@@ -1,6 +1,23 @@
 NOTE: To read changes made to the Debian package (since
 August 23rd 2001) see the changelog.Debian file
 
+Changes (v 3.2.3-WIP) 
+--------------------
+
+- Added support for fuse's filesystems, for securityfs and for other local and
+  non-local filesystems in Linux gen_mounts.
+- Instead of adding support for the admin to define local and non-local
+  filesystems (which is somewhat tricky) I've added a new configuration
+  variable in tigerrc (Tiger_FSScan_WarnUnknown) that allows administrators to
+  disable the warning related to unknown filesystems and modified the following
+  scripts to use it:
+    - scripts/check_known
+    - scripts/check_perms
+    - scripts/find_files      
+    - systems/Linux/2/getdisks  
+  The default behaviour (in the provided tigerrc and in the code), if the variable is not
+  set is to warn admins since unknown filesystems might be a security issue (rootkit?)
+
 Changes (v 3.2.2) 
 ----------------
 - Applied patches from Ryan Bradetich to fix Makefiles in HPUX
@@ -14,7 +31,7 @@ Changes (v 3.2.2)
   Supported OSes:
     - AIX (tested in 4.x and 5.x)   - Debian GNU/Linux
     - HPUX 10/11                    - Nokia IPSO
-    - ORACLE                        - RedHaT GNU/Linux
+    - ORACLE                        - RedHat GNU/Linux
     - Slackware                     - Solaris
     - SuSE Linux                    - Windows XP/2000/2003
 - Added support for a check.d directory where administrators can dump
