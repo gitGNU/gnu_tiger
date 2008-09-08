@@ -1,0 +1,38 @@
+#!/usr/bin/make -f
+# Makefile for tiger HTML documentation
+# 
+#
+#     Makefile for tiger binaries - A UN*X security checking system
+#     Copyright (C) 2008 Javier Fernandez-Sanguino Pen~a <jfs@computer.org>
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+
+TXTFILES = $(wildcard *.txt)
+HTMLFILES = $(patsubst %.txt,../html/%.html,$(TXTFILES))
+
+all: $(HTMLFILES) ../util/doc2html
+
+install:
+
+%.html : %.txt
+	../util/doc2html $<
+
+explain.idx: $(TXTFILES) ../util/genmsgidx
+	../util/genmsgidx
+
+clean:
+	-rm -f *.html
+
+distclean: clean
+	-rm -f ../html/*.html explain.idx

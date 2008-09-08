@@ -57,5 +57,6 @@ AC_SUBST(tigerconfigdir)
 AC_SUBST(tigerhomedir)
 AC_OUTPUT(Makefile
 	c/Makefile
+	doc/Makefile
 	man/tiger.8
 	man/tigercron.8)

@@ -1,3 +1,22 @@
+#!/usr/bin/make -f
+#
+# Makefile for tiger HTML documentation
+#
+#
+#     General makefile for tiger  - A UN*X security checking system
+#     Copyright (C) 2001-2008 Javier Fernandez-Sanguino Pen~a <jfs@computer.org>
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 1, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
 #
 #  You only need to 'make' tiger if you are planning to run it
 #  on a regular basis, or to compile the binaries (sources under c/)
@@ -156,16 +175,19 @@ MISCDIRS=./bin \
 	./scripts/sub \
 	./systems
 
-all:
+all: bin doc
+
+bin:
 	@if [ ! -d bin ]; then \
 	  mkdir bin; \
 	fi
 	cd c && $(MAKE) install
+
+doc:
 	@if [ ! -d html ]; then \
 	  mkdir html; \
 	fi
-	cd util && sh doc2html
-	./util/genmsgidx
+	cd doc && $(MAKE)
 
 installdirs:
 	@echo "Creating $(TIGERHOME)..."
@@ -245,6 +267,7 @@ installconfig:
 
 install: installdirs installbinaries installconfig installmanpages
 	cd c && $(MAKE) install
+	cd doc && $(MAKE) install
 	@echo "Copying miscellaneous dirs..."
 	@for dir in $(MISCDIRS); do \
 	  tar cf - $$dir | (cd $(DESTDIR)$(TIGERHOME); tar xpf -); \
@@ -279,11 +302,13 @@ distribution:
 
 clean: 
 	cd c && $(MAKE) clean
+	cd doc && $(MAKE) clean
 	-find bin/ -type f -exec rm -f {} \;
 	-rm -f man/index.bt 
 
 distclean: clean
 	cd c && $(MAKE) distclean 
+	cd doc && $(MAKE) distclean
 	-find log/ -type f -exec rm -f {} \;
 	-find run/ -type f -exec rm -f {} \;
 	-rm -f Makefile config.{status,log,cache} man/tiger.8 man/tigercron.8

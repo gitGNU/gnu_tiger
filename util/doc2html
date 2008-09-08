@@ -17,7 +17,9 @@
 #
 #
 CNT=0
-set ../doc/*.txt
+if [ -z "$1" ]; then
+    set ../doc/*.txt
+fi
 while [ "$1" ]; do
   OUTF=`echo $1 | sed -e "s/\.\.\/doc/..\/html/" | sed -e "s/\.txt/.html/"`
   TITLE=`echo $1 | sed -e "s/\.\.\/doc\///" | sed -e "s/\.txt//"`
