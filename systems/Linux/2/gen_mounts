@@ -39,6 +39,12 @@
 # Linux/2/gen_mounts - 06/22/2007 - Added fusectl to local FS (Debian bug #409386)
 # Linux/2/gen_mounts - 06/26/2007 - Added Vmware's vmblock as non-local FS
 # Linux/2/gen_mounts - 09/08/2008 - Added reiser4 as a local FS (Debian bug #498203)
+#                                 - Added securityfs as a non-local FS (Ubuntu bug #155211)
+#                                 - Added fuse.gvfs-fuse-daemon as a local FS (Ubuntu bug #155211)
+#                                 - Added fuseblk as a local FS
+#                                 - Added fuse.truecrypt as a local FS
+#                                 - Added fuse.encfs as a local FS (Debian bug #483727)
+#                                 - Added debugfs as a non-local FS, to skip it from checks (Debian bug #469685)
 #
 #-----------------------------------------------------------------------------
 #
@@ -110,6 +116,10 @@ localfs()
   [ "$1" = "auto" ] && LOCAL=0
   [ "$1" = "selinuxfs" ] && LOCAL=0
   [ "$1" = "fusectl" ] && LOCAL=0
+  [ "$1" = "fuseblk" ] && LOCAL=0               # Used in Ubuntu 'hardy'
+  [ "$1" = "fuse.truecrypt" ] && LOCAL=0        # Encrypted filesystem, used in Ubuntu 'hardy'
+  [ "$1" = "fuse.encfs" ] && LOCAL=0            # Encrypted filesystem
+  [ "$1" = "fuse.gvfs-fuse-daemon" ] && LOCAL=0 # Used in Ubuntu 'hardy'
   # Filesystems of other OS
   [ "$1" = "msdos" ] && LOCAL=1
   [ "$1" = "umsdos" ] && LOCAL=1
@@ -134,6 +144,7 @@ localfs()
   [ "$1" = "usbdevfs" ] && LOCAL=1
   [ "$1" = "devfs" ] && LOCAL=1
   [ "$1" = "sysfs" ] && LOCAL=1
+  [ "$1" = "securityfs" ] && LOCAL=1            # Used by Ubuntu, see http://lwn.net/Articles/153366/ 
   [ "$1" = "none" ] && LOCAL=1
   [ "$1" = "autofs" ] && LOCAL=1
   [ "$1" = "binfmt_misc" ] && LOCAL=1
@@ -146,7 +157,9 @@ localfs()
   [ "$1" = "pipefs" ] && LOCAL=1
   [ "$1" = "eventpollfs" ] && LOCAL=1
   [ "$1" = "futexfs" ] && LOCAL=0
-  [ "$1" = "vmblock" ] && LOCAL=1
+  [ "$1" = "vmblock" ] && LOCAL=1               # Vmware filesystem
+  [ "$1" = "debugfs" ] && LOCAL=1               # Debugging filesystem see 
+                                                # http://lwn.net/Articles/115405/
   # Other filesystems we don't support
   [ "$1" = "adfs" ] && LOCAL=1
   [ "$1" = "affs" ] && LOCAL=1
