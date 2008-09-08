@@ -51,10 +51,21 @@ defined. Since the variable is needed for the module to run, it
 will probably exit. This is a configuration problem. It is 
 necessary to add the variable to the tigerrc configuration file.
 %con010c
-The filesystem is not recognised by Tiger as a local filesystem 
-for this operating system and will not be analysed by it. If this
-is a local filesystem then the configuration script for this
-operating system needs to be modified.
+The filesystem is not recognised by Tiger as a valid filesystem 
+for this operating system and will not be analysed. If this is a local
+filesystem then the configuration script for this operating system 
+needs to be modified. You should report this as a bug in the software. 
+
+You can use the following tigerrc variables to adjust this message
+or adapt it to your system locally:
+
+ - Tiger_FSScan_Local: if set, filesystems defined in it will be considered
+   local and will always be analysed.
+ - Tiger_FSScan_NonLocal: ff set, filesystems defined in it will be considered
+   non-local and will not be analysed.
+ - Tiger_FSScan_WarnUnknown : If set to 'N' this message will not be presented
+   (this prevents it from being emailed when some of the Tiger scripts are run
+    through cron)
 %init001e
 The indicated variable, which should specifies the pathname to a command,
 does not have a value. This message should not appear on platforms
