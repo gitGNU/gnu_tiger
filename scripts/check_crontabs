@@ -19,6 +19,8 @@
 #
 # Ideas from Dan Farmer's 'cron.chk' from COPS 1.04.
 # 
+# check_crontabs  - 11/08/2007 - jfs Change message calls so that they can be
+#                                    filtered (Debian bug #411534)
 # check_crontabs  - 01/15/2004 - jfs Will only warn if neither cron.allow
 #                                    nor cron.deny exists (Debian bug #226362)
 # check_crontabs  - 11/19/2003 - jfs Introduce some more information on

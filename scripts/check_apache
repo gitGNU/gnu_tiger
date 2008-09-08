@@ -24,6 +24,9 @@
 # SANS's Linux Security Checklist (item #25)
 #
 # 08/12/2003 - jfs - Fixed a typo in the call to SED
+# 11/08/2007 - jfs - Change message calls so that they can be filtered (Debian bug #411534)
+#                  - Fix the way the configuration file is handled to obtain
+#                  the IP address and port (Debian bug #436904)
 #
 # TODO (generic)
 # - include checks for problematic modules

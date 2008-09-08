@@ -19,6 +19,8 @@
 # 
 #  Checks which xinetd services are enabled or disabled.
 #
+#  11/08/2007 - jfs - Change message calls so that they can be filtered 
+#                     (Debian bug #411534)
 #  11/19/2003 - jfs - Added more verbose check if the configuration file
 #              does not exist. Fix syntax error. Thanks to Ryan Bradetich.
 #  08/19/2003 - jfs - Allow override of XINETDCONF and fix error
