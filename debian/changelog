@@ -1,3 +1,62 @@
+tiger (1:3.2.2-5) unstable; urgency=low
+
+  * Acknowledge NMU, which was not acknowledged in the previous package
+    version.
+    - Fix bashism in 'tigercron' script (Closes: #468700)
+    - Bump Standards-Version to 3.7.3.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Sun, 31 Aug 2008 14:47:18 +0200
+
+tiger (1:3.2.2-4) unstable; urgency=low
+
+  * Fix a temp race condition in the genmsgidx script if the system
+    has a tempfile function (Closes: 496415)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Tue, 26 Aug 2008 12:00:16 +0200
+
+tiger (1:3.2.2-3.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Fix bashism in 'tigercron' script (Closes: #468700)
+  * Bump Standards-Version to 3.7.3.
+
+ -- Chris Lamb <chris@chris-lamb.co.uk>  Sat, 12 Apr 2008 04:35:43 +0100
+
+tiger (1:3.2.2-3) unstable; urgency=low
+
+  * Fix encoding of changelog and copyright files (Closes: #454024)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Mon, 11 Feb 2008 22:28:40 +0100
+
+tiger (1:3.2.2-2) unstable; urgency=low
+
+  * Remove all configuration files on purge, including tiger.default if
+    it exists (which is not a conffile since 1:3.2.1-36 and might be 
+    a leftover) (Closes: #455108)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Sun, 09 Dec 2007 15:36:44 +0100
+
+tiger (1:3.2.2-1) unstable; urgency=low
+
+  * New upstream release
+  * Remove debian/ dir from upstream's tarball to prevent FTBFS 
+    (Closes: #450479)
+  * Fix scripts:
+    - scripts/check_crontabs, scripts/check_apache, scripts/check_xinetd:
+      Change message calls so that they can be filtered (Closes: #411534)
+    - scripts/check_apache: Fix the way the configuration file is handled
+      to obtain the IP address and port (Closes: 436904)
+    - systems/Linux/2/gen_cron: Handles properly the case when the special
+      @daily,@reboot, etc. definitions are used instead of real times. Also
+      fix bug deailing with variables in crontab contents (Closes: 418440) 
+  * Add 'fuse' to the list of valid filesystems (Closes: #449439)
+  * Add Dependency on bsdmainutils to get the COLUMN command (Closes: 448975)
+  * Add Portuguese translation, thanks LuA-sa LourenA§o (Closes: 440372)
+  * Modify update-advisories to skip directories with 'data' in the name
+  * Update the advisories list
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Thu, 08 Nov 2007 02:20:09 +0100
+
 tiger (1:3.2.1-38) unstable; urgency=low
 
   * systems/Linux/2/gen_mounts, vmblock is now recognised as a non-local FS. 
@@ -32,7 +91,7 @@ tiger (1:3.2.1-36) unstable; urgency=low
     (Closes: #409386)
   * Debconf translations:
     - Included Dutch translation provided by Bart Cornelis (Closes: #414768)
-    - Included Portuguese translation provided by Luísa Lourenço (Closes: #415534)
+    - Included Portuguese translation provided by LuÃ­sa LourenÃ§o (Closes: #415534)
 
  -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Fri, 22 Jun 2007 01:04:17 +0200
 
@@ -420,7 +479,7 @@ tiger (1:3.2.1-6) unstable; urgency=low
   * The cron.d taks will only run if tigercron is executable, this avoids
     cron.d from running tiger if it has been removed but not purged
     (thanks to Thomas Lange for noticing this mistake)
-  * Included patch from Nicholas François which makes Tiger not warn
+  * Included patch from Nicholas FranÃ§ois which makes Tiger not warn
     on manpage files purged through localepurge (Closes: #219728)
   * Added To: line in tigercron (Closes: #218363)
   * Added Japanese translation contributed by Hideki Yamane (Closes: #224185)

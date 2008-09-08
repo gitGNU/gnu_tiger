@@ -10,14 +10,19 @@ case "$1" in
 		for dir in /var/log/tiger/ /var/run/tiger/work/ /var/run/tiger/ 
 		do
 			[ -d "$dir" ] &&  {
-			 	find $dir -type f -exec rm -f {} \;
-				rmdir $dir
+			 	find "$dir" -type f -exec rm -f {} \;
+				rmdir "$dir"
 			}
 		done
 # Do we have any tigerXX files under /var/log/? if so we should remove
 # them. This were created due to bug #164682 ...
 		find /var/log/ -type f -name "tiger*" | xargs rm -f
-
+# Remove configuration files, if they still exist
+                for conf in /etc/cron.d/tiger /etc/default/tiger \
+                    /etc/tiger/cronrc /etc/tiger/tiger.ignore \
+                    /etc/tiger/tigerrc /etc/default/tiger.default ; do
+                    [ -f "$conf" ] && rm -f "$conf"
+                done
 	;;
 	remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
 # Do nothing 

@@ -3,11 +3,11 @@ Section: admin
 Priority: optional
 Maintainer: Javier Fernandez-Sanguino Pen~a <jfs@debian.org>
 Build-Depends: debhelper (>= 4.1.13), autoconf, po-debconf (>= 0.5.0)
-Standards-Version: 3.6.0.1
+Standards-Version: 3.7.3
 
 Package: tiger
 Architecture: any
-Depends: diff (>=2.0), net-tools, coreutils, binutils, debconf | debconf-2.0, ${shlibs:Depends}
+Depends: diff (>=2.0), net-tools, coreutils, binutils, bsdmainutils, debconf | debconf-2.0, ${shlibs:Depends}
 Recommends: sendmail | mail-transport-agent, john, chkrootkit
 Suggests: lsof
 Description: Report system security vulnerabilities

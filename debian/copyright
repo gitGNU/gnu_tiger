@@ -1,4 +1,4 @@
-This package was debianized by Javier Fernandez-Sanguino Peña <jfs@debian.org>
+This package was debianized by Javier Fernandez-Sanguino PeÃ±a <jfs@debian.org>
  on Thu, 23 Aug 2001 15:07:16 +0200.
 
 It was downloaded from ftp://sunsite.unc.edu/pub/Linux/system/security
@@ -27,7 +27,7 @@ Upstream Authors:
  Paul Telford <paul_telford@hp.com>
  Bryan Gartner <bryang@soccer.fc.hp.com>
 [modifications for support of Debian GNU/Linux 2.x. made by]
- Javier Fernandez-Sanguino Peña <jfs@computer.org>
+ Javier Fernandez-Sanguino PeÃ±a <jfs@computer.org>
 
 
 Copyright: (c) 1993 Texas A&M University Supercomputer Center
