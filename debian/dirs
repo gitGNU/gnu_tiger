@@ -3,5 +3,5 @@ etc/tiger/templates
 etc/default
 usr/sbin
 usr/lib/tiger
-var/run/tiger/work
+var/lib/tiger/work
 var/log/tiger

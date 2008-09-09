@@ -7,7 +7,7 @@ Standards-Version: 3.7.3
 
 Package: tiger
 Architecture: any
-Depends: diff (>=2.0), net-tools, coreutils, binutils, bsdmainutils, debconf | debconf-2.0, ${shlibs:Depends}
+Depends: diff (>=2.0), net-tools, binutils, bsdmainutils, debconf | debconf-2.0, ucf, ${shlibs:Depends}
 Recommends: sendmail | mail-transport-agent, john, chkrootkit
 Suggests: lsof
 Description: Report system security vulnerabilities

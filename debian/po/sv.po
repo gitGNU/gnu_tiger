@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tiger 1:3.2.1-28 \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-10 19:26+0200\n"
+"Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
+"POT-Creation-Date: 2008-09-09 03:34+0200\n"
 "PO-Revision-Date: 2005-12-17 18:39+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -23,33 +23,78 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#. Type: string
 #. Description
-#: ../templates:4
+#: ../templates:1001
 msgid "Who should receive the daily mails?"
 msgstr "Vem ska ta emot dagliga e-postmeddelanden?"
 
+#. Type: string
 #. Description
-#: ../templates:4
-msgid "The user you enter below will receive all the emails that 'tiger' sends during the day when running the cron jobs. This does not mean that when executing the 'tiger' program standalone this user will receive the reports. Also note that any administrator will be able to access the reports since they are available in the /var/log/tiger/ directory."
-msgstr "Användaren du anger nedan kommer att ta emot all e-post som \"tiger\" skickar under dagen vid körning av cron-jobb. Detta betyder inte att denna användaren tar emot rapporter vid fristående körningar av programmet \"tiger\". Notera även att alla administratörer kommer att ha möjligheten att tillåt rapporter eftersom de är tillgängliga i katalogen /var/log/tiger/."
+#: ../templates:1001
+msgid ""
+"The user you enter below will receive all the emails that 'tiger' sends "
+"during the day when running the cron jobs. This does not mean that when "
+"executing the 'tiger' program standalone this user will receive the reports. "
+"Also note that any administrator will be able to access the reports since "
+"they are available in the /var/log/tiger/ directory."
+msgstr ""
+"Användaren du anger nedan kommer att ta emot all e-post som \"tiger\" "
+"skickar under dagen vid körning av cron-jobb. Detta betyder inte att denna "
+"användaren tar emot rapporter vid fristående körningar av programmet \"tiger"
+"\". Notera även att alla administratörer kommer att ha möjligheten att "
+"tillåt rapporter eftersom de är tillgängliga i katalogen /var/log/tiger/."
 
+#. Type: note
 #. Description
-#: ../templates:13
+#: ../templates:2001
 msgid "Take a minute to customize 'tiger'"
 msgstr "Spendera någon minut på att anpassa \"tiger"
 
+#. Type: note
 #. Description
-#: ../templates:13
-msgid "You should customize the files at /etc/tiger/ to adapt to your local security policy. Firstly, customizing the kind of checks that will be made in this system, as well as the information needed for tests in order to reduce false positives (in /etc/tiger/tigerrc). Secondly, customizing at what times these tests will be executed (in /etc/tiger/cronrc). And thirdly, since some modules warnings might not be problems regarding your current security policy, define a given template file at /etc/tiger/templates/ using runs from each of the modules. Once defined, all the runs will be checked against each one of the templates available (one per module) and only new warnings will be issued."
-msgstr "Du bör anpassa filerna i /etc/tiger för att passa din lokala säkerhetspolicy. Anpassa först den typ av kontroll som ska göras i systemet, såväl den information som behövs för tester för att eliminera falska-positiva (i /etc/tiger/tigerrc). För det andra, anpassa vilka tider dessa tester ska köras (i /etc/tiger/cronrc) och för det tredje, eftersom vissa varningar från moduler kanske inte är problem i din nuvarande säkerhetspolicy, definiera en angiven mallfil i /etc/tiger/templates/ med körningar från varje modul. När de är definierade kommer alla körningar att kontrolleras mot en av de tillgängliga mallarna (en per modul) och endast nya varningar kommer att visas."
+#: ../templates:2001
+msgid ""
+"You should customize the files at /etc/tiger/ to adapt to your local "
+"security policy. Firstly, customizing the kind of checks that will be made "
+"in this system, as well as the information needed for tests in order to "
+"reduce false positives (in /etc/tiger/tigerrc). Secondly, customizing at "
+"what times these tests will be executed (in /etc/tiger/cronrc). And thirdly, "
+"since some modules warnings might not be problems regarding your current "
+"security policy, define a given template file at /etc/tiger/templates/ using "
+"runs from each of the modules. Once defined, all the runs will be checked "
+"against each one of the templates available (one per module) and only new "
+"warnings will be issued."
+msgstr ""
+"Du bör anpassa filerna i /etc/tiger för att passa din lokala "
+"säkerhetspolicy. Anpassa först den typ av kontroll som ska göras i systemet, "
+"såväl den information som behövs för tester för att eliminera falska-"
+"positiva (i /etc/tiger/tigerrc). För det andra, anpassa vilka tider dessa "
+"tester ska köras (i /etc/tiger/cronrc) och för det tredje, eftersom vissa "
+"varningar från moduler kanske inte är problem i din nuvarande "
+"säkerhetspolicy, definiera en angiven mallfil i /etc/tiger/templates/ med "
+"körningar från varje modul. När de är definierade kommer alla körningar att "
+"kontrolleras mot en av de tillgängliga mallarna (en per modul) och endast "
+"nya varningar kommer att visas."
 
-#. Description
-#: ../templates:28
-msgid "Remove templates in buggy 'tiger' versions"
-msgstr "Ta bort mallar i buggiga versioner av \"tiger"
+#~ msgid "Remove templates in buggy 'tiger' versions"
+#~ msgstr "Ta bort mallar i buggiga versioner av \"tiger"
 
-#. Description
-#: ../templates:28
-msgid "Initially Debian's 3.1 tiger versions were distributed with a bug that would cause templates to be created under /var/log/ instead of /var/log/tiger/. Normal operation assumes templates are under /var/log/tiger/ and these templates will not be useful in newer Tiger versions. You might want to preserve a copy of them (to use as templates) and move them manually under their proper location. The package will not do this automatically in order to avoid removing previous templates. Should we remove these files if any are found?"
-msgstr "Initialt sett var tiger-versionerna i Debian 3.1 utsända med en bugg som kunde orsaka att mallar skapades under /var/log/ istället för i /var/log/tiger/. Normal körning antar att mallarna finns under /var/log/tiger/ och dessa mallar kommer inte vara användbara i senare versioner av Tiger. Du kanske vill behålla en kopia av dessa (för att använda som nya mallar) och flytta dom manuellt under deras korrekta plats. Paketet kommer inte att göra detta automatiskt för att undvika att ta bort föregående mallar. Ska vi ta bort dessa filer om de påträffas?"
-
+#~ msgid ""
+#~ "Initially Debian's 3.1 tiger versions were distributed with a bug that "
+#~ "would cause templates to be created under /var/log/ instead of /var/log/"
+#~ "tiger/. Normal operation assumes templates are under /var/log/tiger/ and "
+#~ "these templates will not be useful in newer Tiger versions. You might "
+#~ "want to preserve a copy of them (to use as templates) and move them "
+#~ "manually under their proper location. The package will not do this "
+#~ "automatically in order to avoid removing previous templates. Should we "
+#~ "remove these files if any are found?"
+#~ msgstr ""
+#~ "Initialt sett var tiger-versionerna i Debian 3.1 utsända med en bugg som "
+#~ "kunde orsaka att mallar skapades under /var/log/ istället för i /var/log/"
+#~ "tiger/. Normal körning antar att mallarna finns under /var/log/tiger/ och "
+#~ "dessa mallar kommer inte vara användbara i senare versioner av Tiger. Du "
+#~ "kanske vill behålla en kopia av dessa (för att använda som nya mallar) "
+#~ "och flytta dom manuellt under deras korrekta plats. Paketet kommer inte "
+#~ "att göra detta automatiskt för att undvika att ta bort föregående mallar. "
+#~ "Ska vi ta bort dessa filer om de påträffas?"

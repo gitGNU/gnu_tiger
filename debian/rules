@@ -16,7 +16,7 @@ build-stamp:
 	dh_testdir
 
 	autoconf
-	./configure --with-tigerhome=/usr/lib/tiger --with-tigerwork=/var/run/tiger/work --with-tigerlog=/var/log/tiger --with-tigerbin=/usr/sbin --with-tigerconfig=/etc/tiger --prefix=/usr --mandir=/usr/share/man
+	./configure --with-tigerhome=/usr/lib/tiger --with-tigerwork=/var/lib/tiger/work --with-tigerlog=/var/log/tiger --with-tigerbin=/usr/sbin --with-tigerconfig=/etc/tiger --prefix=/usr --mandir=/usr/share/man
 	$(MAKE) all
 
 
@@ -55,7 +55,9 @@ install: build
 	#install -m 755 debian/tigexp debian/tiger/usr/sbin/
 	#install -m 755 tigercron debian/tiger/usr/lib/tiger/
 	install -m 600 cronrc debian/tiger/etc/tiger/
-	install -m 600 tigerrc debian/tiger/etc/tiger/
+	# Do not install tigerrc, it is handled by ucf since it is edited by Debconf prompts:
+	#install -m 600 tigerrc debian/tiger/etc/tiger/
+	-rm -f debian/tiger/etc/tiger/tigerrc
 	install -m 600 debian/tiger.default debian/tiger/etc/default/tiger
 	install -m 600 debian/debian.ignore debian/tiger/etc/tiger/tiger.ignore
 	install -m 644 version.h debian/tiger/usr/lib/tiger/

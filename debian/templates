@@ -22,15 +22,3 @@ _Description: Take a minute to customize 'tiger'
  all the runs will be checked against each one of the templates available
  (one per module) and only new warnings will be issued.
 
-Template: tiger/remove_mess
-Type: boolean
-Default: true
-_Description: Remove templates in buggy 'tiger' versions
- Initially Debian's 3.1 tiger versions were distributed with a bug that
- would cause templates to be created under /var/log/ instead of
- /var/log/tiger/. Normal operation assumes templates are under
- /var/log/tiger/ and these templates will not be useful in newer Tiger
- versions. You might want to preserve a copy of them (to use as templates)
- and move them manually under their proper location. The package will not
- do this automatically in order to avoid removing previous templates.
- Should we remove these files if any are found?

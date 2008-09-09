@@ -13,3 +13,9 @@ Program python \(pid [[:digit:]]+, parent [[:digit:]]+\) is using a deleted file
 Server \(squid\) .*  \(pid [[:digit:]]+\) is using deleted files
 # SSH users accessing remotely with X11 forwarding 'on'
 The process `sshd' is listening on socket 6[[:digit:]]+ (TCP on loopback interface) is run by .*
+# Identd
+The process .identd. is listening on socket 113 \(TCP on every interface\) is run by identd\.
+# Avahi daemon
+The process .avahi-daemon. is listening on socket [[:digit:]]+ \(UDP on every interface\) is run by avahi\.
+# Bind
+The process .named. is listening on socket [[:digit:]]+ \(UDP on every interface\) is run by bind\.

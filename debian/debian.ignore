@@ -28,3 +28,4 @@ The directory /dev/ida resides in a device directory.
 /dev/ptmx has world permissions
 /dev/gpmctl has world permissions
 /dev/gpmdata has world permissions
+File ".fetchmail-UIDL-cache" in the mail spool, owned by "fetchmail".

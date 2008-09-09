@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tiger_3.1-8\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-10 19:26+0200\n"
+"Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
+"POT-Creation-Date: 2008-09-09 03:34+0200\n"
 "PO-Revision-Date: 2003-03-29 23:43-0300\n"
 "Last-Translator: André Luís Lopes <andrelop@ig.com.br>\n"
 "Language-Team: Debian-BR Project <debian-l10n-portuguese@lists.debian.org>\n"
@@ -23,13 +23,15 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#. Type: string
 #. Description
-#: ../templates:4
+#: ../templates:1001
 msgid "Who should receive the daily mails?"
 msgstr "Quem deve receber as mensagens diarias?"
 
+#. Type: string
 #. Description
-#: ../templates:4
+#: ../templates:1001
 msgid ""
 "The user you enter below will receive all the emails that 'tiger' sends "
 "during the day when running the cron jobs. This does not mean that when "
@@ -44,13 +46,15 @@ msgstr ""
 "quaisquer administradores serão capazes de acessar os relatórios uma vez que "
 "os mesmos estarão disponíveis no diretório /var/log/tiger/."
 
+#. Type: note
 #. Description
-#: ../templates:13
+#: ../templates:2001
 msgid "Take a minute to customize 'tiger'"
 msgstr "Reserve um minuto para personalizar o 'tiger'"
 
+#. Type: note
 #. Description
-#: ../templates:13
+#: ../templates:2001
 msgid ""
 "You should customize the files at /etc/tiger/ to adapt to your local "
 "security policy. Firstly, customizing the kind of checks that will be made "
@@ -75,31 +79,27 @@ msgstr ""
 "todas as execuções serão checadas contra cada um dos modelos disponíveis (um "
 "por módulo) e somente novos avisos serão gerados."
 
-#. Description
-#: ../templates:28
-msgid "Remove templates in buggy 'tiger' versions"
-msgstr "Remover modelos em versões com erros do 'tiger'"
+#~ msgid "Remove templates in buggy 'tiger' versions"
+#~ msgstr "Remover modelos em versões com erros do 'tiger'"
 
-#. Description
-#: ../templates:28
-msgid ""
-"Initially Debian's 3.1 tiger versions were distributed with a bug that would "
-"cause templates to be created under /var/log/ instead of /var/log/tiger/. "
-"Normal operation assumes templates are under /var/log/tiger/ and these "
-"templates will not be useful in newer Tiger versions. You might want to "
-"preserve a copy of them (to use as templates) and move them manually under "
-"their proper location. The package will not do this automatically in order "
-"to avoid removing previous templates. Should we remove these files if any "
-"are found?"
-msgstr ""
-"Inicialmente as versões do Debian 3.1 do tiger foram distribuídas com um bug "
-"que fazia com que os modelos fossem criados sob /var/log ao invés de sob /"
-"var/log/tiger. Operações normais assumem que os modelos estejam sob /var/log/"
-"tiger/ e esses modelos não serão úteis em novas versões do Tiger. Você pode "
-"desejar preservar uma copia deles (para usar como modelos) e movê-los "
-"manualmente sob sua própria localização. O pacote não irá fazer isso "
-"automaticamente para evitar remover modelos anteriores. Esses arquivos devem "
-"ser removidos caso sejam encontrados ?"
+#~ msgid ""
+#~ "Initially Debian's 3.1 tiger versions were distributed with a bug that "
+#~ "would cause templates to be created under /var/log/ instead of /var/log/"
+#~ "tiger/. Normal operation assumes templates are under /var/log/tiger/ and "
+#~ "these templates will not be useful in newer Tiger versions. You might "
+#~ "want to preserve a copy of them (to use as templates) and move them "
+#~ "manually under their proper location. The package will not do this "
+#~ "automatically in order to avoid removing previous templates. Should we "
+#~ "remove these files if any are found?"
+#~ msgstr ""
+#~ "Inicialmente as versões do Debian 3.1 do tiger foram distribuídas com um "
+#~ "bug que fazia com que os modelos fossem criados sob /var/log ao invés de "
+#~ "sob /var/log/tiger. Operações normais assumem que os modelos estejam sob /"
+#~ "var/log/tiger/ e esses modelos não serão úteis em novas versões do Tiger. "
+#~ "Você pode desejar preservar uma copia deles (para usar como modelos) e "
+#~ "movê-los manualmente sob sua própria localização. O pacote não irá fazer "
+#~ "isso automaticamente para evitar remover modelos anteriores. Esses "
+#~ "arquivos devem ser removidos caso sejam encontrados ?"
 
 #~ msgid "root"
 #~ msgstr "root"
