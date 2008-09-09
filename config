@@ -398,7 +398,7 @@ checkfile()
     tempfile=`tempfile -d $WORKDIR` || tempfile=$WORKDIR/rcfile.$$
     $GREP -v '^#' $RCFILE |
     $SED -e 's/^\(.*\)=/export \1; \1=/' > $tempfile
-    . $WORKDIR/rcfile.$$
+    . $tempfile
     $RM -f $tempfile
   }
 
