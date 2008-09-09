@@ -175,18 +175,8 @@ MISCDIRS=./bin \
 	./scripts/sub \
 	./systems
 
-all: bin doc
-
-bin:
-	@if [ ! -d bin ]; then \
-	  mkdir bin; \
-	fi
-	cd c && $(MAKE) install
-
-doc:
-	@if [ ! -d html ]; then \
-	  mkdir html; \
-	fi
+all:
+	cd c && $(MAKE)
 	cd doc && $(MAKE)
 
 installdirs:
@@ -266,6 +256,12 @@ installconfig:
 	@chmod 644 $(DESTDIR)$(TIGERHOME)/config
 
 install: installdirs installbinaries installconfig installmanpages
+	@if [ ! -d bin ]; then \
+	    mkdir bin; \
+	fi
+	@if [ ! -d html ]; then \
+	    mkdir html; \
+	fi
 	cd c && $(MAKE) install
 	cd doc && $(MAKE) install
 	@echo "Copying miscellaneous dirs..."

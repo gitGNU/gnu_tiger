@@ -16,23 +16,27 @@
 #    GNU General Public License for more details.
 #
 #     Please see the file `COPYING' for the complete copyright notice.
-#
+
+
+# Installation program
+INSTALL=@INSTALL@
 
 TXTFILES = $(wildcard *.txt)
-HTMLFILES = $(patsubst %.txt,../html/%.html,$(TXTFILES))
+HTMLFILES = $(patsubst %.txt,%.html,$(TXTFILES))
 
-all: $(HTMLFILES) ../util/doc2html
+all: $(HTMLFILES)
 
 install:
+	$(INSTALL) -m 0644 *.html ../html/
 
-%.html : %.txt
-	../util/doc2html $<
+%.html : %.txt ../util/doc2html
+	sh ../util/doc2html 
 
 explain.idx: $(TXTFILES) ../util/genmsgidx
 	../util/genmsgidx
 
 clean:
-	-rm -f *.html
+	-rm -f ../html/*.html
 
 distclean: clean
-	-rm -f ../html/*.html explain.idx
+	-rm -f Makefile *.html explain.idx
