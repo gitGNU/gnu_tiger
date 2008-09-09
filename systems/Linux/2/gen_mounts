@@ -83,8 +83,6 @@ dirname()
   
 LOCAL_ONLY=$1
 CHKRO=$2
-WARN_UNKNOWN=$3
-[ -z "$WARN_UNKNOWN" ] && WARN_UNKNOWN="unknown"
 
 ronly()
 {
