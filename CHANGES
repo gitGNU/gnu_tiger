@@ -1,7 +1,7 @@
 NOTE: To read changes made to the Debian package (since
 August 23rd 2001) see the changelog.Debian file
 
-Changes (v 3.2.3-WIP) 
+Changes (v 3.2.3) 
 --------------------
 
 - SECURITY FIX: Fix a temporary race condition in the genmsgidx script (only
