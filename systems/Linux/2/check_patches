@@ -24,6 +24,8 @@
 #                Changed TigerInstallDir to .
 # 04/15/2003 jfs Added some TODOS
 # 01/15/2004 jfs Fixed dependancies
+# 10/19/2008 jfs Use UUID instead of UID since UID is not defined in all shells
+#                and config already setis UUID 
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -103,7 +105,7 @@ then
 elif [ -n "$APT" -a -x "$APT" ]
 then
 	tmplog="$WORKDIR/apt-get.out.tmp.$$"
-	[ "$UID" -gt 0  ] && message ERROR ptch05e "" "This script is not running as super-user, it will probably be unable to update the package database from it's sources."
+	[ "$UUID" -gt 0  ] && message ERROR ptch05e "" "This script is not running as super-user, it will probably be unable to update the package database from it's sources."
 
        	$APT update 1> /dev/null
        	$APT -s upgrade | $GREP "^Inst" | awk '{print $2}' > $tmplog
