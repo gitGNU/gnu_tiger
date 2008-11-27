@@ -17,8 +17,8 @@
 #
 # tigexp  - 06/13/93
 # tigexp  - 05/23/2003 - changed so that it is managed by autoconf
-# tigexp  - 11/27/2008 - proper handling of errors and existance (or
-#                        lack of idx file). Also, regenerate the index
+# tigexp  - 11/27/2008 - Proper handling of errors and existance (or
+#                        lack of) idx file. Also, regenerate the index
 #                        file only if running as root.
 #
 # This program retrieves information explaining what a given message 
