@@ -21,6 +21,7 @@
 # 08/13/2003 - jfs - Avoided bashism
 # 08/26/2008 - jfs - Fix temporary race condition by using tempfile
 #                    in those systems that have it
+# 11/27/2008 - jfs - Detect if we cannot write to the file and abort
 #
 #-----------------------------------------------------------------------------
 
@@ -93,6 +94,12 @@ LS=`findcmd ls`
 
 haveallof commands AWK LS BASENAME || exit 1
 haveallof variables BASEDIR || exit 1
+
+# Clear idx file and detect error
+> $BASEDIR/doc/explain.idx && {
+    echo "Error: Cannot write over the index file $BASEDIR/doc/explain.idx. Aborting"
+    exit 1
+}
 
 $LS $BASEDIR/doc/*.txt |
 while read infile 
