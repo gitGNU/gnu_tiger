@@ -24,7 +24,7 @@ INSTALL=@INSTALL@
 TXTFILES = $(wildcard *.txt)
 HTMLFILES = $(patsubst %.txt,%.html,$(TXTFILES))
 
-all: $(HTMLFILES)
+all: $(HTMLFILES) explain.idx
 
 install:
 	$(INSTALL) -m 0644 *.html ../html/
