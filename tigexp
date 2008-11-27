@@ -17,6 +17,9 @@
 #
 # tigexp  - 06/13/93
 # tigexp  - 05/23/2003 - changed so that it is managed by autoconf
+# tigexp  - 11/27/2008 - proper handling of errors and existance (or
+#                        lack of idx file). Also, regenerate the index
+#                        file only if running as root.
 #
 # This program retrieves information explaining what a given message 
 # (INFO, WARN, ALERT, FAIL or ERROR) given out by Tiger means.
@@ -177,26 +180,50 @@ params="$*"
 haveallcmds GREP FMT SED SORT LS || exit 1
 haveallfiles BASEDIR || exit 1
 
-(
+check_idx()
+{
  [ "$UUID" = "" ] && UNAME=`whoami`
 
+# Check if the index is up to date
  if [ "$UNAME" != "root" ] ; then 
   {
+# Not running as root, just warn if the index file is out of date, do not
+# regenerate it
     cd $BASEDIR/doc
     $LS -t
   } | {
     read file
     [ "$file" != "explain.idx" ] && {
-      $BASEDIR/util/genmsgidx $BASEDIR/doc/*.txt ||
 	echo "Warning: Explain index out of date and unable to rebuild it."
+        echo "Warning: Please regenerate it by running, as root, the following command: "
+        echo "Warning: cd $BASEDIR && util/genmsgidx doc/*txt"
     }
   }
+  else
+  {
+# Not running as root, just warn if the index file is out of date, do not
+# regenerate it
+    cd $BASEDIR/doc
+    $LS -t
+  } | {
+    read file
+    [ "$file" != "explain.idx" ] && {
+      echo "Rebuilding explain index file"
+      $BASEDIR/util/genmsgidx $BASEDIR/doc/*.txt 
+    }
+  } 
   fi
-)
+}
 
 explain()
 {
   message="$1"
+  if [ ! -e "$BASEDIR/doc/explain.idx" ] ; then
+    echo "Error: Explain index file ($BASEDIR/doc/explain.idx) does not exist."
+    echo "Error: Please create it by running, as root, the following command: "
+    echo "Error: cd $BASEDIR && util/genmsgidx doc/*txt"
+    exit 1
+  fi
   $GREP "$message" $BASEDIR/doc/explain.idx |
   {
     read msgid file start end
@@ -214,6 +241,10 @@ explain()
 explainfile()
 {
   file=$1
+  if [ ! -r "$file" ] ; then
+    echo "Error: Cannot read file provided as argument: $file"
+    exit 1
+  fi
   $GREP '^--[A-Z]*-- \[.*\]' $file |
   $SED -e 's/^.*\[\(.*\)\].*$/\1/' |
   $SORT -u |
@@ -263,10 +294,13 @@ shift
 if [ "$1" = "-f" ]; then
   explainfile $2
 elif [ "$1" = "-F" ]; then
+  check_idx
   explaininsert $2
 elif [ $# -eq 1 ]; then
+  check_idx
   explain "$1"
 else
+  check_idx
   for msg
   do
     echo "[$msg]"
