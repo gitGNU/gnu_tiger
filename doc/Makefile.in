@@ -33,7 +33,7 @@ install:
 	sh ../util/doc2html 
 
 explain.idx: $(TXTFILES) ../util/genmsgidx
-	../util/genmsgidx
+	BASEDIR=../ ../util/genmsgidx
 
 clean:
 	-rm -f ../html/*.html
