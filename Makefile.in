@@ -166,7 +166,8 @@ MISCFILES=./initdefs \
 	./util/mkfilelst \
 	./util/mksig \
 	./util/setsh \
-	./util/sgrep
+	./util/sgrep \
+        ./doc/explain.idx
 
 MISCDIRS=./bin \
 	./check.d \
@@ -265,7 +266,7 @@ install: installdirs installbinaries installconfig installmanpages
 	cd c && $(MAKE) install
 	cd doc && $(MAKE) install
 	@echo "Copying miscellaneous dirs..."
-	@for dir in $(MISCDIRS); do \
+	for dir in $(MISCDIRS); do \
 	  tar cf - $$dir | (cd $(DESTDIR)$(TIGERHOME); tar xpf -); \
 	done
 	@echo "Copying miscellaneous files..."
@@ -298,13 +299,13 @@ distribution:
 
 clean: 
 	cd c && $(MAKE) clean
-	cd doc && $(MAKE) clean
+	cd doc && $(MAKE) -f Makefile.in clean
 	-find bin/ -type f -exec rm -f {} \;
 	-rm -f man/index.bt 
 
 distclean: clean
 	cd c && $(MAKE) distclean 
-	cd doc && $(MAKE) distclean
+	cd doc && $(MAKE) -f Makefile.in distclean
 	-find log/ -type f -exec rm -f {} \;
 	-find run/ -type f -exec rm -f {} \;
 	-rm -f Makefile config.{status,log,cache} man/tiger.8 man/tigercron.8
