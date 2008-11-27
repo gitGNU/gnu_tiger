@@ -52,7 +52,8 @@
 #                                 - Added bind as a non-local FS (Debian bug #451879)
 #                                 - Skip udev fs even if its in a tmpfs FS, prevent analysis
 #                                   of unexistant symlinks (See Debian bug 434333)
-#
+# Linux/2/gen_mounts - 11/27/2008 - Added ecryptfs, used by ecryptfs-utils (See Debian bug 506512)
+#                                 - Fix bashism (Debian bug #505939)
 #-----------------------------------------------------------------------------
 #
 
@@ -129,6 +130,7 @@ localfs()
   [ "$1" = "fuse.truecrypt" ] && LOCAL=0        # Encrypted filesystem, used in Ubuntu 'hardy'
   [ "$1" = "fuse.encfs" ] && LOCAL=0            # Encrypted filesystem
   [ "$1" = "fuse.gvfs-fuse-daemon" ] && LOCAL=0 # Used in Ubuntu 'hardy'
+  [ "$1" = "ecryptfs" ] && LOCAL=0              # Encrypted filesystem used by ecryptfs-utils
   # Filesystems of other OS
   [ "$1" = "msdos" ] && LOCAL=1
   [ "$1" = "umsdos" ] && LOCAL=1
@@ -208,7 +210,7 @@ localfs()
 
   # The rest we warn about
   if [ "$LOCAL" -eq 2 ] ; then
-    if [ -z "$Tiger_FSScan_WarnUnknown" ] || [ "$Tiger_FSScan_WarnUnknown" == "Y" ] ; then
+    if [ -z "$Tiger_FSScan_WarnUnknown" ] || [ "$Tiger_FSScan_WarnUnknown" = "Y" ] ; then
         echo "--CONFIG-- [con010c] Filesystem '$1' used by '$2' is not recognised as a valid filesystem" >&2
     fi
     LOCAL=1
