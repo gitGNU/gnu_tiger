@@ -17,6 +17,7 @@
 #
 # check_perms - 06/14/93
 #
+# 05/07/2009 jfs Fixed use of quotes in check_perms (Savannah bug #26479)
 # 08/14/2003 jfs Added OUTPUTMETHOD to dependancies
 # 05/01/2003 jfs Fixed dependancies
 # 11/05/2002 jfs Small fix to prevent shell expansion to ocur while testing
@@ -183,7 +184,7 @@ check_file()
     getpermit $file |
     while read filename rowner rgroup rur ruw rux rgr rgw rgx ror row rox rsuid rsgid rstk
     do
-      [ ! $TESTLINK '$filename' ] && [ -f '$filename' -o -d '$filename' ] &&
+      [ ! $TESTLINK "$filename" ] && [ -f "$filename" -o -d "$filename" ] &&
       if [ "$file" = "$filename" ]; then
 	check_file "$filename"
       else
