@@ -96,10 +96,10 @@ haveallof commands AWK LS BASENAME || exit 1
 haveallof variables BASEDIR || exit 1
 
 # Clear idx file and detect error
-> $BASEDIR/doc/explain.idx && {
-    echo "Error: Cannot write over the index file $BASEDIR/doc/explain.idx. Aborting"
-    exit 1
-}
+#> $BASEDIR/doc/explain.idx && {
+#    echo "Error: Cannot write over the index file $BASEDIR/doc/explain.idx. Aborting"
+#    exit 1
+#}
 
 $LS $BASEDIR/doc/*.txt |
 while read infile 

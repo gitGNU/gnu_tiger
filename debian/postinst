@@ -50,7 +50,7 @@ case "$1" in
         $CAT $PKGCONFIG | sed -e "s/^Tiger_Mail_RCPT=.*$/Tiger_Mail_RCPT=\"$MAIL_RCPT\"/"  > $tempfile
 
         # Use UCF to handle file changes
-        ucf $tempfile $CONFIG
+	ucf --debconf-ok $tempfile $CONFIG
         ucfr tiger $CONFIG
         rm -f $tempfile
     ;;

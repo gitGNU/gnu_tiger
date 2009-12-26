@@ -1,3 +1,106 @@
+tiger (1:3.2.3-1) unstable; urgency=low
+
+  * New upstream release
+  * Updated to Debian Policy 3.8.3
+  * Updated debhelper dependency version to 7.
+  * Updated debhelper compatibility to 7.
+  * Added myself as Comaintainer, 
+    Francisco Manuel Garcia Claramonte <francisco@debian.org>
+  * Removed the Diff depends (Closes: #544113, #544041).
+    Thanks to Santiago Vila <sanvila@unex.es> and 
+    Karl Ferdinand Ebert <kfebert@gmail.com> for the patch.
+  * Changes to make the package lintian clean. 
+     + Updated dh_clean call to dh_prep in debian/rules.
+     + Added ${misc:Depends} to Depends debian/control field of
+       tiger and tiger-otheros binary packages.
+  * Removed unneeded commands to create symlinks in debian/rules.
+  * Removed the clear idx file code in util/genmsgidx to allow build the
+    Debian package.
+
+ -- Francisco Manuel Garcia Claramonte <francisco@debian.org>  Thu, 03 Dec 2009 21:52:06 +0100
+
+tiger (1:3.2.2-11) unstable; urgency=low
+
+  * Sort the system/Linux/2/inetd file since 'join' complains about it not being
+    sorted when used in check_inetd (Closes: #524783)
+  * Add symbolic links so users can create the issue and issue.net templates they  
+    want to check against when running check_issue in /etc/tiger/ (Closes: #511970)
+  * scripts/find_files: Use patch provided by Khalid Shukri in order to complain
+    from danging symlinks properly so that they can be tiger.ignore'd (Closes: 434333)
+  * debian/debian.ignore: 
+     - Add an ignore message to remove the dangling symlinks that are udev-related
+     - Add an ignore message for /dev/log since world-writable permissions for
+       that file are standard in Debian (Closes: 417939)
+  * initdefs: Change error message when a file value definition is empty
+  * systems/Linux/2/check_umask: More extensive umask checks also covering different
+    analysis for each one of the available shells in order to provide more meaningful
+    information.
+  * systems/Linux/2/check_rcumask: Remove shell login umask definitions from the file
+    (both bash and csh/tcsh) since these do not apply to the script (i.e. are not
+    init.d related) and add /etc/init.d/rc handling (Closes: 443807)
+  * doc/misc.txt: Add new messages for new umask analysis covered in check_umask
+  * doc/filesys.txt: Add a description of the new warning message introduced by the
+    above patch.
+  * doc/config.txt: Document that this happens also when the configuration system
+    was not able to define a valid file and set a value for the file definition.
+  * debian/rules: Adjust the permissions of /var/lib/tiger/work and /var/log/tiger/ 
+    so that they are 0700. (Closes: #512078)
+  * debian/preinst: Adjust the permissions of /var/lib/tiger/work and
+    /var/log/tiger/ when upgrading so that they are set to 0700.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Thu, 21 May 2009 00:26:23 +0200
+
+tiger (1:3.2.2-10) unstable; urgency=low
+
+  * Fix bug in scripts/check_perms
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Thu, 07 May 2009 23:55:22 +0200
+
+tiger (1:3.2.2-9) unstable; urgency=low
+
+  * Use --debconf-ok when calling ucf (Closes: 517798, 521620)
+  * Update check_release to reflect latest Debian release (Closes: 523700)
+  * Fix systems/Linux/2/config so that it uses /etc/apache2 in Debian if it exists
+    and /etc/apache otherwise. (Closes: 523699)
+  * Change the wording of errors in tigerexp when the variable does not have a value (Closes: 523699)
+  * Throw away errors from executing 'df -t nfs' in scripts/check_network (Closes: 511803)
+  * Linux/2/gen_mounts: Added davfs, fuse and ext4 (Closes: 524722, 498468, 512567)
+  * Update list of Debian advisories
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Sat, 25 Apr 2009 14:01:26 +0200
+
+tiger (1:3.2.2-8) unstable; urgency=low
+
+  * Acknowledge NMU (Closes: #503282)
+  * Fix Makefiles so that the explanation index file is generated and distributed
+    properly (Closes: #507028)
+  * system/Linux/2/gen_mounts:
+     - Added ecryptfs, used by ecryptfs-utils (Closes: 506512)
+     - Fix bashism (Closes: #505939)
+  * Update Standards-Version to 3.8.0:
+     - Added a Homepage field in debian/control
+  * Use debhelper version 5
+  * Lintian fix:
+     - Comment out DH_COMPAT definition in debian/rules
+     - Fixed debian/watch file used by uscan by adding a version and a proper
+       location for upstream updates
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Thu, 27 Nov 2008 23:47:16 +0100
+
+tiger (1:3.2.2-7.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Patched Makefile.in to make clean and distclean targets use
+    doc/Makefile.in when recursing the clean target. (Closes: #503282)
+
+ -- Jonny Lamb <jonny@debian.org>  Fri, 24 Oct 2008 16:14:23 +0100
+
+tiger (1:3.2.2-7) unstable; urgency=low
+
+  * Fix bashism in check_patches script (Closes: #502672)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Sun, 19 Oct 2008 12:45:38 +0200
+
 tiger (1:3.2.2-6) unstable; urgency=medium
 
   * Bring changes from CVS to gen_mounts, amongst other fixes:

@@ -2,12 +2,14 @@ Source: tiger
 Section: admin
 Priority: optional
 Maintainer: Javier Fernandez-Sanguino Pen~a <jfs@debian.org>
-Build-Depends: debhelper (>= 4.1.13), autoconf, po-debconf (>= 0.5.0)
-Standards-Version: 3.7.3
+Uploaders: Francisco Manuel Garcia Claramonte <francisco@debian.org>
+Build-Depends: debhelper (>= 7), autoconf, po-debconf (>= 0.5.0)
+Standards-Version: 3.8.3
+Homepage: http://savannah.nongnu.org/projects/tiger/
 
 Package: tiger
 Architecture: any
-Depends: diff (>=2.0), net-tools, binutils, bsdmainutils, debconf | debconf-2.0, ucf, ${shlibs:Depends}
+Depends: net-tools, binutils, bsdmainutils, debconf | debconf-2.0, ucf, ${shlibs:Depends}, ${misc:Depends}
 Recommends: sendmail | mail-transport-agent, john, chkrootkit
 Suggests: lsof
 Description: Report system security vulnerabilities
@@ -23,7 +25,7 @@ Description: Report system security vulnerabilities
 
 Package: tiger-otheros
 Architecture: any
-Depends: tiger
+Depends: tiger, ${misc:Depends}
 Description: Scripts to run Tiger in other operating systems
  TIGER, or the 'tiger' scripts, is a set of Bourne shell 
  scripts, C programs and data files which are used to perform
