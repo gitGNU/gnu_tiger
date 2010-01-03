@@ -1,7 +1,7 @@
 Template: tiger/mail_rcpt
 Type: string
 Default: root
-_Description: Who should receive the daily mails?
+_Description: Recipient of the daily mails:
  The user you enter below will receive all the emails that 'tiger' sends
  during the day when running the cron jobs. This does not mean that when
  executing the 'tiger' program standalone this user will receive the

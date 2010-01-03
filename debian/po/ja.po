@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
-"POT-Creation-Date: 2008-09-09 03:34+0200\n"
+"POT-Creation-Date: 2010-01-02 01:05+0100\n"
 "PO-Revision-Date: 2003-11-23 10:45+0900\n"
 "Last-Translator: Hideki Yamane <henrich@samba.gr.jp>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
@@ -27,7 +27,9 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../templates:1001
-msgid "Who should receive the daily mails?"
+#, fuzzy
+#| msgid "Who should receive the daily mails?"
+msgid "Recipient of the daily mails:"
 msgstr "日次レポートのメールを誰が受け取りますか?"
 
 #. Type: string

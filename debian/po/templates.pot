@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
-"POT-Creation-Date: 2008-09-09 03:34+0200\n"
+"POT-Creation-Date: 2010-01-02 01:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../templates:1001
-msgid "Who should receive the daily mails?"
+msgid "Recipient of the daily mails:"
 msgstr ""
 
 #. Type: string

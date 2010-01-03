@@ -69,7 +69,11 @@ install: build
 	#ln -fs ../../../../../etc/tiger/issue debian/tiger/usr/lib/tiger/systems/Linux/issue.net
 	#ln -fs ../../../../../etc/tiger/issue.net debian/tiger/usr/lib/tiger/systems/Linux/issue.net
 
-
+	# Adjust executable permissions to some shell scripts
+	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/1/check
+	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/1/gendlclients
+	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/1/getdisks
+	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/2/update_advisories.sh
 
 # Build architecture-independent files here.
 binary-indep: build install

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tiger_1:3.2.1-7-da\n"
 "Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
-"POT-Creation-Date: 2008-09-09 03:34+0200\n"
+"POT-Creation-Date: 2010-01-02 01:05+0100\n"
 "PO-Revision-Date: 2004-02-27 11:22+0100\n"
 "Last-Translator: Claus Hindsgaul <claus_h@image.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -28,7 +28,9 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../templates:1001
-msgid "Who should receive the daily mails?"
+#, fuzzy
+#| msgid "Who should receive the daily mails?"
+msgid "Recipient of the daily mails:"
 msgstr "Hvem skal modtage de daglige breve?"
 
 #. Type: string

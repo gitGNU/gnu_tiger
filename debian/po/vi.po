@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tiger 1/3.2.1-26\n"
 "Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
-"POT-Creation-Date: 2008-09-09 03:34+0200\n"
+"POT-Creation-Date: 2010-01-02 01:05+0100\n"
 "PO-Revision-Date: 2005-08-10 16:52+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
@@ -19,7 +19,9 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../templates:1001
-msgid "Who should receive the daily mails?"
+#, fuzzy
+#| msgid "Who should receive the daily mails?"
+msgid "Recipient of the daily mails:"
 msgstr "Ai nên nhận các thư hàng ngày?"
 
 #. Type: string

@@ -13,9 +13,13 @@ tiger (1:3.2.3-1) unstable; urgency=low
      + Updated dh_clean call to dh_prep in debian/rules.
      + Added ${misc:Depends} to Depends debian/control field of
        tiger and tiger-otheros binary packages.
+     + Adjusted executable permissions to some shell scripts.
   * Removed unneeded commands to create symlinks in debian/rules.
   * Removed the clear idx file code in util/genmsgidx to allow build the
     Debian package.
+  * Updated template description to avoid make a question, according to Debian
+    Developer's Reference (6.5.4.2.1). Updated debian/po/* files. 
+    Updated spanish translation.
 
  -- Francisco Manuel Garcia Claramonte <francisco@debian.org>  Thu, 03 Dec 2009 21:52:06 +0100
 

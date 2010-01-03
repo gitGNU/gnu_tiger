@@ -26,8 +26,8 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../templates:1001
-msgid "Who should receive the daily mails?"
-msgstr "¿Quién debería recibir los correos diarios?"
+msgid "Recipient of the daily mails:"
+msgstr "Destinatario de los correos diarios:"
 
 #. Type: string
 #. Description
