@@ -75,6 +75,10 @@ install: build
 	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/1/getdisks
 	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/2/update_advisories.sh
 
+	# Remove unneeded Makefile files.
+	rm -f debian/tiger/usr/lib/tiger/doc/Makefile
+	rm -f debian/tiger/usr/lib/tiger/doc/Makefile.in
+
 # Build architecture-independent files here.
 binary-indep: build install
 # We have nothing to do by default.

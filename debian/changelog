@@ -20,6 +20,8 @@ tiger (1:3.2.3-1) unstable; urgency=low
   * Updated template description to avoid make a question, according to Debian
     Developer's Reference (6.5.4.2.1). Updated debian/po/* files. 
     Updated spanish translation.
+  * Added commands in debian/rules to remove unneeded Makefiles files in Debian
+    package.
 
  -- Francisco Manuel Garcia Claramonte <francisco@debian.org>  Thu, 03 Dec 2009 21:52:06 +0100
 
