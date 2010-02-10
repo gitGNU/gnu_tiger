@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Javier Fernandez-Sanguino Pen~a <jfs@debian.org>
 Uploaders: Francisco Manuel Garcia Claramonte <francisco@debian.org>
 Build-Depends: debhelper (>= 7), autoconf, po-debconf (>= 0.5.0)
-Standards-Version: 3.8.3
+Standards-Version: 3.8.4
 Homepage: http://savannah.nongnu.org/projects/tiger/
 
 Package: tiger

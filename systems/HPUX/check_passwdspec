@@ -98,14 +98,14 @@ do
 
       # Make sure the password hash only contains valid characters.
       hash=`$AWK -F: '/u_pwd=/ { print substr($2,7) }' $tcbfile`
-      [[ "$hash" != +([a-zA-Z0-9\./]) ]] && continue
+      [ "$hash" != +([a-zA-Z0-9\./]) ] && continue
 
       # Valid password hash without an password expiration date.
       message WARN pass19w "" "Login ID $login does not have password aging enabled."
       continue
     }
 
-    [[ "$hash" != [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./],+([a-zA-Z0-9\./]) ]] && {
+    [ "$hash" != [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./],+([a-zA-Z0-9\./]) ] && {
       # Valid password hash without an password expiration date.
       message WARN pass19w "" "Login ID $login does not have password aging enabled."
     }

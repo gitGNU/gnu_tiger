@@ -87,7 +87,7 @@ do
 
   while read dev parm good level mesgid mesg
   do
-    ([ -z "$dev" ] || [[ $dev = \#* ]]) && continue
+    ([ -z "$dev" ] || [ $dev = \#* ]) && continue
     val=`$NDD -get $dev $parm 2>/dev/null`
     eval "case \"$val\" in
         $good)

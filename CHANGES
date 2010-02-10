@@ -1,6 +1,21 @@
 NOTE: To read changes made to the Debian package (since
 August 23rd 2001) see the changelog.Debian file
 
+Changes (v 3.2.4)
+--------------------
+
+- Fixed some bashisms in files:
+   * systems/default/check_ndd, line 90.
+   * systems/HPUX/check_passwdspec, lines 101, 108.
+
+- Fixed a problem in the sh script file scripts/sub/check_suid
+  finding the owner of files. 
+
+- Updated mailing lists info in README
+
+-...More changes in progress...
+
+
 Changes (v 3.2.3) 
 --------------------
 

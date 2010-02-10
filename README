@@ -40,15 +40,15 @@ Mailing lists
 There are now two mailing lists available for the 'tiger' at
 savannah.gnu.org. These two mailing lists are:
 
-- a user's mailing list: tiger-user@mail.freesoftware.fsf.org
+- a user's mailing list: tiger-user@nongnu.org
     Dedicated to users of the Tiger tool, feel free to ask here any questions
     on how to run the tool, configure it or adapt it to your system.
-    http://mail.freesoftware.fsf.org/mailman/listinfo/tiger-user
+    http://lists.nongnu.org/mailman/listinfo/tiger-user
 
-- a developer's mailing list:  tiger-devel@mail.freesoftware.fsf.org
+- a developer's mailing list:  tiger-devel@nongnu.org
     If you want to help us improve Tiger this is where all discussion on 
     improvements on the tool take place.
-    http://mail.freesoftware.fsf.org/mailman/listinfo/tiger-devel
+    http://lists.nongnu.org/mailman/listinfo/tiger-devel
 
 Note that the previous mailing list (at 'majordomo@net.tamu.edu') does
 no longer work.
@@ -113,3 +113,4 @@ in this release.
 
 First version by Doug.Schales@net.tamu.edu
 Last update by Javier Fernandez-Sanguino
+Last update by Francisco Manuel García Claramonte (11/02/2010)
