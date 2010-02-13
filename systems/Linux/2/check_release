@@ -25,6 +25,7 @@
 # 01/15/2004 jfs       Updated RedHat version (now it's 9 or greater), but
 #            added a note regarding Progeny support...
 # 03/21/2005 jfs       Use EGREP instead of grep -E
+# 04/25/2007 jfs       Update Debian version, current is 5.0
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -79,6 +80,7 @@ echo "# Checking OS release..."
 haveallcmds CUT EGREP RM  || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
+# This code only works for old redhat releases, it does not cover Red Hat Enterprise or CentOS
 if [ -e /etc/redhat-release ]
 then
         REDHAT_VERSION=`$CUT -f5 -d' ' /etc/redhat-release`
@@ -91,7 +93,9 @@ then
 		# Also notice that Progeny does provide official support
 		# for 7.2, 7.3, 8.0 and 9.0 starting January 1, 2004
 		# (but only for x86) see http://transition.progeny.com/
-		if [ $MAJOR -lt 9 ]
+
+                # Note: There is no RedHat 10, used only for comparison
+		if [ $MAJOR -lt 10 ]
 		then
 			message FAIL osv001f "" "Out of date Redhat Linux version $REDHAT_VERSION"
 
@@ -121,10 +125,10 @@ then
             then
                 MAJOR=`echo $DEBIAN_VERSION | $CUT -d \. -f 1`
                 MINOR=`echo $DEBIAN_VERSION | $CUT -d \. -f 2`
-                if [ "$MAJOR" -lt 3 ]
+                if [ "$MAJOR" -lt 5 ]
                 then
                         message FAIL osv002f "" "Out of date Debian GNU/Linux version \`$DEBIAN_VERSION'"
-                elif [ "$MAJOR" -eq 3 -a "$MINOR" -lt 0 ]
+                elif [ "$MAJOR" -eq 5 -a "$MINOR" -lt 0 ]
                 then
                         message FAIL osv002f "" "Out of date Debian GNU/Linux version \`$DEBIAN_VERSION'"
                 fi
