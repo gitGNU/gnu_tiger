@@ -20,6 +20,7 @@
 # tigexp  - 11/27/2008 - Proper handling of errors and existance (or
 #                        lack of) idx file. Also, regenerate the index
 #                        file only if running as root.
+# tigexp  - 04/25/2009 - proper wording for error messages
 #
 # This program retrieves information explaining what a given message 
 # (INFO, WARN, ALERT, FAIL or ERROR) given out by Tiger means.
@@ -61,7 +62,7 @@ haveallcmds()
     set X $__cmdstr
     __cmd=$2
     if [ ! -n "$__cmdstr" ]; then
-      echo "--ERROR-- [init001e] Don't have required command $__file."
+      echo "--ERROR-- [init001e] Don't have a value for required command $__file."
       __retval=1
     elif [ ! -f "$__cmd" ]; then
       echo "--ERROR-- [init004e] \`$__cmd' is not executable (command $__file)."
@@ -79,10 +80,10 @@ haveallfiles()
   do
     eval __file=\$$__var
     if [ ! -n "$__file" ]; then
-      echo "--ERROR-- [init005e] Don't have required file $__var."
+      echo "--ERROR-- [init005e] Don't have a value for required file or directory $__var."
       __retval=1
     elif [ ! -f "$__file" -a ! -d "$__file" ]; then
-      echo "--ERROR-- [init006e] \`$__file' does not exist (file $__var)."
+      echo "--ERROR-- [init006e] \`$__file' does not exist (file or directory $__var)."
       __retval=1
     fi
   done
