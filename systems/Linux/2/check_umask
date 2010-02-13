@@ -1,0 +1,202 @@
+#!/bin/sh
+#
+#     tiger - A UN*X security checking system
+#     Copyright (C) 2003, 2009 Javier Fernandez-Sanguino Pen~a
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2, or (at your option)
+#    any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#     Please see the file `COPYING' for the complete copyright notice.
+#
+# check_umask - 04/15/2003
+#
+# Checks if there is a umask setting for login shells so that users
+# are not (by default) creating files witn insecure permissions.
+#
+# This check has been separated from check_logfiles since it's a broader check.
+# The command requirements have been modified to adjust to what it's really
+# needed.
+#
+# 05/21/2009 - jfs - Enhance checks so that different messages are provided
+#                    based on installed shells
+# 01/13/2004 - jfs - Fixed syntax error in the previous patch
+# 10/19/2003 - jfs - Applied patch from Ryan Bradetich adding 077 umask
+#              to the valid list.
+# 08/09/2003 - jfs - Fixed the script so it does not grok if no valid
+#              umask entries are available
+# 05/01/2003 - jfs - Fixed dependancies
+#
+#-----------------------------------------------------------------------------
+# TODO
+# - The script will not work properly if the 'umask' string is present 
+# in the script but it's not a valid call to the umask setting. 
+# It will not work properly either if more than 1 occurances of umask are 
+# present.
+# - The script does not handle UMASK definition in /etc/login.defs if defined in
+#   octal mode
+# - The script does not handle umask when it is defined through the pam_umask
+#   service for all shells
+# 
+#-----------------------------------------------------------------------------
+#
+TigerInstallDir='.'
+
+#
+# Set default base directory.
+# Order or preference:
+#      -B option
+#      TIGERHOMEDIR environment variable
+#      TigerInstallDir installed location
+#
+basedir=${TIGERHOMEDIR:=$TigerInstallDir}
+
+for parm
+do
+   case $parm in
+   -B) basedir=$2; break;;
+   esac
+done
+
+#
+# Verify that a config file exists there, and if it does
+# source it.
+#
+[ ! -r $basedir/config ] && {
+  echo "--ERROR-- [init002e] No 'config' file in \`$basedir'."
+  exit 1
+}
+
+. $basedir/config
+
+. $BASEDIR/initdefs
+
+#
+# If run in test mode (-t) this will verify that all required
+# elements are set.
+#
+[ "$Tiger_TESTMODE" = 'Y' ] && {
+  haveallcmds  CUT EXPAND GREP HEAD SED TAIL WC || exit 1
+  haveallfiles BASEDIR WORKDIR || exit 1
+  haveallvars TESTLINK HOSTNAME
+  
+  echo "--CONFIG-- [init003c] $0: Configuration ok..."
+  exit 0
+}
+
+#------------------------------------------------------------------------
+
+echo
+echo "# Checking for correct umask settings for user login shells..."
+
+haveallcmds  CUT EXPAND GREP HEAD SED TAIL WC || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
+
+
+#####
+# Check to ensure that the umask is set correctly
+#####
+
+Foundumask=0
+
+# Files to look for include:
+# - /etc/login.defs : used by login (PAM) to set common values across any login shell
+# - /etc/profile: used by Bash
+# - /etc/bash.bashrc: used by Bash
+# - /etc/bashrc: used by Bash
+# - /etc/csh.login: used by csh and tcsh
+# - /etc/csh.cshrc: used by csh and tcsh
+# - /etc/csh/login.d/*: used by csh and tcsh
+
+# First check PAM's default since it applies to all shells
+GLOBALFILE="/etc/login.defs"
+if [ -r $GLOBALFILE ] ; then
+    GLOBALUMASK=`$GREP  ^UMASK $GLOBALFILE  \
+           | $EXPAND  \
+           | $CUT -d" " -f3`
+fi
+
+if [ -z "$GLOBALUMASK" ]; then
+	message WARN misc026w "" "There is no default umask settings for user login shells in $GLOBALFILE"
+else
+    [ "$GLOBALUMASK" != "002" -a "$GLOBALUMASK" != "022" -a "$GLOBALUMASK" != "027" -a "$GLOBALUMASK" != "077" ] && 
+        message FAIL misc022f '' "The default umask setting in $GLOBALFILE for users is insecure ($GLOBALUMASK)"
+fi
+
+check_umask()
+{
+   file=$1
+   [ ! -r "$file" ] && return 0
+
+    Occurance=`$GREP umask $file |$GREP -v ^# | $WC -l`
+
+     if [ $Occurance -gt 0 ]; then
+	Foundumask=1
+	UMASK=`$GREP umask $file  \
+           | $GREP -v ^\# \
+           | $EXPAND  \
+           | $HEAD -n 1 \
+           | $SED -e "s/^.*umask//"\
+           | $CUT -d" " -f2`
+
+        if [ -n "$UMASK" ] ; then
+        [ "$UMASK" != "002" -a "$UMASK" != "022" -a "$UMASK" != "027" -a "$UMASK" != "077" ] && 
+		message FAIL misc022f '' "The umask setting in $file for users is insecure ($UMASK)"
+        else
+                message WARN misc021w "" "There are no valid umask definitions in $file"
+        fi
+     fi
+     if [ $Occurance -gt 1 ]; then
+            message WARN misc023w '' "There are more than one umask entry in $file (total of $Occurance umask definitions)"
+     fi
+   return $Occurance
+}
+
+# Dash
+# Note: Dash only reads /etc/profile so analyse this one first
+shellname="dash"
+Findumask=0
+check_umask /etc/profile || Findumask=1
+# Warn if dash is installed and no definitions have been found
+if [ $Findumask -eq 0 ] && [ -x /bin/dash ] ; then
+        message WARN misc021w "" "There is no umask definition for the $shellname shell"
+fi
+# Same with ksh
+shellname="ksh"
+if [ $Findumask -eq 0 ] && [ -x /bin/ksh ] ; then
+        message WARN misc021w "" "There is no umask definition for the $shellname shell"
+fi
+
+# Bash
+shellname="bash"
+# Do not reset Findumask here:
+# In addition to /etc/profile (tested previously) bash manages other
+# configuration files for login shells:
+for file in /etc/bash.bashrc /etc/bashrc
+do
+    check_umask $file || Findumask=1
+done
+# Warn if bash is installed and no definitions have been found
+if [ $Findumask -eq 0 ] && [ -x /bin/bash ] ; then
+        message WARN misc021w "" "There is no umask definition for the $shellname shell"
+fi
+
+# Csh/Tcsh
+shellname="csh/tcsh"
+Findumask=0
+for file in /etc/csh.login /etc/csh.cshrc /etc/csh/login.d/* 
+do
+    check_umask $file || Findumask=1
+done
+# Warn if csh/tcsh  are installed and no definitions have been found
+if [ $Findumask -eq 0 ] && [ -x /bin/csh -o -x /usr/bin/tcsh ] ; then
+        message WARN misc021w "" "There is no umask definition for the $shellname shell"
+fi
+
+
