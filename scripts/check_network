@@ -542,7 +542,7 @@ sub check_nfs {
 sub check_nfs_client {
 
   # if NFS client is bad too....
-  open(IN,"/bin/df -t nfs|");
+  open(IN,"/bin/df -t nfs 2>/dev/null|");
   <IN>; # toss header
   my $bad = 0;
   while(<IN>) {
