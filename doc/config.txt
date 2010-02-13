@@ -98,7 +98,9 @@ indicates a configuration error.
 %init005e
 The indicated variable, which should contain the pathname to an
 input file or work directory does not have a value.  This indicates
-that either full support is not available for this platform,
+that either full support is not available for this platform, that
+the system tried to find a valid file to set a value for the variable
+but was not able to 
 or that there is a configuration error.
 %init006e
 An input file required for performing a test is not available.  This
