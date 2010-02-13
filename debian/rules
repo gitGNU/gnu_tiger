@@ -66,9 +66,9 @@ install: build
 	chmod 0700 debian/tiger/var/log/tiger
 
 	# Create symbolic links for template files
-	#ln -fs ../../../../../etc/tiger/issue debian/tiger/usr/lib/tiger/systems/Linux/issue.net
-	#ln -fs ../../../../../etc/tiger/issue.net debian/tiger/usr/lib/tiger/systems/Linux/issue.net
-
+	ln -fs ../../../../../etc/tiger/issue debian/tiger/usr/lib/tiger/systems/Linux/issue.net
+	ln -fs ../../../../../etc/tiger/issue.net debian/tiger/usr/lib/tiger/systems/Linux/issue.net
+	
 	# Adjust executable permissions to some shell scripts
 	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/1/check
 	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/1/gendlclients
@@ -99,10 +99,9 @@ binary-arch: build install
 	dh_link
 	dh_strip -XHPUX -XSunOS -XAIX -XIRIX -XNeXT -XMacOSX
 	dh_compress
-	dh_fixperms
 	dh_fixperms  \
-                --exclude var/lib/tiger/work \
-                --exclude var/log/tiger
+		--exclude var/lib/tiger/work \
+		--exclude var/log/tiger
 	dh_installdeb
 	dh_shlibdeps -XHPUX -XSunOS -XAIX -XIRIX -XNeXT -XMacOSX
 	dh_gencontrol
