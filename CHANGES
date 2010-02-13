@@ -11,7 +11,11 @@ Changes (v 3.2.4)
 - Fixed a problem in the sh script file scripts/sub/check_suid
   finding the owner of files. 
 
+- Fixed warning messages in scripts/sub/check_nousrgrp to make them
+  easier to ignore and add proper documentation for the warnings
+
 - Updated mailing lists info in README
+
 
 -...More changes in progress...
 
