@@ -17,6 +17,8 @@
 #
 # check_rcumask - Sat May 18 17:50:00 CEST 2002
 #
+# check_rcumask - 05/21/2009 - jfs - Remove shell login umasks and add Debian's /etc/init.d/rc.
+#                                    Adjust haveallcmds definition
 # check_rcumask - 06/23/2007 - jfs - Fix syntax error (Debian bug #430224)
 # check_rcumask - 06/21/2007 - jfs - Skip comment lines (Debian bug #418531)
 # check_rcumask - 05/20/2006 - jfs - Use TAIL properly (POSIX 1003.2-1992)
@@ -31,7 +33,9 @@
 #       Included patch to check for more source files
 #
 # Checks if there is a umask setting for the init.d scripts (rc) so that
-# these create files with a proper mode (644).
+# the init scripts create files with a proper mode (umask 022 so that files
+# are created at least with 0644 permissions).
+#
 # Done based on scripts/check_logfiles (since the code to look for umasks
 # is there already). The code is included only on Linux scripts since it
 # has not been tested in other environments.
@@ -74,7 +78,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds  HEAD TAIL GREP EXPAND SED CAT SORT AWK LS RM || exit 1
+  haveallcmds  HEAD TAIL GREP EXPAND SED CUT || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -87,7 +91,7 @@ done
 echo
 echo "# Checking for correct umask settings for init scripts..."
 
-haveallcmds HEAD TAIL GREP EXPAND SED CAT SORT LS AWK || exit 1
+haveallcmds HEAD TAIL GREP EXPAND SED CUT  || exit 1
 
 
 #####
@@ -96,12 +100,9 @@ haveallcmds HEAD TAIL GREP EXPAND SED CAT SORT LS AWK || exit 1
 
 Foundumask=0
 
-# Files include Debian's rcS, Titan's umask.sh file and Red Hat default 
-# source for initscripts
-# /etc/rc.d/init.d/functions, C-Shell's /etc/csh.login, Bash's /etc/profile
-# and PAM's /etc/login.defs 
-# (deprecated, but for backward compatibility)
-for file in '/etc/init.d/rcS' '/etc/rc.d/init.d/umask.sh' '/etc/init.d/umask.sh' '/etc/rc.d/init.d/functions' '/etc/csh.login' '/etc/profile'
+# Files include Debian's rc and rcS, Titan's umask.sh file and Red Hat default 
+# source for initscripts: /etc/rc.d/init.d/functions
+for file in '/etc/init.d/rcS' '/etc/rc.d/init.d/umask.sh' '/etc/init.d/umask.sh' '/etc/rc.d/init.d/functions' '/etc/init.d/rc'
 do
    [ -r $file ] && {
 
