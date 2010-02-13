@@ -1,0 +1,23 @@
+#!/bin/sh -e
+
+case "$1" in
+    install)
+    ;;
+    upgrade)
+        for dir in /var/log/tiger/ /var/lib/tiger/work
+        do
+            [ -d "$dir" ] &&  chmod 0700 $dir
+        done
+    ;;
+    abort-upgrade)
+    ;;
+    *)
+        echo "preinst called with unknown argument \`$1'" >&2
+        exit 0
+    ;;
+esac
+
+
+#DEBHELPER#
+
+exit 0
