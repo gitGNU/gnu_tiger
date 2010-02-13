@@ -17,6 +17,9 @@
 #
 # find_files - 06/14/93
 #
+# 05/21/2009 jfs Complain about symlinks that point nowhere in such a way
+#                that they can be tiger.ignore'd
+#
 # 08/09/2008 jfs Have GET_MOUNTS use local like getdisks does and do not warn
 #                for non-local filesystems
 #
@@ -304,7 +307,11 @@ rw=rw
 	#     being used in the find options.  Commented out --mlk
         #     cd /
 	eval nice -5 $FIND "$mountpt" $findpruneopt $findopt -print 2>/dev/null
-      done | nice -6 $output
+      done | nice -6 $output 2>&1 | 
+        sed -e '/No such file/s/^.*:[[:space:]]\(.*\):[[:space:]].*$/\1/' |
+        while  read symlink ; do 
+            message WARN fsys013w "" "$symlink is a dangling symlink."
+        done
     } &
     echo $! >> $pidlist
     counter=`$EXPR $counter + 1`
