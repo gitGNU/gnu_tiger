@@ -17,6 +17,9 @@
 #
 # sub/check_nousrgrp - 06/14/93
 #
+# 13/02/2010 jfs Proper generation of messages using the message() function.
+#
+#
 #-----------------------------------------------------------------------------
 # This script is not runnable directly.
 # 
@@ -49,13 +52,13 @@ haveallcmds AWK GREP LS || exit 1
 haveallvars WORKDIR || exit 1
 
 [ -s "$nouserfile" ] && {
-  echo '--WARN-- [xxxxx] The following files are unowned:'
+  message WARN fsys014w "" "The following files are unowned:"
   $SORT "$nouserfile"
   echo
 }
 
 [ -s "$nogroupfile" ] && {
-  echo '--WARN-- [xxxxx] The following files have undefined groups ownership:'
+  message WARN fsys015w "" "The following files do not have an defined groups ownership:'
   $SORT "$nogroupfile"
   echo
 }
