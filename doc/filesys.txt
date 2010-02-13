@@ -67,11 +67,11 @@ undesirable.
 %fsys011a
 The listed programs are setgid, but are not in the database of
 setgid programs which appear in the OS distribution.
-%fsys0012w
+%fsys012w
 The listed program is not owned by an administrative user.  The 
 majority of SUID programs should probably be owned by an 
 administrative user.
-%fsys0013w
+%fsys013w
 The symbolic link points to a file that does not exist in the filesystem.
 In itself, the link is not dangerous, but you should be aware of its 
 presence, as it might be related to an abnormal situation or 
