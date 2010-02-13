@@ -75,10 +75,10 @@ haveallfiles()
   do
     eval __file=\$$__var
     if [ ! -n "$__file" ]; then
-      echo "--ERROR-- [init005e] Don't have required file $__var."
+      echo "--ERROR-- [init005e] Don't have a value for file definition $__var."
       __retval=1
     elif [ ! -f "$__file" -a ! -d "$__file" ]; then
-      echo "--ERROR-- [init006e] \`$__file' does not exist (file $__var)."
+      echo "--ERROR-- [init006e] \`$__file' does not exist (file definition $__var)."
       __retval=1
     fi
   done
