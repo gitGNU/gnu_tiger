@@ -54,6 +54,7 @@
 #                                   of unexistant symlinks (See Debian bug 434333)
 # Linux/2/gen_mounts - 11/27/2008 - Added ecryptfs, used by ecryptfs-utils (See Debian bug 506512)
 #                                 - Fix bashism (Debian bug #505939)
+# Linux/2/gen_mounts - 05/25/2009 - Added davfs, fuse and ext4 (Debian bug 524722, 498468, 512567)
 #-----------------------------------------------------------------------------
 #
 
@@ -105,6 +106,7 @@ localfs()
   [ "$1" = "ext" ] && LOCAL=0
   [ "$1" = "ext2" ] && LOCAL=0
   [ "$1" = "ext3" ] && LOCAL=0
+  [ "$1" = "ext4" ] && LOCAL=0
   [ "$1" = "auto" ] && LOCAL=0
   [ "$1" = "vzfs" ] && LOCAL=0        # VPS virtual partition
   [ "$1" = "reiserfs" ] && LOCAL=0
@@ -180,10 +182,12 @@ localfs()
   [ "$1" = "hugetlbf" ] && LOCAL=1 
   [ "$1" = "subfs" ] && LOCAL=1 
   [ "$1" = "futexfs" ] && LOCAL=1               # futex (Fast Userspace Locking) mechanism
+  [ "$1" = "fuse" ] && LOCAL=1
   [ "$1" = "vmblock" ] && LOCAL=1               # Vmware filesystem
   [ "$1" = "debugfs" ] && LOCAL=1               # Debugging filesystem see 
                                                 # http://lwn.net/Articles/115405/
   [ "$1" = "configfs" ] && LOCAL=1
+  [ "$1" = "davfs" ] && LOCAL=1
   # Other filesystems we don't support
   [ "$1" = "adfs" ] && LOCAL=1
   [ "$1" = "affs" ] && LOCAL=1
