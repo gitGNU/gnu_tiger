@@ -1,0 +1,42 @@
+# Slovak translation of tiger.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the tiger package.
+# Ivan Masár <helix84@centrum.sk>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tiger\n"
+"Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
+"POT-Creation-Date: 2010-01-02 01:05+0100\n"
+"PO-Revision-Date: 2010-02-17 23:09+0100\n"
+"Last-Translator: Ivan Masár <helix84@centrum.sk>\n"
+"Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
+
+#. Type: string
+#. Description
+#: ../templates:1001
+msgid "Recipient of the daily mails:"
+msgstr "Príjemca denných emailov:"
+
+#. Type: string
+#. Description
+#: ../templates:1001
+msgid "The user you enter below will receive all the emails that 'tiger' sends during the day when running the cron jobs. This does not mean that when executing the 'tiger' program standalone this user will receive the reports. Also note that any administrator will be able to access the reports since they are available in the /var/log/tiger/ directory."
+msgstr "Používateľ, ktorého uvediete nižšie bude dostávať všetky správy, ktoré „tiger“ počas dňa pošle pri spúšťaní úloh cronu. To neznamená, že používateľ dostane správy pri spustení samostatného programu „tiger“. Tiež pamätajte, že ktorýkoľvek správca bude mať prístup k správam, pretože sú dostupné v adresári /var/log/tiger/."
+
+#. Type: note
+#. Description
+#: ../templates:2001
+msgid "Take a minute to customize 'tiger'"
+msgstr "Venujte chvíľku prispôsobeniu konfigurácie „tiger“"
+
+#. Type: note
+#. Description
+#: ../templates:2001
+msgid "You should customize the files at /etc/tiger/ to adapt to your local security policy. Firstly, customizing the kind of checks that will be made in this system, as well as the information needed for tests in order to reduce false positives (in /etc/tiger/tigerrc). Secondly, customizing at what times these tests will be executed (in /etc/tiger/cronrc). And thirdly, since some modules warnings might not be problems regarding your current security policy, define a given template file at /etc/tiger/templates/ using runs from each of the modules. Once defined, all the runs will be checked against each one of the templates available (one per module) and only new warnings will be issued."
+msgstr "Mali by ste si prispôsobiť konfiguračné súbory v /etc/tiger/ v súlade s vašou bezpečnostnou politikou. Za prvé, prispôsobte druhy kontrol, ktoré sa na tomto systéme budú vykonávať ako aj informácie potrebné na zníženie počtu falošných pozitív (v /etc/tiger/tigerrc). Za druhé, prispôsobte časy spúšťania týchto testov (v /etc/tiger/cronrc). A za tretie, pretože hlásenia o niektorých moduloch nemusia byť problémom v kontexte vašej aktuálnej bezpečnostnej politiky, definujte súbory šablón v /etc/tiger/templates/ spustením každého z modulov. Po definícii budú všetky spustenia kontrolované voči jednej z dostupných šablón (pre každý modul jedna) a budú ohlásené iba nové upozornenia."
+

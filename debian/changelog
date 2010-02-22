@@ -1,3 +1,22 @@
+tiger (1:3.2.4-1) unstable; urgency=low
+
+  * Updated some Debconf translations:
+     + Czech translation, thanks to Miroslav Kure <kurem@upcase.inf.upol.cz>
+       (Closes: #569694).
+	 + Portuguese translation, thanks to "Traduz - Portuguese Translation Team"
+       <traduz@debianpt.org>, (Closes: #570456).
+	 + Russian translation, thanks to Yuri Kozlov <yuray@komyakino.ru>
+	   (Closes: #570540).
+	 + Brazilian Portuguese translation, thanks to Adriano Rafael Gomes
+       <adrianorg@gmail.com>, (Closes: #570601).
+   
+  * Added Slovak translation, thanks to helix84 <helix84@centrum.sk>
+    (Closes: #570289).
+  * Added Italian translation, thanks to Vincenzo Campanella <vinz65@gmail.com>
+    (Closes: #570747).
+
+ -- Francisco Manuel Garcia Claramonte <francisco@debian.org>  Sat, 20 Feb 2010 10:31:50 +0100
+
 tiger (1:3.2.3-2) unstable; urgency=low
 
   [ Francisco Manuel Garcia Claramonte ]

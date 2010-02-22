@@ -1,14 +1,14 @@
-# translation of ru.po to Russian
+# translation of tiger_1:3.2.3-2_ru.po to Russian
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Yuri Kozlov <yuray@komyakino.ru>, 2009.
+# Yuri Kozlov <yuray@komyakino.ru>, 2009, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: tiger 1:3.2.2-11\n"
+"Project-Id-Version: tiger 1:3.2.3-2\n"
 "Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
-"POT-Creation-Date: 2008-09-09 03:34+0200\n"
-"PO-Revision-Date: 2009-07-15 22:26+0400\n"
+"POT-Creation-Date: 2010-01-02 01:05+0100\n"
+"PO-Revision-Date: 2010-02-19 20:25+0300\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <debian-l10n-russian@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,8 +20,9 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../templates:1001
-msgid "Who should receive the daily mails?"
-msgstr "Кому направлять ежедневную почту?"
+#| msgid "Who should receive the daily mails?"
+msgid "Recipient of the daily mails:"
+msgstr "Получатель ежедневной почты:"
 
 #. Type: string
 #. Description
@@ -35,10 +36,9 @@ msgid ""
 msgstr ""
 "Указанный вами пользователь будет получать всю почту, которую tiger "
 "отправляет в течение дня при выполнении заданий cron. Это не значит, что "
-"данный пользователь получит отчёты при непосредственном запуске "
-"программы tiger. Также заметим, что любой администратор может "
-"получить доступ к отчётам, так как они доступны в каталоге "
-"/var/log/tiger/."
+"данный пользователь получит отчёты при непосредственном запуске программы "
+"tiger. Также заметим, что любой администратор может получить доступ к "
+"отчётам, так как они доступны в каталоге /var/log/tiger/."
 
 #. Type: note
 #. Description
@@ -61,14 +61,13 @@ msgid ""
 "against each one of the templates available (one per module) and only new "
 "warnings will be issued."
 msgstr ""
-"Измените файлы в /etc/tiger/ согласно вашей политике безопасности. "
-"Во-первых, настройте нужные типы проверок, выполняемых в данной "
-"системе, а также тестовую информацию для сокращения ложных "
-"срабатываний (в /etc/tiger/tigerrc). Во-вторых, задайте время выполнения "
-"тестов (в /etc/tiger/cronrc). И в третьих, так как некоторые предупреждения "
-"от модулей могут не считаться проблемой согласно вашей текущей политике "
-"безопасности, определите нужный файл шаблона в /etc/tiger/templates/, "
-"используемый для каждого модуля. После указания, во всех прогонах "
-"будет проверяться каждый из доступных шаблонов (один на модуль) и "
-"будут выдаваться только новые предупреждения."
+"Измените файлы в /etc/tiger/ согласно вашей политике безопасности. Во-"
+"первых, настройте нужные типы проверок, выполняемых в данной системе, а "
+"также тестовую информацию для сокращения ложных срабатываний (в /etc/tiger/"
+"tigerrc). Во-вторых, задайте время выполнения тестов (в /etc/tiger/cronrc). "
+"И в третьих, так как некоторые предупреждения от модулей могут не считаться "
+"проблемой согласно вашей текущей политике безопасности, определите нужный "
+"файл шаблона в /etc/tiger/templates/, используемый для каждого модуля. После "
+"указания, во всех прогонах будет проверяться каждый из доступных шаблонов "
+"(один на модуль) и будут выдаваться только новые предупреждения."
 

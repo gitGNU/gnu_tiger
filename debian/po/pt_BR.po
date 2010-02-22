@@ -1,35 +1,28 @@
-#
-#    Translators, if you are not familiar with the PO format, gettext
-#    documentation is worth reading, especially sections dedicated to
-#    this format, e.g. by running:
-#         info -n '(gettext)PO Files'
-#         info -n '(gettext)Header Entry'
-#
-#    Some information specific to po-debconf are available at
-#            /usr/share/doc/po-debconf/README-trans
-#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
-#
-#    Developers do not need to manually edit POT or PO files.
-#
+# Debconf translations for tiger.
+# Copyright (C) 2010 THE tiger'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the tiger package.
+# Andr√© Lu√≠s Lopes <andrelop@ig.com.br>, 2003.
+# Adriano Rafael Gomes <adrianorg@gmail.com>, 2010.
+
 msgid ""
-msgstr ""
-"Project-Id-Version: tiger_3.1-8\n"
+msgstr "pt_BR utf-8\n"
+"Project-Id-Version: tiger 1:3.2.3-1\n"
 "Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
 "POT-Creation-Date: 2010-01-02 01:05+0100\n"
-"PO-Revision-Date: 2003-03-29 23:43-0300\n"
-"Last-Translator: AndrÈ LuÌs Lopes <andrelop@ig.com.br>\n"
-"Language-Team: Debian-BR Project <debian-l10n-portuguese@lists.debian.org>\n"
+"PO-Revision-Date: 2010-02-13 13:12-0200\n"
+"Last-Translator: Adriano Rafael Gomes <adrianorg@gmail.com>\n"
+"Language-Team: Brazilian Portuguese <debian-l10n-portuguese@lists.debian."
+"org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. Type: string
 #. Description
 #: ../templates:1001
-#, fuzzy
 #| msgid "Who should receive the daily mails?"
 msgid "Recipient of the daily mails:"
-msgstr "Quem deve receber as mensagens diarias?"
+msgstr "Destinat√°rio dos e-mails di√°rios:"
 
 #. Type: string
 #. Description
@@ -41,12 +34,12 @@ msgid ""
 "Also note that any administrator will be able to access the reports since "
 "they are available in the /var/log/tiger/ directory."
 msgstr ""
-"O usu·rio informado abaixo ir· receber todas as mensagens que o 'tiger' "
-"enviar durante o dia quando executa os jobs do cron. Isto n„o significa que "
-"quando o programa 'tiger' È executado em modo standalone (n„o atravÈs de "
-"jobs do cron) este usu·rio ir· receber os relatÛrios. Note tambÈm que "
-"quaisquer administradores ser„o capazes de acessar os relatÛrios uma vez que "
-"os mesmos estar„o disponÌveis no diretÛrio /var/log/tiger/."
+"O usu√°rio informado abaixo receber√° todos os e-mails que o 'tiger' "
+"enviar durante o dia quando executa os jobs do cron. Isto n√£o significa que "
+"quando o programa 'tiger' √© executado em modo standalone (n√£o atrav√©s de "
+"jobs do cron) este usu√°rio ir√° receber os relat√≥rios. Note tamb√©m que "
+"qualquer administrador ser√° capaz de acessar os relat√≥rios uma vez que "
+"os mesmos estar√£o dispon√≠veis no diret√≥rio /var/log/tiger/."
 
 #. Type: note
 #. Description
@@ -69,20 +62,20 @@ msgid ""
 "against each one of the templates available (one per module) and only new "
 "warnings will be issued."
 msgstr ""
-"VocÍ dever· personalizar os arquivos em /etc/tiger/ e adapt·-los para sua "
-"polÌtica local de seguranÁa. Primeiro, personalizando os tipos de checagens "
-"que ser„o feitas neste sistema, bem como a informaÁ„o necess·ria para os "
+"Voc√™ dever√° personalizar os arquivos em /etc/tiger/ e adapt√°-los para sua "
+"pol√≠tica local de seguran√ßa. Primeiro, personalizando os tipos de checagens "
+"que ser√£o feitas neste sistema, bem como a informa√ß√£o necess√°ria para os "
 "testes de modo a reduzir a possibilidade de falsos positivos (em /etc/tiger/"
-"tigerrc). Segundo, personalizando quando esses testes dever„o ser executados "
+"tigerrc). Segundo, personalizando quando esses testes dever√£o ser executados "
 "(em /etc/tiger/cronrc). E terceiro, uma vez que alguns avisos (warnings) de "
-"mÛdulos podem na verdade n„o ser problemas relacionados a sua polÌtica atual "
-"de seguranÁa local, definir um dado arquivo de modelo (template) em /etc/"
-"tiger/template/ usando execuÁıes de cada um dos mÛdulos. Uma vez definidas, "
-"todas as execuÁıes ser„o checadas contra cada um dos modelos disponÌveis (um "
-"por mÛdulo) e somente novos avisos ser„o gerados."
+"m√≥dulos podem na verdade n√£o ser problemas relacionados a sua pol√≠tica atual "
+"de seguran√ßa local, definir um dado arquivo de modelo (template) em /etc/"
+"tiger/templates/ usando execu√ß√µes de cada um dos m√≥dulos. Uma vez definidas, "
+"todas as execu√ß√µes ser√£o checadas contra cada um dos modelos dispon√≠veis (um "
+"por m√≥dulo) e somente novos avisos ser√£o gerados."
 
 #~ msgid "Remove templates in buggy 'tiger' versions"
-#~ msgstr "Remover modelos em versıes com erros do 'tiger'"
+#~ msgstr "Remover modelos em vers√µes com erros do 'tiger'"
 
 #~ msgid ""
 #~ "Initially Debian's 3.1 tiger versions were distributed with a bug that "
@@ -94,12 +87,12 @@ msgstr ""
 #~ "automatically in order to avoid removing previous templates. Should we "
 #~ "remove these files if any are found?"
 #~ msgstr ""
-#~ "Inicialmente as versıes do Debian 3.1 do tiger foram distribuÌdas com um "
-#~ "bug que fazia com que os modelos fossem criados sob /var/log ao invÈs de "
-#~ "sob /var/log/tiger. OperaÁıes normais assumem que os modelos estejam sob /"
-#~ "var/log/tiger/ e esses modelos n„o ser„o ˙teis em novas versıes do Tiger. "
-#~ "VocÍ pode desejar preservar uma copia deles (para usar como modelos) e "
-#~ "movÍ-los manualmente sob sua prÛpria localizaÁ„o. O pacote n„o ir· fazer "
+#~ "Inicialmente as vers√µes do Debian 3.1 do tiger foram distribu√≠das com um "
+#~ "bug que fazia com que os modelos fossem criados sob /var/log ao inv√©s de "
+#~ "sob /var/log/tiger. Opera√ß√µes normais assumem que os modelos estejam sob /"
+#~ "var/log/tiger/ e esses modelos n√£o ser√£o √∫teis em novas vers√µes do Tiger. "
+#~ "Voc√™ pode desejar preservar uma copia deles (para usar como modelos) e "
+#~ "mov√™-los manualmente sob sua pr√≥pria localiza√ß√£o. O pacote n√£o ir√° fazer "
 #~ "isso automaticamente para evitar remover modelos anteriores. Esses "
 #~ "arquivos devem ser removidos caso sejam encontrados ?"
 

@@ -1,14 +1,14 @@
 # Portuguese translation of tiger's debconf messages.
 # Copyright (C) 2007 Javier Fernandez-Sanguino
 # This file is distributed under the same license as the tiger package.
-# Luísa Lourenço <kikentai@gmail.com>, 2007
+# Luísa Lourenço <kikentai@gmail.com>, 2007-2010
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: tiger 1:3.2.1-35\n"
 "Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
 "POT-Creation-Date: 2010-01-02 01:05+0100\n"
-"PO-Revision-Date: 2007-03-19 15:41+0000\n"
+"PO-Revision-Date: 2010-02-18 23:18+0000\n"
 "Last-Translator: Luísa Lourenço <kikentai@gmail.com>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,10 +18,9 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../templates:1001
-#, fuzzy
 #| msgid "Who should receive the daily mails?"
 msgid "Recipient of the daily mails:"
-msgstr "Quem deve receber os mails diários?"
+msgstr "Destinatário dos mails diários:"
 
 #. Type: string
 #. Description

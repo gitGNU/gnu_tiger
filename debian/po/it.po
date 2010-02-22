@@ -1,0 +1,74 @@
+# ITALIAN TRANSLATION OF TIGER'S PO-DEBCONF FILE.
+# COPYRIGHT (C) 2010 THE TIGER'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the tiger package.
+# Vincenzo Campanella <vinz65@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tiger\n"
+"Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
+"POT-Creation-Date: 2010-01-02 01:05+0100\n"
+"PO-Revision-Date: 2010-02-13 11:25+0100\n"
+"Last-Translator: Vincenzo Campanella <vinz65@gmail.com>\n"
+"Language-Team: Italian <tp@lists.linux.it>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: string
+#. Description
+#: ../templates:1001
+msgid "Recipient of the daily mails:"
+msgstr "Destinatario delle email quotidiane:"
+
+#. Type: string
+#. Description
+#: ../templates:1001
+msgid ""
+"The user you enter below will receive all the emails that 'tiger' sends "
+"during the day when running the cron jobs. This does not mean that when "
+"executing the 'tiger' program standalone this user will receive the reports. "
+"Also note that any administrator will be able to access the reports since "
+"they are available in the /var/log/tiger/ directory."
+msgstr ""
+"L'utente che si inserisce qui sotto riceverà tutte le email che «tiger» "
+"invierà durante il giorno, all'esecuzione dei job di cron. Questo non "
+"significa che l'utente riceverà i rapporti durante l'esecuzione di «tiger» "
+"come programma a sé stante. Notare anche che qualsiasi amministratore sarà "
+"in grado di accedere ai rapporti, che sono disponibili nella directory "
+"«/var/log/tiger»."
+
+#. Type: note
+#. Description
+#: ../templates:2001
+msgid "Take a minute to customize 'tiger'"
+msgstr "Prendersi un minuto per personalizzare «tiger»"
+
+#. Type: note
+#. Description
+#: ../templates:2001
+msgid ""
+"You should customize the files at /etc/tiger/ to adapt to your local "
+"security policy. Firstly, customizing the kind of checks that will be made "
+"in this system, as well as the information needed for tests in order to "
+"reduce false positives (in /etc/tiger/tigerrc). Secondly, customizing at "
+"what times these tests will be executed (in /etc/tiger/cronrc). And thirdly, "
+"since some modules warnings might not be problems regarding your current "
+"security policy, define a given template file at /etc/tiger/templates/ using "
+"runs from each of the modules. Once defined, all the runs will be checked "
+"against each one of the templates available (one per module) and only new "
+"warnings will be issued."
+msgstr ""
+"Si dovrebbero personalizzare i file in «/etc/tiger» per adattarli alle "
+"politiche locali di sicurezza. Prima di tutto, si consiglia la "
+"personalizzazione del tipo di controlli che verrà effettuato in questo "
+"sistema, come pure le informazioni necessarie per le verifiche al fine di "
+"ridurre i falsi positivi (in «/etc/tiger/tigerrc»). In seconda istanza, si "
+"dovrebbero personalizzare gli orari in cui questi controlli verranno "
+"eseguiti (in «/etc/tiger/cronrc»). Terzo punto, poiché gli avvisi di alcuni "
+"programmi potrebbero non essere problemi rispetto alle politiche locali di "
+"sicurezza, si dovrebbe definire un modello in «/etc/tiger/templates» "
+"utilizzando le esecuzioni di ogni modulo. Dopo di questo, tutte le "
+"esecuzioni verranno verificate sulla base di ogni modello disponibile (uno "
+"per ogni modulo) e verranno emessi solo i nuovi avvisi."
+
