@@ -9,11 +9,17 @@ tiger (1:3.2.4-1) unstable; urgency=low
 	   (Closes: #570540).
 	 + Brazilian Portuguese translation, thanks to Adriano Rafael Gomes
        <adrianorg@gmail.com>, (Closes: #570601).
-   
-  * Added Slovak translation, thanks to helix84 <helix84@centrum.sk>
+  * Added Slovak Debconf translation, thanks to helix84 <helix84@centrum.sk>
     (Closes: #570289).
-  * Added Italian translation, thanks to Vincenzo Campanella <vinz65@gmail.com>
-    (Closes: #570747).
+  * Added Italian Debconf translation, thanks to Vincenzo Campanella 
+    <vinz65@gmail.com> (Closes: #570747).
+  * Fixed (in upstream) the problem checking /*/lost+found/* files with 
+    spaces in file name, thanks to Dave Rutherford <dave@evilpettingzoo.com> 
+    for the patch (Closes: #532826).
+  * Fixed (in upstream) the problem with delete() function in initdefs script,
+    and fixed the problem with temporary file in scripts/find_file script. 
+    Thanks to Hannes von Haugwitz <hannes@vonhaugwitz.com> for the patch
+    (Closes: #544701).
 
  -- Francisco Manuel Garcia Claramonte <francisco@debian.org>  Sat, 20 Feb 2010 10:31:50 +0100
 

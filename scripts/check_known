@@ -186,7 +186,7 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
     done
   }
   
-  haveallcmds GET_MOUNTS AWK FIND SED TR && {
+  haveallcmds GET_MOUNTS AWK FIND SED && {
     $GET_MOUNTS local |
     $AWK '{
       if($1 == "/")
@@ -198,23 +198,27 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
     do
       [ -d "$dir" -a -r "$dir" ] && {
 	cd "$dir"
-	files=`$FIND . -print | $SED -e 's%^./%%' -e '/^.$/d' -e '/^..$/d'`
+	alertfiles="`$FIND . -name . -fprintf /dev/null '' -o \( -name '#[0-9]*' -o -name '[0-9]*_[0-9]*' \) -prune -o -print | $SED 's%^./%%'`"
 	# On HP-UX change to:
-	#files=`$FIND . -print | $SED -e 's%^./%%' -e '/^.$/d' -e '/^..$/d' -e '/^[.]fsadm$/d'`
-	alertfiles=`echo "$files" |
-	            $TR ' ' '\012' |
-	            $SED -e 's%^#\{1\}[0-9][0-9.]*$%%g'
-	`
+	#alertfiles="`$FIND . \( -name . -o -name .fsadm \) -fprintf /dev/null '' -o -name '#[0-9]*' -prune -o -print | $SED 's%^./%%'`"
 	if [ -n "$alertfiles" ]; then
 	  message WARN kis004w "" "$dir contains possible non-fsck files:"
-	  # TODO: Consider not listing the files and just providing
-	  # the raw numbers if the number of non-fsck files is very high.
-	  for file in $alertfiles ; do
-	  	$LS -alR $file 
-	  done
+	  # If there are very many non-fsck files, don't list them
+	  # and just provide the raw count.
+	  filecount=$(( `echo "$alertfiles" | wc -l` ))
+	  if [ $filecount -lt 500 ]; then
+	    echo "$alertfiles" | while read file; do
+	  	  $LS -ld "$file"
+	    done
+	  else
+	    echo "(${filecount} files)"
+	  fi
 	  echo
-	elif [ -n "$files" ]; then
-	  message WARN kis004w "Files: $alertfiles" "$dir is not empty:"
+	else
+	  filecount=$(( `$LS -a | wc -l` ))
+	  if [ $filecount -gt 2 ]; then
+	    message WARN kis004w "Files: ${filecount} file(s)" "$dir is not empty:"
+	  fi
 	fi
       }
     done

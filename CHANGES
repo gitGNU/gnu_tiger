@@ -16,6 +16,16 @@ Changes (v 3.2.4)
 
 - Updated mailing lists info in README
 
+- Fixed a problem in delete() function to remove properly files in loop
+  in initdef script.
+
+- Fixed a problem removing a temporary file in scripts/find_file script.
+
+- Apply some minor changes to fix a regression problem in inidefs script
+  (patched by Javier Fernandez-Sanguino Pen~a <jfs@debian.org>).
+
+- Fixed a problem checking files with spaces in file name in /*/lost+found/ 
+  directories.
 
 -...More changes in progress...
 

@@ -392,7 +392,7 @@ do
   [ -s "$file" ] && $CAT $file
 done
 
-delete $pidlist ${outfile}*
+delete $pidlist $mountlist ${outfile}*
 delete $WORKDIR/suid.msgs.$$ $WORKDIR/sgid.msgs.$$ \
        $WORKDIR/other.msgs.$$ $WORKDIR/devs.msgs.$$ \
       $WORKDIR/link.msgs.$$ $WORKDIR/wdir.msgs.$$ $WORKDIR/noowner.msgs.$$
