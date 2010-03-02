@@ -109,6 +109,7 @@ localfs()
   [ "$1" = "ext4" ] && LOCAL=0
   [ "$1" = "auto" ] && LOCAL=0
   [ "$1" = "vzfs" ] && LOCAL=0        # VPS virtual partition
+  [ "$1" = "simfs" ] && LOCAL=0       # OpenVZ virtual partition
   [ "$1" = "reiserfs" ] && LOCAL=0
   [ "$1" = "reiser4" ] && LOCAL=0
   [ "$1" = "xfs" ] && LOCAL=0

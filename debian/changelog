@@ -20,6 +20,8 @@ tiger (1:3.2.4-1) unstable; urgency=low
     and fixed the problem with temporary file in scripts/find_file script. 
     Thanks to Hannes von Haugwitz <hannes@vonhaugwitz.com> for the patch
     (Closes: #544701).
+  * Added support (in upstream) to detect simfs as local filesystem, thanks to
+    Raimund Sacherer <rs@runsolutions.com> for the patch (Closes: #571944).
 
  -- Francisco Manuel Garcia Claramonte <francisco@debian.org>  Sat, 20 Feb 2010 10:31:50 +0100
 
