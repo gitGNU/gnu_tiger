@@ -22,7 +22,6 @@ Changes (v 3.2.4)
 - Fixed a problem removing a temporary file in scripts/find_file script.
 
 - Apply some minor changes to fix a regression problem in inidefs script
-  (patched by Javier Fernandez-Sanguino Pen~a <jfs@debian.org>).
 
 - Fixed a problem checking files with spaces in file name in /*/lost+found/ 
   directories.
