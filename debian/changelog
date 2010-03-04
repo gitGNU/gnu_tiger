@@ -3,15 +3,13 @@ tiger (1:3.2.4-1) unstable; urgency=low
   * New upstream release:
     - Fixed the problem checking /*/lost+found/* files with 
     spaces in file name, thanks to Dave Rutherford for the patch (Closes: #532826).
-    - Fixed (in upstream) the problem with delete() function in initdefs
-      script, and fixed the problem with temporary file in scripts/find_file
-      script.  Thanks to Hannes von Haugwitz for the
-      patch (Closes: #544701).
+    - Fixed the problem with delete() function in initdefs
+      script, and fixed the problem with temporary file in scripts/find_files
+      script.  Thanks to Hannes von Haugwitz for the patch (Closes: #544701).
     - Added support o detect simfs as local filesystem for OpenVZ systems, thanks to
       Raimund Sacherer for the patch (Closes: #571944).
   * Debconf translations updated:
-     + Czech translation, thanks to Miroslav Kure <kurem@upcase.inf.upol.cz>
-       (Closes: #569694).
+     + Czech translation, thanks to Miroslav Kure (Closes: #569694).
      + Portuguese translation, thanks to the "Portuguese Translation Team"
        (Closes: #570456).
      + Russian translation, thanks to Yuri Kozlov (Closes: #570540).
