@@ -15,6 +15,7 @@ tiger (1:3.2.4-1) unstable; urgency=low
      + Russian translation, thanks to Yuri Kozlov (Closes: #570540).
      + Brazilian Portuguese translation, thanks to Adriano Rafael Gomes
        (Closes: #570601).
+     + Vietnamese translation, thanks to Clytie Siddall (Closes: #572777).
   * Debconf translations included:
       + Added Slovak Debconf translation, thanks to helix84 (Closes: #570289).
       + Added Italian Debconf translation, thanks to Vincenzo Campanella (Closes: #570747).
