@@ -16,6 +16,10 @@
 #
 # initdefs - 06/14/93
 #
+# initdefs - 05/03/2010 -  -  Fixed the problem with delete() function in
+#        initdefs which prevented it from deleting multiple files if
+#        it failed with one of them (Debian bug #544701)
+#
 # initdefs - 01/10/2005 - cslater - Modified ignore function so that
 #                     filtering can also be done on msgid and level
 # initdefs - 08/01/2004 - jfs - Allow removal from LOGDIR so that tiger -e
