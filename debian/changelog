@@ -129,7 +129,7 @@ tiger (1:3.2.2-8) unstable; urgency=low
     properly (Closes: #507028)
   * system/Linux/2/gen_mounts:
      - Added ecryptfs, used by ecryptfs-utils (Closes: 506512)
-     - Fix bashism (Closes: #505939)
+     - Fix bashism (Closes: #505939, #505939)
   * Update Standards-Version to 3.8.0:
      - Added a Homepage field in debian/control
   * Use debhelper version 5
