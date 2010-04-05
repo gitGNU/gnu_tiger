@@ -18,6 +18,9 @@
 # check_known - 06/14/93
 #
 # 04/05/2010 jfs Use WC instead of wc and avoid bashisms in script
+#  Also, improve the fix introduced in previous version to handle
+#  also newlines in files. Reducing the number of printed bad files to 100
+#
 # 02/26/2010 fgclaramonte  Prevent error messages if there are files 
 #  under /lost+found or /*/lost+found containinng
 #  spaces in their name. 
