@@ -114,7 +114,7 @@ tiger (1:3.2.2-10) unstable; urgency=low
 
 tiger (1:3.2.2-9) unstable; urgency=low
 
-  * Use --debconf-ok when calling ucf (Closes: 517798, 521620)
+  * Use --debconf-ok when calling ucf (Closes: 517798, 521620, 539188)
   * Update check_release to reflect latest Debian release (Closes: 523700)
   * Fix systems/Linux/2/config so that it uses /etc/apache2 in Debian if it exists
     and /etc/apache otherwise. (Closes: 523699)
