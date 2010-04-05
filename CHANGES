@@ -21,8 +21,8 @@ Changes (v 3.2.4)
 
 - Fixed a problem removing a temporary file in scripts/find_file script.
 
-- Fixed a problem checking files with spaces in file name in /*/lost+found/ 
-  directories.
+- scripts/check_known: Fixed problems handling files with spaces or
+  newline characters in their filename in /*/lost+found/ directories.
 
 - Added support for recognize simfs as local filesystem.
 
