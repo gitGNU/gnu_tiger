@@ -18,7 +18,14 @@
 # check_known - 06/14/93
 #
 # 04/05/2010 jfs Use WC instead of wc and avoid bashisms in script
-# 02/26/2010 fgclaramonte  TODO
+# 02/26/2010 fgclaramonte  Prevent error messages if there are files 
+#  under /lost+found or /*/lost+found containinng
+#  spaces in their name. 
+#  Also add support in the expressions of ReiserFS-style
+#  fsck filenames (nnnn_nnnn) to the more common (#nnnn) type, but
+#  not in the case of HP-UX as presumably it lacks Reiser support.
+#  (Debian bug 532826)
+# 
 # 05/20/2006 jfs Use TAIL properly (POSIX 1003.2-1992)
 # 06/15/2004 jfs Do not call LS directly with all files but use a for loop
 #                (Debian bug #246600)
@@ -201,6 +208,8 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
     do
       [ -d "$dir" -a -r "$dir" ] && {
 	cd "$dir"
+        # List files we have to alert on
+        # TODO: This will not work properly if filenames contain newlines
 	alertfiles="`$FIND . -name . -fprintf /dev/null '' -o \( -name '#[0-9]*' -o -name '[0-9]*_[0-9]*' \) -prune -o -print | $SED 's%^./%%'`"
 	# On HP-UX change to:
 	#alertfiles="`$FIND . \( -name . -o -name .fsadm \) -fprintf /dev/null '' -o -name '#[0-9]*' -prune -o -print | $SED 's%^./%%'`"
