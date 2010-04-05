@@ -196,7 +196,7 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
     done
   }
   
-  haveallcmds GET_MOUNTS AWK FIND SED && {
+  haveallcmds GET_MOUNTS AWK FIND SED WC TR && {
     $GET_MOUNTS local |
     $AWK '{
       if($1 == "/")
@@ -208,11 +208,16 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
     do
       [ -d "$dir" -a -r "$dir" ] && {
 	cd "$dir"
-        # List files we have to alert on
-        # TODO: This will not work properly if filenames contain newlines
-	alertfiles="`$FIND . -name . -fprintf /dev/null '' -o \( -name '#[0-9]*' -o -name '[0-9]*_[0-9]*' \) -prune -o -print | $SED 's%^./%%'`"
+        # List files we have to alert on.
+        # Be careful to handle strange files (with spaces or newline
+        # characters). To do this:
+        # We first list them, then convert newlines to '~' and then
+        # 1) remove the first './', replace '~./' with newlines and
+        # replace the last '~' with a newline. Remaining newlines are located
+        # within the file name and are left as '~'
+	alertfiles="`$FIND . -name . -fprintf /dev/null '' -o \( -name '#[0-9]*' -o -name '[0-9]*_[0-9]*' \) -prune -o -print | $TR '\n' '~' | $SED 's%^./%%; s%~./%\n%g; s%~$%\n%'`"
 	# On HP-UX change to:
-	#alertfiles="`$FIND . \( -name . -o -name .fsadm \) -fprintf /dev/null '' -o -name '#[0-9]*' -prune -o -print | $SED 's%^./%%'`"
+	#alertfiles="`$FIND . \( -name . -o -name .fsadm \) -fprintf /dev/null '' -o -name '#[0-9]*' -prune -o -print | $TR '\n' '~' | $SED 's%^./%%; s%~./%\n%g; s%~$%\n%'`"s%^./%%'`"
 	if [ -n "$alertfiles" ]; then
 	  message WARN kis004w "" "$dir contains possible non-fsck files:"
 	  # If there are very many non-fsck files, don't list them
