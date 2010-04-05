@@ -58,7 +58,7 @@ haveallvars WORKDIR || exit 1
 }
 
 [ -s "$nogroupfile" ] && {
-  message WARN fsys015w "" "The following files do not have an defined groups ownership:'
+  message WARN fsys015w "" "The following files do not have an defined groups ownership:"
   $SORT "$nogroupfile"
   echo
 }
