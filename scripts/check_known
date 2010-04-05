@@ -16,6 +16,9 @@
 #     Please see the file `COPYING' for the complete copyright notice.
 #
 # check_known - 06/14/93
+#
+# 04/05/2010 jfs Use WC instead of wc and avoid bashisms in script
+# 02/26/2010 fgclaramonte  TODO
 # 05/20/2006 jfs Use TAIL properly (POSIX 1003.2-1992)
 # 06/15/2004 jfs Do not call LS directly with all files but use a for loop
 #                (Debian bug #246600)
@@ -88,7 +91,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT EGREP FIND GET_MOUNTS LS SED SGREP STRINGS TR TAIL HEAD CUT OUTPUTMETHOD RM GEN_INETD_SETS || exit 1
+  haveallcmds AWK CAT EGREP FIND GET_MOUNTS LS SED SGREP STRINGS TR TAIL HEAD CUT OUTPUTMETHOD RM GEN_INETD_SETS WC || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars TESTLINK HOSTNAME
   
@@ -100,7 +103,7 @@ done
 echo
 echo "# Checking for known intrusion signs..."
 
-haveallcmds AWK CAT EGREP FIND GET_MOUNTS LS SED SGREP STRINGS TR TAIL HEAD CUT OUTPUTMETHOD RM GEN_INETD_SETS || exit 1
+haveallcmds AWK CAT EGREP FIND GET_MOUNTS LS SED SGREP STRINGS TR TAIL HEAD CUT OUTPUTMETHOD RM GEN_INETD_SETS WC || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 
 safe_temp "$WORKDIR/login.str.$$" "$WORKDIR/pass.list.$$"
@@ -205,17 +208,17 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
 	  message WARN kis004w "" "$dir contains possible non-fsck files:"
 	  # If there are very many non-fsck files, don't list them
 	  # and just provide the raw count.
-	  filecount=$(( `echo "$alertfiles" | wc -l` ))
+	  filecount="`echo "$alertfiles" | $WC -l`"
 	  if [ $filecount -lt 500 ]; then
 	    echo "$alertfiles" | while read file; do
 	  	  $LS -ld "$file"
 	    done
 	  else
-	    echo "(${filecount} files)"
+	    echo "($filecount files)"
 	  fi
 	  echo
 	else
-	  filecount=$(( `$LS -a | wc -l` ))
+	  filecount="`$LS -a | $WC -l`"
 	  if [ $filecount -gt 2 ]; then
 	    message WARN kis004w "Files: ${filecount} file(s)" "$dir is not empty:"
 	  fi
