@@ -9,6 +9,9 @@ tiger (1:3.2.3-3) unstable; urgency=low
       script. Thanks to Hannes von Haugwitz for the patch (Closes: #544701).
     - Added support o detect simfs as local filesystem for OpenVZ systems,
       thanks to Raimund Sacherer for the patch (Closes: #571944).
+  * debian/debian.ignore: Fix unescape patterns (dots and parenthesis)
+    and decrease processing time by combining and grouping similar rules.
+    Thanks to Moritz Naumann for the patch (Closes: #550512).
   * Debconf translations updated:
      + Czech translation, thanks to Miroslav Kure (Closes: #569694).
      + Portuguese translation, thanks to the "Portuguese Translation Team"
