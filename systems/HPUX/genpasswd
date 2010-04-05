@@ -17,6 +17,7 @@
 #
 # HPUX/genpasswd - 06/14/93
 # HPUX/genpasswd - 06/26/2003 - jfs - Patch to identify password hashes
+# HPUX/genpasswd - 06/04/2010 - jfs - Fix shell script syntax errors 
 #
 #-----------------------------------------------------------------------------
 #
@@ -41,22 +42,19 @@ zappasswd()
       passwd=`$AWK -F: '/u_pwd=/ { print substr($2, 7) }' $tcbfile`
     fi
 
-    case $passwd in
-      # bigcrypt passwords used in trusted mode. (13 + (x * 11))
-      [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./]+([a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./]))
+# Do not print out the password hashes since we do not need them, instead
+# print out the type of hash
+    if echo $passwd | $EGREP -q "^[a-zA-Z0-9\./]{24}" ; then
+# bigcrypt passwords used in trusted mode. (13 + (x * 11)), with at least 24 chars
            passwd="bigcrypt"
-           ;;
-      # Normal UNIX passwds (13 chars)
-      [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./]?(,[a-zA-Zo-9\.]+))
+    elif echo $passwd | $EGREP -q "^[a-zA-Z0-9\./]{13}" ; then
+# Normal UNIX passwds (13 chars)
            passwd="crypt3"
-           ;;
-      "")
-	   passwd=""
-           ;;
-      *)
-           passwd="*"
-           ;;
-    esac
+    elif ! [ -z "$passwd" ] && [ "$passwd" != "*" ] ; then
+            passwd="unknown_format"
+    fi
+
+
     echo "$user:$passwd:$rest"
   done
 }

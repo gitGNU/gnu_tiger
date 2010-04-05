@@ -18,6 +18,7 @@
 # check_passwdspec: Perform system specific password checks here like
 #               password aging checks, etc.
 #
+# 06/04/2010 jfs - Fix shell script syntax errors 
 # 11/19/2003 jfs - Patch from Ryan Bradetich changing acc016w to pass19w
 # 08/09/2003 jfs - Included in the Tiger release but changed its name to 
 #                  check_passwdspec. Added safer temporary file creation.
@@ -60,14 +61,14 @@ done
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
   haveallfiles BASEDIR WORKDIR || exit 1
-  haveallcmds AWK GEN_PASSWD_SETS || exit 1
+  haveallcmds AWK GEN_PASSWD_SETS EGREP || exit 1
   
   echo "--CONFIG-- [init003c] $0: Configuration ok..."
   exit 0
 }
 #------------------------------------------------------------------------
 haveallfiles BASEDIR WORKDIR || exit 1
-haveallcmds AWK GEN_PASSWD_SETS || exit 1
+haveallcmds AWK GEN_PASSWD_SETS EGREP || exit 1
 
 echo
 echo "# Verifying system specific password checks..."
@@ -90,25 +91,25 @@ do
     # Ignore password aging check if the shell is /bin/false.
     [ "$shell" = /bin/false ] && continue
 
-    # Get the age and password field from the tcbfile if it exists.
+    # Review the password expiration date
+    # TODO: Alternative it would be better to retrieve the 
+    # age using '/usr/lbin/getprpw -r -m exptm $login'
     tcbfile="/tcb/files/auth/${login%${login#?}}/$login"
-    [ -f $tcbfile ] && {
+    if [ -f $tcbfile ] ; then
+    # We are in a trusted system get the age and password field 
+    # from the tcbfile
       age=`$AWK -F: '/u_exp\#[0-9]/ {print $0}' $tcbfile`
       [ -n "$age" ] && continue
 
       # Make sure the password hash only contains valid characters.
       hash=`$AWK -F: '/u_pwd=/ { print substr($2,7) }' $tcbfile`
-      [ "$hash" != +([a-zA-Z0-9\./]) ] && continue
+      ( echo "$hash" | $EGREP -q "^[a-zA-Z0-9\./]+$" ) && continue
 
       # Valid password hash without an password expiration date.
       message WARN pass19w "" "Login ID $login does not have password aging enabled."
       continue
-    }
+    fi
 
-    [ "$hash" != [a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./][a-zA-Z0-9\./],+([a-zA-Z0-9\./]) ] && {
-      # Valid password hash without an password expiration date.
-      message WARN pass19w "" "Login ID $login does not have password aging enabled."
-    }
   done 
 done < $WORKDIR/pass.list.$$
 
