@@ -231,6 +231,9 @@ Tiger was unable
 %misc020f
 Tiger checked the process table and was not able to find a process
 which it was configured to look for.
+
+If the process is not part of the system processes consider adjusting
+the Tiger_Running_Procs definition in your tigerrc configuration file.
 %misc021w
 There are no umask entries in the configuration file. It is recommended
 that there are umask entries set in the configuration file.
