@@ -14,21 +14,16 @@ SHELL=/bin/bash
 build: build-stamp
 build-stamp:
 	dh_testdir
-
 	autoconf
 	./configure --with-tigerhome=/usr/lib/tiger --with-tigerwork=/var/lib/tiger/work --with-tigerlog=/var/log/tiger --with-tigerbin=/usr/sbin --with-tigerconfig=/etc/tiger --prefix=/usr --mandir=/usr/share/man
 	$(MAKE) all
-
-
 	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
-
 	[ -f Makefile ] && $(MAKE) distclean || $(MAKE) -f Makefile.in distclean
-
 	dh_clean
 
 install: build
@@ -36,27 +31,23 @@ install: build
 	dh_testroot
 	dh_prep
 	dh_installdirs
-
-	# Add here commands to install the package into debian/tiger.
 	$(MAKE) install DESTDIR=debian/tiger/
-	# Just in case
-	chmod a+x debian/tiger/usr/lib/tiger/systems/Linux/2/{deb,gen,check}_*
-	chmod a+x debian/tiger/usr/lib/tiger/scripts/check_*
 	# This is not needed
 	-rm -rf debian/tiger/usr/lib/tiger/man/
-	# Remove the systems that do not apply. 
-	# Currently only Linux and default
+	# Fix permission of all shell files
+	egrep -rl "^#\!/bin/.*sh" debian/tiger | \
+		while read shell ; do chmod a+x $$shell; done
+	# Remove CVS directories
+	-find debian/tiger/ -type d -a -name "CVS" |xargs rm -rf 
+	# Remove the systems that do not apply to the tiger-otheros package
+	# Currently only Linux and default are kept
 	# AIX/  default/  HPUX/  IRIX/  Linux/  NeXT/  SunOS/  UNICOS/ UNICOSMK
 	# TODO: make this for all dirs save for Linux and default (i.e.
 	# make this 'mv' more generic)
-	-find debian/tiger/ -type d -a -name "CVS" |xargs rm -rf 
 	mv debian/tiger/usr/lib/tiger/systems/{AIX,HPUX,IRIX,NeXT,SunOS,UNICOS,UNICOSMK,Tru64,MacOSX} debian/tiger-otheros/usr/lib/tiger/systems/
-	#install -m 755 debian/tiger debian/tiger/usr/sbin/
-	#install -m 755 debian/tigexp debian/tiger/usr/sbin/
-	#install -m 755 tigercron debian/tiger/usr/lib/tiger/
+	# Install configuration files
 	install -m 600 cronrc debian/tiger/etc/tiger/
-	# Do not install tigerrc, it is handled by ucf since it is edited by Debconf prompts:
-	#install -m 600 tigerrc debian/tiger/etc/tiger/
+	# Note: Do not install tigerrc, it is handled by ucf since it is edited by Debconf prompts:
 	-rm -f debian/tiger/etc/tiger/tigerrc
 	install -m 600 debian/tiger.default debian/tiger/etc/default/tiger
 	install -m 600 debian/debian.ignore debian/tiger/etc/tiger/tiger.ignore
@@ -64,17 +55,9 @@ install: build
 	# Adjust the permissions of directories that might contain confidential information
 	chmod 0700 debian/tiger/var/lib/tiger/work
 	chmod 0700 debian/tiger/var/log/tiger
-
 	# Create symbolic links for template files
 	ln -fs ../../../../../etc/tiger/issue debian/tiger/usr/lib/tiger/systems/Linux/issue.net
 	ln -fs ../../../../../etc/tiger/issue.net debian/tiger/usr/lib/tiger/systems/Linux/issue.net
-	
-	# Adjust executable permissions to some shell scripts
-	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/1/check
-	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/1/gendlclients
-	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/1/getdisks
-	chmod 0755 debian/tiger/usr/lib/tiger/systems/Linux/2/update_advisories.sh
-
 	# Remove unneeded Makefile files.
 	rm -f debian/tiger/usr/lib/tiger/doc/Makefile
 	rm -f debian/tiger/usr/lib/tiger/doc/Makefile.in
