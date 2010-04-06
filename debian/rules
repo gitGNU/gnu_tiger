@@ -79,6 +79,7 @@ binary-arch: build install
 	dh_installman man/tiger.8 man/tigexp.8 man/tigercron.8
 	dh_installinfo
 	dh_installchangelogs CHANGES
+	dh_lintian
 	dh_link
 	dh_strip -XHPUX -XSunOS -XAIX -XIRIX -XNeXT -XMacOSX
 	dh_compress
