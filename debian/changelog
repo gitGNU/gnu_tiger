@@ -9,11 +9,20 @@ tiger (1:3.2.3-3) unstable; urgency=low
       script. Thanks to Hannes von Haugwitz for the patch (Closes: #544701).
     - Added support o detect simfs as local filesystem for OpenVZ systems,
       thanks to Raimund Sacherer for the patch (Closes: #571944).
-    - Clarify use of Tiger_Running_Procs for check_runprocs in the documentation
-      (Closes: 544957)
+    - Clarify use of Tiger_Running_Procs for check_runprocs in the
+      documentation (Closes: 544957)
+    - Fix syntax error in scripts/sub/check_nousrgrp
   * debian/debian.ignore: Fix unescape patterns (dots and parenthesis)
     and decrease processing time by combining and grouping similar rules.
     Thanks to Moritz Naumann for the patch (Closes: #550512).
+  * debian/changelog: wrap long lines
+  * Lintia fixes to make the package lintian clean
+    - debian/rules: Adjust executable bit to all shell files instead of just to
+      one selection of them. 
+    - Add debian/tiger.lintian-overrides to setup overrides for warnings
+      that are not relevant for the package.
+    - debian/rules: Add call to dh_lintian.
+  * Update Debian Advisories
   * Debconf translations updated:
      + Czech translation, thanks to Miroslav Kure (Closes: #569694).
      + Portuguese translation, thanks to the "Portuguese Translation Team"
@@ -24,7 +33,8 @@ tiger (1:3.2.3-3) unstable; urgency=low
      + Vietnamese translation, thanks to Clytie Siddall (Closes: #572777).
   * Debconf translations included:
       + Added Slovak Debconf translation, thanks to helix84 (Closes: #570289).
-      + Added Italian Debconf translation, thanks to Vincenzo Campanella (Closes: #570747).
+      + Added Italian Debconf translation, thanks to Vincenzo Campanella
+      (Closes: #570747).
 
  -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Mon, 05 Apr 2010 19:57:47 +0200
 
@@ -36,7 +46,8 @@ tiger (1:3.2.3-2) unstable; urgency=low
   * Updated some Debconf translations:
      + French translation, thanks to Christian Perrier (Closes: #565321).
      + Swedish translation, thanks to Martin Bagge (Closes: #565497).
-     + Japanese translation, thanks to "Hideki Yamane (Debian-JP)" (Closes: #565615).
+     + Japanese translation, thanks to "Hideki Yamane (Debian-JP)" 
+     (Closes: #565615).  
      + German translation, thanks to Erik Schanze (Closes: #568175).
      + Russian translation, thanks to Yuri Kozlov (Closes: #537918)
   * Updated to Debian policy 3.8.4
@@ -47,7 +58,8 @@ tiger (1:3.2.3-2) unstable; urgency=low
   * Fixed the problem finding users in scripts/sub/check_suid. (Closes: #438122)
   [ Javier Fernandez-Sanguino ]
   * Integrate all patches included in the 3.2.2-11 package release which were 
-    missing in 3.2.3-1 and generated regression bugs (Closes: #566893, #567857, #529041)
+    missing in 3.2.3-1 and generated regression bugs (Closes: #566893, #567857,
+    #529041)
 
  -- Francisco Manuel Garcia Claramonte <francisco@debian.org>  Mon, 01 Feb 2010 00:09:33 +0100
 
@@ -79,30 +91,36 @@ tiger (1:3.2.3-1) unstable; urgency=low
 
 tiger (1:3.2.2-11) unstable; urgency=low
 
-  * Sort the system/Linux/2/inetd file since 'join' complains about it not being
-    sorted when used in check_inetd (Closes: #524783)
-  * Add symbolic links so users can create the issue and issue.net templates they  
-    want to check against when running check_issue in /etc/tiger/ (Closes: #511970)
-  * scripts/find_files: Use patch provided by Khalid Shukri in order to complain
-    from danging symlinks properly so that they can be tiger.ignore'd (Closes: 434333)
+  * Sort the system/Linux/2/inetd file since 'join' complains about it not
+    being sorted when used in check_inetd (Closes: #524783)
+  * Add symbolic links so users can create the issue and issue.net templates
+    they want to check against when running check_issue in /etc/tiger/ 
+    (Closes: #511970)
+  * scripts/find_files: Use patch provided by Khalid Shukri in order to
+    complain from danging symlinks properly so that they can be tiger.ignore'd 
+    (Closes: 434333)
   * debian/debian.ignore: 
-     - Add an ignore message to remove the dangling symlinks that are udev-related
+     - Add an ignore message to remove the dangling symlinks that are
+       udev-related.
      - Add an ignore message for /dev/log since world-writable permissions for
        that file are standard in Debian (Closes: 417939)
   * initdefs: Change error message when a file value definition is empty
-  * systems/Linux/2/check_umask: More extensive umask checks also covering different
-    analysis for each one of the available shells in order to provide more meaningful
-    information.
-  * systems/Linux/2/check_rcumask: Remove shell login umask definitions from the file
-    (both bash and csh/tcsh) since these do not apply to the script (i.e. are not
-    init.d related) and add /etc/init.d/rc handling (Closes: 443807)
-  * doc/misc.txt: Add new messages for new umask analysis covered in check_umask
-  * doc/filesys.txt: Add a description of the new warning message introduced by the
-    above patch.
-  * doc/config.txt: Document that this happens also when the configuration system
+  * systems/Linux/2/check_umask: More extensive umask checks also covering
+    different analysis for each one of the available shells in order to provide
+    more meaningful information.
+  * systems/Linux/2/check_rcumask: Remove shell login umask definitions from
+  * the file (both bash and csh/tcsh) since these do not apply to the script
+    (i.e. are not init.d related) and add /etc/init.d/rc handling
+    (Closes: 443807) 
+  * doc/misc.txt: Add new messages for new umask analysis covered in
+    check_umask 
+  * doc/filesys.txt: Add a description of the new warning message introduced by
+    the above patch.
+  * doc/config.txt: Document that this happens also when the configuration
+  * system
     was not able to define a valid file and set a value for the file definition.
-  * debian/rules: Adjust the permissions of /var/lib/tiger/work and /var/log/tiger/ 
-    so that they are 0700. (Closes: #512078)
+  * debian/rules: Adjust the permissions of /var/lib/tiger/work and
+    /var/log/tiger/ so that they are 0700. (Closes: #512078)
   * debian/preinst: Adjust the permissions of /var/lib/tiger/work and
     /var/log/tiger/ when upgrading so that they are set to 0700.
 
@@ -118,10 +136,12 @@ tiger (1:3.2.2-9) unstable; urgency=low
 
   * Use --debconf-ok when calling ucf (Closes: 517798, 521620, 539188)
   * Update check_release to reflect latest Debian release (Closes: 523700)
-  * Fix systems/Linux/2/config so that it uses /etc/apache2 in Debian if it exists
-    and /etc/apache otherwise. (Closes: 523699)
-  * Change the wording of errors in tigerexp when the variable does not have a value (Closes: 523699)
-  * Throw away errors from executing 'df -t nfs' in scripts/check_network (Closes: 511803)
+  * Fix systems/Linux/2/config so that it uses /etc/apache2 in Debian if it
+    exists and /etc/apache otherwise. (Closes: 523699)
+  * Change the wording of errors in tigerexp when the variable does not have a
+    value (Closes: 523699) 
+  * Throw away errors from executing 'df -t nfs' in  scripts/check_network
+    (Closes: 511803)
   * Linux/2/gen_mounts: Added davfs, fuse and ext4 (Closes: 524722, 498468, 512567)
   * Update list of Debian advisories
 
@@ -130,8 +150,8 @@ tiger (1:3.2.2-9) unstable; urgency=low
 tiger (1:3.2.2-8) unstable; urgency=low
 
   * Acknowledge NMU (Closes: #503282)
-  * Fix Makefiles so that the explanation index file is generated and distributed
-    properly (Closes: #507028)
+  * Fix Makefiles so that the explanation index file is generated and
+    distributed properly (Closes: #507028)
   * system/Linux/2/gen_mounts:
      - Added ecryptfs, used by ecryptfs-utils (Closes: 506512)
      - Fix bashism (Closes: #505939, #505939)
@@ -279,7 +299,8 @@ tiger (1:3.2.1-36) unstable; urgency=low
   * Fix the location of Tiger's default file (Closes: #426182)
   * Updated the Debian advisories listing (as of today, latest DSA is 1316)
   * Changed the maintainer's email address
-  * system/Linux/2/check_lilo: run the boot loader check if on amd64 (Closes: #412669)
+  * system/Linux/2/check_lilo: run the boot loader check if on amd64 
+    (Closes: #412669)
   * system/Linux/2/deb_checkmd5sums: Fix the script so that it understands
     properly the "new" md5sum format (Closes: #412822)
   * Add new suid files to the list of SUIDs at  system/Linux/2/suid_list
@@ -296,7 +317,8 @@ tiger (1:3.2.1-36) unstable; urgency=low
     (Closes: #409386)
   * Debconf translations:
     - Included Dutch translation provided by Bart Cornelis (Closes: #414768)
-    - Included Portuguese translation provided by LuÃ­sa LourenÃ§o (Closes: #415534)
+    - Included Portuguese translation provided by LuÃ­sa LourenÃ§o 
+     (Closes: #415534)
 
  -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Fri, 22 Jun 2007 01:04:17 +0200
 
