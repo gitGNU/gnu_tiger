@@ -9657,6 +9657,7 @@ perl	5.6.1-8.8	sparc	DSA-620-1 perl	2004-12-30
 perl-base	5.6.1-8.8	sparc	DSA-620-1 perl	2004-12-30
 perl-debug	5.6.1-8.8	sparc	DSA-620-1 perl	2004-12-30
 perl-suid	5.6.1-8.8	sparc	DSA-620-1 perl	2004-12-30
+phpmyadmin	2.9.1.1-11	all	DSA-1824-1 phpmyadmin	2009-6-25
 wesnoth-data	1.2-5	all	DSA-1737-1 wesnoth	2009-3-11
 wesnoth-music	1.2-5	all	DSA-1737-1 wesnoth	2009-3-11
 wesnoth-tsg	1.2-5	all	DSA-1737-1 wesnoth	2009-3-11
@@ -9696,6 +9697,67 @@ wesnoth	1.2-5	sparc	DSA-1737-1 wesnoth	2009-3-11
 wesnoth-server	1.2-5	sparc	DSA-1737-1 wesnoth	2009-3-11
 wesnoth-editor	1.2-5	sparc	DSA-1737-1 wesnoth	2009-3-11
 tunapie	2.1.8-2	all	DSA-1764-1 tunapie	2009-4-07
+libtiff-doc	3.8.2-11.2	all	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	alpha	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	alpha	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	alpha	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	alpha	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	alpha	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	amd64	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	amd64	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	amd64	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	amd64	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	amd64	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	arm	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	arm	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	arm	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	arm	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	arm	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	armel	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	armel	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	armel	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	armel	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	armel	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	hppa	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	hppa	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	hppa	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	hppa	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	hppa	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	i386	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	i386	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	i386	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	i386	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	i386	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	ia64	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	ia64	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	ia64	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	ia64	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	ia64	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	mips	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	mips	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	mips	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	mips	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	mips	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	mipsel	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	mipsel	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	mipsel	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	mipsel	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	mipsel	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	powerpc	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	powerpc	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	powerpc	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	powerpc	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	powerpc	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	s390	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	s390	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	s390	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	s390	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	s390	DSA-1835-1 tiff	2009-7-15
+libtiff-opengl	3.8.2-11.2	sparc	DSA-1835-1 tiff	2009-7-15
+libtiff-tools	3.8.2-11.2	sparc	DSA-1835-1 tiff	2009-7-15
+libtiff4-dev	3.8.2-11.2	sparc	DSA-1835-1 tiff	2009-7-15
+libtiffxx0c2	3.8.2-11.2	sparc	DSA-1835-1 tiff	2009-7-15
+libtiff4	3.8.2-11.2	sparc	DSA-1835-1 tiff	2009-7-15
 libnss-ldapd	0.6.7.1	alpha	DSA-1758-1 nss-ldapd	2009-3-30
 libnss-ldapd	0.6.7.1	amd64	DSA-1758-1 nss-ldapd	2009-3-30
 libnss-ldapd	0.6.7.1	arm	DSA-1758-1 nss-ldapd	2009-3-30
@@ -9708,6 +9770,36 @@ libnss-ldapd	0.6.7.1	mipsel	DSA-1758-1 nss-ldapd	2009-3-30
 libnss-ldapd	0.6.7.1	powerpc	DSA-1758-1 nss-ldapd	2009-3-30
 libnss-ldapd	0.6.7.1	s390	DSA-1758-1 nss-ldapd	2009-3-30
 libnss-ldapd	0.6.7.1	sparc	DSA-1758-1 nss-ldapd	2009-3-30
+libapr1	1.2.7-9	alpha	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dev	1.2.7-9	alpha	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dbg	1.2.7-9	alpha	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dbg	1.2.7-9	amd64	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dev	1.2.7-9	amd64	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1	1.2.7-9	amd64	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dbg	1.2.7-9	arm	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1	1.2.7-9	arm	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dev	1.2.7-9	arm	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dev	1.2.7-9	i386	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1	1.2.7-9	i386	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dbg	1.2.7-9	i386	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1	1.2.7-9	ia64	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dbg	1.2.7-9	ia64	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dev	1.2.7-9	ia64	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dbg	1.2.7-9	mips	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dev	1.2.7-9	mips	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1	1.2.7-9	mips	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dbg	1.2.7-9	mipsel	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dev	1.2.7-9	mipsel	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1	1.2.7-9	mipsel	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dev	1.2.7-9	powerpc	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dbg	1.2.7-9	powerpc	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1	1.2.7-9	powerpc	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1	1.2.7-9	s390	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dbg	1.2.7-9	s390	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dev	1.2.7-9	s390	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dev	1.2.7-9	sparc	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1	1.2.7-9	sparc	DSA-1854-1 apr, apr-util	2009-8-08
+libapr1-dbg	1.2.7-9	sparc	DSA-1854-1 apr, apr-util	2009-8-08
 phpmyadmin	2.9.1.1-10	all	DSA-1723-1 phpmyadmin	2009-2-11
 psi	0.11-9	alpha	DSA-1741-1 psi	2009-3-14
 psi	0.11-9	amd64	DSA-1741-1 psi	2009-3-14
