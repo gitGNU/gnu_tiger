@@ -1,0 +1,7 @@
+# Lintian override file for Tiger
+# We need to warn the users that Tiger requires adapting to the local system
+tiger binary: possible-debconf-note-abuse 
+# There are directories are set with more strict permissions than expected
+# since they might contain sensitive information. This 
+# includes var/lib/tiger/work/ and var/log/tiger/.
+tiger binary: non-standard-dir-perm
