@@ -28,6 +28,8 @@ Changes (v 3.2.4)
 
 - Improve documentation for tiger messages
 
+- Fixed a bashism problem with logical expression in /systems/HPUX/check_trusted
+
 -...More changes in progress...
 
 

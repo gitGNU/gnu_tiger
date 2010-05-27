@@ -25,6 +25,8 @@
 #                  available.
 # 08/09/2003 jfs - Patch from Ryan Bradetich which adds a check to determine
 #                  system will lock accounts after a number of failed attempts.
+# 23/05/2010 Francisco G. Claramonte - Fixed a bashism problem with
+#                  logical expression, added '$' in '((..))' expression.
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -92,7 +94,7 @@ fi
 
 # Verify the number of login attempts are limited.
 num=`$GETPRDEF -m umaxlntr`
-( [ -z "$num" ] || (( ${num#umaxlntr=} < 1 ))) && {
+( [ -z "$num" ] || $(( ${num#umaxlntr=} < 1 ))) && {
   message WARN trust002w "" "The system is not configured to limit the number of login attempts."
 }
 
