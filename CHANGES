@@ -30,6 +30,9 @@ Changes (v 3.2.4)
 
 - Fixed a bashism problem with logical expression in /systems/HPUX/check_trusted
 
+- Added support to recognize fuse.ltspfs for ltspfs file system and ltsp-server
+  in systems/Linux/2/gen_mounts script.
+
 -...More changes in progress...
 
 

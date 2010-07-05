@@ -55,6 +55,7 @@
 # Linux/2/gen_mounts - 11/27/2008 - Added ecryptfs, used by ecryptfs-utils (See Debian bug 506512)
 #                                 - Fix bashism (Debian bug #505939)
 # Linux/2/gen_mounts - 05/25/2009 - Added davfs, fuse and ext4 (Debian bug 524722, 498468, 512567)
+# Linux/2/gen_mounts - 07/01/2010 - Added fuse.ltspfs (Debian bug 587507)
 #-----------------------------------------------------------------------------
 #
 
@@ -133,6 +134,7 @@ localfs()
   [ "$1" = "fuse.truecrypt" ] && LOCAL=0        # Encrypted filesystem, used in Ubuntu 'hardy'
   [ "$1" = "fuse.encfs" ] && LOCAL=0            # Encrypted filesystem
   [ "$1" = "fuse.gvfs-fuse-daemon" ] && LOCAL=0 # Used in Ubuntu 'hardy'
+  [ "$1" = "fuse.ltspfs" ] && LOCAL=0 		# Used by LTSP 5.x
   [ "$1" = "ecryptfs" ] && LOCAL=0              # Encrypted filesystem used by ecryptfs-utils
   # Filesystems of other OS
   [ "$1" = "msdos" ] && LOCAL=1

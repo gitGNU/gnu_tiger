@@ -1,8 +1,11 @@
-tiger (1:3.2.4-1) unstable; urgency=low
+tiger (1:3.2.3-2) unstable; urgency=low
 
-  * New upstream release.
-  * Fixed the bashism problem with logical expression in 
-    /systems/HPUX/check_trusted. (Closes: #581140).
+  * Updated Debian Policy to 3.9.0.
+  * Pull fixes from upstream SVN:
+    - Fixed the bashism problem with logical expression in 
+      /systems/HPUX/check_trusted. (Closes: #581140).
+    - Added support to recognize fuse.ltspfs for ltspfs file system. Thanks to 
+      Alexandre Cavalcante Alencar. (Closes: #587507).
 
  -- Francisco Manuel Garcia Claramonte <francisco@debian.org>  Thu, 27 May 2010 21:07:17 +0200
 
