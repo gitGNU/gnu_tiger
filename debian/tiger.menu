@@ -1,0 +1,4 @@
+?package(tiger):needs="text" section="Applications/System/Security" \
+  title="Tiger UNIX security tool" \
+  longtitle="Tiger UNIX security tool (root)" \
+  command="su-to-root -c '/usr/sbin/tiger'"

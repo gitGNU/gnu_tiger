@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Tiger UNIX security tool
+Comment=Tiger UNIX security tool (root)
+Exec=su-to-root -c '/usr/sbin/tiger'
+Terminal=true
+Type=Application
+Categories=System;
+StartupNotify=true

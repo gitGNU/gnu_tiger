@@ -61,6 +61,9 @@ install: build
 	# Remove unneeded Makefile files.
 	rm -f debian/tiger/usr/lib/tiger/doc/Makefile
 	rm -f debian/tiger/usr/lib/tiger/doc/Makefile.in
+	# Add Desktop file
+	mkdir -p $(CURDIR)/debian/tiger/usr/share/applications/
+	install -m 0644 $(CURDIR)/debian/tiger.desktop $(CURDIR)/debian/tiger/usr/share/applications/
 
 # Build architecture-independent files here.
 binary-indep: build install
