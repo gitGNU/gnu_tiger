@@ -9,11 +9,11 @@ CONFIG=/etc/tiger/tigerrc
 
 case "$1" in
 	purge)
-		for dir in /var/log/tiger/ /var/lib/tiger/work /var/run/tiger/work/ /var/run/tiger/ 
+		for dir in /var/log/tiger/ /var/lib/tiger/work /var/lib/tiger/ /var/run/tiger/ 
 		do
 			[ -d "$dir" ] &&  {
-			 	find "$dir" -type f -exec rm -f {} \;
-				rmdir "$dir"
+			 	find "$dir" -type d -o -exec rm -f {} \;
+				find "$dir" -type d -depth -exec rmdir {} \;
 			}
 		done
 # Do we have any tigerXX files under /var/log/? if so we should remove
