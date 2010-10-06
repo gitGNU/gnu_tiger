@@ -1,3 +1,25 @@
+tiger (1:3.2.3-5) unstable; urgency=low
+
+  * Linux/2/gen_mounts: Added brtfs (Closes: 598792)
+  * Updated Danish po-debconf translation provided by Joe Dalton
+  (Closes: 596151)
+  * scripts/check_rootdir: Check for inode 2 on ext4 as well as ext2/3.
+    Thanks to the patch provided  by Lorenzo De Liso from Ubuntu.
+  * debian/postrm: Clean directories correctly when purging.
+    Thanks to the patch provided  by Lorenzo De Liso from Ubuntu.
+  * config: Do not complain before creating the directory if WORKDIR
+    does not exist but it is pointing to a temporary location. This
+    change was prompted by the patch provided  by Lorenzo De Liso, but the
+    change is not exactly the same as the one implemented in Ubuntu (which is
+    wrong, as it will try to create the directory twice)
+    (Closes: #589089)
+    Note: The above bug is considered closed even if the patch
+    "Use temporary file instead of hardcoded rcfile for temporary work"
+    is not included as this patch is not accepted.
+  * Remove RCS directories from the source package.
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Wed, 06 Oct 2010 03:01:20 +0200
+
 tiger (1:3.2.3-4) unstable; urgency=low
 
   * Updated Debian Policy to 3.9.0.
