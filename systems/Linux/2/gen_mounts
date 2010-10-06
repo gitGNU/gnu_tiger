@@ -56,6 +56,7 @@
 #                                 - Fix bashism (Debian bug #505939)
 # Linux/2/gen_mounts - 05/25/2009 - Added davfs, fuse and ext4 (Debian bug 524722, 498468, 512567)
 # Linux/2/gen_mounts - 07/01/2010 - Added fuse.ltspfs (Debian bug 587507)
+# Linux/2/gen_mounts - 10/06/2010 - Added btrfs (Debian bug 598792)
 #-----------------------------------------------------------------------------
 #
 
@@ -122,6 +123,7 @@ localfs()
   [ "$1" = "coherent" ] && LOCAL=0
   [ "$1" = "xenix" ] && LOCAL=0
   [ "$1" = "hpfs" ] && LOCAL=0
+  [ "$1" = "brtfs" ] && LOCAL=0
   [ "$1" = "rootfs" ] && LOCAL=0                # Provides an empty root directory for the bootstrap phase
   [ "$1" = "shm" ] && LOCAL=0                   # IPC-shared memory regions
   [ "$1" = "tmpfs" ] && LOCAL=0                 # Temporary files (kept in RAM unless swapped)
