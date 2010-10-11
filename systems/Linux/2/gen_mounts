@@ -123,7 +123,7 @@ localfs()
   [ "$1" = "coherent" ] && LOCAL=0
   [ "$1" = "xenix" ] && LOCAL=0
   [ "$1" = "hpfs" ] && LOCAL=0
-  [ "$1" = "brtfs" ] && LOCAL=0
+  [ "$1" = "btrfs" ] && LOCAL=0
   [ "$1" = "rootfs" ] && LOCAL=0                # Provides an empty root directory for the bootstrap phase
   [ "$1" = "shm" ] && LOCAL=0                   # IPC-shared memory regions
   [ "$1" = "tmpfs" ] && LOCAL=0                 # Temporary files (kept in RAM unless swapped)
