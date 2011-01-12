@@ -17,6 +17,8 @@
 #
 #  config (top level) - 06/14/93
 #
+# 10/06/2010 jfs  Do not complain if the working directory is a temporary
+#                 on (Debian bug #589089)
 # 08/30/2006 jfs  Attempt to create working directory if it does not exist 
 #                 (Debian bug #366919)
 # 06/22/2005 jfs  Abort signature generation if the user does not 
@@ -287,16 +289,23 @@ checkfile()
   # TODO: WORKDIR should be removed on exit if it is located in a temporary 
   # directory
   if [ ! -d "$WORKDIR" ] ; then
-  	  echo "Configured working directory $WORKDIR does not exist" >&2
+         # Complain if the workingdirectory is not located in
+         # a temporary location and it does not exist
+          case "$WORKDIR" in
+            /var/run/* | /tmp* | /var/tmp/* ) ;;
+            *) echo "Configured working directory $WORKDIR does not exist" >&2 ;;
+          esac
   	  if [ "$QUIET" != "Y" ] ; then
 	  	echo "Creating working directory $WORKDIR"
 		echo
 	  fi
+          # Try to create it...
 	  # TODO: -p switch is not portable
   	  if ! mkdir -p "$WORKDIR" >/dev/null 2>&1; then
 	  	  echo "Configured working directory $WORKDIR cannot be created (should you use -w?)" >&2
 		  exit 1
 	  fi
+          # From here on we should have a working WORKDIR
   fi
 
 

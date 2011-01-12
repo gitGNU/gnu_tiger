@@ -144,7 +144,7 @@ Notice that changing the real values for the operating system and
 architecture 
 .B Tiger
 is running in might result in scripts being run which are not
-appropiate to it, and, as a consequence, unexpected (and potentially 
+appropriate to it, and, as a consequence, unexpected (and potentially 
 dangerous) errors might be generated. When executed
 .B Tiger
 will show which operating system, release and architecture thinks it is

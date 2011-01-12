@@ -151,7 +151,7 @@ DIFF=`findcmd diff`
 ID=`findcmd id`
 EXPAND=`findcmd expand`
 # We use sendmail better than mail since we use it to
-# send appropiate headers
+# send appropriate headers
 MAILER=`findcmd sendmail`
 [ -z "$MAILER" ] && MAILER=`findcmd mail`
 LSOF=`findcmd lsof`

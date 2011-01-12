@@ -33,7 +33,7 @@
 # - retrieve the description of the package
 #
 # This script could retrieve the patchdiag.xref file itself from the 
-# appropiate location if it's not available.
+# appropriate location if it's not available.
 #-----------------------------------------------------------------------------
 #
 # This is the directory Tiger is installed on

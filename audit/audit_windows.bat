@@ -9,7 +9,7 @@
 ::
 :: Please notice that this script is enhanced if you download some binary
 :: tools that provide additional information that cannot be retrieved
-:: with Microsoft's tools. The appropiate tools are listed in each
+:: with Microsoft's tools. The appropriate tools are listed in each
 :: place together with their download location.
 :: 
 :: IF you receive this script together with the above mentioned tools

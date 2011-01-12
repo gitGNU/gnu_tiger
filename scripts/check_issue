@@ -18,7 +18,7 @@
 # check_issue - jfs - 11/10/2001
 #
 # Checks the /etc/issue and /etc/issue.net file to determine if they
-# contain the appropiate content (this is defined in the ISSUEFILE and
+# contain the appropriate content (this is defined in the ISSUEFILE and
 # ISSUENETFILE)
 #
 # check_issue - 05/27/2002 - jfs

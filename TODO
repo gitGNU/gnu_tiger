@@ -20,7 +20,7 @@ approach)
    . OVAL interpreter and OS-specific OVAL
    queries (for Debian GNU/Linux, RedHat GNU/Linux and Solaris). 
    . Revision of current checks to add CVE mapping for vulnerabilities
-     if appropiate.
+     if appropriate.
    . Revision of documentation on fixes (tigexp) 
 - Version 3.4 (stable): bug fixes.
 - Version 3.3 (unstable):

@@ -15,7 +15,7 @@ The suite of scripts is made of simple shell scripts (and a batch
 file for Windows 2000/XP/2003) that will extract the relevant
 information from the system (installed software and patches,
 permissions, TCP/IP listeners, processes, etc.) and allow you to review
-that information manually and fill in the appropiate checklist.
+that information manually and fill in the appropriate checklist.
 
 These scripts are derived from Marc Heuse's set of audit scripts [1].
 Similar tools include Seán Boran's UNIX/Linux local audit tool [2].

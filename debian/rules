@@ -98,7 +98,7 @@ binary-arch: build install
 update-dsa:
 # Updated Debian Security Advisories
 # This target should only be run by the Debian maintainer (which needs
-# to fix the update_advisories appropiately)
+# to fix the update_advisories appropriately)
 	cd systems/Linux/2 && sh update_advisories.sh
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install

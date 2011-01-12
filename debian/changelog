@@ -1178,7 +1178,7 @@ tiger (2.2.4p2-1) unstable; urgency=low
     script. TODO: rewrite it in shell script and remove RedHat-specific
     stuff.
   * Moved the Linux specific checks provided by Paul Telford to
-    systems/Linux/2/ since they are not appropiate to other systems
+    systems/Linux/2/ since they are not appropriate to other systems
     (for consistency)
   * Fixed check_release as provided by Paul Telford (some typos and not
     correctly programmed)

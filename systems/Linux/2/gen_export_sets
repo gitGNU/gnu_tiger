@@ -18,7 +18,7 @@
 # Linux/2/gen_export_sets - 12/03/2001
 # 
 # 12/03/2001 jfs  Make it export sets that can be understood by check_exports
-#                 this way it can appropiately find errors 
+#                 this way it can appropriately find errors 
 #
 #-----------------------------------------------------------------------------
 #
