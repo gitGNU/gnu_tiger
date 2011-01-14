@@ -57,6 +57,7 @@
 # Linux/2/gen_mounts - 05/25/2009 - Added davfs, fuse and ext4 (Debian bug 524722, 498468, 512567)
 # Linux/2/gen_mounts - 07/01/2010 - Added fuse.ltspfs (Debian bug 587507)
 # Linux/2/gen_mounts - 10/06/2010 - Added btrfs (Debian bug 598792)
+# Linux/2/gen_mounts - 14/01/2011 - Added xenfs (Savannah bug 32126) 
 #-----------------------------------------------------------------------------
 #
 
@@ -138,6 +139,7 @@ localfs()
   [ "$1" = "fuse.gvfs-fuse-daemon" ] && LOCAL=0 # Used in Ubuntu 'hardy'
   [ "$1" = "fuse.ltspfs" ] && LOCAL=0 		# Used by LTSP 5.x
   [ "$1" = "ecryptfs" ] && LOCAL=0              # Encrypted filesystem used by ecryptfs-utils
+  [ "$1" = "xenfs" ] && LOCAL=0                 # Virtual fs for Xen
   # Filesystems of other OS
   [ "$1" = "msdos" ] && LOCAL=1
   [ "$1" = "umsdos" ] && LOCAL=1
