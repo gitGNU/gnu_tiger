@@ -1,6 +1,14 @@
+tiger (1:3.2.3-6) unstable; urgency=low
+
+  * systems/Linux/2/gen_mounts: Fix typo in brtfs (Closes: 598792)
+  * tigerrc: Use rsyslogd in the Tiger_Running_Procs definition as
+    it is the default syslog daemon since Lenny (Closes: 544957)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Mon, 11 Oct 2010 22:29:03 +0200
+
 tiger (1:3.2.3-5) unstable; urgency=low
 
-  * Linux/2/gen_mounts: Added brtfs (Closes: 598792)
+  * system/Linux/2/gen_mounts: Added brtfs (Closes: 598792)
   * Updated Danish po-debconf translation provided by Joe Dalton
   (Closes: 596151)
   * scripts/check_rootdir: Check for inode 2 on ext4 as well as ext2/3.
@@ -1178,7 +1186,7 @@ tiger (2.2.4p2-1) unstable; urgency=low
     script. TODO: rewrite it in shell script and remove RedHat-specific
     stuff.
   * Moved the Linux specific checks provided by Paul Telford to
-    systems/Linux/2/ since they are not appropriate to other systems
+    systems/Linux/2/ since they are not appropiate to other systems
     (for consistency)
   * Fixed check_release as provided by Paul Telford (some typos and not
     correctly programmed)
