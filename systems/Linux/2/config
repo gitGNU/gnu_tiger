@@ -50,6 +50,8 @@
 # Linux/2/config - 04/17/2005 - jfs - Added IPTABLES and CMP
 # Linux/2/config - 05/20/2006 - jfs - Use TAIL properly (POSIX 1003.2-1992)
 # Linux/2/config - 04/25/2009 - jfs - Use apache2 directory if available in Debian
+# Linux/2/config - 01/14/2011 - jfs - Add /dev/shm and /lib/init/rw
+#               to the writable filesystems (common tmpfs) (Debian bug #317329)
 #
 #-----------------------------------------------------------------------------
  
@@ -310,7 +312,7 @@ export MAILSPOOL CRONSPOOL ETCSHELLS CRONALLOW CRONDENY
 LOCFS=ext2
 export LOCFS
 
-FS_WDIRSYS="/tmp/ /var/tmp/ /var/spool/mail/"
+FS_WDIRSYS="/tmp/ /var/tmp/ /var/spool/mail/ /dev/shm /lib/init/rw"
 export FS_WDIRSYS
 #
 SYSDEFAULTPATH="/bin:/usr/bin"
