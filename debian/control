@@ -10,28 +10,45 @@ Homepage: http://savannah.nongnu.org/projects/tiger/
 Package: tiger
 Architecture: any
 Depends: net-tools, binutils, bsdmainutils, debconf | debconf-2.0, ucf, ${shlibs:Depends}, ${misc:Depends}
-Recommends: sendmail | mail-transport-agent, john, chkrootkit
+Recommends: sendmail | mail-transport-agent, john, chkrootkit, tripwire | aide
 Suggests: lsof
 Description: Report system security vulnerabilities
- TIGER, or the 'tiger' scripts, is a set of Bourne shell 
- scripts, C programs and data files which are used to perform
- a security audit of UNIX systems.  TIGER has one primary goal:
- report ways 'root' can be compromised.
+ TIGER, or the 'tiger' scripts, is a set of Bourne shell scripts, C programs
+ and data files which are used to perform a security audit of different
+ operating systems. The tools can be both run altogether once to generate an
+ audit report of the system and they can also be run periodically to
+ provide information on changes to the system's security once a 
+ security baseline has been defined. Consequently, they can be used
+ also as a host intrusion detection mechanism.
+ .
+ The tools rely on specialised external security tools such as
+ John the Ripper, Chkroot and integrity check tools (like Tripwire,
+ Integrit or Aide) for some of the tasks. The periodic review
+ mechanism relies on the use of the cron task scheduler and an email
+ delivery system.
+ . 
+ TIGER has one primary goal: report ways the system's security can be
+ compromised.
  . 
  Debian's TIGER incorporates new checks primarily oriented towards
  Debian distribution including: md5sums checks of installed files,
  location of files not belonging to packages, check of security
  advisories and analysis of local listening processes.
+ .
+ This package provides all the security scripts and data files.
 
 Package: tiger-otheros
 Architecture: any
 Depends: tiger, ${misc:Depends}
 Description: Scripts to run Tiger in other operating systems
- TIGER, or the 'tiger' scripts, is a set of Bourne shell 
- scripts, C programs and data files which are used to perform
- a security audit of UNIX systems.  TIGER has one primary goal:
- report ways 'root' can be compromised.
- . 
+ TIGER, or the 'tiger' scripts, is a set of Bourne shell scripts, C programs
+ and data files which are used to perform a security audit of different
+ operating systems. The tools can be both run altogether once to generate an
+ audit report of the system and they can also be run periodically to
+ provide information on changes to the system's security once a 
+ security baseline has been defined. Consequently, they can be used
+ also as a host intrusion detection mechanism.
+ .
  This package provides all the scripts for operating systems other
  than Linux provided for in the Tiger distribution. It is provided
  in the hope it will be useful for admins that wish to run tiger
