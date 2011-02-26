@@ -58,6 +58,7 @@
 # Linux/2/gen_mounts - 07/01/2010 - Added fuse.ltspfs (Debian bug 587507)
 # Linux/2/gen_mounts - 10/06/2010 - Added btrfs (Debian bug 598792)
 # Linux/2/gen_mounts - 14/01/2011 - Added xenfs (Savannah bug 32126) 
+#                                   (Debian bug 615052)
 #-----------------------------------------------------------------------------
 #
 
