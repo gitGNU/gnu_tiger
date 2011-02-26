@@ -129,7 +129,7 @@ check_passwd_entries()
   do
 
     # Check the password hash.
-    [ -z "$Tiger_Passwd_Hashes" ] && Tiger_Passwd_Hashes='crypt3|md5|xxxxxxxxxxxxx'
+    [ -z "$Tiger_Passwd_Hashes" ] && Tiger_Passwd_Hashes='crypt3|md5|sha512|xxxxxxxxxxxxx'
     eval "case \"$hash\" in
       \"\")
         message FAIL pass011f \"\" \"Username \\\`$login' has an empty password field.\"
