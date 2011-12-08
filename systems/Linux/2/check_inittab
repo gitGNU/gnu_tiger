@@ -83,11 +83,18 @@ if [ -r /etc/inittab ] ; then
 	do
 	if [ $key = "ctrlaltdel" -a -n "`echo $command |$GREP shutdown`" ] 
 	then
-            if [ ! -e "/etc/shutdown.allow" ] ; then
+            restricted="no"
+
+            # The command has to use '-a' and /etc/shutdown.allow has
+            # to exist and contain something to consider this feature
+            # 'restricted'
+            [ -n "`echo $command | $GREP -- '-a'`" ] && [ -s "/etc/shutdown.allow" ] && restricted="yes"
+
+            if [ "$restricted" = "no" ]; then
 		message FAIL lin007w "" "Normal users can reboot the system through ctrl+alt+del in runlevels $runlevels"
             else
                 users="`cat /etc/shutdown.allow`"
-		message INFO lin007w "" "The following users (listed in /etc/shutdown.allow) can reboot the system through ctrl+alt+del in runlevels $runlevels: $users"
+		message INFO lin007w "" "The following users (listed in /etc/shutdown.allow) can reboot the system through ctrl+alt+del in runlevels $runlevels: '$users'"
             fi
 	fi
 	done
