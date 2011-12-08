@@ -38,6 +38,9 @@ In the default configuration of many GNU/Linux distributions users can
 reboot the machine pressing Ctrl+Alt+Delete while in console mode. This can
 be considered a security risk if an attacker can easily taken down the
 server from console.
+You can restrict this feature through the use of the /etc/shutdown.allow
+file. In that file is defined, only if a user listed in the file (or
+root) are logged in will the system shutdown be initiated.
 %lin008e
 The /proc pseudo-filesystem is needed to check the network configuration
 settings in the kernel and determine insecure setups. /proc is available
