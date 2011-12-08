@@ -1,3 +1,52 @@
+tiger (1:3.2.3-9) unstable; urgency=low
+
+  * debian/control: 
+     - Enhance description
+     - Add Recommends on integrity checking tools
+  [ Take fixes introduced in upstream's GIT]:
+  * systems/Linux/2/config: Add /run/, /run/shm and /run/lock
+    to the list of potentially writable filesystems as these
+    are commonly used as tmpfs (Closes: #633060)
+  * scripts/check_accounts: Sort the user files before joining them 
+    (Closes: #624258)
+  * scripts/check_devices
+    - Extend the list of EXPECTEDDIRS to cover /dev/bsg (Closes: #616339)
+    - Do not test symbolic links if they point to regular files. 
+      (Closes: #616337)
+  * systems/Linux/2/check_inittab: Improved the check so that it takes into
+    account the availability of /etc/shutdown.allow (Closes: #603199)
+  * systems/Linux/2/check_umask: Fix how UMASK is obtained for login.defs
+   (Closes: 603320)
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Thu, 08 Dec 2011 01:46:05 +0100
+
+tiger (1:3.2.3-8) unstable; urgency=high
+
+  * debian/rules: Symlink systems/Linux/3 to systems/Linux/2 to support
+     Linux kernel version 3 (Closes: #635450)
+  * config: Fix bug which prevent it from using the default configuration
+     file if it did not find a proper configuration
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Thu, 04 Aug 2011 23:25:20 +0200
+
+tiger (1:3.2.3-7) unstable; urgency=low
+
+  * debian/control: 
+      - Add Recommends to tripwire | aide
+      - Review package description
+  * Update to latest CVS:
+    - [multiple files] Fix spelling (Closes: #609203)
+    - systems/Linux/2/config: Add /dev/shm and /lib/init/rw to the writable
+    filesystems (common tmpfs) (Closes: #603338)
+    - systems/Linux/2/gen_mounts: Added xenfs as a valid filesystem  
+      (Closes: #615052)
+    - Apply patch by Timo Lindfors to add support for SHA-512 passwords
+     (This is the default used in Debian GNU/Linux squeeze and later releases)
+     (Closes: #581266)
+
+
+ -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Sat, 26 Feb 2011 01:45:50 +0100
+
 tiger (1:3.2.3-6) unstable; urgency=low
 
   * systems/Linux/2/gen_mounts: Fix typo in brtfs (Closes: 598792)
