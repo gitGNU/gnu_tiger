@@ -22,6 +22,7 @@
 # (home directory accesibility, shell configuration files, dormant accounts
 # and .hushlogin files)
 #
+# 08/12/2011 jfs  Sort the user files before joining them (Debian bug #624258)
 # 10/11/2006 jfs  Redirect find errors in $HOME to null (Debian bug #386163)
 # 20/04/2006 jfs  Fix the pipe check in forward files (Debian bug #329610)
 # 15/06/2005 jfs  Check for null $uids before using them in comparisons
@@ -132,7 +133,7 @@ done
 # elements are set.
 #
 [ "$Tiger_TESTMODE" = 'Y' ] && {
-  haveallcmds AWK CAT CHECK_CRON FIND GEN_PASSWD_SETS GREP JOIN LS TR WC RM || exit 1
+  haveallcmds AWK CAT CHECK_CRON FIND GEN_PASSWD_SETS GREP JOIN SORT MV LS TR WC RM || exit 1
   haveallfiles BASEDIR WORKDIR || exit 1
   haveallvars HOSTNAME TESTEXEC || exit 1
   
@@ -143,7 +144,7 @@ done
 echo
 echo "# Performing check of user accounts..."
 
-haveallcmds AWK CAT CHECK_CRON FIND GEN_PASSWD_SETS GREP JOIN LS TR WC RM || exit 1
+haveallcmds AWK CAT CHECK_CRON FIND GEN_PASSWD_SETS GREP JOIN SORT MV LS TR WC RM || exit 1
 haveallfiles BASEDIR WORKDIR || exit 1
 haveallvars HOSTNAME TESTEXEC || exit 1
 
@@ -359,6 +360,7 @@ else
   $GEN_PASSWD_SETS $WORKDIR/pass.list.$$
 fi
 
+
 while read passwd_set
 do
   source=`$CAT $passwd_set.src`
@@ -366,14 +368,16 @@ do
 
   $AWK -F: '{print $1, $6}' $passwd_set |
   $BASEDIR/util/${GETFSHOST:=getfs-std} |
-  $TR ' ' : > $WORKDIR/home.hosts.$$
+  $TR ' ' : | $SORT > $WORKDIR/home.hosts.$$
 
-  $JOIN -t: -o 1.1 1.6 2.3 1.7 1.3 1.2 $passwd_set $WORKDIR/home.hosts.$$ |
+  $SORT $passwd_set  > $WORKDIR/passwd.set.$$
+
+  $JOIN -t: -o 1.1 1.6 2.3 1.7 1.3 1.2 $WORKDIR/passwd.set.$$ $WORKDIR/home.hosts.$$ |
   check_users
 
   [ ! -n "$Tiger_PasswdFiles" ] && delete $passwd_set $passwd_set.src
-  delete $WORKDIR/home.hosts.$$
+  delete "$WORKDIR/home.hosts.$$" "$WORKDIR/passwd.set.$$"
 done < $WORKDIR/pass.list.$$
 
-delete "$WORKDIR/pass.list.$$" "$WORKDIR/home.hosts.$$"
+delete "$WORKDIR/pass.list.$$"
 exit 0
