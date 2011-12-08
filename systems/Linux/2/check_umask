@@ -24,7 +24,7 @@
 # The command requirements have been modified to adjust to what it's really
 # needed.
 #
-# 12/08/2011 - jfs - Fix how UMASK is obtained for login.def
+# 12/08/2011 - jfs - Fix how UMASK is obtained for login.defs
 #                    (Debian bug 603320)
 # 05/21/2009 - jfs - Enhance checks so that different messages are provided
 #                    based on installed shells
