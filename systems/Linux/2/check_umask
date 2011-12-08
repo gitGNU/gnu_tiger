@@ -24,6 +24,8 @@
 # The command requirements have been modified to adjust to what it's really
 # needed.
 #
+# 12/08/2011 - jfs - Fix how UMASK is obtained for login.def
+#                    (Debian bug 603320)
 # 05/21/2009 - jfs - Enhance checks so that different messages are provided
 #                    based on installed shells
 # 01/13/2004 - jfs - Fixed syntax error in the previous patch
@@ -119,7 +121,8 @@ GLOBALFILE="/etc/login.defs"
 if [ -r $GLOBALFILE ] ; then
     GLOBALUMASK=`$GREP  ^UMASK $GLOBALFILE  \
            | $EXPAND  \
-           | $CUT -d" " -f3`
+           | $SED -e"s/\s\+/ /g" \
+           | $CUT -d" " -f2`
 fi
 
 if [ -z "$GLOBALUMASK" ]; then
