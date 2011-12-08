@@ -93,7 +93,7 @@ if [ -r /etc/inittab ] ; then
             if [ "$restricted" = "no" ]; then
 		message FAIL lin007w "" "Normal users can reboot the system through ctrl+alt+del in runlevels $runlevels"
             else
-                users="`cat /etc/shutdown.allow`"
+                users="`cat /etc/shutdown.allow | $GREP -v ^# | $GREP -v ^$ `"
 		message INFO lin007w "" "The following users (listed in /etc/shutdown.allow) can reboot the system through ctrl+alt+del in runlevels $runlevels: '$users'"
             fi
 	fi
