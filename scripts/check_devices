@@ -134,7 +134,7 @@ do
 	file=`echo $file | $SED -e 's/"/\\\"/g'`
     	eval "case \"$file\" in
 		$EXPECTEDFILES)
-		# Expected directories
+		# Expected regular files in this directories
 		;;
 		*)
        		      message WARN dev003w \"\" \"File $file is a regular file in a device directory.\"
