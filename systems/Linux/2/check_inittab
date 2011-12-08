@@ -94,7 +94,11 @@ if [ -r /etc/inittab ] ; then
 		message FAIL lin007w "" "Normal users can reboot the system through ctrl+alt+del in runlevels $runlevels"
             else
                 users="`cat /etc/shutdown.allow | $GREP -v ^# | $GREP -v ^$ `"
-		message INFO lin007w "" "The following users (listed in /etc/shutdown.allow) can reboot the system through ctrl+alt+del in runlevels $runlevels: '$users'"
+                if [ -n "$users" ] ; then
+    		    message INFO lin007w "" "The following users (listed in /etc/shutdown.allow) can reboot the system through ctrl+alt+del in runlevels $runlevels: '$users'"
+                else 
+                    message INFO lin007w "" "Only the root user can reboot the system through ctrl+alt+del in runlevels $runlevels (/etc/shutdown.allow is present but it does not include any user)"
+                fi
             fi
 	fi
 	done
