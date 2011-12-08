@@ -30,12 +30,12 @@
 # 08/09/2002 jfs  Fixed to work in Solaris (added pseudo devices and changed
 #                 -L to -h)
 # 07/25/2002 jfs  Changed TigerInstallDir to .
-# 03/31/2005 jfs  Added EXPECTEDIRS dn EXPECTEDDEVICES in /dev (Os specific)
+# 03/31/2005 jfs  Added EXPECTEDIRS and EXPECTEDDEVICES in /dev (Os specific)
 #                 and added Solaris (9) devices
 # 05/20/2006 jfs  Handle the special case of having " in filenames by quoting
 #                 the character (Debian bug #355096)
 # 06/21/2007 jfs  Extend the list of EXPECTEDDIRS for Linux to cover udev
-# 12/08/2011 jfs  Extend the list of EXPECTEDIRS to cover /dev/bsg 
+# 12/08/2011 jfs  Extend the list of EXPECTEDDIRS to cover /dev/bsg 
 #                 (Debian bug #616339)
 #
 #-----------------------------------------------------------------------------
@@ -108,11 +108,11 @@ check_dev_file()
 echo
 echo "# Checking device permissions..."
 
-EXPECTEDIRS="/dev/none"
+EXPECTEDFILES="/dev/none"
 if [ "$OS" = "Linux" ] ; then
 	EXPECTEDFILES="/dev/core|/dev/stdout"
 fi
-EXPECTEDIRS="/dev/none"
+EXPECTEDDIRS="/dev/none"
 if [ "$OS" = "SunOS" ] ; then
 	EXPECTEDDIRS="/dev/cfg|/dev/cua|/dev/dsk|/dev/es|/dev/fd|/dev/md|/dev/printers|/dev/pts|/dev/rdsk|/dev/sad|/dev/swap|/dev/term"
 fi
@@ -130,7 +130,7 @@ do
 for file in $dir/[a-z0-9]*
 do
 
-	[ -f "$file" ] &&  {
+	[ ! -h "$file" ] && [ -f "$file" ] &&  {
 	file=`echo $file | $SED -e 's/"/\\\"/g'`
     	eval "case \"$file\" in
 		$EXPECTEDFILES)
