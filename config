@@ -17,6 +17,7 @@
 #
 #  config (top level) - 06/14/93
 #
+# 08/04/2011 jfs  Fix setting of CONFIG_DIR when using the default
 # 10/06/2010 jfs  Do not complain if the working directory is a temporary
 #                 on (Debian bug #589089)
 # 08/30/2006 jfs  Attempt to create working directory if it does not exist 
@@ -357,8 +358,8 @@ checkfile()
     [ "$QUIET" != "Y" ] &&  {
     echo "--CONFIG-- [con007c] No configuration files for $OS.  Using default"
     echo "           configuration files.  Not all checks may be performed."
-    CONFIG_DIR="$CONFIG_LOC/default"
     }
+    CONFIG_DIR="$CONFIG_LOC/default"
   else
     echo "--ERROR-- [con008e] No configuration files for $OS $REV and can't find the"
     echo "          default configuration files.  Terminating."
