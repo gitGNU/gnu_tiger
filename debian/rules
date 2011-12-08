@@ -58,6 +58,8 @@ install: build
 	# Create symbolic links for template files
 	ln -fs ../../../../../etc/tiger/issue debian/tiger/usr/lib/tiger/systems/Linux/issue.net
 	ln -fs ../../../../../etc/tiger/issue.net debian/tiger/usr/lib/tiger/systems/Linux/issue.net
+	# Create symbolic link for Linux version 3
+	ln -fs 2 debian/tiger/usr/lib/tiger/systems/Linux/3
 	# Remove unneeded Makefile files.
 	rm -f debian/tiger/usr/lib/tiger/doc/Makefile
 	rm -f debian/tiger/usr/lib/tiger/doc/Makefile.in
