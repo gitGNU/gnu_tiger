@@ -37,6 +37,9 @@
 # 06/21/2007 jfs  Extend the list of EXPECTEDDIRS for Linux to cover udev
 # 12/08/2011 jfs  Extend the list of EXPECTEDDIRS to cover /dev/bsg 
 #                 (Debian bug #616339)
+#                 Do not test symbolic links if they point to regular files.
+#                 (Debian bug #616337)
+#                 Fix typos in names of variables when defined.
 #
 #-----------------------------------------------------------------------------
 #
