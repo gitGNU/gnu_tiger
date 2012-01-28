@@ -1,27 +1,27 @@
 # Dutch po-debconf translation of Tiger
 # Copyright (C) 2007 Javier Fernandez-Sanguino
 # This file is distributed under the same license as the Tiger package.
-# Bart Cornelis <cobaco@skolelinux.no>
+# Bart Cornelis <cobaco@skolelinux.no>, 2007
+# Jeroen Schot <schot@a-eskwadraat.nl>, 2012
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: tiger\n"
+"Project-Id-Version: tiger 1:3.2.3-9\n"
 "Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
 "POT-Creation-Date: 2010-01-02 01:05+0100\n"
-"PO-Revision-Date: 2007-03-06 18:07+0100\n"
-"Last-Translator: Bart Cornelis <cobaco@skolelinux.no>\n"
-"Language-Team: debian-l10n-dutch <debian-l10n-dutch@lists.debian.org>\n"
+"PO-Revision-Date: 2012-01-25 10:02+0100\n"
+"Last-Translator: Jeroen Schot <schot@a-eskwadraat.nl>\n"
+"Language-Team: Debian l10n Dutch <debian-l10n-dutch@lists.debian.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. Type: string
 #. Description
 #: ../templates:1001
-#, fuzzy
-#| msgid "Who should receive the daily mails?"
 msgid "Recipient of the daily mails:"
-msgstr "Wie moet de dagelijkse e-mails ontvangen?"
+msgstr "Ontvanger van de dagelijkse e-mails:"
 
 #. Type: string
 #. Description
@@ -66,29 +66,7 @@ msgstr ""
 "tiger/tigerrc). Daarnaast kunt u de tijdstippen waarop deze tests uitgevoerd "
 "worden aanpassen (in /etc/tiger/cronrc). Tenslotte kunt u template-bestanden "
 "aangeven (in /etc/tiger/templates) via de resultaten van uitgevoerde tests, "
-"eens een template gedefiniëerd is zal tiger de gegenereerde "
-"waarschuwingingen vergelijken met deze in de beschikbare templates (1 per "
+"eens een template gedefinieerd is zal tiger de gegenereerde "
+"waarschuwingen vergelijken met deze in de beschikbare templates (1 per "
 "module) en worden enkel nieuwe waarschuwingen aangegeven. Dit laat toe om "
 "waarschuwingen die geen probleem zijn voor uw beveiligingsbeleid te negeren."
-
-#~ msgid "Remove templates in buggy 'tiger' versions"
-#~ msgstr "Templates in problematische 'tiger'-versies verwijderen."
-
-#~ msgid ""
-#~ "Initially Debian's 3.1 tiger versions were distributed with a bug that "
-#~ "would cause templates to be created under /var/log/ instead of /var/log/"
-#~ "tiger/. Normal operation assumes templates are under /var/log/tiger/ and "
-#~ "these templates will not be useful in newer Tiger versions. You might "
-#~ "want to preserve a copy of them (to use as templates) and move them "
-#~ "manually under their proper location. The package will not do this "
-#~ "automatically in order to avoid removing previous templates. Should we "
-#~ "remove these files if any are found?"
-#~ msgstr ""
-#~ "Debian's 3.1 versie van het 'tiger'-pakket is oorspronkelijk uitgegeven "
-#~ "met een fout de templates aanmaakte in /var/log i.p.v. /var/log/tiger/ . "
-#~ "Normale operatie neemt aan dat de templates zich in /var/log/tiger "
-#~ "bevinden, en deze templates worden niet gebruikt in de nieuwere versies "
-#~ "van tiger. Omdat u mogelijk een kopie hiervan wilt bewaren (om als "
-#~ "templates te gebruiken), of deze handmatig naar de juiste locatie wilt "
-#~ "verplaatsen, verwijdert dit pakket de vorige templates niet automatisch. "
-#~ "Wilt u dat deze bestanden verwijderd worden indien aanwezig?"
