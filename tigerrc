@@ -183,7 +183,7 @@ Tiger_Passwd_Constraints="PASS_MIN_DAYS PASS_MAX_DAYS PASS_WARN_AGE PASS_MIN_LEN
 #
 # Acceptable password hashes.
 # List of password hashes separated by '|'... no whitespaces
-Tiger_Passwd_Hashes='crypt3|md5'
+Tiger_Passwd_Hashes='crypt3|md5|sha512'
 #
 # Number of days of non-modified files in the home directory for a user
 # to be considered dormant (setting = 0 disables this check)
