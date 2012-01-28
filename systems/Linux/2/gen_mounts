@@ -59,6 +59,7 @@
 # Linux/2/gen_mounts - 10/06/2010 - Added btrfs (Debian bug 598792)
 # Linux/2/gen_mounts - 14/01/2011 - Added xenfs (Savannah bug 32126) 
 #                                   (Debian bug 615052)
+# Linux/2/gen_mounts - 28/01/2011 - Added devtmpfs
 #-----------------------------------------------------------------------------
 #
 
@@ -173,6 +174,7 @@ localfs()
   [ "$1" = "usbfs" ] && LOCAL=1                 # USB devices
   [ "$1" = "usbdevfs" ] && LOCAL=1
   [ "$1" = "devfs" ] && LOCAL=1
+  [ "$1" = "devtmpfs" ] && LOCAL=1
   [ "$1" = "sysfs" ] && LOCAL=1                 # General access point to system data
   [ "$1" = "securityfs" ] && LOCAL=1            # Used by Ubuntu, see http://lwn.net/Articles/153366/ 
   [ "$1" = "none" ] && LOCAL=1
