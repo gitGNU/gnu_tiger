@@ -60,6 +60,7 @@
 # Linux/2/gen_mounts - 14/01/2011 - Added xenfs (Savannah bug 32126) 
 #                                   (Debian bug 615052)
 # Linux/2/gen_mounts - 28/01/2011 - Added devtmpfs
+#                                   Added sshfs and cgroup (Debian bug 655276)
 #-----------------------------------------------------------------------------
 #
 
@@ -142,6 +143,7 @@ localfs()
   [ "$1" = "fuse.ltspfs" ] && LOCAL=0 		# Used by LTSP 5.x
   [ "$1" = "ecryptfs" ] && LOCAL=0              # Encrypted filesystem used by ecryptfs-utils
   [ "$1" = "xenfs" ] && LOCAL=0                 # Virtual fs for Xen
+  [ "$1" = "cgroup" ] && LOCAL=0                # Kernel Control Groups
   # Filesystems of other OS
   [ "$1" = "msdos" ] && LOCAL=1
   [ "$1" = "umsdos" ] && LOCAL=1
@@ -156,6 +158,7 @@ localfs()
   [ "$1" = "nfsd" ] && LOCAL=1
   [ "$1" = "ncpfs" ] && LOCAL=1
   [ "$1" = "smbfs" ] && LOCAL=1
+  [ "$1" = "sshfs" ] && LOCAL=1     # Remote SSH mounted filesystem through fuse
   [ "$1" = "cifs" ] && LOCAL=1
   [ "$1" = "coda" ] && LOCAL=1
   [ "$1" = "AFS" ] && LOCAL=1       # Andrew Filesystem
