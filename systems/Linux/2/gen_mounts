@@ -59,7 +59,7 @@
 # Linux/2/gen_mounts - 10/06/2010 - Added btrfs (Debian bug 598792)
 # Linux/2/gen_mounts - 14/01/2011 - Added xenfs (Savannah bug 32126) 
 #                                   (Debian bug 615052)
-# Linux/2/gen_mounts - 28/01/2011 - Added devtmpfs
+# Linux/2/gen_mounts - 28/01/2011 - Added devtmpfs (Debian bug 653416)
 #                                   Added sshfs and cgroup (Debian bug 655276)
 #-----------------------------------------------------------------------------
 #
