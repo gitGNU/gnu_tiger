@@ -48,7 +48,8 @@
 :: http://www.gnu.org/licenses/licenses.html#TOCLGPL
 
 :: ------------------------------------------------------------------------------
-:: Change Control 
+:: Changelog:
+::
 :: 07/2011:
 :: Updated several links pointing to third party tools
 :: Fixed fport command line and added information for running in Windows Server 2003
@@ -57,6 +58,11 @@
 :: Added Service configuration info
 :: Collect more info with DumpSec
 :: More Hotfixes info in XP/2003/7 - wmic qfe list (discarded)
+::
+:: 13/09/2011
+:: Collect policy information with  "secedit".
+:: Win XP does not work [http://support.microsoft.com/kb/889532]
+::
 :: ------------------------------------------------------------------------------
 
 :: TODO: cd to %TEMP% before proceeding? 
@@ -88,6 +94,12 @@ set REPORT=%REPDIR%.\report.txt
 :: Additional path for binaries
 ADDPATH=
 IF EXIST c (set ADDPATH=c:\forensics\)
+
+IF EXIST "%windir%" GOTO :Endwindir
+       SET windir="c:\Windows"
+       ECHO WARN: windir variable does not exist. Configured to "c:\windows"
+:Endwindir
+
 
 :: Additional tools can be downloaded from:
 :: Microsoft
@@ -234,7 +246,7 @@ IF EXIST "%REPDIR%.\Users.dat" DEL "%REPDIR%.\Users.dat"
 :: Download from: http://www.sysinternals.com/ntw2k/freeware/psloggedon.shtml
 :: Logged on users
 ECHO. >>%REPORT%
-ECHO Users connected to this system: >>%REPORT%
+ECHO Users connected to this system: (psloggedon) >>%REPORT%
 ECHO. >>%REPORT%
 psloggedon >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 ECHO WARN: 'Psloggedon' is not available in this system, download from http://www.sysinternals.com/ntw2k/freeware/psloggedon.shtml  >>%REPORT%
@@ -242,7 +254,7 @@ if ERRORLEVEL == 9009 ECHO WARN: 'Psloggedon' is not available in this system, d
 
 :: Event log - last two days
 @echo Events of last two days
-ECHO Extract events of last two days >>%REPORT%
+ECHO Extract events of last two days (psloglist) >>%REPORT%
 ECHO.  >>%REPORT%
 psloglist -d 2  >> %REPDIR%.\psloglist-two-days.out-eventlog.txt
 if ERRORLEVEL == 9009 ECHO WARN: 'Psloglist' is not available in this system >>%REPORT%
@@ -251,7 +263,7 @@ if ERRORLEVEL == 9009 ECHO WARN: 'Psloglist' is not available in this system >>%
 @echo Succesful/failed logins
 :: To record the successful and failed logins to the system.
 :: Download from: http://www.foundstone.com/resources/proddesc/ntlast.htm
-ECHO Successful failed logins: >>%REPORT%
+ECHO Successful failed logins: (ntlast) >>%REPORT%
 ECHO. >>%REPORT%
 ntlast /r >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 GOTO:Nontlast
@@ -259,7 +271,7 @@ ntlast /f >>%REPORT%
 ntlast /r /f >>%REPORT%
 GOTO:Endlogins
 :Nontlast
-ECHO ERROR: 'Ntlast' is not available in this system, download from  http://www.foundstone.com/resources/proddesc/ntlast.htm  >>%REPORT%
+ECHO ERROR: Auditing is off or 'Ntlast' is not available in this system, download from  http://www.foundstone.com/resources/proddesc/ntlast.htm  >>%REPORT%
 :Endlogins
 @echo -------------------------------------------
 
@@ -284,12 +296,12 @@ net accounts >>%REPORT%
 ECHO. >>%REPORT%
 
 ECHO. >>%REPORT%
-ECHO Groups >>%REPORT%
+ECHO Groups (net localgroup) >>%REPORT%
 net localgroup >>%REPORT%
 ECHO. >>%REPORT%
 
 ECHO. >>%REPORT%
-ECHO Net start >>%REPORT%
+ECHO Started services (net start) >>%REPORT%
 net start >>%REPORT%
 ECHO. >>%REPORT%
 
@@ -358,7 +370,7 @@ ECHO ERROR: Nbtstat is not available in this system  >>%REPORT%
 @echo -------------------------------------------
 
 @echo Processes
-ECHO Process listing: >>%REPORT%
+ECHO Process listing: (tasklist) >>%REPORT%
 ECHO. >>%REPORT%
 tasklist >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 ECHO WARN: Tasklist is not available in this system  >>%REPORT%
@@ -372,11 +384,11 @@ pulist >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 ECHO WARN: Pulist is not available in this system, download from http://www.microsoft.com/windows2000/techinfo/reskit/tools/existing/pulist-o.asp  >>%REPORT%
 :: Download from http://www.sysinternals.com/ntw2k/freeware/psservice.shtml
 
-ECHO Servicios - Status: >>%REPORT%
+ECHO Services - Status: (psservice) >>%REPORT%
 ECHO. >>%REPORT%
 psservice >>%REPORT% 2>nul
 ECHO. >>%REPORT%
-ECHO Servicios - Configuracion: >>%REPORT%
+ECHO Services - Configuration: (psservice) >>%REPORT%
 ECHO. >>%REPORT%
 psservice config >>%REPORT% 2>nul
 ECHO. >>%REPORT%
@@ -389,7 +401,7 @@ if ERRORLEVEL == 9009 ECHO WARN: Pssservice is not available in this system, dow
 :: where they are loaded and their version numbers.
 :: To identify unusual DLLs, open files and Trojans.
 :: Download from: http://www.sysinternals.com/ntw2k/freeware/listdlls.shtml
-ECHO Loaded dlls: >>%REPORT%
+ECHO Loaded dlls: (listdlls) >>%REPORT%
 ECHO. >>%REPORT%
 listdlls >>%REPORT%  2>nul
 if ERRORLEVEL == 9009 ECHO WARN: 'Listdlls' is not available in this system, download from http://www.sysinternals.com/ntw2k/freeware/listdlls.shtml  >>%REPORT%
@@ -397,10 +409,11 @@ if ERRORLEVEL == 9009 ECHO WARN: 'Listdlls' is not available in this system, dow
 
 
 @echo Listening services
-ECHO Listening services and connections: >>%REPORT%
 ECHO. >>%REPORT%
+ECHO Listening services and connections: (netstat -ano) >>%REPORT%
 netstat -ano >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 ECHO WARN: 'Netstat' is not available in this system  >>%REPORT%
+ECHO. >>%REPORT%
 
 :OpenPorts
 @echo Open ports
@@ -418,20 +431,33 @@ if ERRORLEVEL == 9009 ECHO WARN: 'Netstat' is not available in this system  >>%R
 :: Another alternatives are:
 :: netstat -aon - show all, show pid, and show ip/port number.
 
-ECHO List of open ports (fport): >>%REPORT%
 ECHO. >>%REPORT%
-::
+ECHO List of open ports (fport): >>%REPORT%
 fport >>%REPORT% 2>nul
-::
+if ERRORLEVEL == 9009 GOTO:Nofport
+ECHO. >>%REPORT%
+GOTO:Endport
+:: Alternative:
 ::runas /user:Administrador fport >>%REPORT% 2>nul
 
-if ERRORLEVEL == 9009 GOTO:Nofport
+:Nofport
+ECHO WARN: 'Fport' is not available in this system, download from http://www.foundstone.com/resources/intrusion_detection.htm >>%REPORT%
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO List of all ports/process mapping (cports): >>%REPORT%
+ECHO. >>%REPORT%
+ECHO Process Name      Process ID      Protocol        Local Port      Local Port Name Local Address   Remote Port     Remote Port Name        Remote Address  Remote Host Name        State   Process Path    Product Name    File Description        File Version    Company Process Created On      User Name       Process Services        Process Attributes      Added On        Module Filename Remote IP Country       Window Title >> %REPORT%        
+cports.exe /stab "" /DisplayUdpPorts 1 /DisplayUdpPorts 1 /DisplayClosedPorts 1 /DisplayListening 1 /DisplayEstablished 1 /DisplayNoState 1 /DisplayNoRemoteIP 1 /ResolveAddresses 0 /sort 1  >> %REPORT%
+if ERRORLEVEL == 9009 GOTO:Nocport
+ECHO. >>%REPORT%
 GOTO:Endport
 
-:Nofport
-ECHO WARN: 'Fport' is not available in this system, download from ttp://www.foundstone.com/resources/intrusion_detection.htm >>%REPORT%
+:Nocport
+ECHO WARN: 'cport' is not available in this system >>%REPORT%
+ECHO. >>%REPORT%
 
-:: Try with a custom script
+:: Last option - Try with a custom script
 :: This is based on the script available at http://www.multingles.net/docs/escucha.htm
 
 @echo off
@@ -481,7 +507,7 @@ echo !sz1! UDP !sz2!!sz3!   [ !sz4! ] >>%REPDIR%.\ports.tmp
 echo. >>%REPORT%
 echo Listening ports in the system >>%REPORT%
 echo. >>%REPORT%
-echo Puerto Programa PID Direccion IP >>%REPORT%
+echo Port Program PID Address IP >>%REPORT%
 echo ------ ------------ ------------ >>%REPORT%
 set iant=
 for /F "tokens=1* delims=" %%i in ('SORT %REPDIR%.\ports.tmp') do if %%i NEQ !iant! (echo %%i >>%REPORT%) & set iant=%%i
@@ -499,6 +525,7 @@ ENDLOCAL
 @echo -------------------------------------------
 
 ::  more info about process/sockets
+ECHO. >>%REPORT% 
 ECHO Obtain information of sockets and processes
 ECHO --------------------------------------------
 ECHO. >>%REPORT%
@@ -510,7 +537,8 @@ ECHO --------------------------------------------
 
 
 @echo -------------------------------------------
-ECHO Listening RPC services: >>%REPORT%
+ECHO. >>%REPORT% 
+ECHO Listening RPC services: (rpcinfo) >>%REPORT%
 ECHO. >>%REPORT%
 :: Rpcinfo is provided both by Windows Services for Unix and by third-party vendors
 :: See http://support.microsoft.com/?id=313621
@@ -520,7 +548,7 @@ if ERRORLEVEL == 9009 ECHO WARN: 'Rpcinfo' is not available in this system  >>%R
 
 
 @echo Extracting routing table
-ECHO Routing table: >>%REPORT%
+ECHO Routing table: (netstat)>>%REPORT%
 ECHO. >>%REPORT%
 netstat -nr >>%REPORT%
 @echo -------------------------------------------
@@ -531,7 +559,8 @@ netstat -nr >>%REPORT%
 :: See http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/netsh.mspx
 :: and http://www.microsoft.com/technet/prodtechnol/windowsserver2003/library/ServerHelp/28e2f559-bfa6-4f3a-857c-ffd045f8de79.mspx
 @echo Extracting firewall configuration
-ECHO Extracting firewall configuration: >>%REPORT%
+ECHO. >>%REPORT%
+ECHO Extracting firewall configuration: (netsh) >>%REPORT%
 ECHO. >>%REPORT%
 netsh firewall show config >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 GOTO:Nonetsh
@@ -574,7 +603,7 @@ GOTO:EOF
 @echo -------------------------------------------
 @echo Current policies
 ECHO. >>%REPORT%
-ECHO Current security policies: >>%REPORT%
+ECHO Current security policies: (auditpol) >>%REPORT%
 ECHO. >>%REPORT%
 auditpol >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 ECHO WARN: 'Auditpol' is not available in this system  >>%REPORT%
@@ -583,7 +612,7 @@ if ERRORLEVEL == 9009 ECHO WARN: 'Auditpol' is not available in this system  >>%
 @echo -------------------------------------------
 @echo Group policies - computer
 ECHO. >>%REPORT%
-ECHO Group policies - computer: >>%REPORT%
+ECHO Group policies - computer: (gpresult) >>%REPORT%
 ECHO. >>%REPORT%
 gpresult /scope computer /z >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 GOTO:Nogpresult
@@ -592,7 +621,7 @@ if ERRORLEVEL == 9009 GOTO:Nogpresult
 @echo -------------------------------------------
 @echo Group policies - user
 ECHO. >>%REPORT%
-ECHO Group policies - user: >>%REPORT%
+ECHO Group policies - user: (gpresult) >>%REPORT%
 ECHO. >>%REPORT%
 gpresult /scope user /z >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 GOTO:Nogpresult
@@ -605,13 +634,15 @@ ECHO WARN: 'Gpresult' is not available in this system, download from http://www.
 
 @echo -------------------------------------------
 @echo Lsa control set
-ECHO Extracting lsa control set: >>%REPORT%
+ECHO. >>%REPORT%
+ECHO Extracting lsa control set: (reg query) >>%REPORT%
 ECHO. >>%REPORT%
 reg query HKLM\SYSTEM\CurrentControlSet\Control\Lsa  /s >>%REPORT%
 @echo -------------------------------------------
 
 @echo -------------------------------------------
 @echo File associations
+ECHO. >>%REPORT%
 ECHO Extracting file associations: >>%REPORT%
 ECHO. >>%REPORT%
 ftype >>%REPORT% 2>nul
@@ -626,6 +657,7 @@ if ERRORLEVEL == 9009 GOTO ECHO WARN: 'Assoc' is not available in this system >>
 
 @echo -------------------------------------------
 @echo Startup services
+ECHO. >>%REPORT%
 ECHO Extracting services started at startup >>%REPORT%
 ECHO. >>%REPORT%
 ECHO "Run:" >>%REPORT%
@@ -656,9 +688,26 @@ IF NOT EXIST secpolicy.inf GOTO :Nopolicy
 ECHO Checking security policy ....
 ECHO Checking security policy: >>%REPORT%
 ECHO. >>%REPORT%
-secedit /analyze /cfg secpolicy.inf /db secpolcheck.sdb /log secpolcheck.log
-if ERRORLEVEL == 9009 GOTO ECHO WARN: 'Secpolicy' is not available in this system >>%REPORT%
+secedit /analyze /cfg secpolicy.inf /db %REPDIR%\secpolcheck.sdb /log %REPDIR%\secpolcheck.log
+if ERRORLEVEL == 9009 GOTO:Nopolicy
+
+
+ECHO. >>%REPORT%
+ECHO --- Policy info: secedit --- >>%REPORT%
+::copy %windir%\security\Database\secedit.sdb %REPDIR%\secedit.sdb
+secedit /export  /cfg %REPDIR%\cfg-secedit.txt /log %REPDIR%\log-export-secedit.txt
+secedit /export  /mergedpolicy /cfg %REPDIR%\cfg-merged-secedit.txt /log %REPDIR%\log-export-merged-secedit.txt
+secedit /analyze /db %REPDIR%\new-secedit.sdb /cfg %REPDIR%\cfg-secedit.txt /log %REPDIR%\log-analyze-secedit.txt^M
+secedit /analyze /db %REPDIR%\new-secedit-merged.sdb /cfg %REPDIR%\cfg-merged-secedit.txt /log %REPDIR%\log-analyze-merged-secedit.txt
+secedit /analyze /db %REPDIR%\new-secedit-hisec.sdb /cfg %windir%\security\templates\hisecws.inf /log %REPDIR%\log-analyze-hisec.txt
+ECHO. >>%REPORT%
+
+GOTO:Endpolicy
+
 :Nopolicy
+ECHO WARN: 'Secpolicy' is not available in this system >>%REPORT%
+
+:Endpolicy
 
 :: Check hotfixes
 
@@ -670,6 +719,7 @@ REGEDIT /E "%REPDIR%.\Hotfixes.dat" "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windo
 
 :: Display header of hotfixes
 ECHO Gathering Hotfixes installed on this PC ....
+ECHO. >>%REPORT%
 ECHO Hotfixes installed on this PC: >>%REPORT%
 ECHO. >>%REPORT%
 
@@ -701,26 +751,27 @@ GOTO:EOF
 
 :Endhf
 
-::@echo -------------------------------------------
-::@echo Extracting Hotfixes with: wmic qfe lsit
-::ECHO. >>%REPORT%
-::wmic qfe list >> %REPDIR%.\hotfixes-qfe.txt
+@echo -------------------------------------------
+@echo Extracting Hotfixes with: wmic qfe lsit
+ECHO. >>%REPORT%
+wmic qfe list >> %REPDIR%.\hotfixes-qfe.txt
+ECHO. >>%REPORT%
 
 @echo -------------------------------------------
 :: Export Registry
 :: TODO: Consider outputing only a fraction of it
 if NOT %EXPORTREG%==yes GOTO:EndExport
-@echo Exporting Full Registry
-ECHO Exporting registry: >>%REPORT%
+@echo Exporting Full Registry (reg export)
 ECHO. >>%REPORT%
-
-
+ECHO Exporting registry: (reg export) >>%REPORT%
 reg export HKLM %REPDIR%.\registry-hlkm.reg
+
 :: If you only want to export information of installed software
 :: reg export HKLM\SOFTWARE\ %REPDIR%.\registry-sw.reg
 :: If you want t export user information
 :: reg export HKU %REPDIR%.\registry-users.reg
 ECHO "Registry exported to %REPDIR%.\registry-hlkm.reg" >>%REPORT%
+ECHO. >>%REPORT%
 ::EndExport
 
 :: Check archive signatures
@@ -733,6 +784,7 @@ ECHO "Registry exported to %REPDIR%.\registry-hlkm.reg" >>%REPORT%
 echo.
 echo "Finished audit please review %REPDIR%"
 echo.
+@echo -------------------------------------------
 pause
 
 
