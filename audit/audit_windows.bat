@@ -288,9 +288,16 @@ ECHO Net view >>%REPORT%
 ECHO. >>%REPORT%
 net view >>%REPORT%
 ECHO. >>%REPORT%
+
 ECHO Net user >>%REPORT%
 net user >>%REPORT%
 ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Users (wmic useraccount) >>%REPORT%
+wmic useraccount >>%REPORT%
+ECHO. >>%REPORT%
+
 ECHO Net accounts >>%REPORT%
 net accounts >>%REPORT%
 ECHO. >>%REPORT%
