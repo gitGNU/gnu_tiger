@@ -1,6 +1,6 @@
 @echo off
 
-:: Windows 2000/XP/2003 Auditing and Forensics script v 1.1
+:: Windows 2000/XP/2003 Auditing and Forensics script v 1.4
 ::
 :: This "simple" script will generate an audit report of the Microsoft
 :: Windows system it is run in. All the audit files will be deposited in
@@ -26,9 +26,9 @@
 :: by right clicking over FPort, selecting the Compatibility tab, and 
 :: selecting Run this program in compatibility mode for Windows XP.
 ::
-:: ------------------------------------------------------------------------------
+:: -----------------------------------------------------------------------------
 ::
-:: This script is (c) 2005 Javier Fernandez-Sanguino
+:: This script is (c) 2005-2012 Javier Fernandez-Sanguino
 :: 
 ::    This program is free software; you can redistribute it and/or modify
 ::    it under the terms of the GNU General Public License as published by
