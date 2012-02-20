@@ -63,6 +63,9 @@
 :: Collect policy information with  "secedit".
 :: Win XP does not work [http://support.microsoft.com/kb/889532]
 ::
+:: 19/09/2011
+:: Added MBSA to check Microsoft Updates on the System
+::
 :: ------------------------------------------------------------------------------
 
 :: TODO: cd to %TEMP% before proceeding? 
@@ -100,6 +103,8 @@ IF EXIST "%windir%" GOTO :Endwindir
        ECHO WARN: windir variable does not exist. Configured to "c:\windows"
 :Endwindir
 
+:: MBSA Directory
+set MBSADIR="%ProgramFiles%\Microsoft Baseline Security Analyzer 2"
 
 :: Additional tools can be downloaded from:
 :: Microsoft
@@ -115,6 +120,9 @@ SET EXPORTREG=yes
 
 :: Review users through the registry
 SET USERREG=no
+
+:: Check Microsoft Updates with MBSA?
+set MBSA=yes
 
 :: ------------ END Configuration variables (customise per system) ------------ 
 
@@ -251,6 +259,31 @@ ECHO. >>%REPORT%
 psloggedon >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 ECHO WARN: 'Psloggedon' is not available in this system, download from http://www.sysinternals.com/ntw2k/freeware/psloggedon.shtml  >>%REPORT%
 @echo -------------------------------------------
+
+@echo -------------------------------------------
+:: Check Microsoft Updates
+:: TODO: Check the location of the cabfiles before running MBSA
+ECHO. >>%REPORT%
+if NOT %MBSA%==yes GOTO:Endmbsa
+
+IF NOT EXIST %MBSADIR%\mbsacli.exe GOTO :Nombsa
+@echo Checking Microsoft Updates on the System
+ECHO. >>%REPORT%
+ECHO Checking Microsoft Updates on the System: >>%REPORT%
+ECHO. >>%REPORT%
+%MBSADIR%\mbsacli.exe /nd /cabpath mbsa_cache >>%REPORT%
+%MBSADIR%\mbsacli.exe /nd /xmlout /catalog mbsa_cache\wsusscn2.cab > %REPDIR%\MBSA.xml
+ECHO. >>%REPORT%
+
+GOTO:Endmbsa
+:Nombsa
+ECHO ERROR: mbsacli.exe is not available in %MBSADIR%  >>%REPORT%
+ECHO ERROR: but MBSA check was requested. >>%REPORT%
+ECHO. >>%REPORT%
+
+:Endmbsa
+@echo -------------------------------------------
+
 
 :: Event log - last two days
 @echo Events of last two days
