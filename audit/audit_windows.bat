@@ -1,6 +1,6 @@
 @echo off
 
-:: Windows 2000/XP/2003 Auditing and Forensics script v 1.0
+:: Windows 2000/XP/2003 Auditing and Forensics script v 1.1
 ::
 :: This "simple" script will generate an audit report of the Microsoft
 :: Windows system it is run in. All the audit files will be deposited in
@@ -19,9 +19,17 @@
 :: Windows 2000, and Win32 are registered trademarks and Visual C++ and 
 :: Windows NT are trademarks of the Microsoft Corporation.
 :: 
+:: IMPORTANT NOTES:
+:: It is noteworthy to mention that if you want to run this script in a 
+:: Windows 2003 Server, you must configure FPort tool to run in Windows XP 
+:: compatibility mode for the utility to successfully run. This is achieved
+:: by right clicking over FPort, selecting the Compatibility tab, and 
+:: selecting Run this program in compatibility mode for Windows XP.
 ::
-:: This script is (c) 2005 Javier Fernandez-Sanguino <jfernandez@germinus.com>
+:: ------------------------------------------------------------------------------
 ::
+:: This script is (c) 2005 Javier Fernandez-Sanguino
+:: 
 ::    This program is free software; you can redistribute it and/or modify
 ::    it under the terms of the GNU General Public License as published by
 ::    the Free Software Foundation; either version 2 of the License, or
@@ -39,6 +47,16 @@
 :: You can also find a copy of the GNU General Public License at
 :: http://www.gnu.org/licenses/licenses.html#TOCLGPL
 
+:: ------------------------------------------------------------------------------
+:: Change Control 
+:: 07/2011:
+:: Updated several links pointing to third party tools
+:: Fixed fport command line and added information for running in Windows Server 2003
+:: Collect event log - 2 days
+:: More  process/sockets information
+:: Added Service configuration info
+:: Collect more info with DumpSec
+:: More Hotfixes info in XP/2003/7 - wmic qfe list (discarded)
 :: ------------------------------------------------------------------------------
 
 :: TODO: cd to %TEMP% before proceeding? 
@@ -68,7 +86,8 @@ IF EXIST %TEMP% (set REPDIR=%TEMP%\Audit-rep) ELSE set REPDIR=Audit-rep
 :: Location of report files
 set REPORT=%REPDIR%.\report.txt
 :: Additional path for binaries
-SET ADDPATH=c:\forensics\
+ADDPATH=
+IF EXIST c (set ADDPATH=c:\forensics\)
 
 :: Additional tools can be downloaded from:
 :: Microsoft
@@ -119,7 +138,7 @@ TITLE Auditing system
 hostname  >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 ECHO ERR: 'Hostname' is not available in this system  >>%REPORT%
 @echo -------------------------------------------
-@echo Extract more information from the system 
+@echo Extract information from the system 
 systeminfo >>%REPDIR%.\systeminfo.txt 2>nul
 if ERRORLEVEL == 9009 ECHO ERR: 'Systeminfo' is not available in this system  >>%REPORT%
 @echo -------------------------------------------
@@ -214,10 +233,19 @@ IF EXIST "%REPDIR%.\Users.dat" DEL "%REPDIR%.\Users.dat"
 :: Record users connected locally and remotely.
 :: Download from: http://www.sysinternals.com/ntw2k/freeware/psloggedon.shtml
 :: Logged on users
+ECHO. >>%REPORT%
 ECHO Users connected to this system: >>%REPORT%
 ECHO. >>%REPORT%
 psloggedon >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 ECHO WARN: 'Psloggedon' is not available in this system, download from http://www.sysinternals.com/ntw2k/freeware/psloggedon.shtml  >>%REPORT%
+@echo -------------------------------------------
+
+:: Event log - last two days
+@echo Events of last two days
+ECHO Extract events of last two days >>%REPORT%
+ECHO.  >>%REPORT%
+psloglist -d 2  >> %REPDIR%.\psloglist-two-days.out-eventlog.txt
+if ERRORLEVEL == 9009 ECHO WARN: 'Psloglist' is not available in this system >>%REPORT%
 @echo -------------------------------------------
 
 @echo Succesful/failed logins
@@ -225,10 +253,10 @@ if ERRORLEVEL == 9009 ECHO WARN: 'Psloggedon' is not available in this system, d
 :: Download from: http://www.foundstone.com/resources/proddesc/ntlast.htm
 ECHO Successful failed logins: >>%REPORT%
 ECHO. >>%REPORT%
-ntlast –r >>%REPORT% 2>nul
+ntlast /r >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 GOTO:Nontlast
-ntlast –f >>%REPORT%
-ntlast –r -f >>%REPORT%
+ntlast /f >>%REPORT%
+ntlast /r /f >>%REPORT%
 GOTO:Endlogins
 :Nontlast
 ECHO ERROR: 'Ntlast' is not available in this system, download from  http://www.foundstone.com/resources/proddesc/ntlast.htm  >>%REPORT%
@@ -238,18 +266,82 @@ ECHO ERROR: 'Ntlast' is not available in this system, download from  http://www.
 @echo System information (Netbios)
 ECHO System netbios information: >>%REPORT%
 ECHO. >>%REPORT%
+ECHO Shared drives >>%REPORT%
 net use >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 GOTO:Nonetuse
 net file >>%REPORT%
 net share >>%REPORT%
+
+ECHO Net view >>%REPORT%
+ECHO. >>%REPORT%
 net view >>%REPORT%
+ECHO. >>%REPORT%
+ECHO Net user >>%REPORT%
 net user >>%REPORT%
+ECHO. >>%REPORT%
+ECHO Net accounts >>%REPORT%
 net accounts >>%REPORT%
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Groups >>%REPORT%
 net localgroup >>%REPORT%
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Net start >>%REPORT%
 net start >>%REPORT%
-GOTO:Endnetbios
+ECHO. >>%REPORT%
+
+GOTO:Dumpsec
+
 :Nonetuse
 ECHO ERROR: 'Net' is not available in this system  >>%REPORT%
+
+:Dumpsec
+
+@echo System information (using Dumpsec)
+ECHO. >>%REPORT%
+ECHO Dumpsec (shares) >>%REPORT%
+DumpSec.exe /computer= /rpt=shares /saveas=fixed /outfile=%REPDIR%.\shares.txt
+if ERRORLEVEL == 9009 GOTO:Nodumpsec
+type %REPDIR%.\shares.txt >>%REPORT%
+del %REPDIR%.\shares.txt
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Dumpsec (users) >>%REPORT%
+DumpSec.exe /computer= /rpt=userscol /saveas=fixed /outfile=%REPDIR%.\users-dumpsec.txt /showosid
+type %REPDIR%.\users-dumpsec.txt >>%REPORT%
+del %REPDIR%.\users-dumpsec.txt
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Dumpsec (policy) >>%REPORT%
+DumpSec.exe /computer= /rpt=policy /saveas=fixed /outfile=%REPDIR%.\policy.txt /showaudit
+type %REPDIR%.\policy.txt >>%REPORT%
+del %REPDIR%.\policy.txt
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Dumpsec (groups) >>%REPORT%
+DumpSec.exe /computer= /rpt=Groupscol /saveas=fixed /outfile=%REPDIR%.\groups-dumpsec.txt
+type %REPDIR%.\groups-dumpsec.txt >>%REPORT%
+del %REPDIR%.\groups-dumpsec.txt
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Dumpsec (rights) >>%REPORT%
+DumpSec.exe /computer= /rpt=rights /saveas=fixed /outfile=%REPDIR%.\rights.txt
+type %REPDIR%.\rights.txt >>%REPORT%
+del %REPDIR%.\rights.txt
+ECHO. >>%REPORT%
+
+GOTO:Endnetbios
+
+:Nodumpsec
+ECHO ERROR: 'Dumpsec' is not available in this system  >>%REPORT%
+
 :Endnetbios
 @echo -------------------------------------------
 @echo Remote Netbios name cache
@@ -279,7 +371,16 @@ if ERRORLEVEL == 9009 ECHO WARN: Pslist is not available in this system, downloa
 pulist >>%REPORT% 2>nul
 if ERRORLEVEL == 9009 ECHO WARN: Pulist is not available in this system, download from http://www.microsoft.com/windows2000/techinfo/reskit/tools/existing/pulist-o.asp  >>%REPORT%
 :: Download from http://www.sysinternals.com/ntw2k/freeware/psservice.shtml
+
+ECHO Servicios - Status: >>%REPORT%
+ECHO. >>%REPORT%
 psservice >>%REPORT% 2>nul
+ECHO. >>%REPORT%
+ECHO Servicios - Configuracion: >>%REPORT%
+ECHO. >>%REPORT%
+psservice config >>%REPORT% 2>nul
+ECHO. >>%REPORT%
+
 if ERRORLEVEL == 9009 ECHO WARN: Pssservice is not available in this system, download from http://www.sysinternals.com/ntw2k/freeware/psservice.shtml  >>%REPORT%
 @echo -------------------------------------------
 
@@ -305,10 +406,25 @@ if ERRORLEVEL == 9009 ECHO WARN: 'Netstat' is not available in this system  >>%R
 @echo Open ports
 :: Record opening ports.
 :: To identify opening ports and their applications.
-:: Download from: http://www.foundstone.com/resources/intrusion_detection.htm
+:: Note: When running on a Windows 2003 Server you must configure FPort to
+:: run in Windows XP compatibility mode for the utility to successfully
+:: run. This is achieved by Right Clicking over FPort, selecting the
+:: Compatibility tab, and Selecting Run this program in compatibility mode
+:: for: Windows XP.
+::
+:: Download from: http://www.mcafee.com/us/downloads/free-tools/fport.aspx
+:: It may need administrative rights. ie: runas /user:Administrador fport
+::
+:: Another alternatives are:
+:: netstat -aon - show all, show pid, and show ip/port number.
+
 ECHO List of open ports (fport): >>%REPORT%
 ECHO. >>%REPORT%
+::
 fport >>%REPORT% 2>nul
+::
+::runas /user:Administrador fport >>%REPORT% 2>nul
+
 if ERRORLEVEL == 9009 GOTO:Nofport
 GOTO:Endport
 
@@ -382,6 +498,17 @@ ENDLOCAL
 :Endport
 @echo -------------------------------------------
 
+::  more info about process/sockets
+ECHO Obtain information of sockets and processes
+ECHO --------------------------------------------
+ECHO. >>%REPORT%
+ECHO Information of sockets and processes: >>%REPORT%
+ECHO. >>%REPORT% 
+tcpvcon -a -n >>%REPORT%
+ECHO. >>%REPORT%
+ECHO --------------------------------------------
+
+
 @echo -------------------------------------------
 ECHO Listening RPC services: >>%REPORT%
 ECHO. >>%REPORT%
@@ -446,6 +573,7 @@ GOTO:EOF
 
 @echo -------------------------------------------
 @echo Current policies
+ECHO. >>%REPORT%
 ECHO Current security policies: >>%REPORT%
 ECHO. >>%REPORT%
 auditpol >>%REPORT% 2>nul
@@ -454,6 +582,7 @@ if ERRORLEVEL == 9009 ECHO WARN: 'Auditpol' is not available in this system  >>%
 
 @echo -------------------------------------------
 @echo Group policies - computer
+ECHO. >>%REPORT%
 ECHO Group policies - computer: >>%REPORT%
 ECHO. >>%REPORT%
 gpresult /scope computer /z >>%REPORT% 2>nul
@@ -462,6 +591,7 @@ if ERRORLEVEL == 9009 GOTO:Nogpresult
 
 @echo -------------------------------------------
 @echo Group policies - user
+ECHO. >>%REPORT%
 ECHO Group policies - user: >>%REPORT%
 ECHO. >>%REPORT%
 gpresult /scope user /z >>%REPORT% 2>nul
@@ -523,6 +653,7 @@ ECHO. >>%REPORT%
 
 :: Check existing security policy with the one provided in the archive (secpolicy.inf)
 IF NOT EXIST secpolicy.inf GOTO :Nopolicy
+ECHO Checking security policy ....
 ECHO Checking security policy: >>%REPORT%
 ECHO. >>%REPORT%
 secedit /analyze /cfg secpolicy.inf /db secpolcheck.sdb /log secpolcheck.log
@@ -538,6 +669,7 @@ REGEDIT /E "%REPDIR%.\Hotfixes.dat" "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windo
 
 
 :: Display header of hotfixes
+ECHO Gathering Hotfixes installed on this PC ....
 ECHO Hotfixes installed on this PC: >>%REPORT%
 ECHO. >>%REPORT%
 
@@ -569,6 +701,11 @@ GOTO:EOF
 
 :Endhf
 
+::@echo -------------------------------------------
+::@echo Extracting Hotfixes with: wmic qfe lsit
+::ECHO. >>%REPORT%
+::wmic qfe list >> %REPDIR%.\hotfixes-qfe.txt
+
 @echo -------------------------------------------
 :: Export Registry
 :: TODO: Consider outputing only a fraction of it
@@ -583,10 +720,8 @@ reg export HKLM %REPDIR%.\registry-hlkm.reg
 :: reg export HKLM\SOFTWARE\ %REPDIR%.\registry-sw.reg
 :: If you want t export user information
 :: reg export HKU %REPDIR%.\registry-users.reg
-ECHO Registry exported to %REPDIR%.\registry-hlkm.reg >>%REPORT%
+ECHO "Registry exported to %REPDIR%.\registry-hlkm.reg" >>%REPORT%
 ::EndExport
-
-:: 91de25d2df1c63c140d1aa945ede81af
 
 :: Check archive signatures
 :: TODO: test for windows, can the registry file be changed?
