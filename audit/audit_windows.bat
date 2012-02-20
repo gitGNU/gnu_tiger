@@ -272,7 +272,7 @@ ECHO. >>%REPORT%
 ECHO Checking Microsoft Updates on the System: >>%REPORT%
 ECHO. >>%REPORT%
 %MBSADIR%\mbsacli.exe /nd /cabpath mbsa_cache >>%REPORT%
-%MBSADIR%\mbsacli.exe /nd /xmlout /catalog mbsa_cache\wsusscn2.cab > %REPDIR%\MBSA.xml
+%MBSADIR%\mbsacli.exe /nd /xmlout /catalog mbsa_cache\wsusscn2.cab > %REPDIR%.\MBSA.xml
 ECHO. >>%REPORT%
 
 GOTO:Endmbsa
@@ -518,7 +518,7 @@ set sz4=%%g: 0
 for /f "tokens=1,2 delims=:" %%s in ("!sz4!") do set sz4=%%s
 if !sz4! == 0.0.0.0 set sz4=any
 if !sz4! == 127.0.0.1 set sz4=loop
-echo !sz1! TCP !sz2!!sz3!   [ !sz4! ] >>%REPDIR%\ports.tmp
+echo !sz1! TCP !sz2!!sz3!   [ !sz4! ] >>%REPDIR%.\ports.tmp
 )
 )
 
@@ -724,18 +724,18 @@ IF NOT EXIST secpolicy.inf GOTO :Nopolicy
 ECHO Checking security policy ....
 ECHO Checking security policy: >>%REPORT%
 ECHO. >>%REPORT%
-secedit /analyze /cfg secpolicy.inf /db %REPDIR%\secpolcheck.sdb /log %REPDIR%\secpolcheck.log
+secedit /analyze /cfg secpolicy.inf /db %REPDIR%.\secpolcheck.sdb /log %REPDIR%.\secpolcheck.log
 if ERRORLEVEL == 9009 GOTO:Nopolicy
 
 
 ECHO. >>%REPORT%
 ECHO --- Policy info: secedit --- >>%REPORT%
-::copy %windir%\security\Database\secedit.sdb %REPDIR%\secedit.sdb
-secedit /export  /cfg %REPDIR%\cfg-secedit.txt /log %REPDIR%\log-export-secedit.txt
-secedit /export  /mergedpolicy /cfg %REPDIR%\cfg-merged-secedit.txt /log %REPDIR%\log-export-merged-secedit.txt
-secedit /analyze /db %REPDIR%\new-secedit.sdb /cfg %REPDIR%\cfg-secedit.txt /log %REPDIR%\log-analyze-secedit.txt^M
-secedit /analyze /db %REPDIR%\new-secedit-merged.sdb /cfg %REPDIR%\cfg-merged-secedit.txt /log %REPDIR%\log-analyze-merged-secedit.txt
-secedit /analyze /db %REPDIR%\new-secedit-hisec.sdb /cfg %windir%\security\templates\hisecws.inf /log %REPDIR%\log-analyze-hisec.txt
+::copy %windir%\security\Database\secedit.sdb %REPDIR%.\secedit.sdb
+secedit /export  /cfg %REPDIR%.\cfg-secedit.txt /log %REPDIR%.\log-export-secedit.txt
+secedit /export  /mergedpolicy /cfg %REPDIR%.\cfg-merged-secedit.txt /log %REPDIR%.\log-export-merged-secedit.txt
+secedit /analyze /db %REPDIR%.\new-secedit.sdb /cfg %REPDIR%.\cfg-secedit.txt /log %REPDIR%.\log-analyze-secedit.txt^M
+secedit /analyze /db %REPDIR%.\new-secedit-merged.sdb /cfg %REPDIR%.\cfg-merged-secedit.txt /log %REPDIR%.\log-analyze-merged-secedit.txt
+secedit /analyze /db %REPDIR%.\new-secedit-hisec.sdb /cfg %windir%\security\templates\hisecws.inf /log %REPDIR%.\log-analyze-hisec.txt
 ECHO. >>%REPORT%
 
 GOTO:Endpolicy
