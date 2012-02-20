@@ -293,11 +293,6 @@ ECHO Net user >>%REPORT%
 net user >>%REPORT%
 ECHO. >>%REPORT%
 
-ECHO. >>%REPORT%
-ECHO Users (wmic useraccount) >>%REPORT%
-wmic useraccount >>%REPORT%
-ECHO. >>%REPORT%
-
 ECHO Net accounts >>%REPORT%
 net accounts >>%REPORT%
 ECHO. >>%REPORT%
@@ -316,6 +311,7 @@ GOTO:Dumpsec
 
 :Nonetuse
 ECHO ERROR: 'Net' is not available in this system  >>%REPORT%
+ECHO. >>%REPORT%
 
 :Dumpsec
 
@@ -759,10 +755,38 @@ GOTO:EOF
 :Endhf
 
 @echo -------------------------------------------
+:: Extract information using wmic
+:: TODO: Information could be extracted to an external file 
+@echo Extracting information using wmic
+ECHO. >>%REPORT%
 @echo Extracting Hotfixes with: wmic qfe lsit
 ECHO. >>%REPORT%
-wmic qfe list >> %REPDIR%.\hotfixes-qfe.txt
+wmic qfe list >> %REPORT%
+if ERRORLEVEL == 9009 GOTO:Nowmic
+
 ECHO. >>%REPORT%
+ECHO Users (wmic useraccount) >>%REPORT%
+wmic useraccount >>%REPORT%
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Shares (wmic share) >>%REPORT%
+wmic share get caption,name,path
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Installed software (wmic product) >>%REPORT%
+wmic product get name,version
+ECHO. >>%REPORT%
+
+GOTO:Endwmic
+
+:Nowmic
+ECHO ERROR: 'Net' is not available in this system  >>%REPORT%
+
+:Endwmic
+ECHO. >>%REPORT%
+
 
 @echo -------------------------------------------
 :: Export Registry
