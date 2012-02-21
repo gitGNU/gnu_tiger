@@ -66,16 +66,19 @@
 :: 19/09/2011
 :: Added MBSA to check Microsoft Updates on the System
 ::
-:: ------------------------------------------------------------------------------
+:: 21/02/2012
+:: Extract information through wmic
+:: -----------------------------------------------------------------------------
 
-:: TODO: cd to %TEMP% before proceeding? 
-:: TODO: Filesystem checks could also check cacls
-:: TODO: Additional tools like
-:: -- ASSOC? (msinfo32 includes it?)
-:: -- GPRESULT : Group Policy
-:: -- IPSEC \\name SHOW
-:: -- Windows 2003 has additional clis that could be of use:
-:: See, for example Nltest: www.microsoft.com/Resources/Documentation/ windowsserv/2003/all/techref/en-us/nltest.asp
+:: TODO
+::  - cd to %TEMP% before proceeding? 
+::  - Filesystem checks could also check cacls
+::  - Additional tools like
+::    *  Systeminfo (Windows XP:
+::  http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/systeminfo.mspx?mfr=true)
+::
+::    * ASSOC? (msinfo32 includes it?)
+::    * IPSEC \\name SHOW
 
 :: Command references:
 :: Windows 2000: Start -> Help -> Index -> Command reference
@@ -108,12 +111,24 @@ set MBSADIR="%ProgramFiles%\Microsoft Baseline Security Analyzer 2"
 
 :: Additional tools can be downloaded from:
 :: Microsoft
-:: MS Windows NT 4.0 Resource Kit Support Tools
-:: http://www.microsoft.com/technet/archive/winntas/downloads/nt4sp4rk.mspx
+::
+:: Sysinternals
+:: http://technet.microsoft.com/es-es/sysinternals/bb545021
+::
+:: Support Tools:
+:: http://technet.microsoft.com/en-us/library/cc758202(v=WS.10).aspx
+::
+:: MS Windows 2003 Support Tools
+:: http://technet.microsoft.com/en-us/windowsserver/bb405955
+:: http://www.microsoft.com/windowsserver2003/techinfo/reskit/tools/default.mspx
+:: MS Windows 2003 Service Pack 2 Support Tools
+:: http://www.microsoft.com/download/en/details.aspx?displaylang=en&id=15326
+:: MS Windows 2003 Resource Kit Tools
+:: http://www.microsoft.com/download/en/details.aspx?displaylang=en&id=17657
 :: MS Windows 2000 Support Tools
 :: http://www.microsoft.com/windows2000/techinfo/reskit/default.asp
-:: MS Windows 2003 Support Tools
-:: http://www.microsoft.com/windowsserver2003/techinfo/reskit/tools/default.mspx
+:: MS Windows NT 4.0 Resource Kit Support Tools
+:: http://technet.microsoft.com/library/cc767868.aspx
 
 :: Export full registry?
 SET EXPORTREG=yes
