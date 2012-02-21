@@ -789,22 +789,19 @@ GOTO:EOF
 
 @echo -------------------------------------------
 :: Extract information using wmic
-:: TODO: Information could be extracted to an external file 
+:: TODO:
+::  - Information could be extracted to an external file 
+::  - In some systems (Windows XMP) wmic is slow to start and might be
+::    best to use the interactive mode
+:: 
+
 @echo Extracting information using wmic
 ECHO. >>%REPORT%
-@echo Extracting Hotfixes with: wmic qfe lsit
+
 ECHO. >>%REPORT%
-wmic qfe list >> %REPORT%
+ECHO Operating system (wmic os) >>%REPORT%
+wmic os list brief
 if ERRORLEVEL == 9009 GOTO:Nowmic
-
-ECHO. >>%REPORT%
-ECHO Users (wmic useraccount) >>%REPORT%
-wmic useraccount >>%REPORT%
-ECHO. >>%REPORT%
-
-ECHO. >>%REPORT%
-ECHO Shares (wmic share) >>%REPORT%
-wmic share get caption,name,path
 ECHO. >>%REPORT%
 
 ECHO. >>%REPORT%
@@ -812,10 +809,72 @@ ECHO Installed software (wmic product) >>%REPORT%
 wmic product get name,version
 ECHO. >>%REPORT%
 
+ECHO Extracting Hotfixes with: wmic qfe lsit >>%REPORT%
+ECHO. >>%REPORT%
+wmic qfe list >> %REPORT%
+
+ECHO. >>%REPORT%
+ECHO Users (wmic useraccount) >>%REPORT%
+wmic sysaccount list >>%REPORT%
+wmic useraccount list >>%REPORT%
+wmic useraccount >>%REPORT%
+wmic netlogin get name,lastlogon,badpasswordcount >>%REPORT%
+wmic group list >>%REPORT%
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Shares (wmic share) >>%REPORT%
+wmic share get caption,name,path >>%REPORT%
+wmic share list >>%REPORT%
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Wmic Computersystem >>%REPORT%
+wmic computersystem list brief
+wmic computersystem list
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Wmic network information >>%REPORT%
+wmic nicconfig list >>%REPORT%
+wmic netclient list brief >>%REPORT%
+wmic netuse get name,username,connectiontype,localname >>%REPORT%
+ECHO. >>%REPORT%
+
+
+ECHO. >>%REPORT%
+ECHO Wmic service and processes information >>%REPORT%
+wmic service list brief >>%REPORT%
+wmic startup list full >>%REPORT%
+wmic process list brief >>%REPORT%
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Wmic disk information >>%REPORT%
+wmic diskdrive list brief >>%REPORT%
+wmic volume list brief >>%REPORT%
+wmic logicaldisk get description,filesystem,name,size >>%REPORT%
+wmic diskquota list full >>%REPORT%
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Wmic remote desktop configuration >>%REPORT%
+wmic rdtoggle list >>%REPORT%
+wmic rdaccount list >>%REPORT%
+wmic rdpermissions list >>%REPORT%
+ECHO. >>%REPORT%
+
+ECHO. >>%REPORT%
+ECHO Wmic extra information >>%REPORT%
+wmic environment list >>%REPORT%
+wmic nteventlog get path,filename,writeable >>%REPORT%
+ECHO. >>%REPORT%
+
+
 GOTO:Endwmic
 
 :Nowmic
-ECHO ERROR: 'Net' is not available in this system  >>%REPORT%
+ECHO ERROR: 'Wmic' is not available in this system  >>%REPORT%
 
 :Endwmic
 ECHO. >>%REPORT%
