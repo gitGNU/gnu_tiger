@@ -195,9 +195,11 @@ check_idx()
   } | {
     read file
     [ "$file" != "explain.idx" ] && {
-	echo "Warning: Explain index out of date and unable to rebuild it."
+        if [ -e "doc/explain.idx" ] ; then
+	echo "Warning: Explain index is out of date and I am unable to rebuild it."
         echo "Warning: Please regenerate it by running, as root, the following command: "
         echo "Warning: cd $BASEDIR && util/genmsgidx doc/*txt"
+        if
     }
   }
   else
