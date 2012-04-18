@@ -8,13 +8,30 @@ Installed processes listening on Internet interfaces must be
 tightly controlled since they are the "open doors" to the 
 outside.
 %lin003w
-Processes that have not been run by root are listening on
-interfaces open to the outside. This processes might have been
-run by root and changed uids or might be rogue processes.
-Confirm if their presence is necessary.
+Processes that have not been run by a valid user are listening on interfaces
+open to external networks. This processes might have been run by a valid user
+and changed uids or might be rogue processes.
+
+The list of valid users is defined in Tiger's configuration file (tigerrc)
+variable 'Tiger_Listening_ValidUsers'. An incorrect definition there might
+also lead to invalid reports and false positives.
+
+To fix this issue, review the value of the configuration variable and
+the user the process is associated to. Confirm if the process is
+running and is necessary. 
+
+If the process is run by a system user, in order to prevent this process from
+working, it is often necessary necessary to reconfigure the system to prevent
+it from starting when the system boots. If this process is run by
+a normal user you might need to review the processes started by login
+scripts, desktop confiuration or periodic program execution.
+
 Notice that sometimes services open sporadic UDP listeners to 
 receive DNS requests, if you receive reports on open UDP services
 that later on are closed this might be a false positive.
+
+You can fix these false positives by adjusting the tiger.ignore configuration
+file.
 %lin004i
 Netstat can be used instead of lsof in order to provide information
 on listening processes, however it will provide less info since it
