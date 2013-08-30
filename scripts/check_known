@@ -17,6 +17,9 @@
 #
 # check_known - 06/14/93
 #
+# 08/30/2013 jfs Determine properly the kernel version to decide wether to user
+# ifconfig (or not) (Debian bug: #708360)
+#
 # 04/05/2010 jfs Use WC instead of wc and avoid bashisms in script
 #  Also, improve the fix introduced in previous version to handle
 #  also newlines in files. Reducing the number of printed bad files to 100
@@ -125,9 +128,16 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
      # (maybe should be moved to systems/Linux/2/check_known)
      [ ! -x "$IP" -o "$OS" != "Linux" ] && message INFO kisXXX "" "Using $IFCONFIG instead of $IP, promiscuous mode detection incomplete. Installing $IP adds libpcap/libnet-based sniffer detection capabilities."
 
-     VER=`echo $REV | $CUT -f 2 -d .`
-     if [ -x "$IP" -a $VER -ge 4 ] 
+     # Extract kernel major and minor version, only take numbers
+     MAJOR_VER=`echo $REV | $CUT -f 1 -d . | $EGREP '^[0-9].*'`
+     MINOR_VER=`echo $REV | $CUT -f 2 -d . | $SED -e 's/-.*$//' |  $EGREP '^[0-9].*'`
+     # only use ifconfig if 'ip' is not available or if we are in version 2.4 or earlier
+     if [ ! -x "$IP" ] || [ -z $MAJOR_VER ] || [ $MAJOR_VER -eq 2 -a $MINOR_VER -lt 4 ]  || [ $MAJOR_VER -lt 2 ]
      then
+         echo "# Testing for promiscuous interfaces with $IFCONFIG"
+         promisc="`$IFCONFIG -a | $GREP -i PROMISC`"
+         [ -n "$promisc" ] && message ALERT kis013a "" "One of the interfaces is set for promiscuous mode"
+     else
          echo "# Testing for promiscuous interfaces with $IP"
          $IP link show |
 	 $EGREP '^[0-9].*PROMISC' |
@@ -138,10 +148,6 @@ trap 'delete $WORKDIR/login.str.$$ $WORKDIR/pass.list.$$ ; exit 1' 1 2 3 15
          do
             message ALERT kis013a "" "Interface $intf set for promiscuous mode"
          done
-     else
-         echo "# Testing for promiscuous interfaces with $IFCONFIG"
-         promisc="`$IFCONFIG -a | $GREP -i PROMISC`"
-         [ -n "$promisc" ] && message ALERT kis013a "" "One of the interfaces is set for promiscuous mode"
      fi
   }
   
