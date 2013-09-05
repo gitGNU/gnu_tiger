@@ -39,7 +39,7 @@ gopher 70/udp
 rje 77/tcp
 finger 79/tcp
 http 80/tcp
-www 80/udp
+http 80/udp
 link 87/tcp
 kerberos 88/tcp
 kerberos 88/udp
@@ -303,7 +303,7 @@ xtelw 1314/tcp
 support 1529/tcp
 cisco-sccp 2000/tcp
 cfinger 2003/tcp
-search 2010/tcp
+pipe-server 2010/tcp
 ninstall 2150/tcp
 ninstall 2150/udp
 zebrasrv 2600/tcp
