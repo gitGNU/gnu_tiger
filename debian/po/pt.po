@@ -11,6 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2010-02-18 23:18+0000\n"
 "Last-Translator: Luísa Lourenço <kikentai@gmail.com>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,7 +19,6 @@ msgstr ""
 #. Type: string
 #. Description
 #: ../templates:1001
-#| msgid "Who should receive the daily mails?"
 msgid "Recipient of the daily mails:"
 msgstr "Destinatário dos mails diários:"
 
