@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 #     tiger - A UN*X security checking system
 #     Copyright (C) 2003 Javier Fernandez-Sanguino
@@ -54,6 +54,7 @@ done
   exit 1
 }
 
+# NOTE: this (sourcing a file with arguments) is a bashism
 . $basedir/config -q
 
 . $BASEDIR/initdefs
