@@ -38,7 +38,8 @@
 # - the 'case' statements probably need to be introduced into an 'eval'
 # (this bug was reported for Debian GNU/Linux) in order for multiple
 # ValidUsers/ValidProcs to work ok. Check systems/Linux/2/check_listeningprocs
-# (once it has been tested it will be included here too)
+# (once it has been tested it will be included here too) (See Debian Bug
+# #384111)
 #
 # NOTES:
 #
