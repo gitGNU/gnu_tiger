@@ -49,6 +49,7 @@
 #             RemoteWelcome=Message for remote login users
 #  
 #   This value can be checked using:  
+#          gconftool-2 --get /apps/gdm/simple-greeter/banner_message_enable
 #          gconftool-2 --get /apps/gdm/simple-greeter/banner_message_text
 #
 #   For more information 
@@ -58,6 +59,7 @@
 #		# - Show a login welcome message
 #		# banner-message-enable=true
 #		# banner-message-text='Welcome'
+#   Note, for GDM also see https://bugzilla.gnome.org/show_bug.cgi?id=660660
 # 
 #-----------------------------------------------------------------------------
 #
