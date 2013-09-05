@@ -1,8 +1,12 @@
 tiger (1:3.2.3-11) UNRELEASED; urgency=low
 
-  * Do not use example file at /usr/share/doc/tiger for the configuration. Copy the example file
+  * debian/postinst, debian/rules: Do not use example file at
+    /usr/share/doc/tiger for the configuration. Copy the example file
     to /usr/share/tiger and use it from there instead (Closes: #710068)
-  [ Updated with upstream content in GIT repository ]
+  * debian/rules: Add the issue and issue.net example files provided into
+    /usr/share/doc/tiger/examples.
+  [ Updated with upstream content in GIT repository. The following is a list
+    of changes relevant to Debian as they close existing bugs. ]
   * scripts/check_known: Determine properly the kernel version to decide wether
     to user ifconfig (or not) (Closes: #708360) Make util/mkfilelst a bash
   * script since it uses a sourced script with arguments (Closes: #690644)
