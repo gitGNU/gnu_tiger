@@ -36,10 +36,19 @@ depends on your legal requirements, TIGER does *not* setup a default banner
 to compare with. If you want the check_issue script to work, please provide
 a suitable file.
 
+Please note that if the system is using display manager (e.g. gdm) that users
+logon on to access a desktop environment (such as GNOME or KDE under Linux and
+other operating systems) the login banner in /etc/issue is *not* presented to
+the end-users of the graphical environment. Please review the documentation of
+your specific display manager to know how to do this.
+
 
 --------------------------------------------------------------------------
 
 For more information, please read:
+
+CERT® Advisory CA-1992-19 Keystroke Logging Banner
+Available at http://www.cert.org/advisories/CA-1992-19.html
 
 "Whitepaper: Login Warning Banners - A Discussion about Login/Warning Banners,
 Their Emplacements and Their Uses" by Bob Radvanovsky, Unixworks
