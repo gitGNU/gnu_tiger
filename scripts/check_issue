@@ -2,6 +2,7 @@
 #
 #     tiger - A UN*X security checking system
 #     Copyright (C) 1993 Douglas Lee Schales, David K. Hess, David R. Safford
+#     Copyright (C) 2002-2013 Javier Fernandez-Sanguino
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,6 +30,10 @@
 #        check of the exit status
 #
 # check_issue - 05/01/2003 - jfs - Fixed dependancies
+#
+# check_issue - 09/05/2013 - jfs - Change the requirement to have the ISSUEFILE
+# and ISSUENETFILE. Instead, provide a different warning message if we do not 
+# have any files to compare with.
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -89,18 +94,24 @@ echo
 echo "# Performing check of /etc/issue(s) login message..."
 
 haveallcmds DIFF || exit 1
-haveallfiles ISSUEFILE ISSUENETFILE BASEDIR WORKDIR || exit 1
+haveallfiles BASEDIR WORKDIR || exit 1
 
 # for the local logins
-$DIFF -q /etc/issue $ISSUEFILE >/dev/null 2>&1
-if [ $? -ne 0 ] 
-  then
-   message WARN issue001w "" "/etc/issue does not contain the designated content."
+if [ -e "$ISSUEFILE" ] ; then
+	$DIFF -q /etc/issue $ISSUEFILE >/dev/null 2>&1
+	if [ $? -ne 0 ] ; then
+	   message WARN issue001w "" "/etc/issue does not contain the designated content."
+	fi
+else
+	message WARN issue003w "" "No administrator-provided $ISSUEFILE found to compare /etc/issue with"
 fi
 
 # for the networked logins
-$DIFF -q /etc/issue.net $ISSUENETFILE >/dev/null 2>&1
-if [ $? -ne 0 ] 
-  then
-   message WARN issue002w "" "/etc/issue.net does not contain the designated content."
+if [ -e "$ISSUENETFILE" ] ; then
+	$DIFF -q /etc/issue.net $ISSUENETFILE >/dev/null 2>&1
+	if [ $? -ne 0 ] ; then
+		message WARN issue002w "" "/etc/issue.net does not contain the designated content."
+	fi
+else
+	message WARN issue003w "" "No administrator-provided $ISSUENETFILE found to compare /etc/issue.net with"
 fi
