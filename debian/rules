@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
-# Sample debian/rules that uses debhelper.
+# debian/rules file for Tiger using debhelper
 # GNU copyright 1997 to 1999 by Joey Hess.
+# (c) 2001-2013 Javier Fernández-Sanguino <jfs@debian.org>
 
 # We depend on baashisms
 SHELL=/bin/bash
