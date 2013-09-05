@@ -47,6 +47,12 @@
 #             DefaultWelcome=false
 #             Welcome=Message for local users
 #             RemoteWelcome=Message for remote login users
+#  
+#   This value can be checked using:  
+#          gconftool-2 --get /apps/gdm/simple-greeter/banner_message_text
+#
+#   For more information 
+#   see https://help.gnome.org/admin/gdm/stable/configuration.html.en#greeterconfiguration
 #
 #   and in GDM3 this is configured in /etc/gdm3/greeter.gsettings:
 #		# - Show a login welcome message
