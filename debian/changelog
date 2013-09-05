@@ -12,6 +12,8 @@ tiger (1:3.2.3-11) UNRELEASED; urgency=low
 	  system/<OPERATING_SYSTEM>/config scripts.
   * systems/Linux/2/services: Update services definition to prevent false
     positives report on duplicated service names (Closes: #696510)
+  * scripts/check_issue: Do not require there to be administrative-provided files to compare
+    with. If they are not found, warn instead that we have nothing to compare with (Closes: #511970)
 
  -- Javier Fernández-Sanguino Peña <jfs@debian.org>  Thu, 05 Sep 2013 07:11:59 +0200
 
