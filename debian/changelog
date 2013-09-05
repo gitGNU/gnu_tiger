@@ -1,3 +1,20 @@
+tiger (1:3.2.3-10) unstable; urgency=low
+
+  * Update Debian Advisories
+  [ Update with content in latest GIT repository ] 
+  * systems/Linux/2/gen_mounts:
+    - Added devtmpfs  (Closes: 653416)
+    - Added sshfs and cgroup (Closes: 655276)
+  * tigerrc: 
+    - Include support for sha512 password hashes (Closes: #657310)
+  * audit/audit_windows.bat: Update audit script
+  [ Patch provided by Christian Perrier ]
+  * Debconf translations updated:
+    - Dutch, thanks to Jeroen Schot.  (Closes: #657283)
+    - Polish, thanks to Michał Kułach.  (Closes: #666445)
+
+ -- Javier Fernández-Sanguino Peña <jfs@debian.org>  Wed, 18 Apr 2012 19:28:18 +0200
+
 tiger (1:3.2.3-9) unstable; urgency=low
 
   * debian/control: 
@@ -43,7 +60,6 @@ tiger (1:3.2.3-7) unstable; urgency=low
     - Apply patch by Timo Lindfors to add support for SHA-512 passwords
      (This is the default used in Debian GNU/Linux squeeze and later releases)
      (Closes: #581266)
-
 
  -- Javier Fernandez-Sanguino Pen~a <jfs@debian.org>  Sat, 26 Feb 2011 01:45:50 +0100
 
