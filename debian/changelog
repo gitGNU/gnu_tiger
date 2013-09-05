@@ -1,6 +1,8 @@
 tiger (1:3.2.3-11) UNRELEASED; urgency=low
 
   * Determine properly the kernel version to decide wether to user ifconfig (or not) (Closes: #708360)
+  * Do not use example file at /usr/share/doc/tiger for the configuration. Copy the example file
+    to /usr/share/tiger and use it from there instead (Closes: #710068)
 
  -- Javier Fernández-Sanguino <jfs@debian.org>  Thu, 05 Sep 2013 07:11:59 +0200
 

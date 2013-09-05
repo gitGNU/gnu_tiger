@@ -3,7 +3,7 @@
 # System configuration file:
 CONFIG=/etc/tiger/tigerrc
 # Package-provided configuration file:
-PKGCONFIG=/usr/share/doc/tiger/examples/tigerrc.gz
+PKGCONFIG=/usr/share/tiger/tigerrc
 
 test $DEBIAN_SCRIPT_DEBUG && set -v -x
 

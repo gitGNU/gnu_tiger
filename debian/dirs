@@ -2,6 +2,7 @@ etc/tiger
 etc/tiger/templates
 etc/default
 usr/sbin
+usr/share/tiger
 usr/lib/tiger
 var/lib/tiger/work
 var/log/tiger
