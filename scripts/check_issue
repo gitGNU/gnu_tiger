@@ -103,7 +103,7 @@ if [ -e "$ISSUEFILE" ] ; then
 	   message WARN issue001w "" "/etc/issue does not contain the designated content."
 	fi
 else
-	message WARN issue003w "" "No administrator-provided $ISSUEFILE found to compare /etc/issue with"
+	message WARN issue003w "" "No administrator-provided $ISSUEFILE found to compare /etc/issue with."
 fi
 
 # for the networked logins
@@ -113,5 +113,5 @@ if [ -e "$ISSUENETFILE" ] ; then
 		message WARN issue002w "" "/etc/issue.net does not contain the designated content."
 	fi
 else
-	message WARN issue003w "" "No administrator-provided $ISSUENETFILE found to compare /etc/issue.net with"
+	message WARN issue003w "" "No administrator-provided $ISSUENETFILE found to compare /etc/issue.net with."
 fi
