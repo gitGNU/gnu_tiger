@@ -1,4 +1,4 @@
-tiger (1:3.2.3-11) UNRELEASED; urgency=low
+tiger (1:3.2.3-11) unstable; urgency=low
 
   * debian/postinst, debian/rules: Do not use example file at
     /usr/share/doc/tiger for the configuration. Copy the example file
