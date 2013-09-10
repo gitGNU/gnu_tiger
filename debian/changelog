@@ -7,17 +7,20 @@ tiger (1:3.2.3-11) UNRELEASED; urgency=low
     /usr/share/doc/tiger/examples.
   [ Updated with upstream content in GIT repository. The following is a list
     of changes relevant to Debian as they close existing bugs. ]
-  * scripts/check_known: Determine properly the kernel version to decide wether
-    to user ifconfig (or not) (Closes: #708360) Make util/mkfilelst a bash
-  * script since it uses a sourced script with arguments (Closes: #690644)
-	- Note: We ignore other bashims reported in the bug reported due to the use of HOSTNAME since
- 	  the Tiger configuration file ensures that the HOSTNAME variable is properly set before
-	  using any of these scripts. This variable is defined using the proper binary in the
-	  system/<OPERATING_SYSTEM>/config scripts.
+  * scripts/check_known: Determine properly the kernel version to decide
+    whether to user ifconfig (or not) (Closes: #708360) 
+  * Make util/mkfilelst a bash script since it uses a sourced script with
+    arguments (Closes: #690644)
+    - Note: We ignore other bashims reported in the bug reported due to the
+      use of HOSTNAME since the Tiger configuration file ensures that the
+      HOSTNAME variable is properly set before using any of these scripts.
+      This variable is defined using the proper binary in the
+      system/<OPERATING_SYSTEM>/config scripts.
   * systems/Linux/2/services: Update services definition to prevent false
     positives report on duplicated service names (Closes: #696510)
-  * scripts/check_issue: Do not require there to be administrative-provided files to compare
-    with. If they are not found, warn instead that we have nothing to compare with (Closes: #511970)
+  * scripts/check_issue: Do not require there to be administrative-provided
+    files to compare with. If they are not found, warn instead that we have
+    nothing to compare with (Closes: #511970)
 
  -- Javier Fernández-Sanguino Peña <jfs@debian.org>  Thu, 05 Sep 2013 07:11:59 +0200
 
