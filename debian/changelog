@@ -3,8 +3,11 @@ tiger (1:3.2.3-11) unstable; urgency=low
   * debian/postinst, debian/rules: Do not use example file at
     /usr/share/doc/tiger for the configuration. Copy the example file
     to /usr/share/tiger and use it from there instead (Closes: #710068)
-  * debian/rules: Add the issue and issue.net example files provided into
-    /usr/share/doc/tiger/examples.
+  * debian/rules: 
+      - Add the issue and issue.net example files provided into
+        /usr/share/doc/tiger/examples.
+      - Remove auto-generated config files when cleaning just in case
+        Makefile didn't take care of them
   [ Updated with upstream content in GIT repository. The following is a list
     of changes relevant to Debian as they close existing bugs. ]
   * scripts/check_known: Determine properly the kernel version to decide
