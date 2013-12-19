@@ -17,6 +17,7 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# 12/19/2013 - jfs - Do not use dpkg-divert if not available
 # 09/09/2008 - jfs - Use prelink to calculate checksums if present (Debian bug #445531)
 # 06/22/2007 - jfs - Fix Debian bug 50611 by properly reading md5sum's output
 # 08/17/2006 - jfs - Fix Ubuntu bug 50611 by excluding dev/ and 
@@ -165,6 +166,9 @@ do
 }
 done
 # check diversions
+
+
+if [ -x /usr/sbin/dpkg-divert ]; then
 /usr/sbin/dpkg-divert --list |
 # extract the file diverted, the backup file and the diverter package
 $SED -e 's/diversion of \(\/.*\) to \(\/.*\) by \(.*\)$/\1;\2;\3/' \
@@ -204,6 +208,7 @@ $SED -e 's/diversion of \(\/.*\) to \(\/.*\) by \(.*\)$/\1;\2;\3/' \
   # restore IFS
   IFS=$saveIFS
 }
+fi
 
 else
 	message WARN lin006w "" "This check cannot be done since we seem not to be running on a Debian GNU/Linux system"
