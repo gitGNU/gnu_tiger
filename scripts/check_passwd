@@ -55,6 +55,8 @@
 #                Add /bin/true as valid shell as well as Solaris shells
 # 05/20/2006 jfs Add quotation marks to Tiger_Admin_Accounts to prevent
 #                errors if empty (Debian bug #342181)
+# 01/09/2013 jfs Added /usr/sbin/nologin to list of valid nologin shells
+#               (Debian bug #734775)
 #
 #-----------------------------------------------------------------------------
 # TODO:
@@ -168,7 +170,7 @@ check_passwd_entries()
     # TODO: The hardcoded list of shells could be user defined 
     # (i.e. in tigerrc)
     eval "case \"$shell\" in
-      /bin/false|/usr/bin/false|/dev/null|/sbin/nologin|/bin/true)
+      /bin/false|/usr/bin/false|/dev/null|/sbin/nologin|/bin/true|/usr/sbin/nologin)
          ;;
       $shcase)
          [ \"$hash\" = \* ] && {

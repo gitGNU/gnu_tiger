@@ -339,7 +339,7 @@ sub check_ftpd {
   close(PASS);
   return unless ($name);
   return unless ($shell);
-  if (( $shell ne '/bin/false' ) || ( $shell ne '/sbin/nologin' )) {
+  if (( $shell ne '/bin/false' ) || ( $shell ne '/sbin/nologin' ) || ( $shell ne '/usr/sbin/nologin' ) ) {
     &Fail('netw018f',"Anon ftp user $name has valid shell of $shell");
   }
 

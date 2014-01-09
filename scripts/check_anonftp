@@ -17,6 +17,8 @@
 #
 # check_anonftp - 06/14/93
 #
+# 01/09/2013 jfs Added /usr/sbin/nologin to list of valid nologin shells
+#               (Debian bug #734775)
 # 08/31/2005 jfs Changed GROUPC to GROUPSS
 # 06/28/2004 jfs Avoid duplicates for $ftphome
 # 01/13/2004 rbrad Cleanup noise and add additional check to check_anonftp.
@@ -161,7 +163,7 @@ haveallcmds GETUSERHOME && {
   # Does the ftp user have a valid shell?
   shell=`echo $ftp_pwentry | $CUT -d: -f7`
   case "$shell" in
-    /bin/false|/usr/bin/false|/sbin/nologin)
+    /bin/false|/usr/bin/false|/sbin/nologin|/usr/sbin/nologin)
       ;;
 
     *)
