@@ -61,7 +61,9 @@
 #                                   (Debian bug 615052)
 # Linux/2/gen_mounts - 28/01/2011 - Added devtmpfs (Debian bug 653416)
 #                                   Added sshfs and cgroup (Debian bug 655276)
-#-----------------------------------------------------------------------------
+# Linux/2/gen_mounts - 23/01/2013 - Added pstore  (Debian bug 733832)
+#                                 - Fix typo: hugetlbf --> hugetlbfs (Debian bug 729692)
+#------------------------------------------------------------------------------------------------------------------
 #
 
 dirname()
@@ -192,7 +194,7 @@ localfs()
   [ "$1" = "pipefs" ] && LOCAL=1
   [ "$1" = "eventpollfs" ] && LOCAL=1           # Efficient event polling mechanism
   [ "$1" = "inotifyfs" ] && LOCAL=1 
-  [ "$1" = "hugetlbf" ] && LOCAL=1 
+  [ "$1" = "hugelbfs" ] && LOCAL=1 
   [ "$1" = "subfs" ] && LOCAL=1 
   [ "$1" = "futexfs" ] && LOCAL=1               # futex (Fast Userspace Locking) mechanism
   [ "$1" = "fuse" ] && LOCAL=1
@@ -201,6 +203,7 @@ localfs()
                                                 # http://lwn.net/Articles/115405/
   [ "$1" = "configfs" ] && LOCAL=1
   [ "$1" = "davfs" ] && LOCAL=1
+  [ "$1" = "pstore" ] && LOCAL=1                # Platform dependen persisten storage
   # Other filesystems we don't support
   [ "$1" = "adfs" ] && LOCAL=1
   [ "$1" = "affs" ] && LOCAL=1
