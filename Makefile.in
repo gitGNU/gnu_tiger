@@ -167,6 +167,8 @@ MISCFILES=./initdefs \
 	./util/mksig \
 	./util/setsh \
 	./util/sgrep \
+	./util/facl.lst \
+	./util/facl.tmpl \
         ./doc/explain.idx
 
 MISCDIRS=./bin \
