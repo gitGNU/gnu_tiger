@@ -10,6 +10,8 @@ tiger (1:3.2.3-12) unstable; urgency=medium
   * systems/Linux/2/gen_mounts
       - Added pstore  (Closes: 733832)
       - Fix typo: hugetlbf --> hugetlbfs (Closes: 729692)
+      - Add fuse.gvfs-fuse-daemon as a filesystem and consider gvfs
+        filesystems as non-LOCAL to be in the safe side.
   * debian/control: Bump standards, no changes required
   * debian/po/es.po: Fix Language in PO file
   * debian/po/ja.po: Update PO debconf based on Japanese team review
