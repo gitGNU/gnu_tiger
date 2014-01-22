@@ -62,7 +62,8 @@
 # Linux/2/gen_mounts - 28/01/2011 - Added devtmpfs (Debian bug 653416)
 #                                   Added sshfs and cgroup (Debian bug 655276)
 # Linux/2/gen_mounts - 23/01/2013 - Added pstore  (Debian bug 733832)
-#                                 - Fix typo: hugetlbf --> hugetlbfs (Debian bug 729692)
+#                                 - Fix typo: hugetlbf --> hugetlbfs 
+#                                    (Debian bug 729692, Savannah bug 40591)
 #------------------------------------------------------------------------------------------------------------------
 #
 
