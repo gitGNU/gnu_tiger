@@ -1,24 +1,17 @@
-#
-#    Translators, if you are not familiar with the PO format, gettext
-#    documentation is worth reading, especially sections dedicated to
-#    this format, e.g. by running:
-#         info -n '(gettext)PO Files'
-#         info -n '(gettext)Header Entry'
-#
-#    Some information specific to po-debconf are available at
-#            /usr/share/doc/po-debconf/README-trans
-#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
-#
-#    Developers do not need to manually edit POT or PO files.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# victory <victory.deb@gmail.com>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: tiger 1:3.2.3-1\n"
+"Project-Id-Version: tiger\n"
 "Report-Msgid-Bugs-To: tiger@packages.debian.org\n"
-"POT-Creation-Date: 2010-01-02 01:05+0100\n"
-"PO-Revision-Date: 2010-01-17 18:27+0900\n"
-"Last-Translator: Hideki Yamane (Debian-JP) <henrich@debian.or.jp>\n"
+"POT-Creation-Date: 2012-06-17 00:18+0000\n"
+"PO-Revision-Date: 2012-06-17 09:18+0900\n"
+"Last-Translator: victory <victory.deb@gmail.com>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,7 +20,7 @@ msgstr ""
 #. Description
 #: ../templates:1001
 msgid "Recipient of the daily mails:"
-msgstr "日次レポートメールの受信者:"
+msgstr "日次メールの受取人:"
 
 #. Type: string
 #. Description
@@ -39,16 +32,16 @@ msgid ""
 "Also note that any administrator will be able to access the reports since "
 "they are available in the /var/log/tiger/ directory."
 msgstr ""
-"cronjob が動いている間 'tiger' が送るメールを受け取るユーザを以下で入力してく"
-"ださい。 'tiger' プログラムが単独で実行された場合にこのユーザがレポートを受け"
-"取るという意味ではありません。管理者であれば /var/log/tiger/ ディレクトリにア"
-"クセスできるのでレポートを読めるということにも注意してください。"
+"その日の cron ジョブの実行中に「tiger」が送る全メールを以下に入力したユーザが"
+"受け取ることになります。これは「tiger」プログラムを実行したらこのユーザが報告"
+"を受け取るということではありません。報告は /var/log/tiger/ ディレクトリにある"
+"ため、管理者なら誰でもアクセス可能であることに注意してください。"
 
 #. Type: note
 #. Description
 #: ../templates:2001
 msgid "Take a minute to customize 'tiger'"
-msgstr "'tiger' のカスタマイズには多少時間がかかります"
+msgstr "「tiger」の設定には数分かかります"
 
 #. Type: note
 #. Description
@@ -65,33 +58,11 @@ msgid ""
 "against each one of the templates available (one per module) and only new "
 "warnings will be issued."
 msgstr ""
-"ローカルのセキュリティポリシーに適合させるためには /etc/tiger/ 以下のファイル"
-"をカスタマイズしなければなりません。まず始めに false positive を減らすため、"
-"テストに必要となる情報のカスタマイズはもちろんのこと、このシステムで行われる"
-"チェックの種類自体も選択します (/etc/tiger/tigerrc) 。2番目に、これらのテスト"
-"が何回実行されるか (/etc/tiger/cronrc) 。3番目に、モジュールが発する警告の幾"
-"つかは、現在のセキュリティポリシーに照らすと問題とはならないので、それぞれの"
-"モジュールが実行する /etc/tiger/templates/ にあるテンプレートファイルを定義し"
-"ます。一度定義すると (モジュールごとに) 利用可能なテンプレートそれぞれに対し"
-"てチェックが行われ、新しい警告だけが取り上げられます。"
-
-#~ msgid "Remove templates in buggy 'tiger' versions"
-#~ msgstr "バグの多いバージョンの 'tiger' のテンプレートを削除します"
-
-#~ msgid ""
-#~ "Initially Debian's 3.1 tiger versions were distributed with a bug that "
-#~ "would cause templates to be created under /var/log/ instead of /var/log/"
-#~ "tiger/. Normal operation assumes templates are under /var/log/tiger/ and "
-#~ "these templates will not be useful in newer Tiger versions. You might "
-#~ "want to preserve a copy of them (to use as templates) and move them "
-#~ "manually under their proper location. The package will not do this "
-#~ "automatically in order to avoid removing previous templates. Should we "
-#~ "remove these files if any are found?"
-#~ msgstr ""
-#~ "最初に配布された Debian の tiger バージョン 3.1 ではテンプレートが /var/"
-#~ "log/tiger/ ではなく /var/log/ に作られるというバグがあります。通常は /var/"
-#~ "log/tiger/ 以下にテンプレートがあると仮定しているので、これらのテンプレー"
-#~ "トは新しい tiger では利用されません。これらのコピーを (テンプレートとして"
-#~ "使うために) 保存しおき、後ほど手動で正しい位置へ移動しておきたいと思うかも"
-#~ "しれません。パッケージは以前のテンプレートが削除されるのを避けるため、この"
-#~ "作業を自動的には実行しません。どうしてもこれらのファイルを削除しますか?"
+"/etc/tiger/ にあるファイルを自分のローカルセキュリティポリシーに合わせて変更し"
+"てください。まず、誤検知を減らすためのテストに必要な情報と同様に、このシステム"
+"で行う確認の種類を変更してください (/etc/tiger/tigerrc)。次に、テストを実行す"
+"る日時を変更してください (/etc/tiger/cronrc)。次に、一部のモジュールの警告は"
+"あなたの現在のセキュリティポリシーでは問題とならないかもしれないので、それぞれ"
+"のモジュールの実行時に使う /etc/tiger/templates/ にあるテンプレートファイルの"
+"割り当てを定義してください。定義が終わると利用可能なテンプレートごとにすべて確"
+"認され (モジュールごとに 1 度)、新しい警告だけが発表されます。"
