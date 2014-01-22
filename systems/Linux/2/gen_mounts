@@ -64,6 +64,7 @@
 # Linux/2/gen_mounts - 23/01/2013 - Added pstore  (Debian bug 733832)
 #                                 - Fix typo: hugetlbf --> hugetlbfs 
 #                                    (Debian bug 729692, Savannah bug 40591)
+#                                 - Add fuse.gvfs-fuse-daemon (Savannah patch 7914) and change it to non-LOCAL
 #------------------------------------------------------------------------------------------------------------------
 #
 
@@ -142,7 +143,8 @@ localfs()
   [ "$1" = "fuseblk" ] && LOCAL=0               # Used in Ubuntu 'hardy'
   [ "$1" = "fuse.truecrypt" ] && LOCAL=0        # Encrypted filesystem, used in Ubuntu 'hardy'
   [ "$1" = "fuse.encfs" ] && LOCAL=0            # Encrypted filesystem
-  [ "$1" = "fuse.gvfs-fuse-daemon" ] && LOCAL=0 # Used in Ubuntu 'hardy'
+  [ "$1" = "fuse.gvfs-fuse-daemon" ] && LOCAL=1 # Used in Ubuntu 'hardy'
+  [ "$1" = "fuse.gvfsd-fuse" ] && LOCAL=1       # Used in Ubuntu 13.10 (Saucy Salamander) replaces fuse.gvfs-fuse-daemon
   [ "$1" = "fuse.ltspfs" ] && LOCAL=0 		# Used by LTSP 5.x
   [ "$1" = "ecryptfs" ] && LOCAL=0              # Encrypted filesystem used by ecryptfs-utils
   [ "$1" = "xenfs" ] && LOCAL=0                 # Virtual fs for Xen
