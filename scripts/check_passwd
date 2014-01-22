@@ -56,7 +56,7 @@
 # 05/20/2006 jfs Add quotation marks to Tiger_Admin_Accounts to prevent
 #                errors if empty (Debian bug #342181)
 # 01/09/2013 jfs Added /usr/sbin/nologin to list of valid nologin shells
-#               (Debian bug #734775)
+#               (Debian bug #734775, #717218)
 #
 #-----------------------------------------------------------------------------
 # TODO:
