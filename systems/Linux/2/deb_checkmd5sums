@@ -17,6 +17,7 @@
 #
 # Linux/deb_checkmd5sums - 24/08/2001
 #
+# 01/23/2014 - jfs - Fix the location of dpkg-divert (Debian bug #732936)
 # 12/19/2013 - jfs - Do not use dpkg-divert if not available
 # 09/09/2008 - jfs - Use prelink to calculate checksums if present (Debian bug #445531)
 # 06/22/2007 - jfs - Fix Debian bug 50611 by properly reading md5sum's output
@@ -168,8 +169,8 @@ done
 # check diversions
 
 
-if [ -x /usr/sbin/dpkg-divert ]; then
-/usr/sbin/dpkg-divert --list |
+if [ -x /usr/bin/dpkg-divert ]; then
+/usr/bin/dpkg-divert --list |
 # extract the file diverted, the backup file and the diverter package
 $SED -e 's/diversion of \(\/.*\) to \(\/.*\) by \(.*\)$/\1;\2;\3/' \
      -e 's/local diversion of \(\/.*\) to \(\/.*\)$/\1;\2;LOCAL/' | {
