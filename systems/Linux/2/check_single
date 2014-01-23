@@ -24,6 +24,7 @@
 # 01/15/2004 jfs      Fixed dependancies
 # 03/21/2005 jfs      Only run if running on the x86 architecture 
 #                     (Debian bug #288737)
+# 01/23/2014 jfs      Do not assume that /etc/inittab exists
 #
 #-----------------------------------------------------------------------------
 #
@@ -88,14 +89,15 @@ then
 	then
 		exit 0
 	fi
-elif [ -e /boot/grub/menu.lst ]
+elif [ -r /boot/grub/menu.lst ]
 then
 	$GREP "password" /boot/grub/menu.lst 1> /dev/null
 	if [ $? -eq 0 ]
 	then
 		exit 0
 	fi
-else		
+elif [ -r /etc/inittab ]
+then
 	SULOGIN_STRING="~~:S:wait:/sbin/sulogin"
 	$GREP "$SULOGIN_STRING" /etc/inittab 1> /dev/null
 	if [ $? -eq 1 ]
