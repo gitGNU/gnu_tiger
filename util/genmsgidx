@@ -22,6 +22,7 @@
 # 08/26/2008 - jfs - Fix temporary race condition by using tempfile
 #                    in those systems that have it
 # 11/27/2008 - jfs - Detect if we cannot write to the file and abort
+# 11/22/2015 - jfs - Make LS behave the same independently of the environment
 #
 #-----------------------------------------------------------------------------
 
@@ -101,7 +102,7 @@ haveallof variables BASEDIR || exit 1
 #    exit 1
 #}
 
-$LS $BASEDIR/doc/*.txt |
+LC_COLLATE=C.UTF-8 $LS $BASEDIR/doc/*.txt |
 while read infile 
 do
   file=`$BASENAME $infile`
