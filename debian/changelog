@@ -1,3 +1,10 @@
+tiger (1:3.2.3-13) unstable; urgency=high
+
+  * debian/rules: Make a symbolic link to make Tiger work with Linux kernel versions 4
+    (Closes:  #785589)
+
+ -- Javier Fernández-Sanguino Peña <jfs@debian.org>  Sun, 22 Nov 2015 20:22:26 +0100
+
 tiger (1:3.2.3-12) unstable; urgency=medium
   
   [ Include changes done in upstream's GIT ]

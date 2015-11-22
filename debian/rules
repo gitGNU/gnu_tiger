@@ -57,8 +57,9 @@ install: build
 	# Adjust the permissions of directories that might contain confidential information
 	chmod 0700 debian/tiger/var/lib/tiger/work
 	chmod 0700 debian/tiger/var/log/tiger
-	# Create symbolic link for Linux version 3
+	# Create symbolic links for Linux versions 3 and 4
 	ln -fs 2 debian/tiger/usr/lib/tiger/systems/Linux/3
+	ln -fs 3 debian/tiger/usr/lib/tiger/systems/Linux/4
 	# Remove unneeded Makefile files.
 	rm -f debian/tiger/usr/lib/tiger/doc/Makefile
 	rm -f debian/tiger/usr/lib/tiger/doc/Makefile.in
