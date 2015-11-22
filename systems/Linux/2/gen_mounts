@@ -65,6 +65,9 @@
 #                                 - Fix typo: hugetlbf --> hugetlbfs 
 #                                    (Debian bug 729692, Savannah bug 40591)
 #                                 - Add fuse.gvfs-fuse-daemon (Savannah patch 7914) and change it to non-LOCAL
+# Linux/2/gen_mounts - 22/11/2015 - Fix typo in sshfs definition (Debian bug 7680867)
+#                                 - Added aufs (Debian bug 781171)
+#                                 - Added fuse.s3fs (Debian bug 799753)
 #------------------------------------------------------------------------------------------------------------------
 #
 
@@ -128,6 +131,7 @@ localfs()
   [ "$1" = "xiafs" ] && LOCAL=0
   [ "$1" = "sysv" ] && LOCAL=0
   [ "$1" = "ufs" ] && LOCAL=0
+  [ "$1" = "aufs" ] && LOCAL=0                    # Aufs (Docker) - advanced multi layered unification filesystem version
   [ "$1" = "coherent" ] && LOCAL=0
   [ "$1" = "xenix" ] && LOCAL=0
   [ "$1" = "hpfs" ] && LOCAL=0
@@ -149,6 +153,7 @@ localfs()
   [ "$1" = "ecryptfs" ] && LOCAL=0              # Encrypted filesystem used by ecryptfs-utils
   [ "$1" = "xenfs" ] && LOCAL=0                 # Virtual fs for Xen
   [ "$1" = "cgroup" ] && LOCAL=0                # General access point to Kernel Control Groups
+  [ "$1" = "fuse.s3fs" ] && LOCAL=1 		# Amazon S3 buckets mounted through fuse
   # Filesystems of other OS
   [ "$1" = "msdos" ] && LOCAL=1
   [ "$1" = "umsdos" ] && LOCAL=1
@@ -163,7 +168,7 @@ localfs()
   [ "$1" = "nfsd" ] && LOCAL=1
   [ "$1" = "ncpfs" ] && LOCAL=1
   [ "$1" = "smbfs" ] && LOCAL=1
-  [ "$1" = "fuse..sshfs" ] && LOCAL=1     # Remote SSH mounted filesystem through fuse
+  [ "$1" = "fuse.sshfs" ] && LOCAL=1     # Remote SSH mounted filesystem through fuse
   [ "$1" = "cifs" ] && LOCAL=1
   [ "$1" = "coda" ] && LOCAL=1
   [ "$1" = "AFS" ] && LOCAL=1       # Andrew Filesystem
