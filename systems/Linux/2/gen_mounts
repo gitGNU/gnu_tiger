@@ -65,6 +65,7 @@
 #                                 - Fix typo: hugetlbf --> hugetlbfs 
 #                                    (Debian bug 729692, Savannah bug 40591)
 #                                 - Add fuse.gvfs-fuse-daemon (Savannah patch 7914) and change it to non-LOCAL
+# Linux/2/gen_mounts - 14/10/2014 - Fix typo: hugelbfs --> hugetlbfs  (Debian bug 740625)
 # Linux/2/gen_mounts - 22/11/2015 - Fix typo in sshfs definition (Debian bug 7680867)
 #                                 - Added aufs (Debian bug 781171)
 #                                 - Added fuse.s3fs (Debian bug 799753)
@@ -202,7 +203,7 @@ localfs()
   [ "$1" = "pipefs" ] && LOCAL=1
   [ "$1" = "eventpollfs" ] && LOCAL=1           # Efficient event polling mechanism
   [ "$1" = "inotifyfs" ] && LOCAL=1 
-  [ "$1" = "hugelbfs" ] && LOCAL=1 
+  [ "$1" = "hugetlbfs" ] && LOCAL=1 
   [ "$1" = "subfs" ] && LOCAL=1 
   [ "$1" = "futexfs" ] && LOCAL=1               # futex (Fast Userspace Locking) mechanism
   [ "$1" = "fuse" ] && LOCAL=1
