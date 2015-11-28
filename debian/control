@@ -6,6 +6,8 @@ Uploaders: Francisco Manuel Garcia Claramonte <francisco@debian.org>
 Build-Depends: debhelper (>= 7), autoconf, po-debconf (>= 0.5.0)
 Standards-Version: 3.9.5
 Homepage: http://savannah.nongnu.org/projects/tiger/
+Vcs-Browser: http://git.savannah.nongnu.org/cgit/tiger.git
+Vcs-Git: http://git.savannah.gnu.org/r/tiger.git
 
 Package: tiger
 Architecture: any
